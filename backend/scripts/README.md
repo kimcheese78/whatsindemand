@@ -2,69 +2,43 @@
 
 This directory contains utility scripts for maintaining and operating the WhatsInDemand platform.
 
-## Essential Production Scripts
+## Production Scripts
 
-These scripts are used in production or are essential for operations:
+**Essential for deployment:**
 
 - **`weekly_scrape.py`** - Scheduled job scraping (runs via cron)
   - Usage: `python scripts/weekly_scrape.py`
   - Scrapes all companies and updates job database
+  - **This is the main production script for keeping data fresh**
 
-- **`scrape_single.py`** - Scrape a single company
-  - Usage: `python scripts/scrape_single.py <company_slug> [company_name]`
-  - Example: `python scripts/scrape_single.py airbnb`
+## Data Migration Scripts
 
-- **`scrape_new_company.py`** - Add a new company to scrape
-  - Usage: `python scripts/scrape_new_company.py`
-  - Interactive script to add new companies
+**One-time use scripts (kept for reference):**
 
-- **`db_status.py`** - Database status and statistics
-  - Usage: `python scripts/db_status.py`
-  - Shows table counts, role breakdown, mapping status
+- **`convert_salaries_to_usd.py`** - Convert salaries to USD
+  - Usage: `python scripts/convert_salaries_to_usd.py`
+  - One-time migration script (already run)
+  - Kept in case salary conversion needs to be re-run
 
-## Maintenance Scripts
+- **`extract_salaries.py`** - Extract salaries from job descriptions
+  - Usage: `python scripts/extract_salaries.py`
+  - One-time migration script (already run)
+  - Kept in case salary extraction needs to be re-run
 
-These scripts are useful for ongoing maintenance:
+## Archived Scripts
 
-- **`assign_roles.py`** - Link jobs to roles
-  - Usage: `python scripts/assign_roles.py`
-  - Assigns role_id to jobs based on title matching
+All other scripts (maintenance, debugging, testing, one-time migrations) have been moved to `_archive/` directory:
 
-- **`link_jobs_to_roles.py`** - Alternative role linking script
-  - Usage: `python scripts/link_jobs_to_roles.py`
+- Debug/test scripts
+- One-time migration scripts
+- Maintenance utilities (can be restored if needed)
+- Diagnostic tools
 
-- **`update_skill_counts.py`** - Update skill statistics
-  - Usage: `python scripts/update_skill_counts.py`
-  - Updates total_job_count and trending_score for skills
-
-- **`validate_companies.py`** - Validate company data
-  - Usage: `python scripts/validate_companies.py`
-
-- **`validate_slugs.py`** - Validate company slugs
-  - Usage: `python scripts/validate_slugs.py`
-
-- **`scrape_all.py`** - Batch scrape all companies
-  - Usage: `python scripts/scrape_all.py`
-
-- **`batch_scrape.py`** - Alternative batch scraping
-  - Usage: `python scripts/batch_scrape.py`
-
-- **`scrape_greenhouse.py`** - Greenhouse-specific scraping utility
-  - Usage: `python scripts/scrape_greenhouse.py`
-
-- **`seed_standard_roles.py`** - Seed initial roles (if needed)
-  - Usage: `python scripts/seed_standard_roles.py`
-
-## Utility Scripts
-
-- **`export_job_titles.py`** - Export job titles for analysis
-- **`list_jobs.py`** - List jobs with filters
-- **`list_roles.py`** - List roles with statistics
-- **`discover_greenhouse.py`** - Discover new Greenhouse companies
+The archive is excluded from git (see `.gitignore`) but kept locally for reference.
 
 ## Notes
 
-- All debug, test, and diagnostic scripts have been removed
-- One-time migration scripts have been removed
-- Keep this directory clean - only production/maintenance scripts should remain
+- Only essential production scripts remain in the main directory
+- Archive contains 58+ scripts that were used during development
+- If you need a specific script from the archive, you can restore it
 
