@@ -41,6 +41,7 @@ playwright==1.56.0
 preshed==3.0.12
 psycopg==3.2.13
 psycopg-binary==3.2.13
+psycopg2-binary==2.9.9
 pyasn1==0.6.1
 pyasn1_modules==0.4.2
 pydantic==2.12.5
