@@ -1,0 +1,101 @@
+# Dependencies
+node_modules/
+venv/
+env/
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+
+# Environment variables
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Build outputs
+build/
+dist/
+*.egg-info/
+
+# Logs
+*.log
+logs/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Database
+*.db
+*.sqlite
+*.sqlite3
+
+# Uploads (user files)
+uploads/
+*.pdf
+*.docx
+*.doc
+
+# Temporary files
+*.tmp
+*.temp
+*.backup
+*.bak
+*.old
+
+# Test coverage
+coverage/
+.nyc_output/
+.coverage
+
+# OS files
+Thumbs.db
+.DS_Store
+
+# Currency files (temporary)
+BR
+BRL
+CA
+CAD
+EUR
+GB
+GBP
+IE
+IN
+INR
+US
+USD
+
+# Diagnostic files
+*.csv
+extreme_salary_diagnosis.csv
+response.json
+roles_report.txt
+
+# SQL backups (keep in separate backup location)
+*.sql
+backup_*.sql
+
+# React
+frontend/build/
+frontend/.pnp
+frontend/.pnp.js
+
+# Python
+*.py[cod]
+*$py.class
+*.so
+.pytest_cache/
+.mypy_cache/
+

@@ -1,0 +1,288 @@
+// services/api.js
+
+const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:5001';
+
+class API {
+  constructor() {
+    this.baseURL = API_BASE_URL;
+    this.token = localStorage.getItem('authToken');
+  }
+
+  setToken(token) {
+    this.token = token;
+    if (token) {
+      localStorage.setItem('authToken', token);
+    } else {
+      localStorage.removeItem('authToken');
+    }
+  }
+
+  getHeaders(includeAuth = true) {
+    const headers = {
+      'Content-Type': 'application/json',
+    };
+
+    const token = this.token || localStorage.getItem('authToken');
+    if (includeAuth && token) {
+      headers['Authorization'] = `Bearer ${token}`;
+    }
+
+    return headers;
+  }
+
+  async request(endpoint, options = {}) {
+    const url = `${this.baseURL}${endpoint}`;
+    
+    const config = {
+      ...options,
+      headers: {
+        ...this.getHeaders(options.auth !== false),
+        ...options.headers,
+      },
+    };
+
+    try {
+      const response = await fetch(url, config);
+      
+      // Handle non-JSON responses
+      const contentType = response.headers.get('content-type');
+      if (!contentType || !contentType.includes('application/json')) {
+        if (!response.ok) {
+          throw new Error(`Request failed with status ${response.status}`);
+        }
+        return { success: true };
+      }
+      
+      const data = await response.json();
+
+      // For 404s on role insights, return the data instead of throwing
+      if (response.status === 404 && data.total_jobs_analyzed === 0) {
+        return { ...data, success: false };
+      }
+
+      if (!response.ok) {
+        throw new Error(data.error || data.message || 'Request failed');
+      }
+
+      return data;
+    } catch (error) {
+      console.error('API Error:', error);
+      throw error;
+    }
+  }
+
+  // ============================================
+  // AUTH ENDPOINTS
+  // ============================================
+
+  async googleAuth(credential) {
+    const data = await this.request('/api/auth/google', {
+        method: 'POST',
+        body: JSON.stringify({ credential }),
+        auth: false,
+    });
+    if (data.token) this.setToken(data.token);
+    return data;
+}
+
+  async signup(email, password, fullName, targetRole, seniorityLevel, location) {
+    const data = await this.request('/api/auth/signup', {
+      method: 'POST',
+      body: JSON.stringify({
+        email,
+        password,
+        full_name: fullName,
+        target_role: targetRole,
+        seniority_level: seniorityLevel,
+        location,
+      }),
+      auth: false,
+    });
+
+    if (data.token) {
+      this.setToken(data.token);
+    }
+
+    return data;
+  }
+
+  async login(email, password) {
+    const data = await this.request('/api/auth/login', {
+      method: 'POST',
+      body: JSON.stringify({ email, password }),
+      auth: false,
+    });
+
+    if (data.token) {
+      this.setToken(data.token);
+    }
+
+    return data;
+  }
+
+  async getCurrentUser() {
+    return this.request('/api/auth/me');
+  }
+
+  logout() {
+    this.setToken(null);
+  }
+
+  // ============================================
+  // SESSION PERSISTENCE
+  // ============================================
+
+  async saveSession(targetRole, seniorityLevel, location, analysisData = null) {
+    return this.request('/api/session/save', {
+      method: 'POST',
+      body: JSON.stringify({
+        target_role: targetRole,
+        seniority_level: seniorityLevel,
+        location: location,
+        analysis: analysisData,
+      }),
+    });
+  }
+
+  async getLastSession() {
+    return this.request('/api/session/last');
+  }
+
+  async clearSession() {
+    return this.request('/api/session/clear', {
+      method: 'POST',
+    });
+  }
+
+  // ============================================
+  // ROLE INTELLIGENCE ENDPOINTS
+  // ============================================
+
+  async getRoleInsights(role, seniority, location, industry = null, companyId = null) {
+    const params = {
+      role,
+      seniority,
+      location,
+    };
+  
+    if (industry) params.industry = industry;
+    if (companyId) params.company_id = companyId;
+  
+    return this.request('/api/roles/insights', {
+      method: 'POST',
+      body: JSON.stringify(params),
+      auth: false,
+    });
+  }
+
+  async getAlternativeRoles(role, seniority = null) {
+    return this.request('/api/roles/alternatives', {
+      method: 'POST',
+      body: JSON.stringify({ role, seniority }),
+      auth: false,
+    });
+  }
+
+  async getRoleDetails(roleId) {
+    return this.request(`/api/roles/${roleId}`, {
+      auth: false,
+    });
+  }
+
+  // ============================================
+  // LOCATIONS ENDPOINTS
+  // ============================================
+
+  async getLocations() {
+    return this.request('/api/locations', {
+      auth: false,
+    });
+  }
+
+  // ============================================
+  // SKILLS ENDPOINTS
+  // ============================================
+
+  async getSkillDetails(skillId, role = null) {
+    const params = new URLSearchParams();
+    if (role) params.append('role', role);
+    
+    const query = params.toString() ? `?${params.toString()}` : '';
+    return this.request(`/api/skills/${skillId}${query}`, {
+      auth: false,
+    });
+  }
+
+  async getAvailableSkills() {
+    return this.request('/api/skills', {
+      auth: false,
+    });
+  }
+
+  // ============================================
+  // COMPANIES ENDPOINTS
+  // ============================================
+
+  async getCompanies(minJobs = 1, industry = null) {
+    const params = new URLSearchParams();
+    params.append('min_jobs', minJobs);
+    if (industry) params.append('industry', industry);
+    
+    return this.request(`/api/companies?${params.toString()}`, {
+      auth: false,
+    });
+  }
+
+  async getIndustries() {
+    return this.request('/api/companies/industries', {
+      auth: false,
+    });
+  }
+
+  async getCompanyDetails(companyId) {
+    return this.request(`/api/companies/${companyId}`, {
+      auth: false,
+    });
+  }
+
+  async getCompanySkills(companyId, role = null) {
+    const params = new URLSearchParams();
+    if (role) params.append('role', role);
+    
+    const query = params.toString() ? `?${params.toString()}` : '';
+    return this.request(`/api/companies/${companyId}/skills${query}`, {
+      auth: false,
+    });
+  }
+
+  // ============================================
+  // JOBS ENDPOINTS
+  // ============================================
+
+  async getJobStats() {
+    return this.request('/api/jobs/stats', {
+      auth: false,
+    });
+  }
+
+  async searchJobs(query, filters = {}) {
+    return this.request('/api/jobs/search', {
+      method: 'POST',
+      body: JSON.stringify({ query, ...filters }),
+      auth: false,
+    });
+  }
+
+  // ============================================
+  // SKILL GAP ENDPOINTS (existing)
+  // ============================================
+
+  async getAvailableRoles(minJobs = 3) {
+    return this.request(`/api/skill-gap/roles?min_jobs=${minJobs}`, {
+      auth: false,
+    });
+  }
+}
+
+const api = new API();
+export default api;

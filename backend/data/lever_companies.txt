@@ -1,0 +1,125 @@
+# Lever Companies - Top Tech Companies using Lever ATS
+# Format: company_slug (one per line)
+# Lines starting with # are comments
+
+# Big Tech & Unicorns
+netflix
+figma
+notion
+coinbase
+lyft
+robinhood
+reddit
+databricks
+anthropic
+openai
+scale
+instacart
+flexport
+plaid
+gusto
+brex
+chime
+affirm
+klarna
+nubank
+nerdwallet
+sofi
+
+# AI & ML Companies
+huggingface
+cohere
+mistral
+anyscale
+weights-and-biases
+labelbox
+snorkel
+
+# Developer Tools
+vercel
+netlify
+supabase
+planetscale
+prisma
+gitpod
+circleci
+launchdarkly
+split
+unleash
+
+# Fintech
+wise
+revolut
+monzo
+marqeta
+checkout
+adyen
+mollie
+parafin
+
+# Enterprise & SaaS
+airtable
+asana
+monday
+clickup
+miro
+loom
+calendly
+typeform
+webflow
+bubble
+retool
+zapier
+make
+tray
+
+# Security
+snyk
+lacework
+orca-security
+wiz
+crowdstrike
+sentinelone
+
+# Data & Analytics
+amplitude
+mixpanel
+segment
+fivetran
+dbt
+census
+hightouch
+monte-carlo
+atlan
+
+# E-commerce & Marketplace
+faire
+goat
+stockx
+poshmark
+mercari
+offerup
+letgo
+
+# Health Tech
+ro
+hims
+nurx
+cerebral
+headspace
+calm
+
+# Other Notable
+ramp
+mercury
+rippling
+deel
+remote
+oyster
+lattice
+culture-amp
+greenhouse-software
+lever
+ashby
+gem
+brighthire

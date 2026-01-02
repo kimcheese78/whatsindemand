@@ -1,0 +1,110 @@
+# Ashby Companies - YC & Modern Startups using Ashby ATS
+# Format: company_slug (one per line)
+# Lines starting with # are comments
+
+# Developer Tools
+vercel
+linear
+raycast
+railway
+resend
+trigger
+inngest
+knock
+nango
+pipedream
+superblocks
+
+# Infrastructure
+fly
+render
+modal
+replicate
+baseten
+banana-dev
+beam
+
+# AI/ML
+perplexity
+character
+anthropic
+cohere
+stability
+jasper
+copy-ai
+writer
+
+# Fintech
+ramp
+mercury
+brex
+deel
+remote
+oyster
+pilot
+puzzle
+digits
+
+# Security
+vanta
+drata
+secureframe
+chainguard
+tailscale
+boundary
+
+# Data
+motherduck
+tobiko
+ponder
+evidence
+lightdash
+cube
+
+# Product & Design
+loom
+pitch
+gamma
+coda
+slite
+almanac
+
+# Sales & Marketing
+clay
+apollo
+outreach
+salesloft
+gong
+chorus
+
+# HR & People
+rippling
+gusto
+justworks
+lattice
+leapsome
+pave
+figures
+
+# Other Notable
+notion
+airtable
+retool
+webflow
+framer
+plasmic
+builder
+sanity
+contentful
+storyblok
+
+# YC Companies
+posthog
+supabase
+cal
+dub
+papermark
+plane
+twenty
+formbricks
+documenso

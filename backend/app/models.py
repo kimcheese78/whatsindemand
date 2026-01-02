@@ -1,0 +1,411 @@
+# backend/app/models.py
+
+from datetime import datetime
+from flask_sqlalchemy import SQLAlchemy
+
+db = SQLAlchemy()
+
+# ============================================
+# USER & AUTHENTICATION MODELS
+# ============================================
+
+class User(db.Model):
+    """User account model"""
+    __tablename__ = 'users'
+    
+    id = db.Column(db.Integer, primary_key=True)
+    email = db.Column(db.String(255), unique=True, nullable=False)
+    password_hash = db.Column(db.String(255))
+    full_name = db.Column(db.String(255))
+    auth_provider = db.Column(db.String(50), default='email')
+    oauth_provider_id = db.Column(db.String(255))
+    has_pro_access = db.Column(db.Boolean, default=False)
+    stripe_customer_id = db.Column(db.String(255))
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    
+    # Relationships
+    profile = db.relationship('UserProfile', backref='user', uselist=False, cascade='all, delete-orphan')
+    skills = db.relationship('UserSkill', backref='user', cascade='all, delete-orphan')
+    payments = db.relationship('Payment', backref='user', cascade='all, delete-orphan')
+    
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'email': self.email,
+            'full_name': self.full_name,
+            'has_pro_access': self.has_pro_access,
+            'created_at': self.created_at.isoformat() if self.created_at else None
+        }
+
+
+class UserProfile(db.Model):
+    """User profile with job search preferences"""
+    __tablename__ = 'user_profiles'
+    
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False, unique=True)
+    target_role = db.Column(db.String(255))
+    seniority_level = db.Column(db.String(50))
+    location = db.Column(db.String(255))
+    resume_file_path = db.Column(db.String(500))
+    resume_text = db.Column(db.Text)
+    resume_uploaded_at = db.Column(db.DateTime)
+    last_analysis_json = db.Column(db.Text)  # Store as JSON string
+    last_analysis_at = db.Column(db.DateTime)
+    
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'target_role': self.target_role,
+            'seniority_level': self.seniority_level,
+            'location': self.location,
+            'resume_uploaded_at': self.resume_uploaded_at.isoformat() if self.resume_uploaded_at else None
+        }
+
+
+# ============================================
+# SKILLS MODELS
+# ============================================
+
+class Skill(db.Model):
+    """Master skills table"""
+    __tablename__ = 'skills'
+    
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(255), unique=True, nullable=False)
+    category = db.Column(db.String(50))   # 'technical', 'soft', 'domain'
+    aliases = db.Column(db.ARRAY(db.String))
+    is_verified = db.Column(db.Boolean, default=False)
+    
+    # NEW: Aggregated stats for performance
+    total_job_count = db.Column(db.Integer, default=0)
+    trending_score = db.Column(db.Float, default=0.0)
+    
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'skill_id': self.id,
+            'name': self.name,
+            'category': self.category,
+            'total_job_count': self.total_job_count,
+            'trending_score': self.trending_score
+        }
+
+
+class UserSkill(db.Model):
+    """Skills extracted from user's resume"""
+    __tablename__ = 'user_skills'
+    
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    skill_id = db.Column(db.Integer, db.ForeignKey('skills.id'), nullable=False)
+    confidence_score = db.Column(db.Integer)  # 0-100
+    is_custom = db.Column(db.Boolean, default=False)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    
+    # Relationship to get skill details
+    skill = db.relationship('Skill', backref='user_skills')
+    
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'skill_name': self.skill.name,
+            'skill_category': self.skill.category,
+            'confidence_score': self.confidence_score,
+            'is_custom': self.is_custom
+        }
+
+# ============================================
+# COMPANY & ROLES MODELS
+# ============================================
+
+class Company(db.Model):
+    """Companies using various ATS systems"""
+    __tablename__ = 'companies'
+    
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(255), nullable=False)
+    industry = db.Column(db.String(100))  # ADD THIS LINE
+    ats_type = db.Column(db.String(50))  # 'greenhouse', 'lever', etc.
+    greenhouse_slug = db.Column(db.String(255))
+    website = db.Column(db.String(500))
+    logo_url = db.Column(db.String(500))
+    last_scraped_at = db.Column(db.DateTime)
+    is_active = db.Column(db.Boolean, default=True)
+    
+    # NEW: Scraping configuration
+    scrape_enabled = db.Column(db.Boolean, default=True)
+    scrape_frequency_hours = db.Column(db.Integer, default=24)
+    total_jobs_scraped = db.Column(db.Integer, default=0)
+    
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    
+    # Relationships
+    jobs = db.relationship('Job', backref='company', cascade='all, delete-orphan')
+    scraper_logs = db.relationship('ScraperLog', backref='company', cascade='all, delete-orphan')
+    
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'name': self.name,
+            'ats_type': self.ats_type,
+            'website': self.website,
+            'logo_url': self.logo_url,
+            'total_jobs_scraped': self.total_jobs_scraped,
+            'last_scraped_at': self.last_scraped_at.isoformat() if self.last_scraped_at else None
+        }
+
+
+class Role(db.Model):
+    """Normalized job roles/titles"""
+    __tablename__ = 'roles'
+    
+    id = db.Column(db.Integer, primary_key=True)
+    normalized_title = db.Column(db.String(255), unique=True, nullable=False, index=True)
+    category = db.Column(db.String(100), index=True)  # Engineering, Design, Product, Sales, Marketing, etc.
+    seniority_level = db.Column(db.String(50), index=True)  # entry, mid, senior, lead, principal
+    job_family = db.Column(db.String(100))  # Software Engineer, Product Manager, Designer, etc.
+    
+    # Aggregated stats (updated by background job)
+    total_active_jobs = db.Column(db.Integer, default=0)
+    avg_salary_min = db.Column(db.Integer)
+    avg_salary_max = db.Column(db.Integer)
+    
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    
+    # Relationships
+    jobs = db.relationship('Job', backref='role', lazy='dynamic')
+    title_variations = db.relationship('RoleTitleVariation', backref='role', lazy=True, cascade='all, delete-orphan')
+    skill_demands = db.relationship('SkillDemand', backref='role', lazy='dynamic')
+    
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'normalized_title': self.normalized_title,
+            'category': self.category,
+            'seniority_level': self.seniority_level,
+            'job_family': self.job_family,
+            'total_active_jobs': self.total_active_jobs,
+            'avg_salary_range': f"${self.avg_salary_min:,}-${self.avg_salary_max:,}" if self.avg_salary_min and self.avg_salary_max else None
+        }
+
+
+class RoleTitleVariation(db.Model):
+    """Maps job title variations to normalized roles"""
+    __tablename__ = 'role_title_variations'
+    
+    id = db.Column(db.Integer, primary_key=True)
+    role_id = db.Column(db.Integer, db.ForeignKey('roles.id'), nullable=False, index=True)
+    original_title = db.Column(db.String(255), unique=True, nullable=False, index=True)
+    frequency = db.Column(db.Integer, default=1)  # How often this variation appears
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'original_title': self.original_title,
+            'normalized_title': self.role.normalized_title if self.role else None,
+            'frequency': self.frequency
+        }
+
+
+# ============================================
+# JOB POSTINGS MODEL
+# ============================================
+
+class Job(db.Model):
+    """Job postings from various sources"""
+    __tablename__ = 'jobs'
+    
+    id = db.Column(db.Integer, primary_key=True)
+    company_id = db.Column(db.Integer, db.ForeignKey('companies.id'))
+    role_id = db.Column(db.Integer, db.ForeignKey('roles.id'), index=True)  # NEW: Link to normalized role
+    
+    source_ats = db.Column(db.String(50))
+    source_job_id = db.Column(db.String(255))
+    source_url = db.Column(db.String(1000))
+    title = db.Column(db.String(500), nullable=False)
+    location_raw = db.Column(db.String(255))
+    location_city = db.Column(db.String(255))
+    location_state = db.Column(db.String(100))
+    location_country = db.Column(db.String(100))
+    location_is_remote = db.Column(db.Boolean, default=False)
+    department = db.Column(db.String(255))
+    seniority_level = db.Column(db.String(50))
+    employment_type = db.Column(db.String(50))
+    description = db.Column(db.Text)
+    description_text = db.Column(db.Text)
+    salary_min = db.Column(db.Integer)
+    salary_max = db.Column(db.Integer)
+    salary_currency = db.Column(db.String(10), default='USD')
+    salary_min_usd = db.Column(db.Integer)
+    salary_max_usd = db.Column(db.Integer)
+    posted_at = db.Column(db.DateTime)
+    scraped_at = db.Column(db.DateTime, default=datetime.utcnow)
+    is_active = db.Column(db.Boolean, default=True)
+    closed_at = db.Column(db.DateTime, nullable=True)
+
+    
+    # Relationships
+    required_skills = db.relationship('JobSkill', backref='job', cascade='all, delete-orphan')
+    
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'company': self.company.to_dict() if self.company else None,
+            'role': self.role.to_dict() if self.role else None,
+            'title': self.title,
+            'location': {
+                'raw': self.location_raw,
+                'city': self.location_city,
+                'state': self.location_state,
+                'country': self.location_country,
+                'is_remote': self.location_is_remote
+            },
+            'department': self.department,
+            'seniority_level': self.seniority_level,
+            'salary_range': f"${self.salary_min:,}-${self.salary_max:,}" if self.salary_min and self.salary_max else None,
+            'source_url': self.source_url,
+            'posted_at': self.posted_at.isoformat() if self.posted_at else None
+        }
+
+
+class JobSkill(db.Model):
+    """Skills required by jobs"""
+    __tablename__ = 'job_skills'
+    
+    id = db.Column(db.Integer, primary_key=True)
+    job_id = db.Column(db.Integer, db.ForeignKey('jobs.id'), nullable=False)
+    skill_id = db.Column(db.Integer, db.ForeignKey('skills.id'), nullable=False)
+    is_required = db.Column(db.Boolean, default=True)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    
+    # Relationship
+    skill = db.relationship('Skill', backref='job_skills')
+
+
+# ============================================
+# SKILLS DEMAND TRACKING (NEW)
+# ============================================
+
+class SkillDemand(db.Model):
+    """Time-series data for skill demand by role"""
+    __tablename__ = 'skills_demand'
+    
+    id = db.Column(db.Integer, primary_key=True)
+    skill_id = db.Column(db.Integer, db.ForeignKey('skills.id'), nullable=False, index=True)
+    role_id = db.Column(db.Integer, db.ForeignKey('roles.id'), index=True)  # Optional: demand per role
+    
+    # Time period
+    period_date = db.Column(db.Date, nullable=False, index=True)  # Start of period (e.g., Monday for weekly)
+    period_type = db.Column(db.String(20), default='week')  # day, week, month
+    
+    # Demand metrics
+    job_count = db.Column(db.Integer, default=0)  # Jobs requiring this skill
+    required_count = db.Column(db.Integer, default=0)  # Jobs where skill is marked required
+    company_count = db.Column(db.Integer, default=0)  # Unique companies
+    
+    # Salary data
+    avg_salary_min = db.Column(db.Integer)
+    avg_salary_max = db.Column(db.Integer)
+    
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    
+    # Relationships
+    skill = db.relationship('Skill', backref='demand_history')
+    
+    __table_args__ = (
+        db.UniqueConstraint('skill_id', 'role_id', 'period_date', 'period_type', name='unique_skill_demand_period'),
+    )
+    
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'skill_name': self.skill.name if self.skill else None,
+            'role_title': self.role.normalized_title if self.role else None,
+            'period_date': self.period_date.isoformat(),
+            'period_type': self.period_type,
+            'job_count': self.job_count,
+            'required_count': self.required_count,
+            'company_count': self.company_count,
+            'avg_salary_min': self.avg_salary_min,
+            'avg_salary_max': self.avg_salary_max
+        }
+
+
+# ============================================
+# SCRAPER LOGS (NEW)
+# ============================================
+
+class ScraperLog(db.Model):
+    """Track scraping operations"""
+    __tablename__ = 'scraper_logs'
+    
+    id = db.Column(db.Integer, primary_key=True)
+    company_id = db.Column(db.Integer, db.ForeignKey('companies.id'), index=True)
+    
+    # Scrape details
+    scrape_type = db.Column(db.String(50), default='full')  # full, incremental
+    status = db.Column(db.String(20), nullable=False, index=True)  # success, partial, failed
+    
+    # Metrics
+    jobs_found = db.Column(db.Integer, default=0)
+    jobs_new = db.Column(db.Integer, default=0)
+    jobs_updated = db.Column(db.Integer, default=0)
+    jobs_removed = db.Column(db.Integer, default=0)
+    
+    # Timing
+    started_at = db.Column(db.DateTime, nullable=False)
+    completed_at = db.Column(db.DateTime)
+    duration_seconds = db.Column(db.Float)
+    
+    # Error tracking
+    error_message = db.Column(db.Text)
+    
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'company_name': self.company.name if self.company else None,
+            'status': self.status,
+            'jobs_found': self.jobs_found,
+            'jobs_new': self.jobs_new,
+            'jobs_updated': self.jobs_updated,
+            'jobs_removed': self.jobs_removed,
+            'duration_seconds': self.duration_seconds,
+            'started_at': self.started_at.isoformat() if self.started_at else None,
+            'completed_at': self.completed_at.isoformat() if self.completed_at else None
+        }
+
+
+# ============================================
+# PAYMENT MODEL
+# ============================================
+
+class Payment(db.Model):
+    """Payment transactions"""
+    __tablename__ = 'payments'
+    
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    stripe_payment_intent_id = db.Column(db.String(255))
+    amount = db.Column(db.Integer)  # in cents
+    currency = db.Column(db.String(10), default='USD')
+    status = db.Column(db.String(50))  # 'pending', 'succeeded', 'failed'
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'amount': self.amount / 100,  # convert cents to dollars
+            'currency': self.currency,
+            'status': self.status,
+            'created_at': self.created_at.isoformat() if self.created_at else None
+        }

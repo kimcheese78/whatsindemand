@@ -1,0 +1,80 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg-info/
+dist/
+build/
+
+# Virtual Environment
+venv/
+env/
+ENV/
+.venv
+
+# Environment variables
+.env
+.env.local
+
+# Database
+*.db
+*.sqlite
+*.sqlite3
+
+# Logs
+*.log
+logs/
+
+# Uploads
+uploads/
+*.pdf
+*.docx
+*.doc
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Temporary files
+*.tmp
+*.temp
+*.backup
+*.bak
+*.old
+
+# Test files
+.pytest_cache/
+.mypy_cache/
+.coverage
+htmlcov/
+
+# Diagnostic/export files
+*.csv
+response.json
+roles_report.txt
+extreme_salary_diagnosis.csv
+
+# SQL backups
+backup_*.sql
+*.sql
+
+# Currency files (temporary)
+BR
+BRL
+CA
+CAD
+EUR
+GB
+GBP
+IE
+IN
+INR
+US
+USD
+
+# Archived scripts (old/debug/test scripts)
+scripts/_archive/

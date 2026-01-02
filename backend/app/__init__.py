@@ -1,0 +1,73 @@
+# backend/app/__init__.py
+
+from flask import Flask
+from flask_cors import CORS
+from flask_migrate import Migrate
+from app.models import db
+import os
+from app.config import config
+
+migrate = Migrate()
+
+def create_app(config_name=None):
+    if config_name is None:
+        config_name = os.getenv('FLASK_CONFIG', 'development')
+    
+    app = Flask(__name__)
+    app.config.from_object(config[config_name])
+    
+    # Initialize database
+    db.init_app(app)
+    
+    # Initialize Flask-Migrate
+    migrate.init_app(app, db)
+    
+    # Enable CORS
+    CORS(app, resources={
+        r"/api/*": {
+            "origins": [app.config['FRONTEND_URL']],
+            "methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+            "allow_headers": ["Content-Type", "Authorization"]
+        }
+    })
+    
+    # ============================================
+    # REGISTER BLUEPRINTS
+    # ============================================
+
+    # Auth & Payment
+    from app.routes import auth, payment
+    app.register_blueprint(auth.bp, url_prefix='/api/auth')
+    app.register_blueprint(payment.bp, url_prefix='/api/payment')
+    
+    # Session persistence
+    from app.routes import analysis
+    app.register_blueprint(analysis.bp, url_prefix='/api/session')  # Renamed for clarity
+    
+    # Job data (existing)
+    from app.routes import jobs
+    app.register_blueprint(jobs.bp, url_prefix='/api/jobs')
+    
+    # Skill gap data (existing)
+    from app.routes.skill_gap import skill_gap_bp
+    app.register_blueprint(skill_gap_bp)
+    
+    # Locations data
+    from app.routes.locations import locations_bp
+    app.register_blueprint(locations_bp)
+
+    # NEW: Career intelligence endpoints
+    from app.routes.roles import roles_bp
+    from app.routes.companies import companies_bp
+    from app.routes.skills import skills_bp
+    
+    app.register_blueprint(roles_bp)       # /api/roles/*
+    app.register_blueprint(companies_bp)   # /api/companies/*
+    app.register_blueprint(skills_bp)      # /api/skills/*
+    
+    # Health check
+    @app.route('/health')
+    def health_check():
+        return {'status': 'healthy', 'message': 'WhatsInDemand API is running'}
+    
+    return app
