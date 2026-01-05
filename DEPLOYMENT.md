@@ -8,6 +8,7 @@
 2. Create new project
 3. Copy connection string from Settings → Database
 4. Format: `postgresql://postgres:[PASSWORD]@db.xxxxx.supabase.co:5432/postgres`
+-> 'postgresql://postgres:[YOUR-PASSWORD]@db.sjamvmcuijyppipvuhud.supabase.co:5432/postgres'
 
 ### 2. Backend Deployment (Render)
 
@@ -16,6 +17,7 @@
 3. Connect GitHub repo
 4. Settings:
    - **Name**: `whatsindemand-backend`
+   - **Root Directory**: `backend` ⚠️ **IMPORTANT: Set this!**
    - **Environment**: `Python 3`
    - **Build Command**: `pip install -r requirements.txt`
    - **Start Command**: `gunicorn run:app --bind 0.0.0.0:$PORT`
