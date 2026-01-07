@@ -749,8 +749,12 @@ def get_role_insights():
     # ============================================
     # GET ALTERNATIVE ROLES
     # ============================================
-    
-    alternative_roles = _get_alternative_roles(role.id, job_ids, skills[:20])
+
+    # Only calculate alternatives if we have fewer than 1000 jobs (to prevent timeout)
+    if total_jobs < 1000:
+        alternative_roles = _get_alternative_roles(role.id, job_ids[:200], skills[:10])
+    else:
+        alternative_roles = []  # Skip for large datasets
 
     # ============================================
     # GET SALARY INFO (ALL CONVERTED TO USD)

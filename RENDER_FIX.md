@@ -52,3 +52,4 @@ cd backend && gunicorn run:app --bind 0.0.0.0:$PORT
 
 After setting Root Directory to `backend`, Render will automatically look for files in that folder, so your commands can be simpler.
 
+
