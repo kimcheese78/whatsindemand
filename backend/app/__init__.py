@@ -23,13 +23,11 @@ def create_app(config_name=None):
     migrate.init_app(app, db)
     
     # Enable CORS
-    CORS(app, resources={
-        r"/api/*": {
-            "origins": "*",
-            "methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-            "allow_headers": ["Content-Type", "Authorization"]
-        }
-    })
+    CORS(app, 
+        origins=["*"],
+        allow_headers=["Content-Type", "Authorization"],
+        methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+        supports_credentials=False)
     
     # ============================================
     # REGISTER BLUEPRINTS
