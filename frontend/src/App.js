@@ -900,6 +900,7 @@ const GoogleSignInButton = ({ onSuccess, onError, text = "CONTINUE WITH GOOGLE" 
   useEffect(() => {
     const initGoogle = () => {
       if (!window.google?.accounts?.id) return;
+      if (!buttonRef.current) return;
 
       window.google.accounts.id.initialize({
         client_id: process.env.REACT_APP_GOOGLE_CLIENT_ID,
@@ -914,33 +915,36 @@ const GoogleSignInButton = ({ onSuccess, onError, text = "CONTINUE WITH GOOGLE" 
             setIsLoading(false);
           }
         },
-        ux_mode: 'popup',  // Force popup mode
-        use_fedcm_for_prompt: false,  // Disable FedCM for now
+        ux_mode: 'popup',
+        use_fedcm_for_prompt: false,
       });
 
-      // Render the actual Google button
-      if (buttonRef.current) {
-        window.google.accounts.id.renderButton(buttonRef.current, {
-          type: 'standard',
-          theme: 'filled_black',
-          size: 'large',
-          text: 'continue_with',
-          shape: 'rectangular',
-          width: buttonRef.current.offsetWidth,
-        });
-      }
+      // Render with fixed width - don't rely on offsetWidth
+      window.google.accounts.id.renderButton(buttonRef.current, {
+        type: 'standard',
+        theme: 'outline',
+        size: 'large',
+        text: 'continue_with',
+        shape: 'rectangular',
+        width: 300,
+      });
     };
 
-    if (window.google?.accounts?.id) {
-      initGoogle();
-    } else {
-      const script = document.createElement('script');
-      script.src = 'https://accounts.google.com/gsi/client';
-      script.async = true;
-      script.defer = true;
-      script.onload = initGoogle;
-      document.body.appendChild(script);
-    }
+    // Small delay to ensure DOM is ready
+    const timer = setTimeout(() => {
+      if (window.google?.accounts?.id) {
+        initGoogle();
+      } else {
+        const script = document.createElement('script');
+        script.src = 'https://accounts.google.com/gsi/client';
+        script.async = true;
+        script.defer = true;
+        script.onload = initGoogle;
+        document.body.appendChild(script);
+      }
+    }, 100);
+
+    return () => clearTimeout(timer);
   }, [onSuccess, onError]);
 
   if (isLoading) {
@@ -955,7 +959,7 @@ const GoogleSignInButton = ({ onSuccess, onError, text = "CONTINUE WITH GOOGLE" 
   return (
     <div 
       ref={buttonRef} 
-      className="w-full flex justify-center [&>div]:w-full [&_iframe]:w-full"
+      className="w-full flex justify-center"
       style={{ minHeight: '44px' }}
     />
   );
