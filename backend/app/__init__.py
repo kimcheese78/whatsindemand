@@ -25,7 +25,7 @@ def create_app(config_name=None):
     # Enable CORS
     CORS(app, resources={
         r"/api/*": {
-            "origins": [app.config['FRONTEND_URL']],
+            "origins": "*",
             "methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
             "allow_headers": ["Content-Type", "Authorization"]
         }
