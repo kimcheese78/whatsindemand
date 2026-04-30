@@ -1,17 +1,41 @@
+@import '@fontsource/ibm-plex-sans/400.css';
+@import '@fontsource/ibm-plex-sans/500.css';
+@import '@fontsource/ibm-plex-sans/600.css';
+@import '@fontsource/ibm-plex-mono/400.css';
+@import '@fontsource/ibm-plex-mono/500.css';
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+@layer base {
+  html, body, #root {
+    background-color: #0a0a0a;
+    color: rgb(255 255 255 / 0.95);
+  }
+  /* color-scheme tells the browser this is a dark UI, which makes the
+     overscroll/rubber-band bounce area, native scrollbars, and form
+     widgets render dark instead of system-default white. */
+  html { color-scheme: dark; overflow-y: scroll; }
+  body {
+    min-height: calc(100vh + 1px);
+    margin: 0;
+    font-family: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-size: 16px;
+    line-height: 24px;
+    font-weight: 400;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font-feature-settings: 'ss02', 'ss03';
+  }
+  /* Numbers in tabular figures by default — keeps columns aligned. */
+  .num, table, [role='table'] {
+    font-variant-numeric: tabular-nums;
+  }
+  /* Sharp corners across the app. */
+  *, *::before, *::after { border-radius: 0 !important; }
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+code, pre, .mono {
+  font-family: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
 }

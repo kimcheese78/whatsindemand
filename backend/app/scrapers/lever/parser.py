@@ -78,20 +78,8 @@ class LeverParser:
         return soup.get_text(separator='\n', strip=True)
     
     def infer_seniority(self, title: str) -> str:
-        """Infer seniority level from job title"""
-        title_lower = title.lower()
-        
-        if any(word in title_lower for word in ['principal', 'staff', 'distinguished', 'fellow', 'vp',
-                                                  'head of', 'director', 'chief']):
-            return 'principal'
-        elif any(word in title_lower for word in ['lead', 'senior', 'sr.', 'sr ', 'iii', ' 3']):
-            return 'senior'
-        elif any(word in title_lower for word in ['junior', 'jr.', 'jr ', 'associate', 'entry', ' i', ' 1']):
-            return 'entry'
-        elif any(word in title_lower for word in ['intern', 'internship', 'co-op', 'coop']):
-            return 'intern'
-        else:
-            return 'mid'
+        from app.utils.seniority import infer_seniority
+        return infer_seniority(title)
     
     def parse_date(self, timestamp_ms: int) -> datetime:
         """Parse Unix timestamp (milliseconds) to datetime"""

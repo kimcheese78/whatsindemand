@@ -14,19 +14,22 @@ def create_app(config_name=None):
         config_name = os.getenv('FLASK_CONFIG', 'development')
     
     app = Flask(__name__)
-    app.config.from_object(config[config_name])
-    
+    cfg = config[config_name]
+    app.config.from_object(cfg)
+    if hasattr(cfg, 'init_app'):
+        cfg.init_app(app)
+
     # Initialize database
     db.init_app(app)
-    
+
     # Initialize Flask-Migrate
     migrate.init_app(app, db)
-    
-    # Enable CORS
-    CORS(app, 
-        origins=["*"],
+
+    # Enable CORS — origin allowlist comes from config (env-driven).
+    CORS(app,
+        origins=app.config['CORS_ORIGINS'],
         allow_headers=["Content-Type", "Authorization"],
-        methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+        methods=["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
         supports_credentials=False)
     
     # ============================================

@@ -49,6 +49,9 @@ class Config:
     # URLs
     FRONTEND_URL = os.getenv('FRONTEND_URL', 'http://localhost:3000')
     BACKEND_URL = os.getenv('BACKEND_URL', 'http://localhost:5001')
+
+    # CORS — comma-separated origin allowlist. Subclasses set defaults.
+    CORS_ORIGINS = [o.strip() for o in os.getenv('CORS_ORIGINS', '').split(',') if o.strip()]
     
     # Redis
     REDIS_URL = os.getenv('REDIS_URL', 'redis://localhost:6379/0')
@@ -61,17 +64,27 @@ class DevelopmentConfig(Config):
     """Development configuration"""
     DEBUG = True
     TESTING = False
+    # In dev, allow any origin so localhost:3000, 127.0.0.1, etc. all work.
+    CORS_ORIGINS = Config.CORS_ORIGINS or ['*']
 
 class ProductionConfig(Config):
     """Production configuration"""
     DEBUG = False
     TESTING = False
-    # In production, ensure all secrets are set via environment variables
-    
+    # In prod, CORS_ORIGINS must be set explicitly via env. Refuse to boot otherwise.
+    @classmethod
+    def init_app(cls, app):
+        if not app.config.get('CORS_ORIGINS'):
+            raise RuntimeError(
+                'CORS_ORIGINS env var must be set in production '
+                '(e.g. "https://whatsindemand.com,https://www.whatsindemand.com")'
+            )
+
 class TestingConfig(Config):
     """Testing configuration"""
     TESTING = True
     SQLALCHEMY_DATABASE_URI = 'postgresql+psycopg://postgres:password@localhost:5432/whatsindemand_test'
+    CORS_ORIGINS = ['*']
 
 # Configuration dictionary
 config = {

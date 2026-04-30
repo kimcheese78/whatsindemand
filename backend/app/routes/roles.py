@@ -33,6 +33,24 @@ def calculate_growth_pct(current_count: float, previous_count: float) -> Optiona
     return round(((current_count - previous_count) / previous_count) * 100, 1)
 
 
+# Cohort-lock keeps every period drawn from the same set of companies, so
+# scrape expansion doesn't create phantom growth.
+COHORT_BUFFER_DAYS = 14         # absorbs scraper ramp-up irregularities
+STALE_LISTING_DAYS = 90         # treat as closed if not re-scraped within this
+MIN_COHORT_COMPANIES = 5        # below this, return None / [] (insufficient data)
+
+
+def _get_cohort_company_ids(role_id: int, cohort_cutoff: date) -> List[int]:
+    """Companies tracked for this role since at least `cohort_cutoff`."""
+    rows = db.session.query(Job.company_id).filter(
+        Job.role_id == role_id,
+        Job.company_id.isnot(None),
+    ).group_by(Job.company_id).having(
+        func.min(Job.scraped_at) <= cohort_cutoff
+    ).all()
+    return [cid for (cid,) in rows]
+
+
 def is_all(value):
     """Check if a value represents 'all' (case-insensitive)."""
     if value is None:
@@ -51,50 +69,82 @@ def is_all(value):
 # ============================================
 
 def get_trend_data(
-    role_id: int, 
-    months: int = 6, 
+    role_id: int,
+    months: int = 4,
     seniority: str = None,
     locations: List[str] = None,
     company_ids: List[int] = None
 ) -> List[Dict]:
     """
-    Get job availability trend data with all filters applied.
+    Cohort-locked monthly trend. Each bar counts distinct postings whose
+    [posted_at_or_scraped_at, closed_at_or_now] window intersects the month,
+    restricted to companies tracked for the entire window so scrape expansion
+    can't create phantom growth.
     """
     today = datetime.utcnow().date()
-    trend_data = []
-    
     job_date = func.coalesce(Job.posted_at, Job.scraped_at)
-    
+
+    # Window starts at first day of (today − months + 1) month
+    first_month = today.month - (months - 1)
+    first_year = today.year
+    while first_month <= 0:
+        first_month += 12
+        first_year -= 1
+    window_start = date(first_year, first_month, 1)
+    cohort_cutoff = window_start - timedelta(days=COHORT_BUFFER_DAYS)
+
+    cohort_company_ids = _get_cohort_company_ids(role_id, cohort_cutoff)
+    if len(cohort_company_ids) < MIN_COHORT_COMPANIES:
+        return []
+
+    # If user filtered by company, intersect with the cohort
+    effective_company_ids = cohort_company_ids
+    if company_ids:
+        effective_company_ids = list(set(company_ids) & set(cohort_company_ids))
+        if not effective_company_ids:
+            # Selected companies are all outside the cohort → all bars are 0
+            effective_company_ids = []
+
+    trend_data = []
+
     for months_ago in range(months - 1, -1, -1):
         month = today.month - months_ago
         year = today.year
-        
         while month <= 0:
             month += 12
             year -= 1
-        
+
         period_start = date(year, month, 1)
-        
         if month == 12:
-            period_end = date(year + 1, 1, 1)
+            month_end_exclusive = date(year + 1, 1, 1)
         else:
-            period_end = date(year, month + 1, 1)
-        
-        # Base query
+            month_end_exclusive = date(year, month + 1, 1)
+
+        is_partial = (months_ago == 0)
+        period_end = today + timedelta(days=1) if is_partial else month_end_exclusive
+
+        if not effective_company_ids:
+            trend_data.append({
+                'date': period_start.isoformat(),
+                'count': 0,
+                **({'is_partial': True} if is_partial else {}),
+            })
+            continue
+
+        stale_floor = period_end - timedelta(days=STALE_LISTING_DAYS)
+
         query = Job.query.filter(
             Job.role_id == role_id,
+            Job.company_id.in_(effective_company_ids),
             job_date < period_end,
+            db.or_(Job.closed_at.is_(None), Job.closed_at >= period_start),
             db.or_(
-                Job.closed_at.is_(None),
-                Job.closed_at >= period_start
-            )
+                Job.closed_at.isnot(None),
+                Job.scraped_at >= stale_floor,
+            ),
         )
-        
-        # Apply company filter
-        if company_ids:
-            query = query.filter(Job.company_id.in_(company_ids))
-        
-        # Apply seniority filter
+
+        # Seniority filter
         if seniority and seniority.lower() != 'all':
             seniority_map = {
                 'entry': ['entry', 'junior', 'associate', 'i', 'I', '1', 'intern'],
@@ -104,69 +154,88 @@ def get_trend_data(
             }
             seniority_values = seniority_map.get(seniority, [seniority])
             seniority_conditions = [
-                func.lower(Job.seniority_level) == val.lower() 
+                func.lower(Job.seniority_level) == val.lower()
                 for val in seniority_values
             ]
             query = query.filter(db.or_(*seniority_conditions))
-        
-        # Apply location filter
+
+        # Location filter
         if locations and not any(loc.lower() == 'all' for loc in locations):
             location_conditions = []
             for loc in locations:
                 location_conditions.append(func.lower(Job.location_country) == loc.lower())
                 location_conditions.append(Job.location_raw.ilike(f'%{loc}%'))
-                
-                # Handle US states
                 if loc == 'United States':
                     for abbrev in US_STATE_ABBREVS:
                         location_conditions.append(func.upper(Job.location_country) == abbrev)
                     location_conditions.append(Job.location_state.in_(list(US_STATE_ABBREVS)))
-                
-                # Handle Canada
                 elif loc == 'Canada':
                     for abbrev in CANADIAN_PROVINCE_ABBREVS:
                         location_conditions.append(func.upper(Job.location_country) == abbrev)
                     location_conditions.append(Job.location_state.in_(list(CANADIAN_PROVINCE_ABBREVS)))
-                    
             query = query.filter(db.or_(*location_conditions))
-        
+
         count = query.count()
-        
-        trend_data.append({
-            'date': period_start.isoformat(),
-            'count': count
-        })
-    
+
+        entry = {'date': period_start.isoformat(), 'count': count}
+        if is_partial:
+            entry['is_partial'] = True
+        trend_data.append(entry)
+
     return trend_data
 
 
 def get_market_trend(
-    role_id: int, 
-    window_days: int = 30, 
+    role_id: int,
+    window_days: int = 30,
+    comparison_offset_days: int = 90,
     seniority: str = None,
     locations: List[str] = None,
     company_ids: List[int] = None
 ) -> Dict:
     """
-    Calculate market trend (growth %) with all filters applied.
+    Cohort-locked headline growth: current `window_days` window ending today
+    vs a `window_days` window ending `comparison_offset_days` ago, drawn from
+    the same set of companies so the % reflects real demand change rather
+    than scrape expansion.
     """
     today = datetime.utcnow().date()
     current_end = today
     current_start = today - timedelta(days=window_days)
-    previous_end = current_start
+    previous_end = today - timedelta(days=comparison_offset_days)
     previous_start = previous_end - timedelta(days=window_days)
-    
+
+    cohort_cutoff = previous_start - timedelta(days=COHORT_BUFFER_DAYS)
+    cohort_company_ids = _get_cohort_company_ids(role_id, cohort_cutoff)
+
+    if len(cohort_company_ids) < MIN_COHORT_COMPANIES:
+        return {
+            'postings_growth_pct': None,
+            'current_period_count': None,
+            'previous_period_count': None,
+            'window_days': window_days,
+            'comparison_offset_days': comparison_offset_days,
+        }
+
+    effective_company_ids = cohort_company_ids
+    if company_ids:
+        effective_company_ids = list(set(company_ids) & set(cohort_company_ids))
+        if not effective_company_ids:
+            return {
+                'postings_growth_pct': None,
+                'current_period_count': 0,
+                'previous_period_count': 0,
+                'window_days': window_days,
+            }
+
     job_date = func.coalesce(Job.posted_at, Job.scraped_at)
-    
+
     def build_base_query():
-        """Build query with all filters except date range."""
-        query = Job.query.filter(Job.role_id == role_id)
-        
-        # Apply company filter
-        if company_ids:
-            query = query.filter(Job.company_id.in_(company_ids))
-        
-        # Apply seniority filter
+        query = Job.query.filter(
+            Job.role_id == role_id,
+            Job.company_id.in_(effective_company_ids),
+        )
+
         if seniority and seniority.lower() != 'all':
             seniority_map = {
                 'entry': ['entry', 'junior', 'associate', 'i', 'I', '1', 'intern'],
@@ -176,18 +245,16 @@ def get_market_trend(
             }
             seniority_values = seniority_map.get(seniority, [seniority])
             seniority_conditions = [
-                func.lower(Job.seniority_level) == val.lower() 
+                func.lower(Job.seniority_level) == val.lower()
                 for val in seniority_values
             ]
             query = query.filter(db.or_(*seniority_conditions))
-        
-        # Apply location filter
+
         if locations and not any(loc.lower() == 'all' for loc in locations):
             location_conditions = []
             for loc in locations:
                 location_conditions.append(func.lower(Job.location_country) == loc.lower())
                 location_conditions.append(Job.location_raw.ilike(f'%{loc}%'))
-                
                 if loc == 'United States':
                     for abbrev in US_STATE_ABBREVS:
                         location_conditions.append(func.upper(Job.location_country) == abbrev)
@@ -196,53 +263,28 @@ def get_market_trend(
                     for abbrev in CANADIAN_PROVINCE_ABBREVS:
                         location_conditions.append(func.upper(Job.location_country) == abbrev)
                     location_conditions.append(Job.location_state.in_(list(CANADIAN_PROVINCE_ABBREVS)))
-                    
             query = query.filter(db.or_(*location_conditions))
-        
+
         return query
-    
+
     def count_available_jobs(period_start: date, period_end: date) -> int:
+        stale_floor = period_end - timedelta(days=STALE_LISTING_DAYS)
         query = build_base_query().filter(
             job_date < period_end,
-            db.or_(
-                Job.closed_at.is_(None),
-                Job.closed_at >= period_start
-            )
+            db.or_(Job.closed_at.is_(None), Job.closed_at >= period_start),
+            db.or_(Job.closed_at.isnot(None), Job.scraped_at >= stale_floor),
         )
         return query.count()
-    
+
     current_count = count_available_jobs(current_start, current_end)
     previous_count = count_available_jobs(previous_start, previous_end)
-    
-    # Count new companies (also needs filters)
-    current_companies_query = build_base_query().filter(
-        job_date >= current_start,
-        job_date < current_end
-    )
-    current_companies = set(
-        c[0] for c in current_companies_query.with_entities(
-            func.distinct(Job.company_id)
-        ).all()
-    )
-    
-    previous_companies_query = build_base_query().filter(
-        job_date >= previous_start,
-        job_date < previous_end
-    )
-    previous_companies = set(
-        c[0] for c in previous_companies_query.with_entities(
-            func.distinct(Job.company_id)
-        ).all()
-    )
-    
-    new_companies_count = len(current_companies - previous_companies)
-    
+
     return {
         'postings_growth_pct': calculate_growth_pct(current_count, previous_count),
         'current_period_count': current_count,
         'previous_period_count': previous_count,
         'window_days': window_days,
-        'new_companies_count': new_companies_count
+        'comparison_offset_days': comparison_offset_days,
     }
 
 
@@ -637,17 +679,19 @@ def get_role_insights():
     # ============================================
     
 
+    # TODO: bump back to months=6 once scrape history reaches ~6.5 months (~2026-06-14).
     trend_data = get_trend_data(
-        role.id, 
-        months=6,
+        role.id,
+        months=4,
         seniority=filters_applied.get('seniority'),
         locations=filters_applied.get('location'),
         company_ids=filters_applied.get('company_ids')
     )
     
     market_trend = get_market_trend(
-        role.id, 
+        role.id,
         window_days=30,
+        comparison_offset_days=90,
         seniority=filters_applied.get('seniority'),
         locations=filters_applied.get('location'),
         company_ids=filters_applied.get('company_ids')
@@ -749,12 +793,9 @@ def get_role_insights():
     # ============================================
     # GET ALTERNATIVE ROLES
     # ============================================
+    
 
-    # Only calculate alternatives if we have fewer than 1000 jobs (to prevent timeout)
-    if total_jobs < 1000:
-        alternative_roles = _get_alternative_roles(role.id, job_ids[:200], skills[:10])
-    else:
-        alternative_roles = []  # Skip for large datasets
+    alternative_roles = _get_alternative_roles(role.id, job_ids)
 
     # ============================================
     # GET SALARY INFO (ALL CONVERTED TO USD)
@@ -875,7 +916,7 @@ def get_role_alternatives():
         for skill_id, skill_name, category, job_count in skill_counts
     ]
     
-    alternatives = _get_alternative_roles(role.id, job_ids, skills)
+    alternatives = _get_alternative_roles(role.id, job_ids)
     
     return jsonify({
         'success': True,
@@ -939,158 +980,181 @@ def _suggest_similar_roles(query: str) -> List[Dict]:
 
 
 def _get_alternative_roles(
-    current_role_id: int, 
-    job_ids: List[int], 
-    current_skills: List[Dict]
+    current_role_id: int,
+    job_ids: List[int],
 ) -> List[Dict]:
     """
-    Find roles with similar skill requirements.
-    Returns top 5 roles ranked by skill overlap (Jaccard similarity).
-    Includes USD salary data for each alternative role.
+    Find adjacent roles a user could plausibly transition into.
+
+    Ranks by transferable-skill coverage (|shared| / |my skills|) — i.e. what
+    fraction of the user's current skillset is reusable in the candidate role —
+    blended with posting growth so dying roles don't surface as "promising".
+
+    De-duplicates by Role.category (max 2 per category) so a role family
+    (e.g. SWE → Senior SWE → SWE II) doesn't dominate the list.
+
+    All skill demand is computed against the *full* candidate role, not a 100-row
+    sample. All salary numbers are USD.
     """
-    if not current_skills or not job_ids:
+    from collections import defaultdict
+
+    MIN_CANDIDATE_JOBS = 30          # demand floor — "in-demand" requires real volume
+    MIN_SHARED_SKILLS = 3
+    MAX_PER_CATEGORY = 2
+    TARGET_COUNT = 5
+
+    if not job_ids:
         return []
-    
+
     total_current_jobs = len(job_ids)
-    
-    # Get ALL skills for current role WITH their frequency
-    current_skills_with_counts = db.session.query(
+
+    # Current role: skill_id -> distinct-job count
+    current_counts = db.session.query(
         JobSkill.skill_id,
-        func.count(JobSkill.id).label('job_count')
+        func.count(func.distinct(JobSkill.job_id)).label('cnt')
     ).filter(
         JobSkill.job_id.in_(job_ids)
     ).group_by(JobSkill.skill_id).all()
-    
-    all_current_skill_ids = set(skill_id for skill_id, _ in current_skills_with_counts)
-    current_skill_demand = {skill_id: count for skill_id, count in current_skills_with_counts}
-    
-    # Get skill names for current role
-    current_skill_names_query = db.session.query(Skill.id, Skill.name).filter(
-        Skill.id.in_(all_current_skill_ids)
-    ).all()
-    current_skill_name_map = {s.id: s.name for s in current_skill_names_query}
-    
-    # Get all other roles with active jobs
+
+    current_skill_demand = {sid: cnt for sid, cnt in current_counts}
+    my_skill_ids = set(current_skill_demand.keys())
+    if len(my_skill_ids) < MIN_SHARED_SKILLS:
+        return []
+
+    # Candidate roles: must clear the demand floor
     other_roles = db.session.query(
         Role.id,
         Role.normalized_title,
         Role.category,
-        func.count(Job.id).label('job_count')
-    ).join(Job).filter(
+        func.count(Job.id).label('jc')
+    ).join(Job, Job.role_id == Role.id).filter(
         Role.id != current_role_id,
         Job.is_active == True
-    ).group_by(Role.id).having(
-        func.count(Job.id) >= 3
+    ).group_by(Role.id, Role.normalized_title, Role.category).having(
+        func.count(Job.id) >= MIN_CANDIDATE_JOBS
     ).all()
-    
-    role_overlaps = []
-    
-    # Collect role IDs for bulk calculations
+
+    if not other_roles:
+        return []
+
     candidate_role_ids = [r[0] for r in other_roles]
-    
-    # Bulk calculate growth for all candidate roles
+    role_meta = {
+        rid: {'title': title, 'category': category, 'job_count': jc}
+        for rid, title, category, jc in other_roles
+    }
+
+    # Bulk: per-(role, skill) distinct-job counts in a single query.
+    # Replaces the prior N+1 loop and the 100-row sample bias.
+    role_skill_rows = db.session.query(
+        Job.role_id,
+        JobSkill.skill_id,
+        func.count(func.distinct(Job.id)).label('cnt')
+    ).join(JobSkill, JobSkill.job_id == Job.id).filter(
+        Job.role_id.in_(candidate_role_ids),
+        Job.is_active == True
+    ).group_by(Job.role_id, JobSkill.skill_id).all()
+
+    role_skill_demand: Dict[int, Dict[int, int]] = defaultdict(dict)
+    for rid, sid, cnt in role_skill_rows:
+        role_skill_demand[rid][sid] = cnt
+
     role_growth_map = _get_all_role_growth_bulk(candidate_role_ids, window_days=30)
-    
-    # Bulk calculate USD salary data for all candidate roles
     role_salary_map = _get_all_role_salaries_bulk(candidate_role_ids)
-    
-    for role_id, role_title, role_category, job_count in other_roles:
-        role_job_ids = [
-            j.id for j in Job.query.filter(
-                Job.role_id == role_id,
-                Job.is_active == True
-            ).limit(100).all()
-        ]
-        
-        if not role_job_ids:
+
+    candidates = []
+    for rid in candidate_role_ids:
+        skills_map = role_skill_demand.get(rid, {})
+        their_skill_ids = set(skills_map.keys())
+
+        shared_ids = my_skill_ids & their_skill_ids
+        if len(shared_ids) < MIN_SHARED_SKILLS:
             continue
-        
-        total_role_jobs = len(role_job_ids)
-        
-        # Get skills for this role WITH their frequency
-        role_skills_with_counts = db.session.query(
-            JobSkill.skill_id,
-            func.count(JobSkill.id).label('job_count')
-        ).filter(
-            JobSkill.job_id.in_(role_job_ids)
-        ).group_by(JobSkill.skill_id).all()
-        
-        role_skill_ids = set(skill_id for skill_id, _ in role_skills_with_counts)
-        role_skill_demand = {skill_id: count for skill_id, count in role_skills_with_counts}
-        
-        # Calculate Jaccard similarity: intersection / union
-        shared_skill_ids = all_current_skill_ids.intersection(role_skill_ids)
-        union_skill_ids = all_current_skill_ids.union(role_skill_ids)
-        
-        # Skills in alternative role that current role doesn't have
-        new_skill_ids = role_skill_ids - all_current_skill_ids
-        
-        # Require minimum overlap
-        if len(shared_skill_ids) < 3:
-            continue
-        
-        # Jaccard similarity as percentage
-        overlap_percentage = round(len(shared_skill_ids) / len(union_skill_ids) * 100)
-        
-        # Calculate combined relevance score for shared skills
-        shared_skills_scored = []
-        for sid in shared_skill_ids:
-            current_demand_pct = (current_skill_demand.get(sid, 0) / total_current_jobs) * 100
-            alt_demand_pct = (role_skill_demand.get(sid, 0) / total_role_jobs) * 100
-            combined_score = current_demand_pct + alt_demand_pct
-            shared_skills_scored.append((sid, combined_score))
-        
-        # Sort by combined score (highest first)
-        shared_skills_scored.sort(key=lambda x: x[1], reverse=True)
-        
-        # Get top shared skill names
-        top_shared_ids = [sid for sid, _ in shared_skills_scored[:6]]
-        shared_skill_names = [
-            current_skill_name_map[sid] 
-            for sid in top_shared_ids 
-            if sid in current_skill_name_map
-        ]
-        
-        # Get new skill names - sorted by demand in the alternative role
-        new_skill_names = []
-        if new_skill_ids:
-            sorted_new_skill_ids = sorted(
-                new_skill_ids, 
-                key=lambda sid: role_skill_demand.get(sid, 0), 
-                reverse=True
-            )
-            
-            top_new_skill_ids = sorted_new_skill_ids[:10]
-            new_skills = db.session.query(Skill.id, Skill.name).filter(
-                Skill.id.in_(top_new_skill_ids)
-            ).all()
-            
-            new_skill_name_map = {s.id: s.name for s in new_skills}
-            new_skill_names = [
-                new_skill_name_map[sid] 
-                for sid in top_new_skill_ids 
-                if sid in new_skill_name_map
-            ][:4]
-        
-        # Get USD salary data for this role
-        salary_data = role_salary_map.get(role_id, {})
-        
-        role_overlaps.append({
-            'title': role_title,
-            'category': role_category,
-            'job_count': job_count,
-            'skill_overlap': overlap_percentage,
-            'shared_skills': shared_skill_names,
-            'new_skills': new_skill_names,
-            'shared_count': len(shared_skill_ids),
-            'new_count': len(new_skill_ids),
-            'posting_growth_pct': role_growth_map.get(role_id),
-            'salary_min': salary_data.get('avg_min'),
-            'salary_max': salary_data.get('avg_max'),
-            'jobs_with_salary': salary_data.get('jobs_with_salary', 0)
+
+        union_ids = my_skill_ids | their_skill_ids
+        new_ids = their_skill_ids - my_skill_ids
+
+        coverage = len(shared_ids) / len(my_skill_ids)        # transferability — primary
+        jaccard = len(shared_ids) / len(union_ids) if union_ids else 0
+
+        # Growth signal — clamp so a single hot role doesn't outrank a strong-coverage match.
+        growth = role_growth_map.get(rid)
+        growth_signal = 0.0
+        if growth is not None:
+            growth_signal = max(-30.0, min(30.0, growth)) / 100.0  # -0.3..0.3
+        score = coverage + 0.15 * growth_signal
+
+        # Rank shared skills by combined demand share in both roles
+        total_role_jobs = role_meta[rid]['job_count']
+        shared_scored = []
+        for sid in shared_ids:
+            mine_pct = current_skill_demand.get(sid, 0) / total_current_jobs
+            theirs_pct = skills_map.get(sid, 0) / total_role_jobs
+            shared_scored.append((sid, mine_pct + theirs_pct))
+        shared_scored.sort(key=lambda x: x[1], reverse=True)
+        top_shared_ids = [sid for sid, _ in shared_scored[:8]]
+
+        # Rank new skills by demand inside the alt role
+        top_new_ids = sorted(
+            new_ids,
+            key=lambda s: skills_map.get(s, 0),
+            reverse=True,
+        )[:10]
+
+        candidates.append({
+            'role_id': rid,
+            'shared_ids': top_shared_ids,
+            'new_ids': top_new_ids,
+            'shared_count': len(shared_ids),
+            'new_count': len(new_ids),
+            'coverage_pct': round(coverage * 100),
+            'jaccard_pct': round(jaccard * 100),
+            'score': score,
+            'growth': growth,
         })
-    
-    # Sort by overlap percentage (descending) and return top 5
-    role_overlaps.sort(key=lambda x: x['skill_overlap'], reverse=True)
-    
-    return role_overlaps[:5]
+
+    if not candidates:
+        return []
+
+    # Hydrate skill names in one query
+    referenced_ids = set()
+    for c in candidates:
+        referenced_ids.update(c['shared_ids'])
+        referenced_ids.update(c['new_ids'])
+    skill_name_map = {
+        s.id: s.name
+        for s in Skill.query.filter(Skill.id.in_(referenced_ids)).all()
+    }
+
+    candidates.sort(key=lambda c: c['score'], reverse=True)
+
+    # Same-category dedupe so role families don't sweep the list
+    out = []
+    cat_counts: Dict[str, int] = defaultdict(int)
+    for c in candidates:
+        meta = role_meta[c['role_id']]
+        cat_key = meta['category'] or '__uncategorized__'
+        if cat_counts[cat_key] >= MAX_PER_CATEGORY:
+            continue
+        cat_counts[cat_key] += 1
+
+        salary = role_salary_map.get(c['role_id'], {})
+        out.append({
+            'title': meta['title'],
+            'category': meta['category'],
+            'job_count': meta['job_count'],
+            'skill_overlap': c['coverage_pct'],   # what % of your skills transfer
+            'jaccard_pct': c['jaccard_pct'],      # symmetric similarity, for transparency
+            'shared_skills': [skill_name_map[s] for s in c['shared_ids'] if s in skill_name_map],
+            'new_skills': [skill_name_map[s] for s in c['new_ids'] if s in skill_name_map][:6],
+            'shared_count': c['shared_count'],
+            'new_count': c['new_count'],
+            'posting_growth_pct': c['growth'],
+            'salary_min': salary.get('avg_min'),
+            'salary_max': salary.get('avg_max'),
+            'salary_currency': 'USD',
+            'jobs_with_salary': salary.get('jobs_with_salary', 0),
+        })
+        if len(out) >= TARGET_COUNT:
+            break
+
+    return out

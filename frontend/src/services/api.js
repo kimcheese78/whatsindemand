@@ -129,6 +129,98 @@ class API {
   }
 
   // ============================================
+  // ACCOUNT SAFETY
+  // ============================================
+
+  async forgotPassword(email) {
+    return this.request('/api/auth/forgot-password', {
+      method: 'POST',
+      body: JSON.stringify({ email }),
+      auth: false,
+    });
+  }
+
+  async resetPassword(token, newPassword) {
+    const data = await this.request('/api/auth/reset-password', {
+      method: 'POST',
+      body: JSON.stringify({ token, new_password: newPassword }),
+      auth: false,
+    });
+    if (data.token) this.setToken(data.token);
+    return data;
+  }
+
+  async changePassword(currentPassword, newPassword) {
+    return this.request('/api/auth/change-password', {
+      method: 'POST',
+      body: JSON.stringify({
+        current_password: currentPassword,
+        new_password: newPassword,
+      }),
+    });
+  }
+
+  async updateProfile({ full_name }) {
+    return this.request('/api/auth/me', {
+      method: 'PATCH',
+      body: JSON.stringify({ full_name }),
+    });
+  }
+
+  async requestEmailChange(newEmail, currentPassword) {
+    return this.request('/api/auth/change-email', {
+      method: 'POST',
+      body: JSON.stringify({
+        new_email: newEmail,
+        current_password: currentPassword,
+      }),
+    });
+  }
+
+  async verifyEmail(token) {
+    const data = await this.request('/api/auth/verify-email', {
+      method: 'POST',
+      body: JSON.stringify({ token }),
+      auth: false,
+    });
+    if (data.token) this.setToken(data.token);
+    return data;
+  }
+
+  async resendVerification() {
+    return this.request('/api/auth/resend-verification', {
+      method: 'POST',
+    });
+  }
+
+  async deleteAccount({ password, confirm }) {
+    const body = {};
+    if (password) body.password = password;
+    if (confirm) body.confirm = confirm;
+    return this.request('/api/auth/delete-account', {
+      method: 'POST',
+      body: JSON.stringify(body),
+    });
+  }
+
+  async exportData() {
+    const url = `${this.baseURL}/api/auth/export-data`;
+    const token = this.token || localStorage.getItem('authToken');
+    const response = await fetch(url, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    if (!response.ok) {
+      let message = 'Export failed';
+      try { const j = await response.json(); message = j.error || message; } catch (e) {}
+      throw new Error(message);
+    }
+    const blob = await response.blob();
+    const filename = (response.headers.get('content-disposition') || '')
+      .match(/filename="?([^"]+)"?/)?.[1] || 'whatsindemand-export.json';
+    return { blob, filename };
+  }
+
+  // ============================================
   // SESSION PERSISTENCE
   // ============================================
 
@@ -217,6 +309,24 @@ class API {
     return this.request('/api/skills', {
       auth: false,
     });
+  }
+
+  async extractSkillsFromText(text) {
+    return this.request('/api/skills/extract', {
+      method: 'POST',
+      body: JSON.stringify({ text }),
+      auth: false,
+    });
+  }
+
+  async extractSkillsFromFile(file) {
+    const formData = new FormData();
+    formData.append('file', file);
+    const url = `${this.baseURL}/api/skills/extract`;
+    const response = await fetch(url, { method: 'POST', body: formData });
+    const data = await response.json();
+    if (!response.ok) throw new Error(data.error || 'Extraction failed');
+    return data;
   }
 
   // ============================================

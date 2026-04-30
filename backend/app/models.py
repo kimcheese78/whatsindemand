@@ -21,22 +21,43 @@ class User(db.Model):
     oauth_provider_id = db.Column(db.String(255))
     has_pro_access = db.Column(db.Boolean, default=False)
     stripe_customer_id = db.Column(db.String(255))
+    email_verified = db.Column(db.Boolean, default=False, nullable=False)
+    email_verified_at = db.Column(db.DateTime)
+    pending_email = db.Column(db.String(255))
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
-    
+
     # Relationships
     profile = db.relationship('UserProfile', backref='user', uselist=False, cascade='all, delete-orphan')
     skills = db.relationship('UserSkill', backref='user', cascade='all, delete-orphan')
     payments = db.relationship('Payment', backref='user', cascade='all, delete-orphan')
-    
+    auth_tokens = db.relationship('AuthToken', backref='user', cascade='all, delete-orphan')
+
     def to_dict(self):
         return {
             'id': self.id,
             'email': self.email,
             'full_name': self.full_name,
+            'auth_provider': self.auth_provider,
             'has_pro_access': self.has_pro_access,
+            'email_verified': bool(self.email_verified),
+            'pending_email': self.pending_email,
             'created_at': self.created_at.isoformat() if self.created_at else None
         }
+
+
+class AuthToken(db.Model):
+    """Single-use, short-lived tokens for password reset, email verification, email change."""
+    __tablename__ = 'auth_tokens'
+
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id', ondelete='CASCADE'), nullable=False, index=True)
+    token_hash = db.Column(db.String(128), unique=True, nullable=False, index=True)
+    purpose = db.Column(db.String(32), nullable=False)  # 'password_reset' | 'email_verify' | 'email_change'
+    payload = db.Column(db.JSON, nullable=True)
+    expires_at = db.Column(db.DateTime, nullable=False, index=True)
+    consumed_at = db.Column(db.DateTime)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
 
 class UserProfile(db.Model):
@@ -248,6 +269,7 @@ class Job(db.Model):
     salary_max_usd = db.Column(db.Integer)
     posted_at = db.Column(db.DateTime)
     scraped_at = db.Column(db.DateTime, default=datetime.utcnow)
+    last_seen_at = db.Column(db.DateTime, default=datetime.utcnow)
     is_active = db.Column(db.Boolean, default=True)
     closed_at = db.Column(db.DateTime, nullable=True)
 

@@ -4,6 +4,7 @@ from app.models import db, Company, Job, JobSkill, Skill, Role, RoleTitleVariati
 from app.scrapers.greenhouse.scraper import GreenhouseScraper
 from app.scrapers.lever.scraper import LeverScraper
 from app.scrapers.ashby.scraper import AshbyScraper
+from app.scrapers.workable.scraper import WorkableScraper
 from app.services.skill_extractor import SkillExtractor
 from app.utils.role_normalizer import normalize_title
 from datetime import datetime
@@ -17,6 +18,7 @@ class JobAggregator:
             'greenhouse': GreenhouseScraper(),
             'lever': LeverScraper(),
             'ashby': AshbyScraper(),
+            'workable': WorkableScraper(),
         }
         self.skill_extractor = SkillExtractor()
     
@@ -107,6 +109,56 @@ class JobAggregator:
         
         return closed_count
     
+    def scrape_from_db(self, ats_type: str = None):
+        """
+        Scrape every Company row in the DB that has scrape_enabled=True and a slug.
+        This is the full-coverage variant (vs. the static registry).
+        """
+        from app.models import Company
+
+        q = Company.query.filter(
+            Company.scrape_enabled.is_(True),
+            Company.ats_type.isnot(None),
+            Company.greenhouse_slug.isnot(None),
+        )
+        if ats_type:
+            q = q.filter(Company.ats_type == ats_type)
+        companies = q.order_by(Company.name.asc()).all()
+
+        results = {
+            'total_companies': len(companies),
+            'successful': 0,
+            'failed': 0,
+            'total_jobs': 0,
+            'errors': [],
+        }
+
+        print(f"\n{'=' * 60}")
+        print(f"Scraping {len(companies)} companies (from DB)")
+        print(f"{'=' * 60}\n")
+
+        for i, company in enumerate(companies):
+            print(f"\n[{i+1}/{len(companies)}] {company.name} ({company.ats_type})")
+            try:
+                count = self.scrape_company_jobs(
+                    company_name=company.name,
+                    company_slug=company.greenhouse_slug,
+                    ats_type=company.ats_type,
+                    industry=company.industry,
+                )
+                if count > 0:
+                    results['successful'] += 1
+                    results['total_jobs'] += count
+                    print(f"  ✅ Saved {count} jobs")
+                else:
+                    results['failed'] += 1
+            except Exception as e:
+                results['failed'] += 1
+                results['errors'].append({'company': company.name, 'error': str(e)})
+                print(f"  ❌ Error: {e}")
+
+        return results
+
     def scrape_from_registry(self, ats_type: str = None, industry: str = None):
         """
         Scrape all companies from the central registry.
@@ -246,6 +298,7 @@ class JobAggregator:
                 existing.is_active = True
                 existing.closed_at = None  # Re-opened if it was closed
                 existing.role_id = role_id
+                existing.last_seen_at = datetime.utcnow()
                 job = existing
             else:
                 # Create new job - set posted_at and scraped_at only here

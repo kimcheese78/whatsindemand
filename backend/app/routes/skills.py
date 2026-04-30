@@ -1,10 +1,87 @@
 # backend/app/routes/skills.py
 
+import os
+import tempfile
 from flask import Blueprint, request, jsonify
 from app.models import db, Skill, JobSkill, Job, Role
+from app.services.skill_extractor import SkillExtractor
+from app.services.resume_parser import ResumeParser
 from sqlalchemy import func
 
 skills_bp = Blueprint('skills', __name__, url_prefix='/api/skills')
+
+
+# Public, stateless skill extraction — used by the onboarding flow before signup.
+# Auth-gated persistence still lives in /api/resume.
+@skills_bp.route('/extract', methods=['POST'])
+def extract_skills_from_input():
+    """
+    Extract skills from pasted text or an uploaded resume file.
+
+    Accepts either:
+      - multipart/form-data with `file` (PDF/DOCX), or
+      - JSON `{"text": "..."}`
+
+    Returns: { "skills": [{skill_id, name, category, confidence}, ...] }
+    """
+    text = None
+
+    if 'file' in request.files:
+        file = request.files['file']
+        if not file.filename:
+            return jsonify({'error': 'No file selected'}), 400
+        ext = file.filename.rsplit('.', 1)[-1].lower() if '.' in file.filename else ''
+        if ext not in {'pdf', 'docx', 'doc', 'txt'}:
+            return jsonify({'error': 'Unsupported file type. Use PDF, DOCX, or TXT.'}), 400
+
+        # Hard cap: 5MB
+        file.seek(0, os.SEEK_END)
+        size = file.tell()
+        file.seek(0)
+        if size > 5 * 1024 * 1024:
+            return jsonify({'error': 'File too large (max 5MB).'}), 400
+
+        try:
+            if ext == 'txt':
+                text = file.read().decode('utf-8', errors='ignore')
+            else:
+                with tempfile.NamedTemporaryFile(delete=False, suffix=f'.{ext}') as tmp:
+                    file.save(tmp.name)
+                    tmp_path = tmp.name
+                try:
+                    text = ResumeParser().extract_text(tmp_path)
+                finally:
+                    if os.path.exists(tmp_path):
+                        os.remove(tmp_path)
+        except Exception as e:
+            return jsonify({'error': f'Could not read file: {e}'}), 400
+    else:
+        body = request.get_json(silent=True) or {}
+        text = (body.get('text') or '').strip()
+
+    if not text or len(text) < 30:
+        return jsonify({'error': 'Not enough text to extract skills from.'}), 400
+
+    extractor = SkillExtractor()
+    extracted = extractor.extract_skills(text)
+
+    # Hydrate with skill metadata
+    skill_ids = [s['skill_id'] for s in extracted]
+    skill_rows = {s.id: s for s in Skill.query.filter(Skill.id.in_(skill_ids)).all()} if skill_ids else {}
+
+    skills_out = []
+    for s in extracted:
+        row = skill_rows.get(s['skill_id'])
+        if not row:
+            continue
+        skills_out.append({
+            'skill_id': row.id,
+            'name': row.name,
+            'category': row.category,
+            'confidence': s['confidence'],
+        })
+
+    return jsonify({'skills': skills_out, 'total': len(skills_out)}), 200
 
 
 @skills_bp.route('/<int:skill_id>', methods=['GET'])

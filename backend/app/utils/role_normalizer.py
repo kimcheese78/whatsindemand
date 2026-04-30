@@ -58,44 +58,55 @@ LOCATION_STRIP_PATTERNS = [
 # Temporal/contract patterns to strip
 TEMPORAL_STRIP_PATTERNS = [
     # Year cohorts: "(Summer 2026)", "(2026)", "(2026 Start)"
-    r'\s*$(?:Summer|Fall|Winter|Spring)?\s*202[4-9](?:\s*Start)?$',
-    r'\s*$202[4-9]$',
-    
+    r'\s*\((?:Summer|Fall|Winter|Spring)?\s*202[4-9](?:\s*Start)?\)$',
+    r'\s*\(202[4-9]\)$',
+
     # Fixed term contracts
-    r'\s*$12[- ]?Month[- ]?(?:Fixed[- ]?Term|Contract|Ftc)?$',
-    r'\s*$(?:Fixed[- ]?Term|Ftc|Contract)$',
-    r'\s*$Contractor$',
-    r'\s*$Contract\s*(?:Basis)?$',
-    r'\s*$Contingent(?:,?\s*Part[- ]?Time)?$',
-    
+    r'\s*\(12[- ]?Month[- ]?(?:Fixed[- ]?Term|Contract|Ftc)?\)$',
+    r'\s*\((?:Fixed[- ]?Term|Ftc|Contract)\)$',
+    r'\s*\(Contractor\)$',
+    r'\s*\(Contract\s*(?:Basis)?\)$',
+    r'\s*\(Contingent(?:,?\s*Part[- ]?Time)?\)$',
+
     # Part-time markers
-    r'\s*$(?:Full[- ]?Time|Part[- ]?Time)$',
+    r'\s*\((?:Full[- ]?Time|Part[- ]?Time)\)$',
 ]
 
 # Language patterns to strip
 LANGUAGE_STRIP_PATTERNS = [
-    r'\s*$[^)]*(?:Speaking|Speaker|Fluent)[^)]*$',
-    r'\s*$(?:Danish|Dutch|Swedish|French|German|Spanish|Portuguese|Italian|Japanese|Korean|Chinese|Mandarin|Cantonese|Hebrew|Arabic|Hindi|Turkish|Polish|Russian|Vietnamese|Thai|Indonesian|Malay)(?:\s*(?:&|and)\s*(?:English|Spanish|Portuguese))?\s*(?:Speaking|Speaker)?$',
+    # Parenthetical language notes: "(Danish Speaking)", "(Fluent Japanese)"
+    r'\s*\([^)]*(?:Speaking|Speaker|Fluent)[^)]*\)$',
+    r'\s*\((?:Danish|Dutch|Swedish|French|German|Spanish|Portuguese|Italian|Japanese|Korean|Chinese|Mandarin|Cantonese|Hebrew|Arabic|Hindi|Turkish|Polish|Russian|Vietnamese|Thai|Indonesian|Malay)(?:\s*(?:&|and)\s*(?:English|Spanish|Portuguese))?\s*(?:Speaking|Speaker)?\)$',
+    # Dash-separated programming languages at end: "- Rust", "- Java", "- C/C++", "- Golang"
+    r'\s*[-–]\s*(?:Rust|Go(?:lang)?|Java|Python|Ruby|Scala|Kotlin|Swift|Elixir|Erlang|Clojure|Haskell|Perl|PHP|C\+\+|C#|\.NET|TypeScript|JavaScript|Node\.?js)\s*$',
+    r'\s*[-–]\s*C\s*/\s*C\+\+\s*$',
 ]
 
 # Other noise to strip
 OTHER_STRIP_PATTERNS = [
     # Skillbridge/military programs
     r'\s*[-–]\s*Skillbridge.*$',
-    r'\s*$Skillbridge$',
-    
+    r'\s*\(Skillbridge\)$',
+
     # Affirmative action notes
-    r'\s*$[^)]*Affirmative Action[^)]*$',
-    r'\s*$[^)]*Exclusiv[ao][^)]*$',  # Portuguese exclusivity notes
-    
+    r'\s*\([^)]*Affirmative Action[^)]*\)$',
+    r'\s*\([^)]*Exclusiv[ao][^)]*\)$',  # Portuguese exclusivity notes
+
     # Team/product suffixes we don't need
     r'\s*[-–]\s*(?:Team\s+)?(?:Web|Mobile|Platform|Core|Growth|Enterprise)$',
-    
+
     # Roman numerals at end (but keep "II" if it's the only thing)
     r'\s+(?:II|III|IV|V|VI)$',
-    
-    # Generic parenthetical noise
-    r'\s*$[^)]*(?:United Kingdom|United States|Bengaluru|Singapore|Poland|Germany|Sweden)$',
+
+    # Parenthetical country/city noise at end
+    r'\s*\([^)]*(?:United Kingdom|United States|Bengaluru|Singapore|Poland|Germany|Sweden|Canada|UK|US|USA|EMEA|APAC|LATAM|London|Toronto|Dublin|Berlin)\)$',
+]
+
+# Trailing comma-separated location/country suffixes: "Software Engineer, Argentina"
+COMMA_LOCATION_STRIP_PATTERNS = [
+    r',\s*(?:Argentina|Australia|Brazil|Canada|China|Colombia|France|Germany|India|Ireland|Israel|Italy|Japan|Korea|Mexico|Netherlands|Poland|Portugal|Singapore|Spain|Sweden|Taiwan|UK|US|USA|United Kingdom|United States|EMEA|APAC|LATAM|AMER)\s*$',
+    # "- United States", "- Nordics", "- Southern Europe", "- Uk/I"
+    r'\s*[-–]\s*(?:United States|United Kingdom|Nordics|Southern Europe|Central Europe|Western Europe|Eastern Europe|Uk/I|Dach)\s*$',
 ]
 
 # ============================================================================
@@ -213,9 +224,12 @@ def clean_title(raw_title: str) -> str:
     
     for pattern in OTHER_STRIP_PATTERNS:
         title = re.sub(pattern, '', title, flags=re.IGNORECASE)
-    
-    # Clean up any remaining parentheses with just location-like content
-    title = re.sub(r'\s*$[^)]{0,30}$$', '', title)  # Short parenthetical at end
+
+    for pattern in COMMA_LOCATION_STRIP_PATTERNS:
+        title = re.sub(pattern, '', title, flags=re.IGNORECASE)
+
+    # Clean up any remaining short parenthetical at end (locations, short qualifiers)
+    title = re.sub(r'\s*\([^)]{0,30}\)$', '', title)
     
     # Remove trailing punctuation and whitespace
     title = re.sub(r'\s*[-–,]\s*$', '', title)
@@ -1759,9 +1773,9 @@ MANAGER_DOMAIN_PATTERNS = [
     (r'marketing', 'Marketing Manager', 'Marketing', 'Marketing'),
     
     # Account patterns
-    (r'account executives?', 'Account Executives Manager', 'Sales', 'Sales Management'),
+    (r'account executives?', 'Account Executive Manager', 'Sales', 'Sales Management'),
     (r'account management', 'Account Management Manager', 'Sales', 'Account Management'),
-    (r'relationship managers?', 'Relationship Managers Manager', 'Sales', 'Relationship Management'),
+    (r'relationship managers?', 'Relationship Manager', 'Sales', 'Relationship Management'),
     
     # Customer Success
     (r'customer success', 'Customer Success Manager', 'Customer Success', 'Customer Success'),
@@ -1912,9 +1926,15 @@ def handle_manager_comma_pattern(title: str) -> Optional[dict]:
     match = re.match(r'^manager\s*,\s*(.+)$', title, re.IGNORECASE)
     if not match:
         return None
-    
+
     domain = match.group(1).strip()
-    
+
+    # Strip trailing region/pipe/dash noise ("| UK&I", "- AMER", "(MidMarket)")
+    domain = re.sub(r'\s*\|.*$', '', domain)
+    domain = re.sub(r'\s*[-–]\s*(?:AMER|EMEA|APAC|LATAM|ANZ|US|UK|EU|Nordics|Central|East|West|North|South).*$', '', domain, flags=re.IGNORECASE)
+    domain = re.sub(r'\s*\([^)]*\)', '', domain)
+    domain = re.split(r',\s*', domain)[0].strip()
+
     for pattern, normalized, category, job_family in MANAGER_DOMAIN_PATTERNS:
         if re.search(pattern, domain, re.IGNORECASE):
             return {
@@ -1923,18 +1943,76 @@ def handle_manager_comma_pattern(title: str) -> Optional[dict]:
                 'seniority_level': None,
                 'job_family': job_family
             }
-    
-    # If no specific match, create "X Manager"
-    domain_clean = re.sub(r'\s*$[^)]*$', '', domain)
-    domain_clean = re.sub(r'\s+', ' ', domain_clean).strip()
+
+    # Depluralize trailing "s Manager[s]" so "Account Executives" -> "Account Executive"
+    domain_clean = re.sub(r'\s+', ' ', domain).strip()
+    domain_clean = re.sub(r's$', '', domain_clean) if domain_clean.lower().endswith('s') and not domain_clean.lower().endswith('ss') else domain_clean
     domain_clean = domain_clean.title()
-    
+
+    # If domain already ends in Manager (e.g. "Partner Account Manager"), don't double it
+    if re.search(r'\bmanager$', domain_clean, re.IGNORECASE):
+        return {
+            'normalized_title': domain_clean,
+            'category': 'Management',
+            'seniority_level': None,
+            'job_family': 'Management'
+        }
+
     return {
         'normalized_title': f"{domain_clean} Manager",
         'category': 'Management',
         'seniority_level': None,
         'job_family': 'Management'
     }
+
+
+def handle_manager_suffix_pattern(title: str, seniority: Optional[str]) -> Optional[dict]:
+    """
+    Handle titles ending in ' Manager' like 'Full Stack Developer Manager' or
+    'AI Engineer Manager'. These are managers of that role, not the role itself —
+    without this handler, generic job_family patterns would strip the Manager
+    context and e.g. map 'Full Stack Developer Manager' to 'Fullstack Engineer'.
+
+    Skips titles that are already an explicit Manager role like 'Product Manager',
+    'Engineering Manager', 'Account Manager' (those are handled by job_family).
+    """
+    m = re.match(r'^(.+?)\s+managers?$', title.strip(), re.IGNORECASE)
+    if not m:
+        return None
+
+    remainder = m.group(1).strip()
+    remainder = re.sub(r'[\s,.\-]+$', '', remainder)
+
+    # Single-word remainders that are already canonical "X Manager" roles
+    # (Product Manager, Account Manager, Engineering Manager, etc.)
+    # -> let the regular job_family patterns handle those directly.
+    SKIP_REMAINDERS = {
+        'product', 'account', 'engineering', 'sales', 'marketing', 'project',
+        'design', 'operations', 'data', 'program', 'general', 'office',
+        'partner', 'community', 'content', 'finance', 'brand', 'growth',
+    }
+    if remainder.lower() in SKIP_REMAINDERS:
+        return None
+
+    # Try matching remainder against job_family patterns to get the canonical base role
+    for pattern, normalized, category, job_family in JOB_FAMILY_PATTERNS:
+        if re.search(pattern, remainder, re.IGNORECASE):
+            # If the matched role already ends in Manager (shouldn't here, but guard),
+            # return as-is to prevent "X Manager Manager"
+            if re.search(r'\bmanager$', normalized, re.IGNORECASE):
+                return {
+                    'normalized_title': normalized,
+                    'category': category,
+                    'seniority_level': seniority,
+                    'job_family': job_family,
+                }
+            return {
+                'normalized_title': f'{normalized} Manager',
+                'category': category,
+                'seniority_level': seniority,
+                'job_family': job_family,
+            }
+    return None
 
 
 def handle_head_of_pattern(title: str) -> Optional[dict]:
@@ -1977,7 +2055,7 @@ def handle_director_pattern(title: str, seniority: str = None) -> Optional[dict]
     
     # Clean domain - remove location/team suffixes
     domain = re.sub(r'\s*[-–].*$', '', domain)
-    domain = re.sub(r'\s*$.*$$', '', domain)
+    domain = re.sub(r'\s*\(.*\)$', '', domain)
     
     for pattern, normalized, category, job_family in DIRECTOR_DOMAIN_PATTERNS:
         if re.search(pattern, domain, re.IGNORECASE):
@@ -2116,11 +2194,18 @@ def normalize_title(raw_title: str) -> dict:
     if associate_result:
         associate_result['normalized_title'] = fix_acronyms(associate_result['normalized_title'])
         return associate_result
-    
+
+    # "X Manager" suffix (e.g. "Full Stack Developer Manager", "AI Engineer Manager")
+    # Route these to management track before generic job_family patterns claim them.
+    mgr_suffix = handle_manager_suffix_pattern(title_without_seniority, seniority)
+    if mgr_suffix:
+        mgr_suffix['normalized_title'] = fix_acronyms(mgr_suffix['normalized_title'])
+        return mgr_suffix
+
     # ================================================================
     # Match against main job family patterns
     # ================================================================
-    
+
     # Remove team/product suffixes for matching (but keep for context)
     title_for_matching = re.split(r',\s*(?![^()]*\))', title_without_seniority)[0].strip()
     

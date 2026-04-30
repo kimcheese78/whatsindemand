@@ -27,6 +27,11 @@ COMPANIES = [
     {"slug": "scaleai", "name": "Scale AI", "ats": "greenhouse", "industry": "AI/ML"},
     {"slug": "runwayml", "name": "Runway", "ats": "greenhouse", "industry": "AI/ML"},
     {"slug": "labelbox", "name": "Labelbox", "ats": "greenhouse", "industry": "AI/ML"},
+    {"slug": "gleanwork", "name": "Glean", "ats": "greenhouse", "industry": "AI/ML"},
+    {"slug": "togetherai", "name": "Together AI", "ats": "greenhouse", "industry": "AI/ML"},
+    {"slug": "coreweave", "name": "CoreWeave", "ats": "greenhouse", "industry": "AI/ML"},
+    {"slug": "heygen", "name": "HeyGen", "ats": "greenhouse", "industry": "AI/ML"},
+    {"slug": "speechify", "name": "Speechify", "ats": "greenhouse", "industry": "AI/ML"},
 
     # Fintech
     {"slug": "stripe", "name": "Stripe", "ats": "greenhouse", "industry": "Fintech"},
@@ -44,6 +49,8 @@ COMPANIES = [
     {"slug": "justworks", "name": "Justworks", "ats": "greenhouse", "industry": "Fintech"},
     {"slug": "carta", "name": "Carta", "ats": "greenhouse", "industry": "Fintech"},
     {"slug": "adyen", "name": "Adyen", "ats": "greenhouse", "industry": "Fintech"},
+    {"slug": "block", "name": "Block", "ats": "greenhouse", "industry": "Fintech"},
+    {"slug": "squarespace", "name": "Squarespace", "ats": "greenhouse", "industry": "B2B SaaS"},
 
 
     # Data / Analytics
@@ -62,6 +69,10 @@ COMPANIES = [
     {"slug": "okta", "name": "Okta", "ats": "greenhouse", "industry": "Security"},
     {"slug": "wizinc", "name": "Wiz", "ats": "greenhouse", "industry": "Security"},
     {"slug": "orcasecurity", "name": "Orca Security", "ats": "greenhouse", "industry": "Security"},
+    {"slug": "verkada", "name": "Verkada", "ats": "greenhouse", "industry": "Security"},
+    {"slug": "abnormalsecurity", "name": "Abnormal Security", "ats": "greenhouse", "industry": "Security"},
+    {"slug": "axonius", "name": "Axonius", "ats": "greenhouse", "industry": "Security"},
+    {"slug": "huntress", "name": "Huntress", "ats": "greenhouse", "industry": "Security"},
 
     # Developer Tools
     {"slug": "gitlab", "name": "GitLab", "ats": "greenhouse", "industry": "Developer Tools"},
@@ -76,6 +87,7 @@ COMPANIES = [
     {"slug": "figma", "name": "Figma", "ats": "greenhouse", "industry": "Developer Tools"},
     {"slug": "grafanalabs", "name": "Grafana Labs", "ats": "greenhouse", "industry": "Developer Tools"},
     {"slug": "temporal", "name": "Temporal", "ats": "greenhouse", "industry": "Developer Tools"},
+    {"slug": "warp", "name": "Warp", "ats": "greenhouse", "industry": "Developer Tools"},
 
     # B2B SaaS
     {"slug": "braze", "name": "Braze", "ats": "greenhouse", "industry": "B2B SaaS"},
@@ -116,6 +128,48 @@ COMPANIES = [
     {"slug": "peloton", "name": "Peloton", "ats": "greenhouse", "industry": "Health/Wellness"},
     {"slug": "calm", "name": "Calm", "ats": "greenhouse", "industry": "Health/Wellness"},
 
+    # Healthcare
+    {"slug": "natera", "name": "Natera", "ats": "greenhouse", "industry": "Healthcare"},
+    {"slug": "modernhealth", "name": "Modern Health", "ats": "greenhouse", "industry": "Healthcare"},
+
+    # Climate / IoT
+    {"slug": "samsara", "name": "Samsara", "ats": "greenhouse", "industry": "Climate"},
+
+    # Marketing Tech
+    {"slug": "bloomreach", "name": "Bloomreach", "ats": "greenhouse", "industry": "MarTech"},
+    {"slug": "attentive", "name": "Attentive", "ats": "greenhouse", "industry": "MarTech"},
+    {"slug": "yotpo", "name": "Yotpo", "ats": "greenhouse", "industry": "MarTech"},
+    {"slug": "iterable", "name": "Iterable", "ats": "greenhouse", "industry": "MarTech"},
+    {"slug": "apollo", "name": "Apollo", "ats": "greenhouse", "industry": "MarTech"},
+
+    # Robotics
+    {"slug": "agilityrobotics", "name": "Agility Robotics", "ats": "greenhouse", "industry": "Robotics"},
+    {"slug": "figure", "name": "Figure AI", "ats": "greenhouse", "industry": "Robotics"},
+
+    # Space Tech
+    {"slug": "rocketlab", "name": "Rocket Lab", "ats": "greenhouse", "industry": "SpaceTech"},
+
+    # Gaming
+    {"slug": "roblox", "name": "Roblox", "ats": "greenhouse", "industry": "Gaming"},
+    {"slug": "riotgames", "name": "Riot Games", "ats": "greenhouse", "industry": "Gaming"},
+    {"slug": "scopely", "name": "Scopely", "ats": "greenhouse", "industry": "Gaming"},
+
+    # Crypto / Web3
+    {"slug": "bitgo", "name": "BitGo", "ats": "greenhouse", "industry": "Crypto/Web3"},
+    {"slug": "fireblocks", "name": "Fireblocks", "ats": "greenhouse", "industry": "Crypto/Web3"},
+    {"slug": "gemini", "name": "Gemini", "ats": "greenhouse", "industry": "Crypto/Web3"},
+    {"slug": "consensys", "name": "Consensys", "ats": "greenhouse", "industry": "Crypto/Web3"},
+
+    # Legal Tech
+    {"slug": "relativity", "name": "Relativity", "ats": "greenhouse", "industry": "LegalTech"},
+
+    # PropTech
+    {"slug": "opendoor", "name": "Opendoor", "ats": "greenhouse", "industry": "PropTech"},
+
+    # Transportation
+    {"slug": "wayve", "name": "Wayve", "ats": "greenhouse", "industry": "Transportation"},
+    {"slug": "bird", "name": "Bird", "ats": "greenhouse", "industry": "Transportation"},
+
     # Education
     {"slug": "duolingo", "name": "Duolingo", "ats": "greenhouse", "industry": "Education"},
     {"slug": "coursera", "name": "Coursera", "ats": "greenhouse", "industry": "Education"},
@@ -124,6 +178,7 @@ COMPANIES = [
     # ===================================================================================
     # LEVER (7 companies - verified)
     # ===================================================================================
+    {"slug": "mistral", "name": "Mistral AI", "ats": "lever", "industry": "AI/ML"},
     {"slug": "spotify", "name": "Spotify", "ats": "lever", "industry": "Consumer/Social"},
     {"slug": "palantir", "name": "Palantir", "ats": "lever", "industry": "Data/Analytics"},
     {"slug": "zoox", "name": "Zoox", "ats": "lever", "industry": "Transportation"},
@@ -142,19 +197,26 @@ COMPANIES = [
     {"slug": "perplexity", "name": "Perplexity", "ats": "ashby", "industry": "AI/ML"},
     {"slug": "anyscale", "name": "Anyscale", "ats": "ashby", "industry": "AI/ML"},
     {"slug": "modal", "name": "Modal", "ats": "ashby", "industry": "AI/ML"},
+    {"slug": "writer", "name": "Writer", "ats": "ashby", "industry": "AI/ML"},
+    {"slug": "elevenlabs", "name": "ElevenLabs", "ats": "ashby", "industry": "AI/ML"},
+    {"slug": "baseten", "name": "Baseten", "ats": "ashby", "industry": "AI/ML"},
 
     # Fintech
     {"slug": "ramp", "name": "Ramp", "ats": "ashby", "industry": "Fintech"},
     {"slug": "unit", "name": "Unit", "ats": "ashby", "industry": "Fintech"},
     {"slug": "column", "name": "Column", "ats": "ashby", "industry": "Fintech"},
+    {"slug": "moderntreasury", "name": "Modern Treasury", "ats": "ashby", "industry": "Fintech"},
 
     # Data / Analytics
     {"slug": "neon", "name": "Neon", "ats": "ashby", "industry": "Data/Analytics"},
     {"slug": "posthog", "name": "PostHog", "ats": "ashby", "industry": "Data/Analytics"},
     {"slug": "fullstory", "name": "FullStory", "ats": "ashby", "industry": "Data/Analytics"},
+    {"slug": "airbyte", "name": "Airbyte", "ats": "ashby", "industry": "Data/Analytics"},
+    {"slug": "prefect", "name": "Prefect", "ats": "ashby", "industry": "Data/Analytics"},
 
     # Security
     {"slug": "vanta", "name": "Vanta", "ats": "ashby", "industry": "Security"},
+    {"slug": "snyk", "name": "Snyk", "ats": "ashby", "industry": "Security"},
     {"slug": "drata", "name": "Drata", "ats": "ashby", "industry": "Security"},
     {"slug": "clerk", "name": "Clerk", "ats": "ashby", "industry": "Security"},
     {"slug": "stytch", "name": "Stytch", "ats": "ashby", "industry": "Security"},
@@ -169,10 +231,12 @@ COMPANIES = [
     {"slug": "sentry", "name": "Sentry", "ats": "ashby", "industry": "Developer Tools"},
     {"slug": "docker", "name": "Docker", "ats": "ashby", "industry": "Developer Tools"},
     {"slug": "sanity", "name": "Sanity", "ats": "ashby", "industry": "Developer Tools"},
+    {"slug": "cursor", "name": "Cursor", "ats": "ashby", "industry": "Developer Tools"},
 
     # B2B SaaS
     {"slug": "notion", "name": "Notion", "ats": "ashby", "industry": "B2B SaaS"},
     {"slug": "zapier", "name": "Zapier", "ats": "ashby", "industry": "B2B SaaS"},
+    {"slug": "loom", "name": "Loom", "ats": "ashby", "industry": "B2B SaaS"},
     {"slug": "gamma", "name": "Gamma", "ats": "ashby", "industry": "B2B SaaS"},
     {"slug": "deel", "name": "Deel", "ats": "ashby", "industry": "B2B SaaS"},
     {"slug": "oyster", "name": "Oyster", "ats": "ashby", "industry": "B2B SaaS"},
@@ -181,7 +245,11 @@ COMPANIES = [
     # Health / Biotech
     {"slug": "benchling", "name": "Benchling", "ats": "ashby", "industry": "Health/Biotech"},
 
+    # E-commerce
+    {"slug": "whatnot", "name": "Whatnot", "ats": "ashby", "industry": "E-commerce"},
+
     # HR / Recruiting
+    {"slug": "greenhouse", "name": "Greenhouse", "ats": "greenhouse", "industry": "HR/Recruiting"},
     {"slug": "ashby", "name": "Ashby", "ats": "ashby", "industry": "HR/Recruiting"},
 ]
 
