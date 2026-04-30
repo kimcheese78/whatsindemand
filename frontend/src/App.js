@@ -4195,11 +4195,11 @@ const AboutScreen = () => {
   return (
   <LegalLayout title="ABOUT">
     <p>
-      Welcome to WhatsInDemand.
+      Hi, I'm Henry. Welcome to WhatsInDemand.
     </p>
     <p>
-      I'm Henry, and I built this website because I couldn't stop
-      asking myself: will AI take my job?
+      I built this website because I couldn't stop asking myself: will
+      AI take my job?
     </p>
     <p>
       The internet had plenty of answers, and none of them agreed. I
