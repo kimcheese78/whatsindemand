@@ -1585,10 +1585,6 @@ const RoleSelectionScreen = () => {
             )}
           </button>
 
-          <p className="text-center text-ink-muted text-sm mt-4">
-            Free to explore (Beta)
-          </p>
-
           <div className="flex justify-start pt-4">
             <button
               onClick={() => setCurrentScreen('landing')}
