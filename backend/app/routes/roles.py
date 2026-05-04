@@ -140,7 +140,7 @@ def get_trend_data(
             db.or_(Job.closed_at.is_(None), Job.closed_at >= period_start),
             db.or_(
                 Job.closed_at.isnot(None),
-                Job.scraped_at >= stale_floor,
+                Job.last_seen_at >= stale_floor,
             ),
         )
 
@@ -187,104 +187,46 @@ def get_trend_data(
 
 def get_market_trend(
     role_id: int,
-    window_days: int = 30,
-    comparison_offset_days: int = 90,
     seniority: str = None,
     locations: List[str] = None,
-    company_ids: List[int] = None
+    company_ids: List[int] = None,
+    trend_data: Optional[List[Dict]] = None,
 ) -> Dict:
     """
-    Cohort-locked headline growth: current `window_days` window ending today
-    vs a `window_days` window ending `comparison_offset_days` ago, drawn from
-    the same set of companies so the % reflects real demand change rather
-    than scrape expansion.
+    Latest month-over-month growth, derived from the same cohort-locked
+    monthly data the trend chart shows. Compares the last full month to the
+    month before it, so the headline number can never disagree with the
+    bars on the chart.
+
+    `trend_data` may be passed in to avoid recomputing; otherwise we fetch
+    a fresh 4-month window.
     """
-    today = datetime.utcnow().date()
-    current_end = today
-    current_start = today - timedelta(days=window_days)
-    previous_end = today - timedelta(days=comparison_offset_days)
-    previous_start = previous_end - timedelta(days=window_days)
+    if trend_data is None:
+        trend_data = get_trend_data(
+            role_id,
+            months=4,
+            seniority=seniority,
+            locations=locations,
+            company_ids=company_ids,
+        )
 
-    cohort_cutoff = previous_start - timedelta(days=COHORT_BUFFER_DAYS)
-    cohort_company_ids = _get_cohort_company_ids(role_id, cohort_cutoff)
-
-    if len(cohort_company_ids) < MIN_COHORT_COMPANIES:
+    full_months = [b for b in trend_data if not b.get('is_partial')]
+    if len(full_months) < 2:
         return {
             'postings_growth_pct': None,
             'current_period_count': None,
             'previous_period_count': None,
-            'window_days': window_days,
-            'comparison_offset_days': comparison_offset_days,
         }
 
-    effective_company_ids = cohort_company_ids
-    if company_ids:
-        effective_company_ids = list(set(company_ids) & set(cohort_company_ids))
-        if not effective_company_ids:
-            return {
-                'postings_growth_pct': None,
-                'current_period_count': 0,
-                'previous_period_count': 0,
-                'window_days': window_days,
-            }
-
-    job_date = func.coalesce(Job.posted_at, Job.scraped_at)
-
-    def build_base_query():
-        query = Job.query.filter(
-            Job.role_id == role_id,
-            Job.company_id.in_(effective_company_ids),
-        )
-
-        if seniority and seniority.lower() != 'all':
-            seniority_map = {
-                'entry': ['entry', 'junior', 'associate', 'i', 'I', '1', 'intern'],
-                'mid': ['mid', 'middle', 'ii', 'II', '2', 'intermediate'],
-                'senior': ['senior', 'sr', 'iii', 'III', '3'],
-                'lead': ['lead', 'principal', 'staff', 'director', 'head', 'iv', 'IV', '4', '5']
-            }
-            seniority_values = seniority_map.get(seniority, [seniority])
-            seniority_conditions = [
-                func.lower(Job.seniority_level) == val.lower()
-                for val in seniority_values
-            ]
-            query = query.filter(db.or_(*seniority_conditions))
-
-        if locations and not any(loc.lower() == 'all' for loc in locations):
-            location_conditions = []
-            for loc in locations:
-                location_conditions.append(func.lower(Job.location_country) == loc.lower())
-                location_conditions.append(Job.location_raw.ilike(f'%{loc}%'))
-                if loc == 'United States':
-                    for abbrev in US_STATE_ABBREVS:
-                        location_conditions.append(func.upper(Job.location_country) == abbrev)
-                    location_conditions.append(Job.location_state.in_(list(US_STATE_ABBREVS)))
-                elif loc == 'Canada':
-                    for abbrev in CANADIAN_PROVINCE_ABBREVS:
-                        location_conditions.append(func.upper(Job.location_country) == abbrev)
-                    location_conditions.append(Job.location_state.in_(list(CANADIAN_PROVINCE_ABBREVS)))
-            query = query.filter(db.or_(*location_conditions))
-
-        return query
-
-    def count_available_jobs(period_start: date, period_end: date) -> int:
-        stale_floor = period_end - timedelta(days=STALE_LISTING_DAYS)
-        query = build_base_query().filter(
-            job_date < period_end,
-            db.or_(Job.closed_at.is_(None), Job.closed_at >= period_start),
-            db.or_(Job.closed_at.isnot(None), Job.scraped_at >= stale_floor),
-        )
-        return query.count()
-
-    current_count = count_available_jobs(current_start, current_end)
-    previous_count = count_available_jobs(previous_start, previous_end)
+    current = full_months[-1]
+    previous = full_months[-2]
 
     return {
-        'postings_growth_pct': calculate_growth_pct(current_count, previous_count),
-        'current_period_count': current_count,
-        'previous_period_count': previous_count,
-        'window_days': window_days,
-        'comparison_offset_days': comparison_offset_days,
+        'postings_growth_pct': calculate_growth_pct(current['count'], previous['count']),
+        'current_period_count': current['count'],
+        'previous_period_count': previous['count'],
+        'current_period_start': current['date'],
+        'previous_period_start': previous['date'],
     }
 
 
@@ -690,11 +632,10 @@ def get_role_insights():
     
     market_trend = get_market_trend(
         role.id,
-        window_days=30,
-        comparison_offset_days=90,
         seniority=filters_applied.get('seniority'),
         locations=filters_applied.get('location'),
-        company_ids=filters_applied.get('company_ids')
+        company_ids=filters_applied.get('company_ids'),
+        trend_data=trend_data,
     )
 
     # Return empty result if no jobs match filters
