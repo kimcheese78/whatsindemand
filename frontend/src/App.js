@@ -636,7 +636,7 @@ const AppProvider = ({ children }) => {
 // ============================================
 
 const NavBar = () => {
-  const { user, handleLogout, setCurrentScreen } = useApp();
+  const { user, handleLogout, setCurrentScreen, roleData } = useApp();
   
   return (
     <nav className="px-8 py-6 border-b border-line">
@@ -651,8 +651,8 @@ const NavBar = () => {
         {user ? (
           <div className="flex items-center gap-6">
             <button
-              onClick={() => setCurrentScreen('dashboard')}
-              aria-label="Go to dashboard"
+              onClick={() => setCurrentScreen(roleData ? 'dashboard' : 'role-selection')}
+              aria-label={roleData ? 'Go to dashboard' : 'Pick your role'}
               className="flex items-center gap-2 px-2 py-1 -mx-2 -my-1 rounded hover:bg-white/5 transition-colors"
             >
               <div className="w-8 h-8 bg-white/10 rounded-full flex items-center justify-center">
