@@ -1089,32 +1089,16 @@ const SingleSelectDropdown = ({
 // ============================================
 // GOOGLE SIGN-IN BUTTON (Fixed for FedCM)
 // ============================================
-const GoogleSignInButton = ({ onSuccess, onError, text = "CONTINUE WITH GOOGLE" }) => {
-  const buttonRef = useRef(null);
-  const wrapperRef = useRef(null);
+const GoogleSignInButton = ({ onSuccess, onError, text = "Continue with Google" }) => {
+  const hiddenButtonRef = useRef(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [isReady, setIsReady] = useState(false);
 
   useEffect(() => {
-    let resizeObserver;
     let scriptEl;
 
-    const renderAtCurrentWidth = () => {
-      if (!window.google?.accounts?.id || !buttonRef.current || !wrapperRef.current) return;
-      const w = Math.min(400, Math.max(200, Math.round(wrapperRef.current.getBoundingClientRect().width)));
-      buttonRef.current.innerHTML = '';
-      window.google.accounts.id.renderButton(buttonRef.current, {
-        type: 'standard',
-        theme: 'outline',
-        size: 'large',
-        text: 'continue_with',
-        shape: 'rectangular',
-        width: w,
-      });
-    };
-
     const initGoogle = () => {
-      if (!window.google?.accounts?.id) return;
-      if (!buttonRef.current) return;
+      if (!window.google?.accounts?.id || !hiddenButtonRef.current) return;
 
       window.google.accounts.id.initialize({
         client_id: process.env.REACT_APP_GOOGLE_CLIENT_ID,
@@ -1133,12 +1117,17 @@ const GoogleSignInButton = ({ onSuccess, onError, text = "CONTINUE WITH GOOGLE" 
         use_fedcm_for_prompt: false,
       });
 
-      renderAtCurrentWidth();
+      hiddenButtonRef.current.innerHTML = '';
+      window.google.accounts.id.renderButton(hiddenButtonRef.current, {
+        type: 'standard',
+        theme: 'outline',
+        size: 'large',
+        text: 'continue_with',
+        shape: 'rectangular',
+        width: 300,
+      });
 
-      if (wrapperRef.current && 'ResizeObserver' in window) {
-        resizeObserver = new ResizeObserver(() => renderAtCurrentWidth());
-        resizeObserver.observe(wrapperRef.current);
-      }
+      setIsReady(true);
     };
 
     const timer = setTimeout(() => {
@@ -1154,25 +1143,67 @@ const GoogleSignInButton = ({ onSuccess, onError, text = "CONTINUE WITH GOOGLE" 
       }
     }, 100);
 
-    return () => {
-      clearTimeout(timer);
-      if (resizeObserver) resizeObserver.disconnect();
-    };
+    return () => clearTimeout(timer);
   }, [onSuccess, onError]);
+
+  const handleClick = () => {
+    if (!hiddenButtonRef.current) return;
+    const realButton = hiddenButtonRef.current.querySelector('div[role=button]')
+      || hiddenButtonRef.current.querySelector('[role=button]')
+      || hiddenButtonRef.current.querySelector('button');
+    if (realButton) realButton.click();
+  };
 
   if (isLoading) {
     return (
-      <div className="w-full px-6 py-4 bg-white/20 text-ink-muted font-medium text-sm tracking-wide flex items-center justify-center gap-3">
-        <DotSpinner size={20} tone="black" />
-        SIGNING IN...
+      <div
+        className="w-full bg-white text-[#1f1f1f] flex items-center justify-center gap-3 border border-[#dadce0]"
+        style={{
+          height: '44px',
+          fontFamily: 'Roboto, "Helvetica Neue", Arial, sans-serif',
+          fontWeight: 500,
+          fontSize: 14,
+          letterSpacing: 0.25,
+        }}
+      >
+        <DotSpinner size={18} tone="black" />
+        Signing in…
       </div>
     );
   }
 
   return (
-    <div ref={wrapperRef} className="w-full" style={{ minHeight: '44px' }}>
-      <div ref={buttonRef} className="w-full flex justify-center" />
-    </div>
+    <>
+      <div
+        ref={hiddenButtonRef}
+        style={{ position: 'absolute', width: 1, height: 1, opacity: 0, pointerEvents: 'none', overflow: 'hidden', clip: 'rect(0 0 0 0)' }}
+        aria-hidden="true"
+      />
+      <button
+        type="button"
+        onClick={handleClick}
+        disabled={!isReady}
+        className="w-full flex items-center justify-center gap-3 bg-white text-[#1f1f1f] border border-[#dadce0] hover:bg-[#f8f9fa] active:bg-[#f1f3f4] disabled:opacity-60 disabled:cursor-not-allowed transition-colors"
+        style={{
+          height: '44px',
+          paddingLeft: 12,
+          paddingRight: 12,
+          fontFamily: 'Roboto, "Helvetica Neue", Arial, sans-serif',
+          fontWeight: 500,
+          fontSize: 14,
+          letterSpacing: 0.25,
+        }}
+      >
+        <svg width="20" height="20" viewBox="0 0 48 48" aria-hidden="true">
+          <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
+          <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/>
+          <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/>
+          <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/>
+          <path fill="none" d="M0 0h48v48H0z"/>
+        </svg>
+        <span>{text}</span>
+      </button>
+    </>
   );
 };
 
@@ -2839,7 +2870,7 @@ const OverviewTab = () => {
           ) : (
             <HeroNumber tone="default" value="—" className="text-ink-faint" />
           )}
-          <Eyebrow className="text-ink-faint">vs {marketTrend?.comparison_offset_days || 90} days ago</Eyebrow>
+          <Eyebrow className="text-ink-faint">vs previous month</Eyebrow>
         </div>
 
         {highlightCos.length > 0 && (
