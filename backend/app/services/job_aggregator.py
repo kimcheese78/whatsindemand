@@ -282,6 +282,9 @@ class JobAggregator:
             ).first()
             
             if existing:
+                description_unchanged = (
+                    existing.description_text == job_data['description_text']
+                )
                 # Update existing job - but PRESERVE posted_at and scraped_at
                 existing.title = job_data['title']
                 existing.source_url = job_data['source_url']
@@ -300,6 +303,13 @@ class JobAggregator:
                 existing.role_id = role_id
                 existing.last_seen_at = datetime.utcnow()
                 job = existing
+
+                # Skip skill re-extraction when description hasn't changed.
+                # That's the slowest step in the scrape (spaCy + regex over the
+                # full description text), and there's nothing to update.
+                if description_unchanged:
+                    db.session.commit()
+                    return True
             else:
                 # Create new job - set posted_at and scraped_at only here
                 job = Job(
