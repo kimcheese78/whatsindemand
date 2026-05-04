@@ -2882,10 +2882,10 @@ const OverviewTab = () => {
         </Panel>
 
         {/* POSTING TREND — bar chart with readable labels */}
-        <Panel>
+        <Panel className="flex flex-col h-full">
           <Eyebrow className="mb-4">Active openings — same companies, 4-month view</Eyebrow>
           {trendData.length > 0 ? (
-            <>
+            <div className="mt-auto">
               <div className="flex items-end gap-2 h-32 mb-2">
                 {trendData.map((d, i) => {
                   const isLast = i === trendData.length - 1;
@@ -2928,7 +2928,7 @@ const OverviewTab = () => {
               <p className="text-meta text-ink-faint mt-2">
                 Recently added companies are excluded until they have 4+ months of history, so each month compares the same set of companies.
               </p>
-            </>
+            </div>
           ) : (
             <div className="h-32 flex items-center justify-center text-body text-ink-faint text-center px-4">
               Not enough history yet — we'll show this once 4 months of stable scrape data exist for this role.
