@@ -4172,9 +4172,7 @@ const PrivacyScreen = () => (
   </LegalLayout>
 );
 
-const AboutScreen = () => {
-  const { setCurrentScreen } = useApp();
-  return (
+const AboutScreen = () => (
   <LegalLayout title="ABOUT">
     <p>
       Hi, I'm Henry. Welcome to WhatsInDemand.
@@ -4195,20 +4193,8 @@ const AboutScreen = () => {
       what the job market is actually signaling. And it's for anyone
       trying to figure out what their next move should be.
     </p>
-    <p>
-      Have feedback? The{' '}
-      <button
-        type="button"
-        onClick={() => setCurrentScreen('contact')}
-        className="text-white underline hover:text-ink-muted transition-colors"
-      >
-        contact email
-      </button>{' '}
-      is real and I read everything. And yes, I'm a real human.
-    </p>
   </LegalLayout>
-  );
-};
+);
 
 const ContactScreen = () => (
   <LegalLayout title="CONTACT">
