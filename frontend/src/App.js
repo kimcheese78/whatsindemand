@@ -1719,7 +1719,7 @@ const SignupScreen = () => {
           <GoogleSignInButton
             onSuccess={handleGoogleSuccess}
             onError={handleGoogleError}
-            text="SIGN UP WITH GOOGLE"
+            text="Sign up with Google"
           />
 
           <div className="relative my-6">
