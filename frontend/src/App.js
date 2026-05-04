@@ -484,13 +484,17 @@ const AppProvider = ({ children }) => {
       );
 
       setUser(data.user);
-      await exploreRole();
+      if (selectedRole && selectedSeniority) {
+        await exploreRole();
+      } else {
+        setCurrentScreen('role-selection');
+      }
     } catch (err) {
       setError(err.message);
     } finally {
       setLoading(false);
     }
-  }, [signupEmail, signupPassword, signupFullName, selectedRole, selectedSeniority, selectedLocation, exploreRole]);
+  }, [signupEmail, signupPassword, signupFullName, selectedRole, selectedSeniority, selectedLocation, exploreRole, setCurrentScreen]);
 
   const handleLogout = useCallback(() => {
     localStorage.removeItem('authToken');
