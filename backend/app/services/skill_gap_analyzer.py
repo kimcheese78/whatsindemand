@@ -253,7 +253,9 @@ class SkillGapAnalyzer:
             Role.category,
             Role.job_family,
             func.count(Job.id).label('job_count')
-        ).join(Job).group_by(Role.id).having(
+        ).join(Job).filter(
+            Job.is_active == True
+        ).group_by(Role.id).having(
             func.count(Job.id) >= threshold
         ).order_by(
             func.count(Job.id).desc()
