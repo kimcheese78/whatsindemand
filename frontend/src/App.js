@@ -1091,8 +1091,14 @@ const SingleSelectDropdown = ({
 // ============================================
 const GoogleSignInButton = ({ onSuccess, onError, text = "Continue with Google" }) => {
   const hiddenButtonRef = useRef(null);
+  const onSuccessRef = useRef(onSuccess);
+  const onErrorRef = useRef(onError);
   const [isLoading, setIsLoading] = useState(false);
   const [isReady, setIsReady] = useState(false);
+
+  // Keep callbacks current without re-triggering the effect.
+  useEffect(() => { onSuccessRef.current = onSuccess; }, [onSuccess]);
+  useEffect(() => { onErrorRef.current = onError; }, [onError]);
 
   useEffect(() => {
     let scriptEl;
@@ -1106,9 +1112,9 @@ const GoogleSignInButton = ({ onSuccess, onError, text = "Continue with Google" 
           setIsLoading(true);
           try {
             const data = await api.googleAuth(response.credential);
-            onSuccess(data);
+            onSuccessRef.current(data);
           } catch (err) {
-            onError(err.message || 'Google sign-in failed');
+            onErrorRef.current(err.message || 'Google sign-in failed');
           } finally {
             setIsLoading(false);
           }
@@ -1144,7 +1150,7 @@ const GoogleSignInButton = ({ onSuccess, onError, text = "Continue with Google" 
     }, 100);
 
     return () => clearTimeout(timer);
-  }, [onSuccess, onError]);
+  }, []);
 
   const handleClick = () => {
     if (!hiddenButtonRef.current) return;
