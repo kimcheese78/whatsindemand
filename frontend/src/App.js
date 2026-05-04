@@ -2926,7 +2926,7 @@ const OverviewTab = () => {
                 })}
               </div>
               <p className="text-meta text-ink-faint mt-2">
-                Cohort-locked: only companies with 4+ months of history. MTD bar may be below "Active postings" above.
+                Recently added companies are excluded until they have 4+ months of history, so each month compares the same set of companies.
               </p>
             </>
           ) : (
