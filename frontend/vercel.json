@@ -1,4 +1,7 @@
 {
+  "redirects": [
+    { "source": "/Articles/:slug*", "destination": "https://blog.whatsindemand.com/:slug*", "permanent": true }
+  ],
   "rewrites": [
     { "source": "/(.*)", "destination": "/" }
   ],
