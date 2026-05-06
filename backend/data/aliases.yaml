@@ -1,0 +1,1363 @@
+# Raw-title -> canonical_id alias map.
+#
+# Keys are *de-leveled* normalized titles (lowercase, seniority/level-suffix/
+# parenthetical/employment-type/location-tail stripped). The runtime applies
+# the same normalization before looking up.
+#
+# Value `null` = recognized junk (skip; do not create role).
+# A line without a canonical_id (commented `# TODO`) = unmapped, falls through
+# to manual review queue.
+
+# =============================================================================
+# Software Engineering — generic
+# =============================================================================
+"software engineer": software_engineer
+"software development engineer": software_engineer
+"software developer": software_engineer
+"backend software engineer": software_engineer
+"software engineer - backend": software_engineer
+"software engineer, backend": software_engineer
+"software engineer - android": software_engineer
+"software engineer, android": software_engineer
+"software engineer, android test engineering": software_engineer
+"android engineer": software_engineer
+"android engineer, brand ad formats": software_engineer
+"ios engineer": software_engineer
+"engineer, ios performance": software_engineer
+"ios platform engineer": software_engineer
+"mobile engineer": software_engineer
+"frontend engineer": software_engineer
+"front end engineer": software_engineer
+"front-end engineer": software_engineer
+"frontend engineer - clickstack": software_engineer
+"software engineer, front-end": software_engineer
+"software engineer, frontend": software_engineer
+"software engineer - frontend and mobile": software_engineer
+"fullstack engineer": software_engineer
+"full stack engineer": software_engineer
+"full-stack engineer": software_engineer
+"full stack engineer - clickstack": software_engineer
+"software engineer, full stack": software_engineer
+"software engineer, fullstack": software_engineer
+"software engineer, full-stack": software_engineer
+"software engineer - fullstack": software_engineer
+"software engineer i, full-stack": software_engineer
+"full stack software engineer - billing team": software_engineer
+"full stack software engineer - control plane": software_engineer
+"full stack software engineer - clickpipes platform": software_engineer
+"fullstack software engineer, grc": software_engineer
+"full stack product software engineer": software_engineer
+"full stack product software engineer, commerce platform": software_engineer
+"backend product software engineer, commerce platform": software_engineer
+"backend engineer": software_engineer
+"backend engineer - clickstack": software_engineer
+"backend engineer - subscriptions": software_engineer
+"backend ads engineer - hts media services": software_engineer
+"full-stack ads engineer - hts media services": software_engineer
+"backend software engineer - defense": software_engineer
+"product engineer": software_engineer
+"software engineer, product": software_engineer
+"software engineer, product data platform": software_engineer
+"software engineer, generalist": software_engineer
+"software engineer, growth": software_engineer
+"software engineer, c++": software_engineer
+"software engineer, nix": software_engineer
+"software engineer, substrate": software_engineer
+"software engineer, geometry": software_engineer
+"software engineer, payments": software_engineer
+"software engineer, identity": software_engineer
+"software engineer, fraud": software_engineer
+"software engineer, mapping": software_engineer
+"software engineer, ad serving": software_engineer
+"software engineer, applied a": software_engineer
+"software engineer, core services": software_engineer
+"software engineer, qualityos": software_engineer
+"software engineer, intelligence systems": software_engineer
+"software engineer, distributed simulation": software_engineer
+"software engineer, robotics": robotics_engineer
+"software engineer, maritime": software_engineer
+"software engineer, connected warfare": software_engineer
+"software engineer, cash app banking": software_engineer
+"software engineer, cash app - controls": software_engineer
+"software engineer, cash app - lending products": software_engineer
+"software engineer, roku u": software_engineer
+"software engineer, strategic customer engagements": software_engineer
+"software engineer, macos specialist": software_engineer
+"software engineer, embedded ui - c++": software_engineer
+"software engineer, autonomous vehicle performance metrics": software_engineer
+"software engineer, network infrastructure": infrastructure_engineer
+"software engineer, data": software_engineer
+"software engineer, data engineering": data_engineer
+"software engineer, data infrastructure": infrastructure_engineer
+"software engineer, data platform": software_engineer
+"software engineer - data platform": software_engineer
+"software engineer, developer enablement": software_engineer
+"software engineer, developer experience": software_engineer
+"software engineer, developer platform": software_engineer
+"software engineer, devops": devops_engineer
+"software engineer, machine learning": machine_learning_engineer
+"software engineer, machine learning infrastructure": ai_infrastructure_engineer
+"software engineer, infrastructure": infrastructure_engineer
+"software engineer (infrastructure) - clickstack": infrastructure_engineer
+"software engineer - infrastructure": infrastructure_engineer
+"software engineer - cloud infrastructure": cloud_infrastructure_engineer
+"software engineer - distributed data systems": software_engineer
+"software engineer - data integration & jvm ecosystem": software_engineer
+"software engineer - python and data ecosystem": software_engineer
+"software engineer - ai fintech foundation": software_engineer
+"software engineer - autonomy integrations": software_engineer
+"software engineer - apollo platform": software_engineer
+"software engineer - mission manager": software_engineer
+"software engineer - delta": software_engineer
+"software engineer - golang/kubernetes": software_engineer
+"software engineer - identity & authorization platform": software_engineer
+"software engineer - customer experience platform": software_engineer
+"software engineer - database engine als": software_engineer
+"software engineer - database integrations": software_engineer
+"software engineer - jvm language clients": software_engineer
+"software engineer - etl platform": software_engineer
+"software engineer - unity catalog runtime enforcement": software_engineer
+"software engineer, security": security_engineer
+"software engineer, forward deployed agent builder": software_engineer
+"software engineer, new grad": software_engineer
+"software engineer 2": software_engineer
+"software engineer i": software_engineer
+"software engineer ii": software_engineer
+"core software engineer": software_engineer
+"core software engineer (c++)": software_engineer
+"application software engineer - relocation to tokyo": software_engineer
+"infrastructure software engineer": infrastructure_engineer
+"platform software engineer": platform_engineer
+"data platform engineer": data_engineer
+"edge infrastructure engineer": infrastructure_engineer
+"engineer": software_engineer  # bare "engineer" - default to SE
+"engineer - privacy": software_engineer
+"engineer, autonomy ml systems": machine_learning_engineer
+"engineer, workday ats": software_engineer
+"engineer team lead - trajectory planning lead": software_engineer
+"engineer tech lead manager, ml acceleration": machine_learning_engineer
+"engineer motion planning": software_engineer
+"motion planning engineer": software_engineer
+"open source program developer": software_engineer
+"web application developer - defense": software_engineer
+"mission software engineer": software_engineer
+"language programmer, verse ue integration": software_engineer
+"server engineer_monopoly go!": software_engineer
+"ui programmer": software_engineer
+"cnc programmer": software_engineer
+
+# =============================================================================
+# Specialty / framework-tied developers
+# =============================================================================
+"oracle developer": software_engineer
+"oic developer": software_engineer  # Oracle Integration Cloud
+"oracle fusion software developer": software_engineer
+"netsuite developer": software_engineer
+"salesforce developer": software_engineer
+"workday integrations developer": software_engineer
+"syteline developer": software_engineer
+"cadence pcb librarian": electrical_engineer
+
+# =============================================================================
+# Embedded / Firmware / Hardware
+# =============================================================================
+"embedded software engineer": software_engineer
+"embedded engineer": software_engineer
+"firmware engineer": software_engineer
+"flight software engineer": software_engineer
+"mission operations engineer": mission_operations_engineer
+"electrical engineer": electrical_engineer
+"electrical test engineer": electrical_engineer
+"mechanical engineer": mechanical_engineer
+"manufacturing engineer": manufacturing_engineer
+"manufacturing test engineer": manufacturing_test_engineer
+"manufacturing technician": manufacturing_technician
+"production supervisor": production_supervisor
+"thermal engineer": thermal_engineer
+"thermal analyst": thermal_engineer
+"fpga engineer": fpga_engineer
+"robotics engineer": robotics_engineer
+"robotics engineer, maritime": robotics_engineer
+"design engineer": design_engineer
+"hardware technician": manufacturing_technician
+"facilities technician": manufacturing_technician
+"facilities engineer": mechanical_engineer
+"industrial engineer": manufacturing_engineer
+"project engineer": mechanical_engineer
+"program chief engineer": mechanical_engineer
+"compliance engineer": mechanical_engineer
+"system safety engineer": systems_engineer
+"flight test engineer": mission_operations_engineer
+"flight test operator": mission_operations_engineer
+"field test engineer, maritime": test_engineer
+"uas flight test engineer": mission_operations_engineer
+"data center engineer": infrastructure_engineer
+"release engineer - data plane": software_engineer
+"product quality engineer": qa_engineer
+"quality engineer": qa_engineer
+
+# =============================================================================
+# Data / ML / AI / Research
+# =============================================================================
+"data engineer": data_engineer
+"analytics engineer": analytics_engineer
+"agentic analytics engineer": analytics_engineer
+"data scientist": data_scientist
+"data scientist, ai products": data_scientist
+"data scientist, finance": data_scientist
+"data scientist, product": data_scientist
+"data scientist, product analytics": data_scientist
+"data scientist, trust and safety": data_scientist
+"product analytics": data_scientist
+"machine learning engineer": machine_learning_engineer
+"machine learning engineer, data mining": machine_learning_engineer
+"machine learning engineer, offline infrastructure": machine_learning_engineer
+"ai engineer": ai_engineer
+"ai engineer - notebooks": ai_engineer
+"ai engineer - fde": ai_engineer
+"ai engineer | canada |": ai_engineer
+"ai engineer | us |": ai_engineer
+"applied ai engineer": applied_ai_engineer
+"applied ai architect, industries": applied_ai_engineer
+"applied ai architect, startups": applied_ai_engineer
+"applied scientist": applied_scientist
+"ai/ml scientist & engineer": applied_scientist
+"ai research engineer": research_engineer
+"ai security researcher": research_engineer
+"research engineer": research_engineer
+"research scientist": research_scientist
+"threat and attack research engineer": research_engineer
+"ai infrastructure engineer": ai_infrastructure_engineer
+"ai deployment engineer | codex": software_engineer
+"ai deployment engineer- codex": software_engineer
+"data science manager": data_science_manager
+"data science lead": data_science_manager
+"data analyst": data_analyst
+"data analyst, commercial & operations": data_analyst
+"data analyst, block compliance": data_analyst
+"product analyst": product_analyst
+"business analyst": business_analyst
+"systems analyst, cost & receipt accounting": business_analyst
+"order management analyst": business_analyst
+"order management functional analyst": business_analyst
+
+# =============================================================================
+# Infrastructure / Platform / DevOps / SRE / Security
+# =============================================================================
+"infrastructure engineer": infrastructure_engineer
+"platform engineer": platform_engineer
+"devops engineer": devops_engineer
+"site reliability engineer": site_reliability_engineer
+"site reliability engineer, currents": site_reliability_engineer
+"database reliability engineer - core team": site_reliability_engineer
+"cloud engineer": cloud_engineer
+"cloud engineer, multinational digital infrastructure": cloud_engineer
+"cloud infrastructure engineer": cloud_infrastructure_engineer
+"cloud performance engineer": cloud_engineer
+"network engineer": network_engineer
+"systems engineer": systems_engineer
+"systems engineer, c": systems_engineer
+"systems engineer - business systems": business_systems_engineer
+"business systems engineer": business_systems_engineer
+"system administrator": it_engineer
+"systems administrator, classified it": it_engineer
+"it engineer": it_engineer
+"it ops technician": it_support_engineer
+"it support engineer": it_support_engineer
+"it support specialist": it_support_engineer
+"it systems engineer": it_engineer
+"identity management engineer": security_engineer
+"information systems security manager": security_engineer
+"security engineer": security_engineer
+"security engineer - detection and response": security_engineer
+"security engineer, detection & response": security_engineer
+"security engineer - product & production infrastructure": security_engineer
+"security engineer, application security": application_security_engineer
+"security engineer, application & platform security": application_security_engineer
+"security software engineer - endpoint security": security_engineer
+"security software engineer - crypto services": security_engineer
+"application security engineer": application_security_engineer
+"product security engineer": product_security_engineer
+"product security engineer, programs": product_security_engineer
+"product infrastructure security engineer": product_security_engineer
+"software security engineer, full stack": application_security_engineer
+"cloud security engineer": cloud_security_engineer
+"infrastructure security engineer": infrastructure_security_engineer
+"offensive security engineer": offensive_security_engineer
+"enterprise security engineer": enterprise_security_engineer
+"information security engineer": information_security_engineer
+"information security engineer - insider risk": information_security_engineer
+"security operations engineer": security_operations_engineer
+"security operations analyst": security_operations_analyst
+"soc analyst": security_operations_analyst
+"security architect": security_engineer
+"detection and response engineer": security_engineer
+"escalation engineer - dlp": security_engineer
+"industrial security specialist": security_engineer
+
+# =============================================================================
+# Customer-facing engineering (Sales eng / Solutions / Implementation / FDE)
+# =============================================================================
+"sales engineer": sales_engineer
+"sales engineer, enterprise": sales_engineer
+"sales engineer, majors": sales_engineer
+"enterprise sales engineer": sales_engineer
+"sales system engineer": sales_engineer
+"solutions engineer": solutions_engineer
+"solution engineer": solutions_engineer
+"solutions engineer, enterprise": solutions_engineer
+"solutions engineer, mid- enterprise": solutions_engineer
+"solutions engineer, upmarket (pre-sales)": solutions_engineer
+"enterprise solutions engineer": solutions_engineer
+"customer solutions engineer": solutions_engineer
+"solutions architect": solutions_architect
+"solutions architect - ai/b": solutions_architect
+"solutions architect, gsis": solutions_architect
+"resident solutions architect": resident_solutions_architect
+"resident solutions architect - public sector": resident_solutions_architect
+"resident solutions architect - financial services": resident_solutions_architect
+"resident solutions architect - healthcare & life sciences": resident_solutions_architect
+"resident solutions architect - manufacturing": resident_solutions_architect
+"resident solutions architect - communications, media, entertainment & games": resident_solutions_architect
+"partner solutions architect": partner_solutions_architect
+"delivery solutions architect": solutions_architect
+"technical architect": solutions_architect
+"software architect": solutions_architect
+"solutions consultant": solutions_consultant
+"solutions consultant, retail": solutions_consultant
+"enterprise solutions consultant": solutions_consultant
+"commercial solutions consultant": solutions_consultant
+"mid-market solutions consultant - expense": solutions_consultant
+"ai solutions consultant": solutions_consultant
+"travel payments consultant": solutions_consultant
+"pre-sales services consultant": solutions_consultant
+"implementation engineer": implementation_engineer
+"implementation consultant": implementation_consultant
+"implementation consultant, embedded finance": implementation_consultant
+"enterprise implementation consultant": implementation_consultant
+"implementation manager": implementation_manager
+"integration engineer": integration_engineer
+"field engineer": field_engineer
+"field service technician": field_engineer
+"forward deployed engineer": software_engineer
+"forward deployed software engineer": software_engineer
+"forward deployed software engineer - us government": software_engineer
+"forward deployed infrastructure engineer - us government": software_engineer
+"forward deployed enablement engineer - customer success": software_engineer
+"founding forward deployed engineer": software_engineer
+"forward-deployed data scientist": forward_deployed_data_scientist
+"forward deployed product manager": product_manager
+"forward deployed ai accelerator, marketing": software_engineer
+"deployment strategist": deployment_strategist
+"deployment strategist - us government": deployment_strategist
+"deployment strategist, build to apply - us government": deployment_strategist
+"technical deployment lead": deployment_strategist
+"customer success engineer": product_support_engineer
+"customer support engineer": product_support_engineer
+"product support engineer": product_support_engineer
+"application engineer - technical customer lead": implementation_engineer
+"developer experience engineer": software_engineer
+"developer advocate": technical_writer
+"developer relations advocate": technical_writer
+
+# =============================================================================
+# Quality / Testing / Support
+# =============================================================================
+"qa engineer": qa_engineer
+"qa engineer - core database": qa_engineer
+"test engineer": test_engineer
+"technical support engineer": technical_support_engineer
+"technical support engineer - mobile apps and compliance": technical_support_engineer
+"technical support specialist": technical_support_specialist
+"product support specialist": product_support_specialist
+"support specialist": support_specialist
+"customer support specialist": support_specialist
+"customer experience agent": support_specialist
+"customer care lead consultant": support_specialist
+"customer experience team lead": support_specialist
+"designated technical support engineer": technical_support_engineer
+"quality inspector": quality_inspector
+
+# =============================================================================
+# GTM / Specialty Engineering
+# =============================================================================
+"gtm engineer": gtm_engineer
+
+# =============================================================================
+# Engineering Management
+# =============================================================================
+"engineering manager": engineering_manager
+"engineering manager, cloud infrastructure": engineering_manager
+"engineering manager, ai models infrastructure": engineering_manager
+"engineering manager, gtm engineering": engineering_manager
+"engineering manager, onboarding": engineering_manager
+"engineering manager, acquisition": engineering_manager
+"engineering manager, activation": engineering_manager
+"engineering manager - ads reporting": engineering_manager
+"engineering manager - language clients": engineering_manager
+"engineering manager - security incident response": engineering_manager
+"engineering manager - trust and safety": engineering_manager
+"manager, engineering": engineering_manager
+"manager, software engineering": engineering_manager
+"manager, field engineering": engineering_manager
+"manager, forward deployed engineering": engineering_manager
+"manager, technical account management": engineering_manager
+"director, software engineering": director_of_engineering
+"director of engineering": director_of_engineering
+"software development manager, engagement growth": engineering_manager
+"software development manager, community discovery": engineering_manager
+"tech lead - dispatching & partner integrations": engineering_manager
+"tech lead manager, ml data services": engineering_manager
+"director, product management": director_of_product
+"director of product": director_of_product
+"director, product management, video ad platform": director_of_product
+"product management director, okta identity threat detection and response products": director_of_product
+"director product management, banking + ap": director_of_product
+
+# =============================================================================
+# Product / Program / Project Management
+# =============================================================================
+"product manager": product_manager
+"product manager, growth": product_manager
+"product manager, community": product_manager
+"product manager, payments": product_manager
+"product manager, developer experience": product_manager
+"product manager, ational growth": product_manager
+"product manager, local payment methods emea": product_manager
+"product manager, hts api marketplace": product_manager
+"product manager, okta for ai agents": product_manager
+"product manager - flight connectivity": product_manager
+"product manager - clickhouse cloud": product_manager
+"product manager - data collaboration & measurement": product_manager
+"product mgr - community": product_manager
+"ai product manager": product_manager
+"growth product manager": product_manager
+"product, growth/a": product_manager
+"technical product manager": technical_product_manager
+"technical product manager, core engine": technical_product_manager
+"technical product manager - core database": technical_product_manager
+"technical product manager, engine authoring features": technical_product_manager
+"technical product manager, engine authoring ux & workflows": technical_product_manager
+"technical product manager, pipeline applications & collaboration": technical_product_manager
+"group product manager": group_product_manager
+"product operations manager": product_operations_manager
+"product operations (senior) manager": product_operations_manager
+"product program manager": program_manager
+"technical program manager": technical_program_manager
+"technical program manager, connected warfare": technical_program_manager
+"technical program manager, rms": technical_program_manager
+"technical program manager, launched effects": technical_program_manager
+"program manager": program_manager
+"program manager, launched effects": program_manager
+"program manager, deployment systems & operations": program_manager
+"compensation program manager - market strategy & infrastructure": program_manager
+"sales enablement program manager, sales skills & methodology": program_manager
+"hr program manager, hr compliance & al audit": program_manager
+"project manager": project_manager
+"technical project manager": project_manager
+"project operations manager": project_manager
+"project delivery lead, battlespace": project_manager
+
+# =============================================================================
+# Design
+# =============================================================================
+"product designer": product_designer
+"product design": product_designer
+"staff/principal product designer": product_designer
+"ux designer": ux_designer
+"ux designer, monetization": ux_designer
+"ux researcher": ux_researcher
+"ux researcher, quantitative analysis": ux_researcher
+"brand designer": brand_designer
+"motion designer": motion_designer
+"graphic designer": graphic_designer
+"content designer": content_designer
+"creative director": creative_director
+"design director": design_director
+"design director, battle pass": design_director
+"product design director": design_director
+"director, product design": design_director
+"director, creative strategy": creative_director
+"systems designer": product_designer
+"game designer, engagement": product_designer
+"technical designer in animation": product_designer
+
+# =============================================================================
+# Sales — IC + Reps
+# =============================================================================
+"sales development representative": sales_development_representative
+"sales development representative, nordics": sales_development_representative
+"enterprise sales development representative": sales_development_representative
+"mid-market sales development representative": sales_development_representative
+"bilingual business development representative": business_development_representative
+"business development representative": business_development_representative
+"enterprise business development representative": business_development_representative
+"business development rep associate": business_development_representative
+"account development representative": sales_development_representative
+"account executive": account_executive
+"account executive - enterprise": enterprise_account_executive
+"account executive, enterprise": enterprise_account_executive
+"account executive, large enterprise": enterprise_account_executive
+"account executive, strategic enterprise": enterprise_account_executive
+"account executive, mid-enterprise": enterprise_account_executive
+"account executive, mid-market": mid_market_account_executive
+"account executive, mid market": mid_market_account_executive
+"account executive, midmarket": mid_market_account_executive
+"account executive, senior midmarket": mid_market_account_executive
+"account executive, commercial": commercial_account_executive
+"account executive, strategic": strategic_account_executive
+"account executive, scale": account_executive
+"account executive, territory": territory_account_executive
+"account executive, e-commerce": account_executive
+"account executive, ads manager": account_executive
+"account executive, emerging ai products": account_executive
+"account executive, emerging enterprise": account_executive
+"account executive, emerging enterprise, financial services": account_executive
+"account executive, majors - central": major_account_executive
+"enterprise account executive": enterprise_account_executive
+"enterprise account executive - dach": enterprise_account_executive
+"enterprise account executive - financial services": enterprise_account_executive
+"enterprise account executive, central": enterprise_account_executive
+"enterprise account executive, financial services": enterprise_account_executive
+"enterprise account executive, auth0": enterprise_account_executive
+"enterprise associate ae": enterprise_account_executive
+"strategic account executive": strategic_account_executive
+"strategic account executive, auth0": strategic_account_executive
+"strategic ai/bi account executive": strategic_account_executive
+"strategic core account executive - discrete manufacturing": strategic_account_executive
+"commercial account executive": commercial_account_executive
+"commercial account executive - benelux / nordics region": commercial_account_executive
+"corporate account executive": corporate_account_executive
+"mid-market account executive": mid_market_account_executive
+"mid market account executive": mid_market_account_executive
+"market account executive": mid_market_account_executive
+"mid-market account executive - public sector": mid_market_account_executive
+"mid-market client sales executive": mid_market_account_executive
+"territory account executive": territory_account_executive
+"territory account executive, retail - jackson": territory_account_executive
+"territory account executive, retail - dallas: fort worth": territory_account_executive
+"territory account executive, retail - burlington": territory_account_executive
+"territory account executive, retail - denver north": territory_account_executive
+"territory account executive, retail - south texas": territory_account_executive
+"territory account executive, retail - northeast houston": territory_account_executive
+"major account executive": major_account_executive
+"major enterprise account executive": major_account_executive
+"select major account executive": major_account_executive
+"key account executive, auth0": major_account_executive
+"key accounts executive": major_account_executive
+"local advertising account executive": account_executive
+"sales account executive": account_executive
+"enterprise sales executive": enterprise_account_executive
+"commercial saas client sales executive": commercial_account_executive
+"client account manager": account_manager
+"client partner, large customer sales": account_manager
+"regional client partner, ads solutions": account_manager
+"account director": key_account_director
+"key account director": key_account_director
+"account manager": account_manager
+"account manager, enterprise": enterprise_account_manager
+"enterprise account manager": enterprise_account_manager
+"enterprise partner account manager": enterprise_account_manager
+"enterprise partner account manager, gsis": enterprise_account_manager
+"partner account manager, mid-enterprise": enterprise_account_manager
+"programmatic account manager": account_manager
+"technical account manager": technical_account_manager
+"technical account manager, portuguese speaking": technical_account_manager
+"trading specialist": sales_specialist
+"programmatic trading specialist": sales_specialist
+"sales specialist": sales_specialist
+"sales representative": sales_representative
+"educational sales representative": sales_representative
+"sales associate": sales_representative
+
+# =============================================================================
+# Sales Management / Ops
+# =============================================================================
+"sales manager": sales_manager
+"sales manager, commercial": sales_manager
+"sales manager, mid-market": sales_manager
+"manager, mid market sales": sales_manager
+"manager, mid- enterprise partner sales": sales_manager
+"manager, commercial sales": sales_manager
+"manager, field sales": sales_manager
+"manager, account management": sales_manager
+"manager, sales development": sales_manager
+"sales development manager": sales_manager
+"manager, enterprise sales engineering": sales_manager
+"manager, solutions engineering": sales_manager
+"regional sales director": regional_sales_director
+"regional sales manager, channel": regional_sales_director
+"regional director, enterprise": regional_sales_director
+"business development manager": business_development_manager
+"business development director, satellite propulsion": business_development_manager
+"business development lead/manager, launch": business_development_manager
+"director, business development, advanced effects": business_development_manager
+"sales operations analyst": sales_operations_analyst
+"sales operations manager": sales_operations_manager
+"sales operations business partner": sales_operations_manager
+"revenue operations manager": revenue_operations_manager
+"revenue operations lead": revenue_operations_manager
+"deal desk manager": deal_desk_manager
+"deal operations analyst": deal_operations_analyst
+"deal support quality & strategy manager": deal_operations_analyst
+"sales compensation analyst": sales_operations_analyst
+"partner sales manager": partner_sales_manager
+"strategic ai sales": strategic_account_executive
+"i, strategic ai sales": strategic_account_executive
+"avp, delivery partnerships": partner_sales_manager
+"director, partnerships - snowflake": partner_sales_manager
+
+# =============================================================================
+# Customer Success / Support
+# =============================================================================
+"customer success manager": customer_success_manager
+"customer success manager, ads solutions": customer_success_manager
+"customer success manager, strategic": customer_success_manager
+"strategic customer success manager": customer_success_manager
+"scaled customer success manager": customer_success_manager
+"enterprise customer success manager": enterprise_customer_success_manager
+"mid-market customer success manager": mid_market_customer_success_manager
+"customer success associate": customer_success_associate
+"technical success manager": technical_success_manager
+"technical customer success manager": technical_success_manager
+"ai success manager": ai_success_manager
+"manager, ai outcomes": ai_success_manager
+"engagement manager": engagement_manager
+"engagement manager, public sector": engagement_manager
+
+# =============================================================================
+# Marketing
+# =============================================================================
+"marketing manager": marketing_manager
+"marketing": marketing_manager
+"product marketing manager": product_marketing_manager
+"product marketing manager, prime / otc": product_marketing_manager
+"technical product marketing manager": product_marketing_manager
+"product marketing lead": product_marketing_manager
+"director, product marketing": product_marketing_manager
+"partner marketing manager": partner_marketing_manager
+"partner marketing technology alliances manager": partner_marketing_manager
+"manager, partner growth marketing": partner_marketing_manager
+"field marketing manager": field_marketing_manager
+"field marketing manager - mid-market, east": field_marketing_manager
+"field operations manager, strategic": field_marketing_manager
+"influencer marketing manager": influencer_marketing_manager
+"social media manager": social_media_manager
+"social": social_media_manager
+"marketing coordinator": marketing_coordinator
+"marketing advisor": marketing_advisor
+"event marketing manager": event_marketing_manager
+"tradeshow and event marketing manager": event_marketing_manager
+"tradeshow associate": event_marketing_manager
+"customer marketing manager": marketing_manager
+"content marketing lead, campaigns, demand generation & thought leadership": marketing_manager
+"director, growth marketing": marketing_manager
+"director, organic growth & discoverability": marketing_manager
+"communications manager": marketing_manager
+"manager, communications & content": marketing_manager
+"al communications": marketing_manager
+"al communications manager": marketing_manager
+"government affairs manager": marketing_manager
+"marketing operations manager": marketing_manager
+"marketing operations manager, b2b sales": marketing_manager
+"marketing operations manager, product-led growth": marketing_manager
+"marketing analyst": marketing_manager
+"regional community managers": marketing_manager
+"community manager": marketing_manager
+"partner growth manager": partner_marketing_manager
+"ad operations associate": ad_operations_associate
+"technical writer": technical_writer
+"technical marketing engineer": technical_writer
+
+# =============================================================================
+# Operations / Business Ops / Supply Chain / Logistics
+# =============================================================================
+"operations associate": operations_associate
+"operations specialist": operations_specialist
+"operations manager": operations_manager
+"manager, operations": operations_manager
+"operations supervisor": operations_supervisor
+"business operations manager": operations_manager
+"strategy & operations senior manager, logistics": operations_manager
+"area manager": area_manager
+"global operations associate": global_operations_associate
+"global operations specialist": global_operations_specialist
+"ocean operations associate": ocean_operations_associate
+"customs specialist": customs_specialist
+"trade advisory lead": trade_advisory_lead
+"global supply manager": global_supply_manager
+"material planner": material_planner
+"procurement manager": procurement_manager
+"buyer": senior_buyer
+"senior buyer": senior_buyer
+"production coordinator": production_supervisor
+"fulfillment associate": operations_associate
+"fulfillment specialist": operations_specialist
+"configuration manager": operations_manager
+"federal compliance manager": operations_manager
+
+# =============================================================================
+# HR / People / Talent
+# =============================================================================
+"recruiter": recruiter
+"g&a recruiter": recruiter
+"business recruiter": recruiter
+"design recruiter": recruiter
+"technical recruiter": technical_recruiter
+"technical recruiter, production engineering": technical_recruiter
+"recruiting coordinator": recruiting_coordinator
+"manager, recruiting operations": recruiting_coordinator
+"talent acquisition partner": talent_acquisition_partner
+"talent acquisition sourcer": talent_sourcer
+"talent strategist": talent_acquisition_partner
+"talent management lead": talent_acquisition_partner
+"technical sourcer": talent_sourcer
+"technical sourcer, hardware": talent_sourcer
+"technical sourcer, production engineering": talent_sourcer
+"director, talent acquisition": director_of_talent_acquisition
+"manager, talent acquisition": director_of_talent_acquisition
+"manager, talent acquisition operations": director_of_talent_acquisition
+"hr business partner": hr_business_partner
+"people business partner": people_business_partner
+"director, people business partner": people_business_partner
+"people partner": people_partner
+"compensation partner": people_partner
+"people operations partner": people_operations_partner
+"people operations coordinator": people_operations_coordinator
+"people operations specialist": people_operations_specialist
+"people team - hr operations & ai innovation": people_operations_specialist
+"compensation analyst": compensation_analyst
+"manager, global compensation": compensation_analyst
+"director, executive compensation": compensation_analyst
+"benefits analyst": compensation_analyst
+"payroll manager": payroll_manager
+"payroll analyst": compensation_analyst
+"strategic workforce planning lead": people_operations_partner
+"workplace manager": operations_manager
+
+# =============================================================================
+# Finance / Accounting
+# =============================================================================
+"accountant": accountant
+"fund accountant": accountant
+"accounting manager": accounting_manager
+"manager, accounting": accounting_manager
+"assistant controller": accounting_manager
+"revenue accountant": revenue_accountant
+"revenue accounting manager": revenue_accounting_manager
+"manager, revenue accounting": revenue_accounting_manager
+"financial analyst": financial_analyst
+"financial analyst, fp&a": financial_analyst
+"financial analyst, gtm": financial_analyst
+"analyst, corporate fp&a": financial_analyst
+"revenue analyst": financial_analyst
+"finance manager": finance_manager
+"finance manager, commissions": finance_manager
+"finance manager, trs": finance_manager
+"manager, fp&a": finance_manager
+"fp&a manager": finance_manager
+"financial reporting manager": finance_manager
+"strategic finance manager": strategic_finance_manager
+"strategic finance associate": strategic_finance_manager
+"controller": controller
+"tax manager": tax_manager
+"accounts payable manager": accounting_manager
+"manager, accounts payable": accounting_manager
+"accounts payable specialist": accountant
+"ap & employee expense specialist": accountant
+"investor relations & corporate development": finance_manager
+"derivatives risk oversight lead": financial_analyst
+
+# =============================================================================
+# Legal
+# =============================================================================
+"legal counsel": legal_counsel
+"counsel": legal_counsel
+"counsel, regulatory": legal_counsel
+"product counsel": legal_counsel
+"product and regulatory counsel": legal_counsel
+"commercial counsel": commercial_counsel
+"corporate counsel": corporate_counsel
+"privacy counsel": privacy_counsel
+"managing counsel, ai governance": legal_counsel
+"associate general counsel": associate_general_counsel
+"general counsel": associate_general_counsel
+"deputy general counsel, strategic litigation and ip": associate_general_counsel
+"team lead, regulatory product counsel - north america": legal_counsel
+"product paralegal": product_paralegal
+"contracts manager": contracts_manager
+"s negotiator": contracts_negotiator
+"legal operations associate": product_paralegal
+"legal operations specialist": product_paralegal
+"ational fintech counsel": legal_counsel
+"ational trade compliance leader": legal_counsel
+
+# =============================================================================
+# Healthcare / Clinical
+# =============================================================================
+"physician": physician
+"family physician": family_medicine_physician
+"family medicine physician": family_medicine_physician
+"family medicine physician - sign-on bonus available": family_medicine_physician
+"per diem family medicine physician": family_medicine_physician
+"early career-primary care physician - adult medicine": primary_care_physician
+"virtual family medicine physician - sc licensed": family_medicine_physician
+"primary care physician": primary_care_physician
+"primary care physician - sign-on bonus available": primary_care_physician
+"per diem primary care physician": primary_care_physician
+"nurse practitioner": nurse_practitioner
+"family nurse practitioner or physician assistant": nurse_practitioner
+"nurse practitioner or physician assistant": nurse_practitioner
+"family medicine physician assistant or nurse practitioner": nurse_practitioner
+"virtual family nurse practitioner - ma licensed": nurse_practitioner
+"virtual family nurse practitioner - ny licensed": nurse_practitioner
+"nurse care manager": nurse_care_manager
+"pediatric behavioral health nurse care manager": nurse_care_manager
+"physician assistant": physician_assistant
+"virtual physician assistant - ca or az licensed": physician_assistant
+"virtual physician assistant - ca licensed": physician_assistant
+"virtual physician assistant - ma licensed": physician_assistant
+"virtual physician assistant - ny licensed": physician_assistant
+"mental health therapist": mental_health_therapist
+"psychiatrist": psychiatrist
+"medical assistant": medical_assistant
+"phlebotomist / administrative assistant": medical_assistant
+"clinical oncology specialist": clinical_oncology_specialist
+"testing psychologist": testing_psychologist
+"neuropsychologist": neuropsychologist
+"organ health specialist": medical_assistant
+"director, health underwriting": medical_assistant
+
+# =============================================================================
+# Retail / Hospitality
+# =============================================================================
+"restaurant manager": restaurant_manager
+"restaurant general manager": restaurant_general_manager
+"shift supervisor": shift_supervisor
+"store advisor": store_advisor
+"retail ambassador": retail_ambassador
+"brand ambassador": brand_ambassador
+
+# =============================================================================
+# Real Estate (Compass)
+# =============================================================================
+"agent experience manager": agent_experience_manager
+"agent experience coordinator": agent_experience_coordinator
+"transaction coordinator": transaction_coordinator
+"strategic growth manager": strategic_growth_manager
+"strategic growth partner": strategic_growth_partner
+
+# =============================================================================
+# Executive support / Misc
+# =============================================================================
+"executive assistant": executive_assistant
+"executive business partner": executive_business_partner
+"office administrator": office_administrator
+"studio associate": office_administrator
+"of staff": executive_business_partner  # "[chief] of staff"
+"brex rotational program": null  # internship/rotation - skip
+"helix data creator": null  # gig contractor role
+"safety specialist": null  # too generic
+"r&d portfolio and operations management": program_manager
+"director risk management": operations_manager
+
+# =============================================================================
+# Partnerships / Business Dev
+# =============================================================================
+"strategic partner manager": strategic_partner_manager
+"technology partner manager, at scale- hospitality": technology_partner_manager
+"director, commerce and performance partnerships": strategic_partner_manager
+"partnerships": strategic_partner_manager
+
+"director, field engineering": engineering_manager
+"software engineer, platform": platform_engineer
+"technical representative": technical_support_specialist
+"fullstack engineer, emerging products & product platform": software_engineer
+"technical operations manager": operations_manager
+"programs & business operations lead": program_manager
+"staff/principal engineer - perception capabilities": software_engineer
+"technical enablement manager": program_manager
+"technical operations engineer, intelligence systems": software_engineer
+
+# =============================================================================
+# Long-tail additions (from initial backfill dry-run)
+# =============================================================================
+"administrative business partner": executive_business_partner
+"performance advisor": customer_success_manager  # Compass-specific role
+"manager, customer success": customer_success_manager
+"technical consultant": solutions_consultant
+"senior business systems analyst": business_analyst
+"payments performance analyst": financial_analyst
+"customs trainer": customs_specialist
+"renewals manager": account_manager
+"director, enterprise sales": regional_sales_director
+"senior market manager": sales_manager
+"sales enablement manager": sales_operations_manager
+"relationship manager": account_manager
+"business value consultant": solutions_consultant
+"design sourcer": talent_sourcer
+"manager, technical support": technical_success_manager
+"manager, mid-market sales": sales_manager
+"head of payment optimization": product_manager
+"financial crimes investigator": financial_analyst
+"compensation manager": compensation_analyst
+"instructional designer": content_designer
+
+# =============================================================================
+# Backfill round 2 — long-tail (freq>=3 unmapped) + new canonical roles
+# =============================================================================
+"treasury analyst": treasury_analyst
+"treasury manager": treasury_manager
+"treasury finance specialist": treasury_analyst
+"associate, treasury operations": treasury_analyst
+"treasury operations analyst": treasury_analyst
+"internal auditor": internal_auditor
+"stock administrator": stock_plan_administrator
+"stock plan administrator": stock_plan_administrator
+"manager, global equity programs": equity_program_manager
+"director, global equity management": equity_program_manager
+"corporate paralegal": paralegal
+"legal operations analyst": paralegal
+"legal intern": paralegal
+"demand generation manager": demand_generation_manager
+"senior demand generation manager": demand_generation_manager
+"director, demand generation": demand_generation_manager
+"content marketing": content_marketing_manager
+"copywriter": copywriter
+"senior copywriter": copywriter
+"paid media specialist": paid_media_specialist
+"salesforce administrator": salesforce_administrator
+"senior salesforce administrator": salesforce_administrator
+"workday integrations developer": workday_administrator
+"anaplan model builder": business_systems_analyst
+"workplace experience specialist": workplace_experience_manager
+"manager, workplace experience": workplace_experience_manager
+"workplace operations coordinator": workplace_experience_manager
+"office manager": office_manager
+"customer onboarding manager": customer_onboarding_manager
+"merchant onboarding manager": customer_onboarding_manager
+"renewals specialist": renewals_manager
+"sales enablement manager": sales_enablement_manager
+"director, global sales enablement": sales_enablement_manager
+"field enablement manager": field_enablement_manager
+"enablement manager": sales_enablement_manager
+"partner development manager": partner_development_manager
+"partner manager": partner_manager
+"senior partner manager": partner_manager
+"sr. measurement partner": partner_manager
+"phlebotomist": phlebotomist
+"phlebotomist/front desk": phlebotomist
+"float phlebotomist/administrative assistant": phlebotomist
+"clinical lab scientist": clinical_lab_scientist
+"clinical case manager": clinical_lab_scientist
+"clinical field specialist": clinical_lab_scientist
+"threat specialist": threat_specialist
+"staff security analyst, insider threat": threat_specialist
+"deal desk analyst": deal_desk_analyst
+"deal operations administrator": deal_desk_analyst
+"revenue operations analyst": revenue_operations_analyst
+"senior revenue operations analyst": revenue_operations_analyst
+"revenue operations lead": revenue_strategy_operations_lead
+"revenue strategy & operations lead": revenue_strategy_operations_lead
+"manager, revenue strategy & operations": revenue_strategy_operations_lead
+"sr. analyst, sales strategy & operations": revenue_operations_analyst
+"business systems analyst": business_systems_analyst
+"business systems architect": business_systems_analyst
+"system administrator": systems_administrator
+"systems administrator": systems_administrator
+"it operation specialist": systems_administrator
+"talent acquisition specialist": talent_acquisition_specialist
+"talent acquisition coordinator": recruiting_coordinator
+"director, technical recruiting": director_of_talent_acquisition
+"payroll specialist": payroll_specialist
+"senior payroll specialist": payroll_specialist
+"payroll associate": payroll_specialist
+"administrative assistant": administrative_assistant
+"senior administrative assistant": administrative_assistant
+"administrative coordinator": administrative_assistant
+"incident manager": incident_manager
+"senior incident manager": incident_manager
+"manager, customer success": customer_success_manager
+"client success manager": customer_success_manager
+"physical security manager": physical_security_manager
+"safety specialist": physical_security_manager
+"senior security analyst": security_engineer
+
+# Sales / GTM long-tail
+"sales director, enterprise": regional_sales_director
+"sales director, scale": regional_sales_director
+"area sales director, enterprise": regional_sales_director
+"senior sales director, strategic retail": regional_sales_director
+"director, sales development": sales_manager
+"director, ai partner solutions": partner_development_manager
+"manager, growth sales": sales_manager
+"manager, enterprise business development": business_development_manager
+"growth client sales executive": account_executive
+"account development executive": sales_development_representative
+"sales development specialist": sales_development_representative
+"market manager": sales_manager
+"senior market manager": sales_manager
+"senior partner business manager": partner_manager
+"senior partner manager - channels": partner_manager
+"senior technology partner development manager": technology_partner_manager
+"sr. ecosystem growth manager": partner_manager
+"senior mid-market sales executive": mid_market_account_executive
+"senior solution architect": solutions_architect
+"sr. lead solution architect - ai agents": solutions_architect
+"technical solution architect": solutions_architect
+"solution consultant - r&d": solutions_consultant
+"senior cloudflare one gtm specialist": solutions_consultant
+"business value consultant": solutions_consultant
+"senior value advisor": solutions_consultant
+"value insights manager": solutions_consultant
+"product growth partner": product_manager
+"international expansion lead": product_manager
+"international expansion lead (product)": product_manager
+"head of payment optimization (product)": product_manager
+"director, product management, video ad platform": director_of_product
+"design manager": design_director
+"senior narrative designer": product_designer
+"staff product researcher": ux_researcher
+"senior ai programmer, special projects": software_engineer
+"data journalist, economics & research group": data_analyst
+"economist, economics & research group": data_analyst
+"real estate market analyst": data_analyst
+"senior accounting analyst": accountant
+"senior tax analyst": tax_manager
+"senior procurement analyst": procurement_manager
+"senior procurement specialist": procurement_manager
+"director, procurement": procurement_manager
+"senior trade advisory associate": trade_advisory_lead
+"strategic finance analyst": strategic_finance_manager
+"strategic finance, gtm": strategic_finance_manager
+"financial analyst, fp&a": financial_analyst
+"manager, professional services": engagement_manager
+"senior manager, professional services": engagement_manager
+"manager, implementation consulting": implementation_manager
+"senior manager, implementation": implementation_manager
+"manager, implementation": implementation_manager
+"enterprise services manager": engagement_manager
+"merchant fraud analyst": data_analyst
+"fraud prevention and detection specialist": data_analyst
+"customer service specialist": support_specialist
+"customer enablement manager": customer_success_manager
+"senior escalation manager": technical_support_specialist
+"product support manager": product_support_specialist
+"specialist, premium support": technical_support_specialist
+"senior specialist, premium support": technical_support_specialist
+"team lead - technical support": technical_support_specialist
+"team lead, account management strategy and execution": sales_manager
+"supervisor, customer success team": customer_success_manager
+"manager, technical support": technical_success_manager
+"showroom sales supervisor": shift_supervisor
+"asset protection associate": operations_associate
+"site leader": area_manager
+"head of community": social_media_manager
+"head of security": security_engineer
+"head of employee relations": hr_business_partner
+"director, international benefits": compensation_analyst
+"director, executive compensation": compensation_analyst
+"compensation manager": compensation_analyst
+"senior compensation manager": compensation_analyst
+"compensation program manager": compensation_analyst
+"manager, global compensation": compensation_analyst
+"manager, global people solutions": hr_business_partner
+"people consultant": hr_business_partner
+"people technology analyst": business_systems_analyst
+"people product technical lead - workday": workday_administrator
+"people team - hr operations & ai innovation": hr_business_partner
+"senior manager, people systems": business_systems_analyst
+"senior identity specialist": security_engineer
+"contract manager": contracts_manager
+"contracts manager": contracts_manager
+"sr. digital strategist": marketing_manager
+"customer experience agent": support_specialist
+"customer experience team lead": support_specialist
+"insurance agent, protect": sales_representative
+"member service representative": support_specialist
+"compliance manager": legal_counsel
+"compliance manager (card & rewards)": legal_counsel
+"federal compliance manager": legal_counsel
+"associate manager, compliance": legal_counsel
+"compliance associate": legal_counsel
+"compliance engineer": legal_counsel
+"manager, compliance execution & enablement": legal_counsel
+"global safety response operations analyst": legal_counsel
+"financial reporting manager": finance_manager
+"senior manager, gtm business systems": business_systems_analyst
+"senior manager, gtm incentive compensation design": compensation_analyst
+"senior manager, strategic initiatives": program_manager
+"senior manager, strategy and operations": program_manager
+"strategy & operations senior manager, logistics": program_manager
+"senior manager, deal strategy": deal_desk_manager
+"senior sales outbound programs manager": sales_operations_manager
+"director, creative strategy": creative_director
+"director, organic growth & discoverability": marketing_manager
+"director, growth marketing": marketing_manager
+"director, partnerships - snowflake": strategic_partner_manager
+"manager, partner growth marketing": partner_marketing_manager
+"manager, partner product and delivery": program_manager
+"manager, city operations": operations_manager
+"manager, ai outcomes": ai_success_manager
+"ai outcomes manager": ai_success_manager
+"ai customer lifecycle manager": customer_success_manager
+"ai field consultant": solutions_consultant
+"ai intern": ai_engineer
+"applied ai architect": applied_ai_engineer
+"principal ai architect": applied_ai_engineer
+"sr. compensation manager": compensation_analyst
+"sr. tradeshow and event marketing manager": event_marketing_manager
+"sr. solutions engineer": solutions_engineer
+"sr. solutions architect": solutions_architect
+"sr. staff software development engineer": software_engineer
+"sr. communications manger - ads": marketing_manager
+"sr. client partner": account_manager
+"sr. measurement partner, ads solutions": account_manager
+"customer service": support_specialist
+"customs trainer": customs_specialist
+"sneaker and apparel authenticator": quality_inspector
+"corporate counsel": corporate_counsel
+"product counsel": legal_counsel
+"product and regulatory counsel": legal_counsel
+"counsel, regulatory": legal_counsel
+"senior renewals specialist": renewals_manager
+"renewals specialist": renewals_manager
+"senior stock plan administrator": stock_plan_administrator
+"senior stock administrator": stock_plan_administrator
+"investor relations & corporate development": finance_manager
+"senior manager, investor relations": finance_manager
+"manager, investor relations": finance_manager
+"director, executive compensation": compensation_analyst
+"director, health underwriting": medical_assistant
+"global safety response operations": legal_counsel
+"trade compliance leader": legal_counsel
+"ational fintech counsel": legal_counsel
+"ational trade compliance leader": legal_counsel
+"derivatives risk oversight lead": financial_analyst
+"director risk management": operations_manager
+"deal support quality & strategy manager": deal_operations_analyst
+"strategy & operations": program_manager
+"strategic workforce planning lead": people_operations_partner
+"head of community": social_media_manager
+"team lead, regulatory product counsel - north america": legal_counsel
+"customer care lead consultant": support_specialist
+"global communications manager": marketing_manager
+"global communications": marketing_manager
+"director, communications": marketing_manager
+"manager, communications": marketing_manager
+"director, communications & brand": marketing_manager
+"director, content marketing": content_marketing_manager
+"director, brand": creative_director
+"director, marketing": marketing_manager
+"director, product marketing": product_marketing_manager
+"director, customer marketing": marketing_manager
+"director, growth": marketing_manager
+"director, growth marketing": marketing_manager
+"director, paid media": paid_media_specialist
+"director, lifecycle marketing": marketing_manager
+"director, performance marketing": paid_media_specialist
+"director, sales enablement": sales_enablement_manager
+"director, customer success": customer_success_manager
+"director, customer experience": customer_success_manager
+"director, support": customer_success_manager
+"director, technical support": technical_success_manager
+"director, technical writing": technical_writer
+"director, design": design_director
+"director, security": security_engineer
+"director, it": it_engineer
+"director, infrastructure": infrastructure_engineer
+"director, devops": devops_engineer
+"director, data": data_engineer
+"director, data engineering": data_science_manager
+"director, data science": data_science_manager
+"director, machine learning": data_science_manager
+"director, ai": ai_engineer
+"director, applied ai": applied_ai_engineer
+"director, finance": finance_manager
+"director, accounting": accounting_manager
+"director, fp&a": finance_manager
+"director, tax": tax_manager
+"director, treasury": treasury_manager
+"director, legal": legal_counsel
+"director, hr": hr_business_partner
+"director, people": hr_business_partner
+"director, talent": director_of_talent_acquisition
+"director, recruiting": director_of_talent_acquisition
+"director, operations": operations_manager
+"director, business operations": operations_manager
+"director, supply chain": global_supply_manager
+"director, procurement": procurement_manager
+"director, partnerships": strategic_partner_manager
+"director, product": director_of_product
+"director, product management": director_of_product
+"director, product design": design_director
+"director, ux": design_director
+"director, brand design": design_director
+"director, business development": business_development_manager
+"director, sales": sales_manager
+
+# =============================================================================
+# Junk / unmappable
+# =============================================================================
+"don't see what you're looking for?": null
+"s manager": null  # truncated artifact
+"select major account executive (cst)": major_account_executive
+
+# =============================================================================
+# Bulk fallback aliases — common "[domain] [role-noun]" forms that should map
+# to the closest canonical even without a dedicated taxonomy entry.
+# =============================================================================
+# Director forms (no dedicated *_director canonical → use generic manager)
+"operations director": operations_manager
+"sales director": sales_manager
+"finance director": finance_manager
+"marketing director": marketing_manager
+"engineering director": director_of_engineering
+"product director": director_of_product
+"design director": director_of_design
+"people director": director_of_people
+"hr director": hr_manager
+"talent director": talent_manager
+"recruiting director": recruiting_manager
+"communications director": communications_manager
+"director of communications": communications_manager
+"director of internal communications": communications_manager
+"director of marketing": marketing_manager
+"director of sales": sales_manager
+"director of operations": operations_manager
+"director of finance": finance_manager
+"director of people": director_of_people
+"data director": data_science_manager
+"analytics director": data_science_manager
+"director of analytics": data_science_manager
+
+# Manager forms — common compounds that didn't have aliases
+"operations analyst": business_analyst
+"data manager": data_science_manager
+"analytics manager": data_science_manager
+"data operations analyst": business_analyst
+"strategy manager": business_analyst
+"strategy & planning manager": business_analyst
+"planning manager": program_manager
+"program management": program_manager
+"performance management": business_analyst
+"order management": operations_specialist
+"vendor management": operations_manager
+"procurement & vendor management": operations_manager
+"risk management": risk_manager
+"third-party risk management": risk_manager
+"portfolio management": portfolio_manager
+"underwriting and portfolio management": portfolio_manager
+"account management": account_manager
+"talent acquisition": talent_acquisition_specialist
+"talent acquisition partner": talent_acquisition_specialist
+"customer success": customer_success_manager
+"customer experience": customer_experience_manager
+"supply chain": supply_chain_analyst
+"machine learning": machine_learning_engineer
+"strategic finance": strategic_finance_manager
+"clinical strategy": medical_director
+"brand strategy": marketing_manager
+"campaign strategy": marketing_manager
+"marketplace strategy": business_analyst
+"business strategy": business_analyst
+
+# Bare acronyms / common shorthands
+"sdr": sales_development_representative
+"bdr": business_development_representative
+"ae": account_executive
+"se": sales_engineer
+"sa": solutions_architect
+"pm": product_manager
+"em": engineering_manager
+"tpm": technical_program_manager
+"se ii": software_engineer
+"swe": software_engineer
+
+# Tech Lead patterns (rewritten by step 4 to "{} engineer")
+"android core product engineer": software_engineer
+"web core product & chrome extension engineer": software_engineer
+
+# Lead / Sr. Lead patterns
+"analytics lead": data_analyst
+"compliance lead": compliance_specialist
+"product owner": product_manager
+"economist": data_scientist
+"biostatistician": data_scientist
+"medical science liaison": physician
+"localization manager": program_manager
+"localization producer": program_manager
+"localisation producer": program_manager
+
+# Recruiting / Talent
+"technical recruiter": recruiter
+"technical recruiting": recruiter
+"manager, technical recruiting": recruiting_manager
+"talent partner": talent_acquisition_specialist
+
+# Common artist/creative roles (game industry)
+"2d artist": graphic_designer
+"3d artist": graphic_designer
+"technical artist": graphic_designer
+"animation artist": graphic_designer
+"lead artist": graphic_designer
+"concept artist": graphic_designer
+
+# Junk / acquisition pages
+"future opportunities": null
+"general application": null
+"join our talent network": null
+"talent community": null
+"general interest": null
+"open application": null
+
+# High-volume residual patterns (final pass)
+"retail key holder": cashier
+"key holder": cashier
+"member of technical staff": software_engineer
+"member of technical": software_engineer
+"member of product": product_manager
+"liquor barn - store associate": store_associate
+"liquor barn - key holder": cashier
+"liquor store associate": store_associate
+"client partner": account_manager
+"global sourcing manager": senior_buyer
+"sourcing manager": senior_buyer
+"sales district manager": sales_manager
+"district manager": sales_manager
+"regional director": operations_manager
+"finance & strategy": finance_manager
+"finance and strategy": finance_manager
+"sales executive": account_executive
+"field sales executive": account_executive
+"sales development": sales_development_representative
+"rvp": sales_manager
+"avp": operations_manager
+"producer": program_manager
+"demand & supply planner": material_planner
+"demand and supply planner": material_planner
+"supply planner": material_planner
+"demand planner": material_planner
+"production technician": manufacturing_technician
+"production planner": material_planner
+"phd research": research_scientist
+"phd researcher": research_scientist
+"researcher": research_scientist
+"master scheduler": material_planner
+"mobile service technician": field_service_technician
+"service technician": field_service_technician
+"technical lead": engineering_manager
+"associate director": operations_manager
+"associate store leader": retail_store_manager
+"store leader": retail_store_manager
+"store manager": retail_store_manager
+"vice president": operations_manager
+"regional vice president": operations_manager
+"clinical practice support expert": medical_assistant
+"editor": technical_writer
+"gameplay programmer": software_engineer
+"gameplay ai programmer": software_engineer
+"c programmer": software_engineer
+"animator": graphic_designer
+"technical animator": graphic_designer
+"data creator": data_analyst

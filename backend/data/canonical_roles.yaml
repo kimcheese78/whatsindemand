@@ -1,0 +1,1392 @@
+# Canonical role taxonomy for WhatsInDemand
+# Each entry: id -> {name, category, job_family, parent?}
+# Seniority is NOT part of canonical id — it's extracted separately at scrape time.
+# `parent` is optional — used when a role is a specialization of another (e.g. backend_engineer parent = software_engineer)
+
+# =============================================================================
+# ENGINEERING — Software
+# =============================================================================
+software_engineer:
+  name: Software Engineer
+  category: Engineering
+  job_family: Software Engineering
+
+# =============================================================================
+# ENGINEERING — Data / ML / AI
+# =============================================================================
+data_engineer:
+  name: Data Engineer
+  category: Engineering
+  job_family: Data Engineering
+
+analytics_engineer:
+  name: Analytics Engineer
+  category: Engineering
+  job_family: Data Engineering
+
+machine_learning_engineer:
+  name: Machine Learning Engineer
+  category: Engineering
+  job_family: Machine Learning
+
+ai_engineer:
+  name: AI Engineer
+  category: Engineering
+  job_family: Machine Learning
+
+applied_ai_engineer:
+  name: Applied AI Engineer
+  category: Engineering
+  job_family: Machine Learning
+  parent: ai_engineer
+
+ai_infrastructure_engineer:
+  name: AI Infrastructure Engineer
+  category: Engineering
+  job_family: Machine Learning
+  parent: ai_engineer
+
+forward_deployed_data_scientist:
+  name: Forward Deployed Data Scientist
+  category: Data Science
+  job_family: Customer Engineering
+  parent: data_scientist
+
+# =============================================================================
+# ENGINEERING — Infrastructure / Platform
+# =============================================================================
+infrastructure_engineer:
+  name: Infrastructure Engineer
+  category: Engineering
+  job_family: Infrastructure
+
+platform_engineer:
+  name: Platform Engineer
+  category: Engineering
+  job_family: Infrastructure
+
+devops_engineer:
+  name: DevOps Engineer
+  category: Engineering
+  job_family: Infrastructure
+
+site_reliability_engineer:
+  name: Site Reliability Engineer
+  category: Engineering
+  job_family: Infrastructure
+
+cloud_engineer:
+  name: Cloud Engineer
+  category: Engineering
+  job_family: Infrastructure
+
+cloud_infrastructure_engineer:
+  name: Cloud Infrastructure Engineer
+  category: Engineering
+  job_family: Infrastructure
+  parent: infrastructure_engineer
+
+network_engineer:
+  name: Network Engineer
+  category: Engineering
+  job_family: Infrastructure
+
+systems_engineer:
+  name: Systems Engineer
+  category: Engineering
+  job_family: Systems
+
+# =============================================================================
+# ENGINEERING — Security
+# =============================================================================
+security_engineer:
+  name: Security Engineer
+  category: Engineering
+  job_family: Security
+
+application_security_engineer:
+  name: Application Security Engineer
+  category: Engineering
+  job_family: Security
+  parent: security_engineer
+
+product_security_engineer:
+  name: Product Security Engineer
+  category: Engineering
+  job_family: Security
+  parent: security_engineer
+
+cloud_security_engineer:
+  name: Cloud Security Engineer
+  category: Engineering
+  job_family: Security
+  parent: security_engineer
+
+infrastructure_security_engineer:
+  name: Infrastructure Security Engineer
+  category: Engineering
+  job_family: Security
+  parent: security_engineer
+
+offensive_security_engineer:
+  name: Offensive Security Engineer
+  category: Engineering
+  job_family: Security
+  parent: security_engineer
+
+enterprise_security_engineer:
+  name: Enterprise Security Engineer
+  category: Engineering
+  job_family: Security
+  parent: security_engineer
+
+information_security_engineer:
+  name: Information Security Engineer
+  category: Engineering
+  job_family: Security
+  parent: security_engineer
+
+security_operations_engineer:
+  name: Security Operations Engineer
+  category: Engineering
+  job_family: Security
+
+security_operations_analyst:
+  name: Security Operations Analyst
+  category: Engineering
+  job_family: Security
+
+# =============================================================================
+# ENGINEERING — Hardware / Systems
+# =============================================================================
+electrical_engineer:
+  name: Electrical Engineer
+  category: Engineering
+  job_family: Hardware Engineering
+
+mechanical_engineer:
+  name: Mechanical Engineer
+  category: Engineering
+  job_family: Hardware Engineering
+
+manufacturing_engineer:
+  name: Manufacturing Engineer
+  category: Engineering
+  job_family: Manufacturing
+
+robotics_engineer:
+  name: Robotics Engineer
+  category: Engineering
+  job_family: Robotics
+
+thermal_engineer:
+  name: Thermal Engineer
+  category: Engineering
+  job_family: Hardware Engineering
+
+fpga_engineer:
+  name: FPGA Engineer
+  category: Engineering
+  job_family: Hardware Engineering
+
+manufacturing_test_engineer:
+  name: Manufacturing Test Engineer
+  category: Engineering
+  job_family: Manufacturing
+  parent: manufacturing_engineer
+
+mission_operations_engineer:
+  name: Mission Operations Engineer
+  category: Engineering
+  job_family: Aerospace
+
+# =============================================================================
+# ENGINEERING — Customer-facing
+# =============================================================================
+sales_engineer:
+  name: Sales Engineer
+  category: Engineering
+  job_family: Sales Engineering
+
+solutions_engineer:
+  name: Solutions Engineer
+  category: Engineering
+  job_family: Sales Engineering
+
+solutions_architect:
+  name: Solutions Architect
+  category: Engineering
+  job_family: Sales Engineering
+
+solutions_consultant:
+  name: Solutions Consultant
+  category: Engineering
+  job_family: Sales Engineering
+
+partner_solutions_architect:
+  name: Partner Solutions Architect
+  category: Engineering
+  job_family: Sales Engineering
+  parent: solutions_architect
+
+resident_solutions_architect:
+  name: Resident Solutions Architect
+  category: Engineering
+  job_family: Sales Engineering
+  parent: solutions_architect
+
+implementation_engineer:
+  name: Implementation Engineer
+  category: Engineering
+  job_family: Customer Engineering
+
+implementation_consultant:
+  name: Implementation Consultant
+  category: Engineering
+  job_family: Customer Engineering
+
+implementation_manager:
+  name: Implementation Manager
+  category: Engineering
+  job_family: Customer Engineering
+
+integration_engineer:
+  name: Integration Engineer
+  category: Engineering
+  job_family: Customer Engineering
+
+field_engineer:
+  name: Field Engineer
+  category: Engineering
+  job_family: Customer Engineering
+
+deployment_strategist:
+  name: Deployment Strategist
+  category: Engineering
+  job_family: Customer Engineering
+
+# =============================================================================
+# ENGINEERING — Quality / Test / Support
+# =============================================================================
+qa_engineer:
+  name: QA Engineer
+  category: Engineering
+  job_family: Quality Engineering
+
+test_engineer:
+  name: Test Engineer
+  category: Engineering
+  job_family: Quality Engineering
+
+technical_support_engineer:
+  name: Technical Support Engineer
+  category: Engineering
+  job_family: Customer Support
+
+it_support_engineer:
+  name: IT Support Engineer
+  category: IT
+  job_family: IT Operations
+
+it_engineer:
+  name: IT Engineer
+  category: IT
+  job_family: IT Operations
+
+# =============================================================================
+# ENGINEERING — Specialty
+# =============================================================================
+gtm_engineer:
+  name: GTM Engineer
+  category: Engineering
+  job_family: Software Engineering
+
+design_engineer:
+  name: Design Engineer
+  category: Engineering
+  job_family: Software Engineering
+
+# =============================================================================
+# ENGINEERING — Management
+# =============================================================================
+engineering_manager:
+  name: Engineering Manager
+  category: Engineering
+  job_family: Engineering Leadership
+
+director_of_engineering:
+  name: Director of Engineering
+  category: Engineering
+  job_family: Engineering Leadership
+
+director_of_product:
+  name: Director of Product
+  category: Product
+  job_family: Product Leadership
+
+# =============================================================================
+# DATA SCIENCE / RESEARCH
+# =============================================================================
+data_scientist:
+  name: Data Scientist
+  category: Data Science
+  job_family: Data Science
+
+data_analyst:
+  name: Data Analyst
+  category: Data Science
+  job_family: Analytics
+
+product_analyst:
+  name: Product Analyst
+  category: Product
+  job_family: Analytics
+
+business_analyst:
+  name: Business Analyst
+  category: Operations
+  job_family: Analytics
+
+ml_scientist:
+  name: Machine Learning Scientist
+  category: Data Science
+  job_family: Machine Learning
+
+applied_scientist:
+  name: Applied Scientist
+  category: Data Science
+  job_family: Machine Learning
+
+research_engineer:
+  name: Research Engineer
+  category: Data Science
+  job_family: Research
+
+research_scientist:
+  name: Research Scientist
+  category: Data Science
+  job_family: Research
+
+data_science_manager:
+  name: Data Science Manager
+  category: Data Science
+  job_family: Data Science Leadership
+
+# =============================================================================
+# PRODUCT
+# =============================================================================
+product_manager:
+  name: Product Manager
+  category: Product
+  job_family: Product Management
+
+technical_product_manager:
+  name: Technical Product Manager
+  category: Product
+  job_family: Product Management
+  parent: product_manager
+
+group_product_manager:
+  name: Group Product Manager
+  category: Product
+  job_family: Product Management
+  parent: product_manager
+
+product_operations_manager:
+  name: Product Operations Manager
+  category: Product
+  job_family: Product Operations
+
+technical_program_manager:
+  name: Technical Program Manager
+  category: Product
+  job_family: Program Management
+
+program_manager:
+  name: Program Manager
+  category: Operations
+  job_family: Program Management
+
+project_manager:
+  name: Project Manager
+  category: Operations
+  job_family: Project Management
+
+# =============================================================================
+# DESIGN
+# =============================================================================
+product_designer:
+  name: Product Designer
+  category: Design
+  job_family: Product Design
+
+ux_designer:
+  name: UX Designer
+  category: Design
+  job_family: Product Design
+
+ux_researcher:
+  name: UX Researcher
+  category: Design
+  job_family: User Research
+
+brand_designer:
+  name: Brand Designer
+  category: Design
+  job_family: Brand & Marketing Design
+
+motion_designer:
+  name: Motion Designer
+  category: Design
+  job_family: Brand & Marketing Design
+
+content_designer:
+  name: Content Designer
+  category: Design
+  job_family: Content Design
+
+graphic_designer:
+  name: Graphic Designer
+  category: Design
+  job_family: Brand & Marketing Design
+
+creative_director:
+  name: Creative Director
+  category: Design
+  job_family: Design Leadership
+
+design_director:
+  name: Design Director
+  category: Design
+  job_family: Design Leadership
+
+# =============================================================================
+# SALES
+# =============================================================================
+sales_development_representative:
+  name: Sales Development Representative
+  category: Sales
+  job_family: Sales Development
+
+business_development_representative:
+  name: Business Development Representative
+  category: Sales
+  job_family: Sales Development
+
+account_executive:
+  name: Account Executive
+  category: Sales
+  job_family: Account Management
+
+enterprise_account_executive:
+  name: Enterprise Account Executive
+  category: Sales
+  job_family: Account Management
+  parent: account_executive
+
+mid_market_account_executive:
+  name: Mid-Market Account Executive
+  category: Sales
+  job_family: Account Management
+  parent: account_executive
+
+commercial_account_executive:
+  name: Commercial Account Executive
+  category: Sales
+  job_family: Account Management
+  parent: account_executive
+
+strategic_account_executive:
+  name: Strategic Account Executive
+  category: Sales
+  job_family: Account Management
+  parent: account_executive
+
+corporate_account_executive:
+  name: Corporate Account Executive
+  category: Sales
+  job_family: Account Management
+  parent: account_executive
+
+territory_account_executive:
+  name: Territory Account Executive
+  category: Sales
+  job_family: Account Management
+  parent: account_executive
+
+major_account_executive:
+  name: Major Account Executive
+  category: Sales
+  job_family: Account Management
+  parent: account_executive
+
+account_manager:
+  name: Account Manager
+  category: Sales
+  job_family: Account Management
+
+enterprise_account_manager:
+  name: Enterprise Account Manager
+  category: Sales
+  job_family: Account Management
+  parent: account_manager
+
+technical_account_manager:
+  name: Technical Account Manager
+  category: Sales
+  job_family: Account Management
+  parent: account_manager
+
+key_account_director:
+  name: Key Account Director
+  category: Sales
+  job_family: Account Management
+
+partner_sales_manager:
+  name: Partner Sales Manager
+  category: Sales
+  job_family: Partnerships
+
+sales_manager:
+  name: Sales Manager
+  category: Sales
+  job_family: Sales Management
+
+regional_sales_director:
+  name: Regional Sales Director
+  category: Sales
+  job_family: Sales Management
+
+business_development_manager:
+  name: Business Development Manager
+  category: Sales
+  job_family: Business Development
+
+sales_specialist:
+  name: Sales Specialist
+  category: Sales
+  job_family: Sales Operations
+
+sales_operations_analyst:
+  name: Sales Operations Analyst
+  category: Sales
+  job_family: Sales Operations
+
+sales_operations_manager:
+  name: Sales Operations Manager
+  category: Sales
+  job_family: Sales Operations
+
+revenue_operations_manager:
+  name: Revenue Operations Manager
+  category: Sales
+  job_family: Sales Operations
+
+deal_desk_manager:
+  name: Deal Desk Manager
+  category: Sales
+  job_family: Sales Operations
+
+deal_operations_analyst:
+  name: Deal Operations Analyst
+  category: Sales
+  job_family: Sales Operations
+
+sales_representative:
+  name: Sales Representative
+  category: Sales
+  job_family: Inside Sales
+
+# =============================================================================
+# CUSTOMER SUCCESS / SUPPORT
+# =============================================================================
+customer_success_manager:
+  name: Customer Success Manager
+  category: Customer Success
+  job_family: Customer Success
+
+enterprise_customer_success_manager:
+  name: Enterprise Customer Success Manager
+  category: Customer Success
+  job_family: Customer Success
+  parent: customer_success_manager
+
+mid_market_customer_success_manager:
+  name: Mid-Market Customer Success Manager
+  category: Customer Success
+  job_family: Customer Success
+  parent: customer_success_manager
+
+customer_success_associate:
+  name: Customer Success Associate
+  category: Customer Success
+  job_family: Customer Success
+
+technical_success_manager:
+  name: Technical Success Manager
+  category: Customer Success
+  job_family: Customer Success
+
+ai_success_manager:
+  name: AI Success Manager
+  category: Customer Success
+  job_family: Customer Success
+
+engagement_manager:
+  name: Engagement Manager
+  category: Customer Success
+  job_family: Professional Services
+
+product_support_specialist:
+  name: Product Support Specialist
+  category: Customer Success
+  job_family: Customer Support
+
+technical_support_specialist:
+  name: Technical Support Specialist
+  category: Customer Success
+  job_family: Customer Support
+
+support_specialist:
+  name: Support Specialist
+  category: Customer Success
+  job_family: Customer Support
+
+product_support_engineer:
+  name: Product Support Engineer
+  category: Engineering
+  job_family: Customer Support
+
+# =============================================================================
+# MARKETING
+# =============================================================================
+marketing_manager:
+  name: Marketing Manager
+  category: Marketing
+  job_family: Marketing
+
+product_marketing_manager:
+  name: Product Marketing Manager
+  category: Marketing
+  job_family: Product Marketing
+
+partner_marketing_manager:
+  name: Partner Marketing Manager
+  category: Marketing
+  job_family: Marketing
+
+field_marketing_manager:
+  name: Field Marketing Manager
+  category: Marketing
+  job_family: Marketing
+
+influencer_marketing_manager:
+  name: Influencer Marketing Manager
+  category: Marketing
+  job_family: Marketing
+
+social_media_manager:
+  name: Social Media Manager
+  category: Marketing
+  job_family: Marketing
+
+marketing_coordinator:
+  name: Marketing Coordinator
+  category: Marketing
+  job_family: Marketing
+
+marketing_advisor:
+  name: Marketing Advisor
+  category: Marketing
+  job_family: Marketing
+
+event_marketing_manager:
+  name: Event Marketing Manager
+  category: Marketing
+  job_family: Marketing
+
+# =============================================================================
+# OPERATIONS / BUSINESS OPS
+# =============================================================================
+operations_associate:
+  name: Operations Associate
+  category: Operations
+  job_family: Business Operations
+
+operations_specialist:
+  name: Operations Specialist
+  category: Operations
+  job_family: Business Operations
+
+operations_manager:
+  name: Operations Manager
+  category: Operations
+  job_family: Business Operations
+
+operations_supervisor:
+  name: Operations Supervisor
+  category: Operations
+  job_family: Business Operations
+
+business_systems_engineer:
+  name: Business Systems Engineer
+  category: Operations
+  job_family: IT / Business Systems
+
+# =============================================================================
+# HR / PEOPLE / TALENT
+# =============================================================================
+recruiter:
+  name: Recruiter
+  category: People
+  job_family: Talent Acquisition
+
+technical_recruiter:
+  name: Technical Recruiter
+  category: People
+  job_family: Talent Acquisition
+  parent: recruiter
+
+recruiting_coordinator:
+  name: Recruiting Coordinator
+  category: People
+  job_family: Talent Acquisition
+
+talent_acquisition_partner:
+  name: Talent Acquisition Partner
+  category: People
+  job_family: Talent Acquisition
+
+talent_sourcer:
+  name: Talent Sourcer
+  category: People
+  job_family: Talent Acquisition
+
+director_of_talent_acquisition:
+  name: Director of Talent Acquisition
+  category: People
+  job_family: Talent Acquisition
+
+hr_business_partner:
+  name: HR Business Partner
+  category: People
+  job_family: HR
+
+people_business_partner:
+  name: People Business Partner
+  category: People
+  job_family: HR
+
+people_partner:
+  name: People Partner
+  category: People
+  job_family: HR
+
+people_operations_partner:
+  name: People Operations Partner
+  category: People
+  job_family: People Operations
+
+people_operations_coordinator:
+  name: People Operations Coordinator
+  category: People
+  job_family: People Operations
+
+people_operations_specialist:
+  name: People Operations Specialist
+  category: People
+  job_family: People Operations
+
+compensation_analyst:
+  name: Compensation Analyst
+  category: People
+  job_family: Total Rewards
+
+payroll_manager:
+  name: Payroll Manager
+  category: People
+  job_family: Payroll
+
+# =============================================================================
+# FINANCE / ACCOUNTING
+# =============================================================================
+accountant:
+  name: Accountant
+  category: Finance
+  job_family: Accounting
+
+accounting_manager:
+  name: Accounting Manager
+  category: Finance
+  job_family: Accounting
+
+revenue_accountant:
+  name: Revenue Accountant
+  category: Finance
+  job_family: Accounting
+  parent: accountant
+
+revenue_accounting_manager:
+  name: Revenue Accounting Manager
+  category: Finance
+  job_family: Accounting
+  parent: accounting_manager
+
+financial_analyst:
+  name: Financial Analyst
+  category: Finance
+  job_family: FP&A
+
+finance_manager:
+  name: Finance Manager
+  category: Finance
+  job_family: Finance
+
+strategic_finance_manager:
+  name: Strategic Finance Manager
+  category: Finance
+  job_family: Strategic Finance
+
+controller:
+  name: Controller
+  category: Finance
+  job_family: Accounting
+
+tax_manager:
+  name: Tax Manager
+  category: Finance
+  job_family: Tax
+
+# =============================================================================
+# LEGAL
+# =============================================================================
+legal_counsel:
+  name: Legal Counsel
+  category: Legal
+  job_family: Legal
+
+commercial_counsel:
+  name: Commercial Counsel
+  category: Legal
+  job_family: Legal
+  parent: legal_counsel
+
+corporate_counsel:
+  name: Corporate Counsel
+  category: Legal
+  job_family: Legal
+  parent: legal_counsel
+
+privacy_counsel:
+  name: Privacy Counsel
+  category: Legal
+  job_family: Legal
+  parent: legal_counsel
+
+associate_general_counsel:
+  name: Associate General Counsel
+  category: Legal
+  job_family: Legal
+
+product_paralegal:
+  name: Product Paralegal
+  category: Legal
+  job_family: Legal
+
+contracts_manager:
+  name: Contracts Manager
+  category: Legal
+  job_family: Legal
+
+contracts_negotiator:
+  name: Contracts Negotiator
+  category: Legal
+  job_family: Legal
+
+# =============================================================================
+# HEALTHCARE / CLINICAL
+# =============================================================================
+physician:
+  name: Physician
+  category: Healthcare
+  job_family: Clinical
+
+primary_care_physician:
+  name: Primary Care Physician
+  category: Healthcare
+  job_family: Clinical
+  parent: physician
+
+family_medicine_physician:
+  name: Family Medicine Physician
+  category: Healthcare
+  job_family: Clinical
+  parent: physician
+
+nurse_practitioner:
+  name: Nurse Practitioner
+  category: Healthcare
+  job_family: Clinical
+
+physician_assistant:
+  name: Physician Assistant
+  category: Healthcare
+  job_family: Clinical
+
+mental_health_therapist:
+  name: Mental Health Therapist
+  category: Healthcare
+  job_family: Behavioral Health
+
+psychiatrist:
+  name: Psychiatrist
+  category: Healthcare
+  job_family: Behavioral Health
+
+medical_assistant:
+  name: Medical Assistant
+  category: Healthcare
+  job_family: Clinical
+
+clinical_oncology_specialist:
+  name: Clinical Oncology Specialist
+  category: Healthcare
+  job_family: Clinical
+
+testing_psychologist:
+  name: Testing Psychologist
+  category: Healthcare
+  job_family: Behavioral Health
+
+neuropsychologist:
+  name: Neuropsychologist
+  category: Healthcare
+  job_family: Behavioral Health
+
+nurse_care_manager:
+  name: Nurse Care Manager
+  category: Healthcare
+  job_family: Clinical
+
+# =============================================================================
+# RETAIL / RESTAURANT / FIELD
+# =============================================================================
+restaurant_manager:
+  name: Restaurant Manager
+  category: Retail / Hospitality
+  job_family: Store Operations
+
+restaurant_general_manager:
+  name: Restaurant General Manager
+  category: Retail / Hospitality
+  job_family: Store Operations
+
+shift_supervisor:
+  name: Shift Supervisor
+  category: Retail / Hospitality
+  job_family: Store Operations
+
+store_advisor:
+  name: Store Advisor
+  category: Retail / Hospitality
+  job_family: Store Operations
+
+retail_ambassador:
+  name: Retail Ambassador
+  category: Retail / Hospitality
+  job_family: Store Operations
+
+brand_ambassador:
+  name: Brand Ambassador
+  category: Retail / Hospitality
+  job_family: Store Operations
+
+# =============================================================================
+# SUPPLY CHAIN / MANUFACTURING / OPS
+# =============================================================================
+material_planner:
+  name: Material Planner
+  category: Operations
+  job_family: Supply Chain
+
+global_supply_manager:
+  name: Global Supply Manager
+  category: Operations
+  job_family: Supply Chain
+
+procurement_manager:
+  name: Procurement Manager
+  category: Operations
+  job_family: Procurement
+
+senior_buyer:
+  name: Senior Buyer
+  category: Operations
+  job_family: Procurement
+
+manufacturing_technician:
+  name: Manufacturing Technician
+  category: Operations
+  job_family: Manufacturing
+
+quality_inspector:
+  name: Quality Inspector
+  category: Operations
+  job_family: Quality Assurance
+
+production_supervisor:
+  name: Production Supervisor
+  category: Operations
+  job_family: Manufacturing
+
+ocean_operations_associate:
+  name: Ocean Operations Associate
+  category: Operations
+  job_family: Logistics
+
+global_operations_associate:
+  name: Global Operations Associate
+  category: Operations
+  job_family: Logistics
+
+global_operations_specialist:
+  name: Global Operations Specialist
+  category: Operations
+  job_family: Logistics
+
+customs_specialist:
+  name: Customs Specialist
+  category: Operations
+  job_family: Logistics
+
+trade_advisory_lead:
+  name: Trade Advisory Lead
+  category: Operations
+  job_family: Logistics
+
+area_manager:
+  name: Area Manager
+  category: Operations
+  job_family: Operations Management
+
+# =============================================================================
+# REAL ESTATE — Compass-specific
+# =============================================================================
+agent_experience_manager:
+  name: Agent Experience Manager
+  category: Real Estate
+  job_family: Real Estate Operations
+
+agent_experience_coordinator:
+  name: Agent Experience Coordinator
+  category: Real Estate
+  job_family: Real Estate Operations
+
+transaction_coordinator:
+  name: Transaction Coordinator
+  category: Real Estate
+  job_family: Real Estate Operations
+
+strategic_growth_manager:
+  name: Strategic Growth Manager
+  category: Real Estate
+  job_family: Real Estate Operations
+
+strategic_growth_partner:
+  name: Strategic Growth Partner
+  category: Real Estate
+  job_family: Real Estate Operations
+
+# =============================================================================
+# EXECUTIVE / SUPPORT / MISC
+# =============================================================================
+executive_assistant:
+  name: Executive Assistant
+  category: Operations
+  job_family: Executive Support
+
+executive_business_partner:
+  name: Executive Business Partner
+  category: Operations
+  job_family: Executive Support
+
+office_administrator:
+  name: Office Administrator
+  category: Operations
+  job_family: Office Operations
+
+technical_writer:
+  name: Technical Writer
+  category: Engineering
+  job_family: Documentation
+
+# =============================================================================
+# Additional canonical roles (added after backfill audit)
+# =============================================================================
+treasury_analyst:
+  name: Treasury Analyst
+  category: Finance
+  job_family: Treasury
+
+treasury_manager:
+  name: Treasury Manager
+  category: Finance
+  job_family: Treasury
+
+internal_auditor:
+  name: Internal Auditor
+  category: Finance
+  job_family: Audit
+
+stock_plan_administrator:
+  name: Stock Plan Administrator
+  category: Finance
+  job_family: Equity
+
+equity_program_manager:
+  name: Equity Program Manager
+  category: Finance
+  job_family: Equity
+
+paralegal:
+  name: Paralegal
+  category: Legal
+  job_family: Legal
+
+demand_generation_manager:
+  name: Demand Generation Manager
+  category: Marketing
+  job_family: Marketing
+
+content_marketing_manager:
+  name: Content Marketing Manager
+  category: Marketing
+  job_family: Marketing
+
+copywriter:
+  name: Copywriter
+  category: Marketing
+  job_family: Content
+
+paid_media_specialist:
+  name: Paid Media Specialist
+  category: Marketing
+  job_family: Marketing
+
+salesforce_administrator:
+  name: Salesforce Administrator
+  category: IT
+  job_family: IT Operations
+
+workday_administrator:
+  name: Workday Administrator
+  category: IT
+  job_family: IT Operations
+
+workplace_experience_manager:
+  name: Workplace Experience Manager
+  category: Operations
+  job_family: Office Operations
+
+office_manager:
+  name: Office Manager
+  category: Operations
+  job_family: Office Operations
+  parent: office_administrator
+
+customer_onboarding_manager:
+  name: Customer Onboarding Manager
+  category: Customer Success
+  job_family: Customer Success
+
+renewals_manager:
+  name: Renewals Manager
+  category: Customer Success
+  job_family: Customer Success
+
+sales_enablement_manager:
+  name: Sales Enablement Manager
+  category: Sales
+  job_family: Sales Enablement
+
+field_enablement_manager:
+  name: Field Enablement Manager
+  category: Sales
+  job_family: Sales Enablement
+
+partner_development_manager:
+  name: Partner Development Manager
+  category: Partnerships
+  job_family: Partnerships
+
+partner_manager:
+  name: Partner Manager
+  category: Partnerships
+  job_family: Partnerships
+
+phlebotomist:
+  name: Phlebotomist
+  category: Healthcare
+  job_family: Clinical
+
+clinical_lab_scientist:
+  name: Clinical Lab Scientist
+  category: Healthcare
+  job_family: Clinical
+
+threat_specialist:
+  name: Threat Specialist
+  category: Engineering
+  job_family: Security
+  parent: security_engineer
+
+deal_desk_analyst:
+  name: Deal Desk Analyst
+  category: Sales
+  job_family: Sales Operations
+
+revenue_operations_analyst:
+  name: Revenue Operations Analyst
+  category: Sales
+  job_family: Sales Operations
+
+revenue_strategy_operations_lead:
+  name: Revenue Strategy & Operations Lead
+  category: Sales
+  job_family: Sales Operations
+
+business_systems_analyst:
+  name: Business Systems Analyst
+  category: Operations
+  job_family: IT / Business Systems
+
+systems_administrator:
+  name: Systems Administrator
+  category: IT
+  job_family: IT Operations
+
+talent_acquisition_specialist:
+  name: Talent Acquisition Specialist
+  category: People
+  job_family: Talent Acquisition
+
+payroll_specialist:
+  name: Payroll Specialist
+  category: People
+  job_family: Payroll
+
+administrative_assistant:
+  name: Administrative Assistant
+  category: Operations
+  job_family: Executive Support
+
+incident_manager:
+  name: Incident Manager
+  category: Engineering
+  job_family: Customer Support
+
+physical_security_manager:
+  name: Physical Security Manager
+  category: Operations
+  job_family: Operations Management
+
+# =============================================================================
+# PARTNERSHIPS / BUSINESS DEV
+# =============================================================================
+strategic_partner_manager:
+  name: Strategic Partner Manager
+  category: Partnerships
+  job_family: Partnerships
+
+technology_partner_manager:
+  name: Technology Partner Manager
+  category: Partnerships
+  job_family: Partnerships
+
+ad_operations_associate:
+  name: Ad Operations Associate
+  category: Marketing
+  job_family: Ad Operations
+
+# =============================================================================
+# Additional canonical roles (added during normalizer expansion)
+# =============================================================================
+communications_manager:
+  name: Communications Manager
+  category: Marketing
+  job_family: Communications
+
+compliance_specialist:
+  name: Compliance Specialist
+  category: Legal
+  job_family: Compliance
+
+customer_experience_manager:
+  name: Customer Experience Manager
+  category: Customer Success
+  job_family: Customer Experience
+
+director_of_design:
+  name: Director of Design
+  category: Design
+  job_family: Design Leadership
+
+director_of_people:
+  name: Director of People
+  category: People
+  job_family: People Leadership
+
+hr_manager:
+  name: HR Manager
+  category: People
+  job_family: HR
+
+medical_director:
+  name: Medical Director
+  category: Healthcare
+  job_family: Clinical Leadership
+
+portfolio_manager:
+  name: Portfolio Manager
+  category: Finance
+  job_family: Investment Management
+
+recruiting_manager:
+  name: Recruiting Manager
+  category: People
+  job_family: Talent Acquisition
+
+risk_manager:
+  name: Risk Manager
+  category: Finance
+  job_family: Risk
+
+supply_chain_analyst:
+  name: Supply Chain Analyst
+  category: Operations
+  job_family: Supply Chain
+
+talent_manager:
+  name: Talent Manager
+  category: People
+  job_family: Talent Acquisition
+
+cashier:
+  name: Cashier
+  category: Retail
+  job_family: Retail Floor
+
+store_associate:
+  name: Store Associate
+  category: Retail
+  job_family: Retail Floor
+
+retail_store_manager:
+  name: Retail Store Manager
+  category: Retail
+  job_family: Retail Management
+
+field_service_technician:
+  name: Field Service Technician
+  category: Operations
+  job_family: Field Operations

@@ -6,7 +6,7 @@ from app.scrapers.lever.scraper import LeverScraper
 from app.scrapers.ashby.scraper import AshbyScraper
 from app.scrapers.workable.scraper import WorkableScraper
 from app.services.skill_extractor import SkillExtractor
-from app.utils.role_normalizer import normalize_title
+from app.utils.role_normalizer_v2 import normalize_title
 from datetime import datetime
 
 

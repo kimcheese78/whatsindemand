@@ -2,7 +2,7 @@
 
 from app.scrapers.base_scraper import BaseScraper
 from app.scrapers.greenhouse.parser import GreenhouseParser
-from app.utils.role_normalizer import normalize_title
+from app.utils.role_normalizer_v2 import normalize_title
 from typing import List, Dict, Optional
 import requests
 
