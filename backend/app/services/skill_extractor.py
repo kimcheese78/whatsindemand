@@ -267,10 +267,31 @@ SECTION_PATTERNS = {
         r"the right candidate",
         r"what we look for",
         r"what we require(?:d)?",
-        r"you (?:may |might )?(?:be a good fit|thrive in this role) if",
+        r"you (?:may |might )?(?:be a good fit|thrive in this role) if(?: you)?",
         r"you should apply if",
         r"what we['']?re looking for(?: \(.*?\))?",
         r"who you are(?: \(.*?\))?",
+        # Parenthetical requirements — e.g. "What you'll need to thrive (Requirements)"
+        r".{5,60}\((?:requirements?|qualifications?|must[- ]haves?)\)",
+        # Figma-style
+        r"we['']?d love to hear from you if",
+        r"we['']?re looking for someone who",
+        # Cloudflare-style — "Required Skills & Qualifications" / "Experiences might include"
+        r"required skills(?: [&/] qualifications?)?",
+        r"experiences? (?:might |may |could )?include",
+        # On Running-style
+        r"your story",
+        # Okta-style
+        r"what you['']?ll bring to the role",
+        # Roku-style
+        r"we['']?re excited if you have",
+        # Notion-style
+        r"skills? you['']?ll need to bring",
+        # Whatnot-style — "As our next X you should have"
+        r"as our next .{0,40} you should",
+        # Healthcare / One Medical
+        r"education(?:,? licenses?,?)?(?: and .+)? required",
+        r"(?:licenses?|certifications?) required",
     ],
     'preferred': [
         r"(?:preferred|desired)(?: skills| experience| qualifications)?",
@@ -286,6 +307,15 @@ SECTION_PATTERNS = {
         r"ideally you",
         r"these qualifications would be nice to have",
         r"what will make you stand out(?: \(.*?\))?",
+        # Parenthetical preferred — e.g. "What will help you stand out (Nonessential Skills/Nice to Haves)"
+        r".{5,60}\((?:preferred|desired|nice[- ]to[- ]haves?|nonessential|bonus)\)",
+        # Figma-style
+        r"(?:while )?not required,?.{0,30}(?:plus|bonus|added)",
+        r"it['']?s an (?:added )?plus if",
+        # Okta-style
+        r"and extra credit if",
+        # "Nice to Haves" (plural)
+        r"nice[- ]to[- ]haves?",
     ],
     'responsibilities': [
         r"(?:key )?responsibilities",
@@ -295,14 +325,19 @@ SECTION_PATTERNS = {
         r"you will(?:\.\.\.)?",
         r"the (?:opportunity|impact you will have)",
         r"areas of focus",
-        r"the role",
+        r"about the role",
         r"role overview",
         r"job description",
         r"position overview",
         r"the impact you(?:'?ll| will) have",
+        r"a day in the life",
+        r"your mission",
+        r"what you['']?ll achieve",
+        # Parenthetical responsibilities
+        r".{5,60}\(responsibilities\)",
     ],
     'about_company': [
-        r"about (?:us|the company|the team|\w+)",
+        r"about (?:us|the company|the team|\w+(?:\s+\w+)?)",
         r"who we are",
         r"our (?:mission|vision|culture|values|story)",
         r"why (?:join|work)",
@@ -343,8 +378,8 @@ def parse_jd_sections(jd_text: str) -> List[Dict]:
     headers = []
     for section_name, patterns in SECTION_PATTERNS.items():
         for pattern in patterns:
-            # Match section headers (with optional markdown/formatting)
-            full_pattern = r'(?:^|\n)\s*(?:\*{1,2}|#{1,4})?\s*' + pattern + r'\s*(?:\*{1,2}|:)?\s*(?:\n|$)'
+            # Match section headers (with optional markdown/emoji/formatting prefix)
+            full_pattern = r'(?:^|\n)\s*(?:[\U00002600-\U000027BF\U0001F300-\U0001FAFF]\s*)*(?:\*{1,2}|#{1,4})?\s*' + pattern + r'\s*(?:\*{1,2}|:)?\s*(?:\n|$)'
             for match in re.finditer(full_pattern, text, re.IGNORECASE | re.MULTILINE):
                 headers.append({
                     'name': section_name,
