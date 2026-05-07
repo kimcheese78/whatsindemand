@@ -359,6 +359,53 @@ SECTION_PATTERNS = {
 # Only extract skills from these sections
 EXTRACTION_SECTIONS = {'requirements', 'preferred'}
 
+# Scored signals for paragraph-level heuristic (used when no sections detected)
+_PARA_POSITIVE = [
+    (3.0, re.compile(r'\b\d+\+?\s*years?\s+of\s+experience\b', re.I)),
+    (2.5, re.compile(r'\bexperience\s+(?:with|in)\b', re.I)),
+    (2.5, re.compile(r'\bproficien(?:t|cy)\s+in\b', re.I)),
+    (2.0, re.compile(r'\bknowledge\s+of\b', re.I)),
+    (2.0, re.compile(r'\bfamili(?:ar|arity)\s+with\b', re.I)),
+    (2.0, re.compile(r'\b(?:bachelor|master|phd|m\.s|b\.s|degree|certification)\b', re.I)),
+    (1.5, re.compile(r'\b(?:must|required?)\b', re.I)),
+    (1.5, re.compile(r'\bability\s+to\b', re.I)),
+    (1.0, re.compile(r'\bunderstand(?:ing)?\s+of\b', re.I)),
+    (1.0, re.compile(r'\btrack\s+record\b', re.I)),
+    (1.0, re.compile(r'\bproven\b', re.I)),
+]
+
+_PARA_NEGATIVE = [
+    (-4.0, re.compile(r'\b(?:salary|equity|vacation|pto|dental|vision|401k|parental\s+leave|health\s+insurance|stock\s+options)\b', re.I)),
+    (-4.0, re.compile(r'\b(?:equal\s+opportunity|disability|accommodation|eeo|affirmative\s+action)\b', re.I)),
+    (-3.0, re.compile(r'\b(?:we\s+are|our\s+mission|who\s+we\s+are|about\s+us|our\s+team|our\s+culture)\b', re.I)),
+    (-2.0, re.compile(r'\b(?:founded|headquartered|series\s+[a-e]|venture|funding|investors?)\b', re.I)),
+    (-1.5, re.compile(r'\b(?:join\s+us|come\s+work|we\s+offer|we\s+provide|we\s+believe)\b', re.I)),
+]
+
+
+def _score_paragraph(text: str) -> float:
+    score = 0.0
+    for weight, pattern in _PARA_POSITIVE:
+        if pattern.search(text):
+            score += weight
+    for weight, pattern in _PARA_NEGATIVE:
+        if pattern.search(text):
+            score += weight  # weight is already negative
+
+    # Bullet density bonus: short bullet-dense paragraphs strongly signal requirements
+    lines = [l.strip() for l in text.split('\n') if l.strip()]
+    if lines:
+        bullet_lines = sum(1 for l in lines if l and l[0] in '-•*·')
+        avg_len = sum(len(l) for l in lines) / len(lines)
+        bullet_ratio = bullet_lines / len(lines)
+        if bullet_ratio > 0.5:
+            score += bullet_ratio * 2.0
+        # Short average line length = likely list items
+        if avg_len < 80 and bullet_ratio > 0.3:
+            score += 1.0
+
+    return score
+
 
 def parse_jd_sections(jd_text: str) -> List[Dict]:
     """
@@ -454,16 +501,29 @@ def extract_requirements_text(jd_text: str) -> Tuple[str, dict]:
         'used_fallback': False,
     }
 
-    # Fallback: if no requirements sections found, use everything except
-    # known non-skill sections (benefits, about_company) to avoid false positives
+    # Fallback: no requirements sections detected — use paragraph heuristic
+    # to extract only requirement-likely paragraphs from the remaining text
     if not extracted_text.strip():
         NON_SKILL_SECTIONS = {'benefits', 'about_company'}
-        fallback_parts = [
+        candidate_text = '\n\n'.join(
             s['text'] for s in sections
             if s['name'] not in NON_SKILL_SECTIONS
-        ]
-        extracted_text = '\n'.join(fallback_parts) if fallback_parts else jd_text
+        ) or jd_text
+
+        # Score each paragraph; keep those above threshold
+        SCORE_THRESHOLD = 2.0
+        paragraphs = [p.strip() for p in candidate_text.split('\n\n') if p.strip()]
+        scored = [(p, _score_paragraph(p)) for p in paragraphs]
+        high_signal = [p for p, score in scored if score >= SCORE_THRESHOLD]
+
+        # If heuristic is too aggressive (nothing passes), fall back to all candidate text
+        extracted_text = '\n\n'.join(high_signal) if high_signal else candidate_text
         metadata['used_fallback'] = True
+        metadata['para_heuristic'] = {
+            'total_paras': len(paragraphs),
+            'kept_paras': len(high_signal),
+            'scores': [round(s, 1) for _, s in scored],
+        }
     
     return extracted_text, metadata
 
