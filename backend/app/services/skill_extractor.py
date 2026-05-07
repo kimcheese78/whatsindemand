@@ -243,11 +243,11 @@ def _title_case_word(word: str) -> str:
 SECTION_PATTERNS = {
     'requirements': [
         r"(?:basic |minimum )?(?:requirements|qualifications)",
-        r"what you'?ll need(?: to succeed)?",
-        r"what we'?re looking for",
+        r"what you['’]?ll need(?: to succeed)?",
+        r"what we['’]?re looking for",
         r"what you bring",
         r"you (?:should |must |will )?have",
-        r"we'?re looking for someone",
+        r"we['’]?re looking for someone",
         r"required(?: skills| experience| qualifications)?",
         r"must[- ]have(?:s)?",
         r"key skills",
@@ -257,18 +257,26 @@ SECTION_PATTERNS = {
         r"experience(?: required)?",
         r"skills (?:and|&) (?:experience|qualifications)",
         r"what you need",
+        r"(?:an )?ideal candidate(?:s)?(?:['’]s)?(?: should| must| will)?(?: have)?",
+        r"your profile",
+        r"your qualifications",
+        r"(?:minimum|basic) qualifications",
+        r"you['’]?re a (?:great |strong |good )?fit",
+        r"what you['’]ll bring",
+        r"the right candidate",
     ],
     'preferred': [
         r"(?:preferred|desired)(?: skills| experience| qualifications)?",
         r"nice[- ]to[- ]have",
         r"bonus(?: points)?",
-        r"it'?s (?:great|nice|a plus) if",
+        r"it['’]?s (?:great|nice|a plus) if",
         r"strong candidates",
         r"a\s+plus",
-        r"ideal(?:ly)?",
         r"extra credit",
         r"additional(?: desired)? (?:skills|qualifications)",
         r"even better if",
+        r"bonus if you have",
+        r"ideally you",
     ],
     'responsibilities': [
         r"(?:key )?responsibilities",
@@ -394,16 +402,22 @@ def extract_requirements_text(jd_text: str) -> Tuple[str, dict]:
             extracted_parts.append(section['text'])
     
     extracted_text = '\n'.join(extracted_parts)
-    
+
     metadata = {
         'sections_found': section_counts,
         'extraction_sections_found': sum(1 for s in sections if s['name'] in EXTRACTION_SECTIONS),
         'used_fallback': False,
     }
-    
-    # Fallback: if no requirements sections found, use full text
+
+    # Fallback: if no requirements sections found, use everything except
+    # known non-skill sections (benefits, about_company) to avoid false positives
     if not extracted_text.strip():
-        extracted_text = jd_text
+        NON_SKILL_SECTIONS = {'benefits', 'about_company'}
+        fallback_parts = [
+            s['text'] for s in sections
+            if s['name'] not in NON_SKILL_SECTIONS
+        ]
+        extracted_text = '\n'.join(fallback_parts) if fallback_parts else jd_text
         metadata['used_fallback'] = True
     
     return extracted_text, metadata
