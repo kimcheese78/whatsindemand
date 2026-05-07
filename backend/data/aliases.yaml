@@ -592,15 +592,15 @@
 "business development director, satellite propulsion": business_development_manager
 "business development lead/manager, launch": business_development_manager
 "director, business development, advanced effects": business_development_manager
-"sales operations analyst": sales_operations_analyst
+"sales operations analyst": sales_operations_manager
 "sales operations manager": sales_operations_manager
 "sales operations business partner": sales_operations_manager
 "revenue operations manager": revenue_operations_manager
 "revenue operations lead": revenue_operations_manager
-"deal desk manager": deal_desk_manager
+"deal desk manager": deal_desk_analyst
 "deal operations analyst": deal_operations_analyst
 "deal support quality & strategy manager": deal_operations_analyst
-"sales compensation analyst": sales_operations_analyst
+"sales compensation analyst": sales_operations_manager
 "partner sales manager": partner_sales_manager
 "strategic ai sales": strategic_account_executive
 "i, strategic ai sales": strategic_account_executive
@@ -617,7 +617,7 @@
 "scaled customer success manager": customer_success_manager
 "enterprise customer success manager": enterprise_customer_success_manager
 "mid-market customer success manager": mid_market_customer_success_manager
-"customer success associate": customer_success_associate
+"customer success associate": customer_success_manager
 "technical success manager": technical_success_manager
 "technical customer success manager": technical_success_manager
 "ai success manager": ai_success_manager
@@ -644,8 +644,8 @@
 "influencer marketing manager": influencer_marketing_manager
 "social media manager": social_media_manager
 "social": social_media_manager
-"marketing coordinator": marketing_coordinator
-"marketing advisor": marketing_advisor
+"marketing coordinator": marketing_manager
+"marketing advisor": marketing_manager
 "event marketing manager": event_marketing_manager
 "tradeshow and event marketing manager": event_marketing_manager
 "tradeshow associate": event_marketing_manager
@@ -672,16 +672,16 @@
 # =============================================================================
 # Operations / Business Ops / Supply Chain / Logistics
 # =============================================================================
-"operations associate": operations_associate
-"operations specialist": operations_specialist
+"operations associate": operations_manager
+"operations specialist": operations_manager
 "operations manager": operations_manager
 "manager, operations": operations_manager
-"operations supervisor": operations_supervisor
+"operations supervisor": operations_manager
 "business operations manager": operations_manager
 "strategy & operations senior manager, logistics": operations_manager
 "area manager": area_manager
-"global operations associate": global_operations_associate
-"global operations specialist": global_operations_specialist
+"global operations associate": global_operations_manager
+"global operations specialist": global_operations_manager
 "ocean operations associate": ocean_operations_associate
 "customs specialist": customs_specialist
 "trade advisory lead": trade_advisory_lead
@@ -691,8 +691,8 @@
 "buyer": senior_buyer
 "senior buyer": senior_buyer
 "production coordinator": production_supervisor
-"fulfillment associate": operations_associate
-"fulfillment specialist": operations_specialist
+"fulfillment associate": operations_manager
+"fulfillment specialist": operations_manager
 "configuration manager": operations_manager
 "federal compliance manager": operations_manager
 
@@ -705,12 +705,12 @@
 "design recruiter": recruiter
 "technical recruiter": technical_recruiter
 "technical recruiter, production engineering": technical_recruiter
-"recruiting coordinator": recruiting_coordinator
-"manager, recruiting operations": recruiting_coordinator
-"talent acquisition partner": talent_acquisition_partner
+"recruiting coordinator": recruiter
+"manager, recruiting operations": recruiter
+"talent acquisition partner": talent_acquisition_specialist
 "talent acquisition sourcer": talent_sourcer
-"talent strategist": talent_acquisition_partner
-"talent management lead": talent_acquisition_partner
+"talent strategist": talent_acquisition_specialist
+"talent management lead": talent_acquisition_specialist
 "technical sourcer": talent_sourcer
 "technical sourcer, hardware": talent_sourcer
 "technical sourcer, production engineering": talent_sourcer
@@ -722,8 +722,8 @@
 "director, people business partner": people_business_partner
 "people partner": people_partner
 "compensation partner": people_partner
-"people operations partner": people_operations_partner
-"people operations coordinator": people_operations_coordinator
+"people operations partner": people_operations_specialist
+"people operations coordinator": people_operations_specialist
 "people operations specialist": people_operations_specialist
 "people team - hr operations & ai innovation": people_operations_specialist
 "compensation analyst": compensation_analyst
@@ -732,7 +732,7 @@
 "benefits analyst": compensation_analyst
 "payroll manager": payroll_manager
 "payroll analyst": compensation_analyst
-"strategic workforce planning lead": people_operations_partner
+"strategic workforce planning lead": people_operations_specialist
 "workplace manager": operations_manager
 
 # =============================================================================
@@ -852,8 +852,8 @@
 # =============================================================================
 "executive assistant": executive_assistant
 "executive business partner": executive_business_partner
-"office administrator": office_administrator
-"studio associate": office_administrator
+"office administrator": office_manager
+"studio associate": office_manager
 "of staff": executive_business_partner  # "[chief] of staff"
 "brex rotational program": null  # internship/rotation - skip
 "helix data creator": null  # gig contractor role
@@ -907,7 +907,7 @@
 # Backfill round 2 — long-tail (freq>=3 unmapped) + new canonical roles
 # =============================================================================
 "treasury analyst": treasury_analyst
-"treasury manager": treasury_manager
+"treasury manager": treasury_analyst
 "treasury finance specialist": treasury_analyst
 "associate, treasury operations": treasury_analyst
 "treasury operations analyst": treasury_analyst
@@ -955,19 +955,19 @@
 "staff security analyst, insider threat": threat_specialist
 "deal desk analyst": deal_desk_analyst
 "deal operations administrator": deal_desk_analyst
-"revenue operations analyst": revenue_operations_analyst
-"senior revenue operations analyst": revenue_operations_analyst
+"revenue operations analyst": revenue_operations_manager
+"senior revenue operations analyst": revenue_operations_manager
 "revenue operations lead": revenue_strategy_operations_lead
 "revenue strategy & operations lead": revenue_strategy_operations_lead
 "manager, revenue strategy & operations": revenue_strategy_operations_lead
-"sr. analyst, sales strategy & operations": revenue_operations_analyst
+"sr. analyst, sales strategy & operations": revenue_operations_manager
 "business systems analyst": business_systems_analyst
 "business systems architect": business_systems_analyst
 "system administrator": systems_administrator
 "systems administrator": systems_administrator
 "it operation specialist": systems_administrator
 "talent acquisition specialist": talent_acquisition_specialist
-"talent acquisition coordinator": recruiting_coordinator
+"talent acquisition coordinator": recruiter
 "director, technical recruiting": director_of_talent_acquisition
 "payroll specialist": payroll_specialist
 "senior payroll specialist": payroll_specialist
@@ -1050,7 +1050,7 @@
 "supervisor, customer success team": customer_success_manager
 "manager, technical support": technical_success_manager
 "showroom sales supervisor": shift_supervisor
-"asset protection associate": operations_associate
+"asset protection associate": operations_manager
 "site leader": area_manager
 "head of community": social_media_manager
 "head of security": security_engineer
@@ -1089,7 +1089,7 @@
 "senior manager, strategic initiatives": program_manager
 "senior manager, strategy and operations": program_manager
 "strategy & operations senior manager, logistics": program_manager
-"senior manager, deal strategy": deal_desk_manager
+"senior manager, deal strategy": deal_desk_analyst
 "senior sales outbound programs manager": sales_operations_manager
 "director, creative strategy": creative_director
 "director, organic growth & discoverability": marketing_manager
@@ -1137,7 +1137,7 @@
 "director risk management": operations_manager
 "deal support quality & strategy manager": deal_operations_analyst
 "strategy & operations": program_manager
-"strategic workforce planning lead": people_operations_partner
+"strategic workforce planning lead": people_operations_specialist
 "head of community": social_media_manager
 "team lead, regulatory product counsel - north america": legal_counsel
 "customer care lead consultant": support_specialist
@@ -1177,7 +1177,7 @@
 "director, accounting": accounting_manager
 "director, fp&a": finance_manager
 "director, tax": tax_manager
-"director, treasury": treasury_manager
+"director, treasury": treasury_analyst
 "director, legal": legal_counsel
 "director, hr": hr_business_partner
 "director, people": hr_business_partner
@@ -1218,7 +1218,7 @@
 "people director": director_of_people
 "hr director": hr_manager
 "talent director": talent_manager
-"recruiting director": recruiting_manager
+"recruiting director": recruiter
 "communications director": communications_manager
 "director of communications": communications_manager
 "director of internal communications": communications_manager
@@ -1241,7 +1241,7 @@
 "planning manager": program_manager
 "program management": program_manager
 "performance management": business_analyst
-"order management": operations_specialist
+"order management": operations_manager
 "vendor management": operations_manager
 "procurement & vendor management": operations_manager
 "risk management": risk_manager
@@ -1292,7 +1292,7 @@
 # Recruiting / Talent
 "technical recruiter": recruiter
 "technical recruiting": recruiter
-"manager, technical recruiting": recruiting_manager
+"manager, technical recruiting": recruiter
 "talent partner": talent_acquisition_specialist
 
 # Common artist/creative roles (game industry)

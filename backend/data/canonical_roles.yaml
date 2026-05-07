@@ -567,11 +567,6 @@ sales_specialist:
   category: Sales
   job_family: Sales Operations
 
-sales_operations_analyst:
-  name: Sales Operations Analyst
-  category: Sales
-  job_family: Sales Operations
-
 sales_operations_manager:
   name: Sales Operations Manager
   category: Sales
@@ -579,11 +574,6 @@ sales_operations_manager:
 
 revenue_operations_manager:
   name: Revenue Operations Manager
-  category: Sales
-  job_family: Sales Operations
-
-deal_desk_manager:
-  name: Deal Desk Manager
   category: Sales
   job_family: Sales Operations
 
@@ -616,11 +606,6 @@ mid_market_customer_success_manager:
   category: Customer Success
   job_family: Customer Success
   parent: customer_success_manager
-
-customer_success_associate:
-  name: Customer Success Associate
-  category: Customer Success
-  job_family: Customer Success
 
 technical_success_manager:
   name: Technical Success Manager
@@ -690,16 +675,6 @@ social_media_manager:
   category: Marketing
   job_family: Marketing
 
-marketing_coordinator:
-  name: Marketing Coordinator
-  category: Marketing
-  job_family: Marketing
-
-marketing_advisor:
-  name: Marketing Advisor
-  category: Marketing
-  job_family: Marketing
-
 event_marketing_manager:
   name: Event Marketing Manager
   category: Marketing
@@ -708,23 +683,8 @@ event_marketing_manager:
 # =============================================================================
 # OPERATIONS / BUSINESS OPS
 # =============================================================================
-operations_associate:
-  name: Operations Associate
-  category: Operations
-  job_family: Business Operations
-
-operations_specialist:
-  name: Operations Specialist
-  category: Operations
-  job_family: Business Operations
-
 operations_manager:
   name: Operations Manager
-  category: Operations
-  job_family: Business Operations
-
-operations_supervisor:
-  name: Operations Supervisor
   category: Operations
   job_family: Business Operations
 
@@ -746,16 +706,6 @@ technical_recruiter:
   category: People
   job_family: Talent Acquisition
   parent: recruiter
-
-recruiting_coordinator:
-  name: Recruiting Coordinator
-  category: People
-  job_family: Talent Acquisition
-
-talent_acquisition_partner:
-  name: Talent Acquisition Partner
-  category: People
-  job_family: Talent Acquisition
 
 talent_sourcer:
   name: Talent Sourcer
@@ -781,16 +731,6 @@ people_partner:
   name: People Partner
   category: People
   job_family: HR
-
-people_operations_partner:
-  name: People Operations Partner
-  category: People
-  job_family: People Operations
-
-people_operations_coordinator:
-  name: People Operations Coordinator
-  category: People
-  job_family: People Operations
 
 people_operations_specialist:
   name: People Operations Specialist
@@ -1044,13 +984,8 @@ ocean_operations_associate:
   category: Operations
   job_family: Logistics
 
-global_operations_associate:
-  name: Global Operations Associate
-  category: Operations
-  job_family: Logistics
-
-global_operations_specialist:
-  name: Global Operations Specialist
+global_operations_manager:
+  name: Global Operations Manager
   category: Operations
   job_family: Logistics
 
@@ -1110,11 +1045,6 @@ executive_business_partner:
   category: Operations
   job_family: Executive Support
 
-office_administrator:
-  name: Office Administrator
-  category: Operations
-  job_family: Office Operations
-
 technical_writer:
   name: Technical Writer
   category: Engineering
@@ -1125,11 +1055,6 @@ technical_writer:
 # =============================================================================
 treasury_analyst:
   name: Treasury Analyst
-  category: Finance
-  job_family: Treasury
-
-treasury_manager:
-  name: Treasury Manager
   category: Finance
   job_family: Treasury
 
@@ -1192,7 +1117,6 @@ office_manager:
   name: Office Manager
   category: Operations
   job_family: Office Operations
-  parent: office_administrator
 
 customer_onboarding_manager:
   name: Customer Onboarding Manager
@@ -1242,11 +1166,6 @@ threat_specialist:
 
 deal_desk_analyst:
   name: Deal Desk Analyst
-  category: Sales
-  job_family: Sales Operations
-
-revenue_operations_analyst:
-  name: Revenue Operations Analyst
   category: Sales
   job_family: Sales Operations
 
