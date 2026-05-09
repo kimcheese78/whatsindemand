@@ -80,14 +80,8 @@ git push -u origin main
 ## Next Steps
 
 Once your code is on GitHub:
-1. Go to [render.com](https://render.com)
+1. Go to [railway.app](https://railway.app)
 2. Sign up/login
-3. Click "New" → "Web Service"
-4. Connect your GitHub account
-5. Select your `whatsindemand` repository
-6. Follow the deployment steps in `DEPLOYMENT.md`
-
-
-
-
-
+3. Click "New Project" → "Deploy from GitHub repo"
+4. Select your `whatsindemand` repository
+5. Follow the deployment steps in `DEPLOYMENT.md`
