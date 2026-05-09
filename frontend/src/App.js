@@ -1392,7 +1392,10 @@ const RoleSelectionScreen = () => {
     const title = role.title || role;
     const q = roleSearchQuery.toLowerCase();
     if (title.toLowerCase().includes(q)) return { role, matchedAlias: null };
-    const matched = (role.aliases || []).find(a => a.toLowerCase().includes(q));
+    // Only treat short, clean aliases as hints (skip raw scraped job titles)
+    const matched = (role.aliases || []).find(a =>
+      a.toLowerCase().includes(q) && a.length <= 40 && !a.includes('/')
+    );
     if (matched) return { role, matchedAlias: matched };
     return null;
   }).filter(Boolean);
@@ -1518,7 +1521,7 @@ const RoleSelectionScreen = () => {
                       >
                         <span className="text-base">
                           {roleTitle}
-                          {matchedAlias && (
+                          {matchedAlias && matchedAlias.toLowerCase() !== roleTitle.toLowerCase() && (
                             <span className="text-sm text-ink-muted ml-2">also: {matchedAlias}</span>
                           )}
                         </span>
