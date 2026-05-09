@@ -192,6 +192,9 @@ class Role(db.Model):
     seniority_level = db.Column(db.String(50), index=True)  # entry, mid, senior, lead, principal
     job_family = db.Column(db.String(100))  # Software Engineer, Product Manager, Designer, etc.
     
+    # Search aliases for autocomplete (curated, distinct from RoleTitleVariation normalizer mappings)
+    search_aliases = db.Column(db.ARRAY(db.String), default=list)
+
     # Aggregated stats (updated by background job)
     total_active_jobs = db.Column(db.Integer, default=0)
     avg_salary_min = db.Column(db.Integer)

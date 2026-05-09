@@ -249,7 +249,7 @@ class SkillGapAnalyzer:
         return [{'id': r.id, 'title': r.normalized_title, 'category': r.category} for r in roles]
     
     def get_available_roles(self, min_jobs: int = None) -> List[Dict]:
-        """Get all roles with job counts and aliases."""
+        """Get all roles with job counts and curated search aliases."""
         threshold = min_jobs if min_jobs is not None else self.min_jobs_threshold
 
         roles = db.session.query(
@@ -257,6 +257,7 @@ class SkillGapAnalyzer:
             Role.normalized_title,
             Role.category,
             Role.job_family,
+            Role.search_aliases,
             func.count(Job.id).label('job_count')
         ).join(Job).filter(
             Job.is_active == True
@@ -266,16 +267,6 @@ class SkillGapAnalyzer:
             func.count(Job.id).desc()
         ).all()
 
-        role_ids = [r[0] for r in roles]
-        alias_rows = db.session.query(
-            RoleTitleVariation.role_id,
-            RoleTitleVariation.original_title,
-        ).filter(RoleTitleVariation.role_id.in_(role_ids)).all()
-
-        aliases_by_role: Dict[int, List[str]] = {}
-        for role_id, original_title in alias_rows:
-            aliases_by_role.setdefault(role_id, []).append(original_title)
-
         return [
             {
                 'id': role_id,
@@ -283,9 +274,9 @@ class SkillGapAnalyzer:
                 'category': category,
                 'job_family': job_family,
                 'job_count': job_count,
-                'aliases': aliases_by_role.get(role_id, []),
+                'aliases': search_aliases or [],
             }
-            for role_id, title, category, job_family, job_count in roles
+            for role_id, title, category, job_family, search_aliases, job_count in roles
         ]
     
     def get_skills_for_selection(self) -> Dict[str, List[Dict]]:
