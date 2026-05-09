@@ -1388,17 +1388,24 @@ const RoleSelectionScreen = () => {
 
   const dropdownRef = useRef(null);
 
-  const filteredRoles = allRoles.map(role => {
-    const title = role.title || role;
+  const filteredRoles = (() => {
     const q = roleSearchQuery.toLowerCase();
-    if (title.toLowerCase().includes(q)) return { role, matchedAlias: null };
-    // Only treat short, clean aliases as hints (skip raw scraped job titles)
-    const matched = (role.aliases || []).find(a =>
-      a.toLowerCase().includes(q) && a.length <= 40 && !a.includes('/')
-    );
-    if (matched) return { role, matchedAlias: matched };
-    return null;
-  }).filter(Boolean);
+    const titleMatches = [];
+    const aliasMatches = [];
+    for (const role of allRoles) {
+      const title = role.title || role;
+      if (title.toLowerCase().includes(q)) {
+        titleMatches.push({ role, matchedAlias: null });
+      } else {
+        const matched = (role.aliases || []).find(a =>
+          a.toLowerCase().includes(q) && a.length <= 40 && !a.includes('/')
+        );
+        if (matched) aliasMatches.push({ role, matchedAlias: matched });
+      }
+    }
+    // Title matches first (already sorted by job_count from API), then alias matches
+    return [...titleMatches, ...aliasMatches];
+  })();
 
   const handleRoleSelect = (role) => {
     const roleTitle = role.title || role;
