@@ -1521,9 +1521,6 @@ const RoleSelectionScreen = () => {
                       >
                         <span className="text-base">
                           {roleTitle}
-                          {matchedAlias && matchedAlias.toLowerCase() !== roleTitle.toLowerCase() && (
-                            <span className="text-sm text-ink-muted ml-2">also: {matchedAlias}</span>
-                          )}
                         </span>
                         {jobCount && (
                           <span className="text-sm text-ink-muted ml-4 shrink-0">{jobCount} jobs</span>
