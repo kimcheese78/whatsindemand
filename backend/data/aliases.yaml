@@ -17,15 +17,15 @@
 "backend software engineer": software_engineer
 "software engineer - backend": software_engineer
 "software engineer, backend": software_engineer
-"software engineer - android": software_engineer
-"software engineer, android": software_engineer
-"software engineer, android test engineering": software_engineer
-"android engineer": software_engineer
-"android engineer, brand ad formats": software_engineer
-"ios engineer": software_engineer
+"software engineer - android": mobile_engineer
+"software engineer, android": mobile_engineer
+"software engineer, android test engineering": mobile_engineer
+"android engineer": mobile_engineer
+"android engineer, brand ad formats": mobile_engineer
+"ios engineer": mobile_engineer
 "engineer, ios performance": software_engineer
-"ios platform engineer": software_engineer
-"mobile engineer": software_engineer
+"ios platform engineer": mobile_engineer
+"mobile engineer": mobile_engineer
 "frontend engineer": software_engineer
 "front end engineer": software_engineer
 "front-end engineer": software_engineer
@@ -1275,7 +1275,7 @@
 "swe": software_engineer
 
 # Tech Lead patterns (rewritten by step 4 to "{} engineer")
-"android core product engineer": software_engineer
+"android core product engineer": mobile_engineer
 "web core product & chrome extension engineer": software_engineer
 
 # Lead / Sr. Lead patterns

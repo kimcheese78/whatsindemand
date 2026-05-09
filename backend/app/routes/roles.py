@@ -1,7 +1,7 @@
 # backend/app/routes/roles.py
 
 from flask import Blueprint, request, jsonify
-from app.models import db, Job, JobSkill, Skill, Role, Company
+from app.models import db, Job, JobSkill, Skill, Role, Company, RoleTitleVariation
 from sqlalchemy import func
 from typing import List, Dict, Optional
 from datetime import datetime, timedelta, date
@@ -62,6 +62,25 @@ def is_all(value):
             isinstance(v, str) and v.lower() == 'all' for v in value
         )
     return False
+
+
+def _find_role(role_name: str):
+    """Look up a role by normalized title, then alias, then partial match."""
+    role = Role.query.filter(
+        func.lower(Role.normalized_title) == func.lower(role_name)
+    ).first()
+    if role:
+        return role
+
+    variation = RoleTitleVariation.query.filter(
+        func.lower(RoleTitleVariation.original_title) == func.lower(role_name)
+    ).first()
+    if variation:
+        return Role.query.get(variation.role_id)
+
+    return Role.query.filter(
+        Role.normalized_title.ilike(f'%{role_name}%')
+    ).first()
 
 
 # ============================================
@@ -458,22 +477,12 @@ def get_role_insights():
     if not role_name:
         return jsonify({'success': False, 'error': 'role is required'}), 400
     
-    # Find the role
-    role = Role.query.filter(
-        func.lower(Role.normalized_title) == func.lower(role_name)
-    ).first()
-    
+    role = _find_role(role_name)
     if not role:
-        role = Role.query.filter(
-            Role.normalized_title.ilike(f'%{role_name}%')
-        ).first()
-    
-    if not role:
-        suggestions = _suggest_similar_roles(role_name)
         return jsonify({
             'success': False,
             'error': f'Role "{role_name}" not found',
-            'suggestions': suggestions
+            'suggestions': _suggest_similar_roles(role_name)
         }), 404
 
     # Build job query with filters
@@ -612,8 +621,7 @@ def get_role_insights():
         filters_applied['company_ids'] = company_ids
 
     # Get jobs
-    jobs = jobs_query.all()
-    job_ids = [j.id for j in jobs]
+    job_ids = [j for (j,) in jobs_query.with_entities(Job.id).all()]
     total_jobs = len(job_ids)
 
     # ============================================
@@ -815,10 +823,7 @@ def get_role_alternatives():
     if not role_name:
         return jsonify({'success': False, 'error': 'role is required'}), 400
     
-    role = Role.query.filter(
-        func.lower(Role.normalized_title) == func.lower(role_name)
-    ).first()
-    
+    role = _find_role(role_name)
     if not role:
         return jsonify({'success': False, 'error': f'Role "{role_name}" not found'}), 404
     

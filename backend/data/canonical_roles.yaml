@@ -11,6 +11,11 @@ software_engineer:
   category: Engineering
   job_family: Software Engineering
 
+mobile_engineer:
+  name: Mobile Engineer
+  category: Engineering
+  job_family: Mobile Engineering
+
 # =============================================================================
 # ENGINEERING — Data / ML / AI
 # =============================================================================

@@ -336,7 +336,7 @@ class JobAggregator:
                 db.session.add(job)
                 db.session.flush()
             
-            self._extract_job_skills(job)
+            job.skills_dirty = True
             db.session.commit()
             return True
             
@@ -347,14 +347,10 @@ class JobAggregator:
     
     def _extract_job_skills(self, job: Job):
         """Extract skills from job description and save to job_skills table"""
-        # Delete existing job skills
-        JobSkill.query.filter_by(job_id=job.id).delete()
-        
         # Extract skills from description
         skills_found = self.skill_extractor.extract_skills(job.description_text)
         
-        # Save only top 10 skills (most relevant)
-        for skill_data in skills_found[:10]:
+        for skill_data in skills_found:
             job_skill = JobSkill(
                 job_id=job.id,
                 skill_id=skill_data['skill_id'],
@@ -362,6 +358,37 @@ class JobAggregator:
             )
             db.session.add(job_skill)
     
+    def extract_dirty_jobs(self):
+        """Extract skills for all jobs flagged skills_dirty=True.
+
+        Called after incremental discovery so the SkillExtractor loads a fresh
+        copy of the taxonomy (which may include skills just auto-promoted).
+        """
+        from app.services.skill_extractor import SkillExtractor
+        extractor = SkillExtractor()  # fresh instance — picks up newly promoted skills
+
+        dirty_jobs = Job.query.filter_by(skills_dirty=True).filter(
+            Job.description_text.isnot(None),
+            Job.description_text != '',
+        ).all()
+
+        if not dirty_jobs:
+            return 0
+
+        print(f"  Extracting skills for {len(dirty_jobs)} jobs...", flush=True)
+        for job in dirty_jobs:
+            skills_found = extractor.extract_skills(job.description_text)
+            for skill_data in skills_found:
+                db.session.add(JobSkill(
+                    job_id=job.id,
+                    skill_id=skill_data['skill_id'],
+                    is_required=skill_data['confidence'] >= 80,
+                ))
+            job.skills_dirty = False
+
+        db.session.commit()
+        return len(dirty_jobs)
+
     def _update_role_counts(self, role_ids: set = None):
         """Update total_active_jobs count for specified roles (or all if none specified)"""
         if role_ids:

@@ -272,6 +272,7 @@ class Job(db.Model):
     last_seen_at = db.Column(db.DateTime, default=datetime.utcnow)
     is_active = db.Column(db.Boolean, default=True)
     closed_at = db.Column(db.DateTime, nullable=True)
+    skills_dirty = db.Column(db.Boolean, default=True, index=True)
 
     
     # Relationships
@@ -405,6 +406,54 @@ class ScraperLog(db.Model):
             'started_at': self.started_at.isoformat() if self.started_at else None,
             'completed_at': self.completed_at.isoformat() if self.completed_at else None
         }
+
+
+# ============================================
+# SKILL DISCOVERY MODELS
+# ============================================
+
+class SkillCandidate(db.Model):
+    """Skill candidates discovered from job descriptions, pending promotion review."""
+    __tablename__ = 'skill_candidates'
+
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(255), unique=True, nullable=False, index=True)
+    job_count = db.Column(db.Integer, default=0)
+    company_count = db.Column(db.Integer, default=0)
+    first_seen = db.Column(db.Date)
+    last_seen = db.Column(db.Date)
+    methods = db.Column(db.ARRAY(db.String))
+    example_contexts = db.Column(db.ARRAY(db.String))
+    status = db.Column(db.String(20), default='pending', index=True)  # pending/approved/rejected
+    promoted_skill_id = db.Column(db.Integer, db.ForeignKey('skills.id'), nullable=True)
+    promoted_at = db.Column(db.DateTime, nullable=True)
+    rejected_reason = db.Column(db.String(255), nullable=True)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+    jobs = db.relationship('SkillCandidateJob', backref='candidate', cascade='all, delete-orphan')
+
+
+class SkillCandidateJob(db.Model):
+    """Tracks which jobs mentioned each skill candidate (for targeted backfill on promotion)."""
+    __tablename__ = 'skill_candidate_jobs'
+
+    candidate_id = db.Column(db.Integer, db.ForeignKey('skill_candidates.id', ondelete='CASCADE'), primary_key=True)
+    job_id = db.Column(db.Integer, db.ForeignKey('jobs.id', ondelete='CASCADE'), primary_key=True)
+
+
+class DiscoveryRun(db.Model):
+    """Audit log for incremental discovery runs."""
+    __tablename__ = 'discovery_runs'
+
+    id = db.Column(db.Integer, primary_key=True)
+    started_at = db.Column(db.DateTime, nullable=False)
+    completed_at = db.Column(db.DateTime)
+    jobs_processed = db.Column(db.Integer, default=0)
+    candidates_upserted = db.Column(db.Integer, default=0)
+    candidates_promoted = db.Column(db.Integer, default=0)
+    status = db.Column(db.String(20), default='running')  # running/completed/failed
+    error = db.Column(db.Text)
 
 
 # ============================================

@@ -1,6 +1,6 @@
 # backend/app/services/skill_gap_analyzer.py
 
-from app.models import db, Job, JobSkill, Skill, Role, UserSkill
+from app.models import db, Job, JobSkill, Skill, Role, UserSkill, RoleTitleVariation
 from sqlalchemy import func
 from typing import List, Dict, Optional
 
@@ -21,16 +21,7 @@ class SkillGapAnalyzer:
         """
         Analyze the gap between user's skills and target role requirements
         """
-        # Find the role
-        role = Role.query.filter(
-            func.lower(Role.normalized_title) == func.lower(target_role)
-        ).first()
-        
-        if not role:
-            role = Role.query.filter(
-                Role.normalized_title.ilike(f'%{target_role}%')
-            ).first()
-        
+        role = self._find_role(target_role)
         if not role:
             return {
                 'success': False,
@@ -100,8 +91,7 @@ class SkillGapAnalyzer:
                 })
 
         # Get final job IDs
-        jobs = jobs_query.all()
-        job_ids = [j.id for j in jobs]    
+        job_ids = [j for (j,) in jobs_query.with_entities(Job.id).all()]
 
         # If filters were ignored, return error (don't show misleading data)
         if filters_ignored:
@@ -177,6 +167,21 @@ class SkillGapAnalyzer:
             'missing_skills': sorted(gap_skills, key=lambda x: x['demand'], reverse=True),
         }
     
+    def _find_role(self, role_name: str):
+        role = Role.query.filter(
+            func.lower(Role.normalized_title) == func.lower(role_name)
+        ).first()
+        if role:
+            return role
+        variation = RoleTitleVariation.query.filter(
+            func.lower(RoleTitleVariation.original_title) == func.lower(role_name)
+        ).first()
+        if variation:
+            return Role.query.get(variation.role_id)
+        return Role.query.filter(
+            Role.normalized_title.ilike(f'%{role_name}%')
+        ).first()
+
     def _get_role_skill_requirements(self, job_ids: List[int]) -> List[Dict]:
         """Get skill frequency for a set of jobs"""
         if not job_ids:
@@ -244,9 +249,9 @@ class SkillGapAnalyzer:
         return [{'id': r.id, 'title': r.normalized_title, 'category': r.category} for r in roles]
     
     def get_available_roles(self, min_jobs: int = None) -> List[Dict]:
-        """Get all roles with job counts"""
+        """Get all roles with job counts and aliases."""
         threshold = min_jobs if min_jobs is not None else self.min_jobs_threshold
-        
+
         roles = db.session.query(
             Role.id,
             Role.normalized_title,
@@ -260,14 +265,25 @@ class SkillGapAnalyzer:
         ).order_by(
             func.count(Job.id).desc()
         ).all()
-        
+
+        role_ids = [r[0] for r in roles]
+        alias_rows = db.session.query(
+            RoleTitleVariation.role_id,
+            RoleTitleVariation.original_title,
+        ).filter(RoleTitleVariation.role_id.in_(role_ids)).all()
+
+        aliases_by_role: Dict[int, List[str]] = {}
+        for role_id, original_title in alias_rows:
+            aliases_by_role.setdefault(role_id, []).append(original_title)
+
         return [
             {
                 'id': role_id,
                 'title': title,
                 'category': category,
                 'job_family': job_family,
-                'job_count': job_count
+                'job_count': job_count,
+                'aliases': aliases_by_role.get(role_id, []),
             }
             for role_id, title, category, job_family, job_count in roles
         ]

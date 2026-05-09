@@ -1388,10 +1388,14 @@ const RoleSelectionScreen = () => {
 
   const dropdownRef = useRef(null);
 
-  const filteredRoles = allRoles.filter(role => {
+  const filteredRoles = allRoles.map(role => {
     const title = role.title || role;
-    return title.toLowerCase().includes(roleSearchQuery.toLowerCase());
-  });
+    const q = roleSearchQuery.toLowerCase();
+    if (title.toLowerCase().includes(q)) return { role, matchedAlias: null };
+    const matched = (role.aliases || []).find(a => a.toLowerCase().includes(q));
+    if (matched) return { role, matchedAlias: matched };
+    return null;
+  }).filter(Boolean);
 
   const handleRoleSelect = (role) => {
     const roleTitle = role.title || role;
@@ -1503,7 +1507,7 @@ const RoleSelectionScreen = () => {
               {/* Dropdown - only show when no role selected */}
               {showRoleDropdown && filteredRoles.length > 0 && !selectedRole && (
                 <div className="absolute w-full mt-2 bg-zinc-900 border-2 border-line-strong max-h-72 overflow-y-auto z-20">
-                  {filteredRoles.slice(0, 12).map((role, idx) => {
+                  {filteredRoles.slice(0, 12).map(({ role, matchedAlias }, idx) => {
                     const roleTitle = role.title || role;
                     const jobCount = role.job_count;
                     return (
@@ -1512,9 +1516,14 @@ const RoleSelectionScreen = () => {
                         onClick={() => handleRoleSelect(role)}
                         className="w-full px-5 py-4 text-left hover:bg-white/10 transition-colors border-b border-white/5 last:border-b-0 flex items-center justify-between"
                       >
-                        <span className="text-base">{roleTitle}</span>
+                        <span className="text-base">
+                          {roleTitle}
+                          {matchedAlias && (
+                            <span className="text-sm text-ink-muted ml-2">also: {matchedAlias}</span>
+                          )}
+                        </span>
                         {jobCount && (
-                          <span className="text-sm text-ink-muted">{jobCount} jobs</span>
+                          <span className="text-sm text-ink-muted ml-4 shrink-0">{jobCount} jobs</span>
                         )}
                       </button>
                     );
