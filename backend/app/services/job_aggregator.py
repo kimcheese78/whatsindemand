@@ -1,6 +1,6 @@
 # app/services/job_aggregator.py
 
-from app.models import db, Company, Job, JobSkill, Skill, Role, RoleTitleVariation
+from app.models import db, Company, Job, JobSkill, Skill, Role, RoleTitleVariation, RoleCandidate
 from app.scrapers.greenhouse.scraper import GreenhouseScraper
 from app.scrapers.lever.scraper import LeverScraper
 from app.scrapers.ashby.scraper import AshbyScraper
@@ -223,18 +223,18 @@ class JobAggregator:
         return results
     
     def _get_or_create_role(self, job_data: dict) -> Role:
-        """Get existing role or create new one based on normalized title"""
+        """Get existing role or queue as candidate if unmatched."""
         normalized_title = job_data.get('role_normalized_title', '')
-        
-        # Skip junk entries
+
         if not normalized_title or normalized_title == 'Unknown':
+            # Queue raw title for manual review instead of creating a junk Role row
+            raw_title = job_data.get('title', '').strip()
+            if raw_title:
+                self._queue_role_candidate(raw_title)
             return None
-        
-        # Try to find existing role
+
         role = Role.query.filter_by(normalized_title=normalized_title).first()
-        
         if not role:
-            # Create new role
             role = Role(
                 normalized_title=normalized_title,
                 category=job_data.get('role_category', 'Other'),
@@ -243,10 +243,29 @@ class JobAggregator:
                 total_active_jobs=0
             )
             db.session.add(role)
-            db.session.flush()  # Get the ID
+            db.session.flush()
             print(f"    📌 Created new role: {normalized_title}")
-        
+
         return role
+
+    def _queue_role_candidate(self, raw_title: str):
+        """Upsert an unmatched raw title into role_candidates for manual review."""
+        from datetime import date
+        today = date.today()
+        existing = RoleCandidate.query.filter_by(raw_title=raw_title).first()
+        if existing:
+            if existing.status == 'pending':
+                existing.job_count += 1
+                existing.last_seen = today
+        else:
+            db.session.add(RoleCandidate(
+                raw_title=raw_title,
+                job_count=1,
+                company_count=1,
+                first_seen=today,
+                last_seen=today,
+                status='pending',
+            ))
     
     def _track_title_variation(self, role: Role, original_title: str):
         """Track the original title as a variation of the role"""

@@ -415,6 +415,23 @@ class ScraperLog(db.Model):
 # SKILL DISCOVERY MODELS
 # ============================================
 
+class RoleCandidate(db.Model):
+    """Raw job titles that couldn't be mapped to a canonical role, pending manual review."""
+    __tablename__ = 'role_candidates'
+
+    id = db.Column(db.Integer, primary_key=True)
+    raw_title = db.Column(db.String(500), unique=True, nullable=False, index=True)
+    job_count = db.Column(db.Integer, default=1)
+    company_count = db.Column(db.Integer, default=1)
+    first_seen = db.Column(db.Date)
+    last_seen = db.Column(db.Date)
+    status = db.Column(db.String(20), default='pending', index=True)  # pending/approved/rejected
+    mapped_role_id = db.Column(db.Integer, db.ForeignKey('roles.id'), nullable=True)
+    rejected_reason = db.Column(db.String(255), nullable=True)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+
 class SkillCandidate(db.Model):
     """Skill candidates discovered from job descriptions, pending promotion review."""
     __tablename__ = 'skill_candidates'
