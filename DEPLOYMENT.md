@@ -1,103 +1,81 @@
 # Deployment Guide
 
-## Quick Deploy (Free Tier)
+## Stack
 
-### 1. Database Setup (Supabase)
+- **Backend**: Railway (auto-deploys on push to `main`)
+- **Frontend**: Vercel (auto-deploys on push to `main`)
+- **Database**: Supabase (PostgreSQL)
 
-1. Go to [supabase.com](https://supabase.com) and create account
-2. Create new project
-3. Copy connection string from Settings → Database
-4. Format: `postgresql://postgres:[PASSWORD]@db.xxxxx.supabase.co:5432/postgres`
--> 'postgresql://postgres:[YOUR-PASSWORD]@db.sjamvmcuijyppipvuhud.supabase.co:5432/postgres'
+---
 
-### 2. Backend Deployment (Render)
+## Backend (Railway)
 
-1. Push code to GitHub
-2. Go to [render.com](https://render.com) → New → Web Service
-3. Connect GitHub repo
-4. Settings:
-   - **Name**: `whatsindemand-backend`
-   - **Root Directory**: `backend` ⚠️ **IMPORTANT: Set this!**
-   - **Environment**: `Python 3`
-   - **Build Command**: `pip install -r requirements.txt`
-   - **Start Command**: `gunicorn run:app --bind 0.0.0.0:$PORT`
-5. Add Environment Variables:
-   ```
-   FLASK_ENV=production
-   SECRET_KEY=<generate-random-string>
-   JWT_SECRET_KEY=<generate-random-string>
-   DATABASE_URL=<supabase-connection-string>
-   FRONTEND_URL=https://your-app.vercel.app
-   BACKEND_URL=https://your-backend.onrender.com
-   PORT=10000
-   ```
-6. Deploy
+Railway auto-deploys when you push to `main`. No manual steps needed for code changes.
 
-### 3. Frontend Deployment (Vercel)
-
-1. Go to [vercel.com](https://vercel.com) → New Project
-2. Import from GitHub, select `frontend` folder
-3. Add Environment Variable:
-   ```
-   REACT_APP_API_URL=https://your-backend.onrender.com
-   ```
-4. Deploy
-
-### 4. Run Database Migrations
-
-After backend is deployed:
-1. Go to Render dashboard → Your service → Shell
-2. Run: `flask db upgrade`
-
-Or create tables manually:
-```python
-from app import create_app
-from app.models import db
-
-app = create_app()
-with app.app_context():
-    db.create_all()
+**Environment variables** (set in Railway dashboard → Variables):
+```
+FLASK_ENV=production
+SECRET_KEY=<random string>
+JWT_SECRET_KEY=<random string>
+DATABASE_URL=<supabase connection string>
+FRONTEND_URL=https://whatsindemand.com
+BACKEND_URL=https://<your-service>.railway.app
+RESEND_API_KEY=<resend api key>
+EMAIL_FROM=noreply@whatsindemand.com
+WEB_URL=https://whatsindemand.com
 ```
 
-## Required Files for Deployment
+**Start command**: `gunicorn run:app --bind 0.0.0.0:$PORT`
 
-### Backend
-- `Procfile` - Process file for Render
-- `runtime.txt` - Python version
-- `requirements.txt` - Python dependencies (must include `gunicorn`)
+**Root directory**: `backend`
 
-### Frontend
-- `package.json` - Node dependencies
-- `vercel.json` - Vercel configuration (optional)
+---
+
+## Frontend (Vercel)
+
+Vercel auto-deploys when you push to `main`.
+
+**Environment variable** (set in Vercel dashboard → Settings → Environment Variables):
+```
+REACT_APP_API_URL=https://<your-service>.railway.app
+```
+
+---
+
+## Database Migrations
+
+After deploying backend changes that include schema changes, run via Railway shell:
+
+```bash
+flask db upgrade
+```
+
+---
 
 ## Post-Deployment Checklist
 
-- [ ] Backend is accessible at Render URL
-- [ ] Frontend is accessible at Vercel URL
-- [ ] Database migrations completed
-- [ ] CORS configured correctly
-- [ ] Environment variables set
-- [ ] Test API endpoints
-- [ ] Test frontend → backend connection
+- [ ] Railway deploy succeeded (check dashboard)
+- [ ] Vercel deploy succeeded (check dashboard)
+- [ ] DB migration run if schema changed
+- [ ] Environment variables set (especially RESEND_API_KEY, WEB_URL)
+- [ ] Test auth flows end-to-end
+
+---
 
 ## Troubleshooting
 
 **Backend won't start:**
-- Check Render logs
+- Check Railway deploy logs
 - Verify all environment variables are set
 - Ensure `gunicorn` is in requirements.txt
 
 **CORS errors:**
-- Verify `FRONTEND_URL` matches your Vercel domain exactly
-- Check backend CORS configuration
+- Verify `FRONTEND_URL` in Railway matches your Vercel domain exactly
 
 **Database connection fails:**
-- Verify `DATABASE_URL` format
-- Check Supabase connection settings
-- Ensure database is accessible from Render IPs
+- Verify `DATABASE_URL` format (Supabase connection string)
+- Check Supabase is accessible from Railway IPs
 
-**Frontend can't connect to backend:**
-- Verify `REACT_APP_API_URL` is set correctly
-- Check backend is running (Render services sleep after inactivity)
-- Test backend URL directly in browser
-
+**Emails not sending:**
+- Verify `RESEND_API_KEY` is set in Railway
+- Check Railway logs — missing key logs a warning and skips silently
