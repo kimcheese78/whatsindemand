@@ -96,9 +96,12 @@ def main():
                 stats['already_exists'] += 1
                 continue
 
+            # Map Lightcast top-level category to our three canonical categories
+            category = 'Soft' if cat == 'Physical and Inherent Abilities' else cat
+
             to_insert.append({
                 'name': name_clean,
-                'category': cat,  # use Lightcast top-level category
+                'category': category,
                 'aliases': [],
                 'is_verified': True,
                 'total_job_count': 0,
