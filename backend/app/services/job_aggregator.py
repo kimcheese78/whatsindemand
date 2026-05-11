@@ -6,7 +6,7 @@ from app.scrapers.lever.scraper import LeverScraper
 from app.scrapers.ashby.scraper import AshbyScraper
 from app.scrapers.workable.scraper import WorkableScraper
 from app.services.skill_extractor import SkillExtractor
-from app.utils.role_normalizer_v2 import normalize_title
+from app.utils.role_normalizer_v2 import normalize_title, _should_skip as _is_placeholder_title
 from datetime import datetime
 
 
@@ -290,6 +290,9 @@ class JobAggregator:
     def _save_job(self, company_id: int, job_data: dict) -> bool:
         """Save a single job to database"""
         try:
+            if _is_placeholder_title(job_data.get('title', '')):
+                return False
+
             role = self._get_or_create_role(job_data)
             role_id = role.id if role else None
             
