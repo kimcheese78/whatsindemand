@@ -18,12 +18,20 @@ from app.models import db, Skill
 APPLY = '--apply' in sys.argv
 DATA_PATH = os.path.join(os.path.dirname(__file__), '..', 'data', 'lightcast_taxonomy.json')
 
-# Skip whole Lightcast categories that are inherent traits, not JD skills.
-CATEGORY_SKIPLIST = {
-    'Physical and Inherent Abilities',
+# No whole top-level category blocks.
+CATEGORY_SKIPLIST: set = set()
+
+# Block specific subcategories that contain conditions/diagnoses, not job skills.
+SUBCATEGORY_SKIPLIST = {
+    ('Health Care', 'Genetic Disorders Subcategory'),
+    ('Health Care', 'Infectious Diseases Subcategory'),      # Ebola, Pneumonia, etc.
+    ('Health Care', 'Mental Health Diseases and Disorders'), # Schizophrenia, Alzheimer's, etc.
+    ('Education and Training', 'Special Education'),         # Dyslexia, Dyscalculia, etc.
 }
 
 # Skip individual skill names known to cause false-positive noise.
+# Add names here rather than blocking whole categories, so legitimate skills
+# in the same subcategory (e.g. Mental Health, Genetic Counseling) still come through.
 # Kept in sync with scripts/cleanup_generic_skills.py NAME_SKIPLIST.
 NAME_SKIPLIST = {
     'office', 'management', 'operations', 'planning', 'analysis',
@@ -43,6 +51,15 @@ NAME_SKIPLIST = {
     'drafting', 'curation', 'training',
     'hospitality', 'cooperation', 'coordinating', 'collections',
     'sales',
+    # Medical conditions / diseases — not skills anyone "has"
+    # (performing arts names are kept — they appear in media/entertainment JDs)
+    'dyslexia', 'dyscalculia', 'learning disabilities',
+    'genetic disorders', 'infectious diseases', 'infection',
+    'pneumonia', 'influenza', 'tuberculosis', 'ebola', 'mono',
+    'foodborne illness', 'communicable diseases', 'antimicrobials',
+    'mental diseases', 'diagnostic and statistical manual of mental disorders',
+    "alzheimer's disease", 'personality disorder', 'schizophrenia',
+    'autism spectrum disorders',
 }
 
 
@@ -80,6 +97,9 @@ def main():
                 continue
             if cat in CATEGORY_SKIPLIST:
                 stats['category_skipped'] += 1
+                continue
+            if (cat, subcat) in SUBCATEGORY_SKIPLIST:
+                stats['subcategory_skipped'] += 1
                 continue
             if name_clean.lower() in existing_by_name:
                 stats['already_exists'] += 1
