@@ -227,9 +227,10 @@ class JobAggregator:
         normalized_title = job_data.get('role_normalized_title', '')
 
         if not normalized_title or normalized_title == 'Unknown':
-            # Queue raw title for manual review instead of creating a junk Role row
+            # Queue raw title for manual review, but not junk/placeholder titles
+            role_category = job_data.get('role_category', '')
             raw_title = job_data.get('title', '').strip()
-            if raw_title:
+            if raw_title and role_category != 'Skip':
                 self._queue_role_candidate(raw_title)
             return None
 

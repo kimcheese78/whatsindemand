@@ -255,7 +255,7 @@ class Job(db.Model):
     source_job_id = db.Column(db.String(255))
     source_url = db.Column(db.String(1000))
     title = db.Column(db.String(500), nullable=False)
-    location_raw = db.Column(db.String(255))
+    location_raw = db.Column(db.String(512))
     location_city = db.Column(db.String(255))
     location_state = db.Column(db.String(100))
     location_country = db.Column(db.String(100))
