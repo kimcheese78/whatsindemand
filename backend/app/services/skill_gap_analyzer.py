@@ -283,14 +283,14 @@ class SkillGapAnalyzer:
         """Get all skills organized by category"""
         skills = Skill.query.order_by(Skill.category, Skill.name).all()
         
-        categorized = {'technical': [], 'soft': [], 'domain': [], 'hard': []}
-        
+        categorized = {'Technical': [], 'Soft': [], 'Domain': [], 'hard': []}
+
         for skill in skills:
             skill_data = {'id': skill.id, 'name': skill.name, 'category': skill.category}
-            category = skill.category or 'technical'
+            category = skill.category or 'Technical'
             if category in categorized:
                 categorized[category].append(skill_data)
-            if category in ['technical', 'domain']:
+            if category in ['Technical', 'Domain']:
                 categorized['hard'].append(skill_data)
         
         return categorized

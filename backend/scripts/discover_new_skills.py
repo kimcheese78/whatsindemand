@@ -332,14 +332,14 @@ def _classify_skill(name: str) -> str:
     }
     for sig in _TECH:
         if sig in n:
-            return 'technical'
+            return 'Technical'
     for sig in _SOFT:
         if sig in n:
-            return 'soft'
+            return 'Soft'
     tech_suffixes = ('js', '.js', 'db', 'ops', 'sql', 'sdk', 'api', 'net', 'lang')
     if any(n.endswith(s) for s in tech_suffixes):
-        return 'technical'
-    return 'domain'
+        return 'Technical'
+    return 'Domain'
 
 
 def _promote_candidate(candidate, taxonomy_set: set) -> bool:
