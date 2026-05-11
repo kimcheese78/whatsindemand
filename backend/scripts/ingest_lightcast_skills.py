@@ -51,15 +51,6 @@ NAME_SKIPLIST = {
     'drafting', 'curation', 'training',
     'hospitality', 'cooperation', 'coordinating', 'collections',
     'sales',
-    # Medical conditions / diseases — not skills anyone "has"
-    # (performing arts names are kept — they appear in media/entertainment JDs)
-    'dyslexia', 'dyscalculia', 'learning disabilities',
-    'genetic disorders', 'infectious diseases', 'infection',
-    'pneumonia', 'influenza', 'tuberculosis', 'ebola', 'mono',
-    'foodborne illness', 'communicable diseases', 'antimicrobials',
-    'mental diseases', 'diagnostic and statistical manual of mental disorders',
-    "alzheimer's disease", 'personality disorder', 'schizophrenia',
-    'autism spectrum disorders',
 }
 
 
