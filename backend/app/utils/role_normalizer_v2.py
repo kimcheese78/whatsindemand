@@ -159,9 +159,22 @@ def _delevel(title: str) -> str:
 # ---------------------------------------------------------------------------
 
 _SKIP_KEYWORDS = [
-    "talent pool", "general interest", "don't see what you're looking for",
+    # Talent pool / catchall listings
+    "talent pool", "talent community", "join our talent", "talent network",
+    "candidate pool", "oyster talent",
+    # "Don't see a role" variants
+    "don't see what you're looking for", "didn't see what you are looking for",
+    "don't see your dream job", "don't see a role", "don't see the job",
+    "don't see the perfect", "can't find a role",
+    # General application variants
+    "general application", "general apply", "general interest",
+    "general resume submittal", "open application",
+    # Engagement / community signups
+    "interested in joining", "join our community", "introduce yourself",
+    "register your interest", "sign up to our", "university talent network",
+    # Program / fellowship catchalls
     "future opportunities", "future openings", "expression of interest",
-    "candidate pool", "join our talent network",
+    "early career program",
 ]
 
 
