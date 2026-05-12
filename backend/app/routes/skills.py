@@ -6,6 +6,7 @@ from flask import Blueprint, request, jsonify
 from app.models import db, Skill, JobSkill, Job, Role
 from app.services.skill_extractor import SkillExtractor
 from app.services.resume_parser import ResumeParser
+from app import limiter
 from sqlalchemy import func
 
 skills_bp = Blueprint('skills', __name__, url_prefix='/api/skills')
@@ -14,6 +15,7 @@ skills_bp = Blueprint('skills', __name__, url_prefix='/api/skills')
 # Public, stateless skill extraction — used by the onboarding flow before signup.
 # Auth-gated persistence still lives in /api/resume.
 @skills_bp.route('/extract', methods=['POST'])
+@limiter.limit("5 per minute; 20 per hour")
 def extract_skills_from_input():
     """
     Extract skills from pasted text or an uploaded resume file.

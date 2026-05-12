@@ -12,6 +12,7 @@ from app.services.email import send_email
 from app.services import email_templates
 from google.oauth2 import id_token
 from google.auth.transport import requests as google_requests
+from app import limiter
 
 logger = logging.getLogger(__name__)
 
@@ -26,6 +27,7 @@ def _send_verification_email(user: User) -> None:
     send_email(user.email, subject, html, text)
 
 @bp.route('/signup', methods=['POST'])
+@limiter.limit("5 per minute; 20 per hour")
 def signup():
     """User signup with email/password"""
     data = request.get_json()
@@ -90,6 +92,7 @@ def signup():
     }), 201
 
 @bp.route('/login', methods=['POST'])
+@limiter.limit("10 per minute; 50 per hour")
 def login():
     """User login with email/password"""
     data = request.get_json()
@@ -120,6 +123,7 @@ def login():
     }), 200
 
 @bp.route('/google', methods=['POST'])
+@limiter.limit("10 per minute; 50 per hour")
 def google_auth():
     """Google OAuth authentication"""
     data = request.get_json()
@@ -212,6 +216,7 @@ def test():
 # ============================================
 
 @bp.route('/forgot-password', methods=['POST'])
+@limiter.limit("3 per minute; 10 per hour")
 def forgot_password():
     """Initiate password reset. Returns 404 if no account exists for the email."""
     data = request.get_json(silent=True) or {}
@@ -242,6 +247,7 @@ def forgot_password():
 
 
 @bp.route('/reset-password', methods=['POST'])
+@limiter.limit("5 per minute; 10 per hour")
 def reset_password():
     data = request.get_json(silent=True) or {}
     raw = data.get('token')
@@ -394,6 +400,7 @@ def verify_email():
 
 
 @bp.route('/resend-verification', methods=['POST'])
+@limiter.limit("2 per minute; 5 per hour")
 @token_required
 def resend_verification():
     user = User.query.get(request.user_id)
