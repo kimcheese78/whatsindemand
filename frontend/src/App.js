@@ -1907,7 +1907,10 @@ const SkillsInputScreen = () => {
   const [resumeText, setResumeText] = useState('');
   const [extracting, setExtracting] = useState(false);
   const [extractError, setExtractError] = useState(null);
-  const [extractedExtra, setExtractedExtra] = useState([]);
+  const [extractedExtra, setExtractedExtra] = useState(() => {
+    const suggestedIds = new Set(suggestedSkills.map(s => s.skill_id));
+    return (userSkills || []).filter(s => !suggestedIds.has(s.skill_id));
+  });
   const [addedExtra, setAddedExtra] = useState([]);
   const [allSkills, setAllSkills] = useState([]);
   const [skillQuery, setSkillQuery] = useState('');

@@ -1,8 +1,8 @@
 """
-Backfill role_candidates with all job titles that have no role_id assigned.
+Backfill unmatched_titles with all job titles that have no role_id assigned.
 
-Skips titles already in role_candidates and known placeholder titles.
-Run: PYTHONPATH=. venv/bin/python scripts/backfill_role_candidates.py [--dry-run]
+Skips titles already in unmatched_titles and known placeholder titles.
+Run: PYTHONPATH=. venv/bin/python scripts/backfill_unmatched_titles.py [--dry-run]
 """
 import sys
 import os
@@ -11,7 +11,7 @@ from collections import Counter
 
 sys.path.insert(0, os.getcwd())
 from app import create_app
-from app.models import db, Job, RoleCandidate
+from app.models import db, Job, UnmatchedTitle
 
 PLACEHOLDER_KEYWORDS = [
     "don't see what you're looking for",
@@ -48,7 +48,7 @@ def main():
 
         # Get existing role_candidate titles
         existing = {
-            rc.raw_title for rc in RoleCandidate.query.with_entities(RoleCandidate.raw_title).all()
+            rc.raw_title for rc in UnmatchedTitle.query.with_entities(UnmatchedTitle.raw_title).all()
         }
 
         stats = Counter()
@@ -71,7 +71,7 @@ def main():
                 continue
 
             db.session.execute(db.text('''
-                INSERT INTO role_candidates (raw_title, job_count, company_count, first_seen, last_seen, status)
+                INSERT INTO unmatched_titles (raw_title, job_count, company_count, first_seen, last_seen, status)
                 VALUES (:title, :job_count, :company_count, :first_seen, :last_seen, 'pending')
                 ON CONFLICT (raw_title) DO NOTHING
             '''), {
@@ -86,10 +86,10 @@ def main():
             db.session.commit()
 
         print(f'\nResults:')
-        print(f'  Already in role_candidates: {stats["already_exists"]}')
+        print(f'  Already in unmatched_titles: {stats["already_exists"]}')
         print(f'  Placeholders skipped:       {stats["placeholder"]}')
         print(f'  {"Would insert" if DRY_RUN else "Inserted"}:                  {stats["to_insert"]}')
-        total = db.session.execute(db.text('SELECT COUNT(*) FROM role_candidates WHERE status = \'pending\'')).scalar()
+        total = db.session.execute(db.text('SELECT COUNT(*) FROM unmatched_titles WHERE status = \'pending\'')).scalar()
         print(f'  Total pending candidates:   {total}')
 
 

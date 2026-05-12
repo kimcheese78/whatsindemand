@@ -7,8 +7,8 @@ For each pending raw title you can:
   q  — quit
 
 Usage:
-    PYTHONPATH=. venv/bin/python scripts/review_role_candidates.py
-    PYTHONPATH=. venv/bin/python scripts/review_role_candidates.py --min-count 3
+    PYTHONPATH=. venv/bin/python scripts/review_unmatched_titles.py
+    PYTHONPATH=. venv/bin/python scripts/review_unmatched_titles.py --min-count 3
 """
 import os
 import sys
@@ -20,7 +20,7 @@ from dotenv import load_dotenv
 load_dotenv(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), '.env'))
 
 from app import create_app
-from app.models import db, Role, RoleCandidate, RoleTitleVariation
+from app.models import db, Role, UnmatchedTitle, RoleTitleVariation
 
 app = create_app()
 
@@ -115,9 +115,9 @@ def _pick_or_create_role(raw_title: str) -> Role | None:
 
 
 def _run(min_count: int):
-    candidates = RoleCandidate.query.filter_by(status='pending').filter(
-        RoleCandidate.job_count >= min_count
-    ).order_by(RoleCandidate.job_count.desc()).all()
+    candidates = UnmatchedTitle.query.filter_by(status='pending').filter(
+        UnmatchedTitle.job_count >= min_count
+    ).order_by(UnmatchedTitle.job_count.desc()).all()
 
     if not candidates:
         print(f'No pending role candidates with count >= {min_count}.')

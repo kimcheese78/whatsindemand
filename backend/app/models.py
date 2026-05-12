@@ -415,9 +415,9 @@ class ScraperLog(db.Model):
 # SKILL DISCOVERY MODELS
 # ============================================
 
-class RoleCandidate(db.Model):
+class UnmatchedTitle(db.Model):
     """Raw job titles that couldn't be mapped to a canonical role, pending manual review."""
-    __tablename__ = 'role_candidates'
+    __tablename__ = 'unmatched_titles'
 
     id = db.Column(db.Integer, primary_key=True)
     raw_title = db.Column(db.String(500), unique=True, nullable=False, index=True)

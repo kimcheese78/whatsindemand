@@ -1,6 +1,6 @@
 # app/services/job_aggregator.py
 
-from app.models import db, Company, Job, JobSkill, Skill, Role, RoleTitleVariation, RoleCandidate
+from app.models import db, Company, Job, JobSkill, Skill, Role, RoleTitleVariation, UnmatchedTitle
 from app.scrapers.greenhouse.scraper import GreenhouseScraper
 from app.scrapers.lever.scraper import LeverScraper
 from app.scrapers.ashby.scraper import AshbyScraper
@@ -250,16 +250,16 @@ class JobAggregator:
         return role
 
     def _queue_role_candidate(self, raw_title: str):
-        """Upsert an unmatched raw title into role_candidates for manual review."""
+        """Upsert an unmatched raw title into unmatched_titles for manual review."""
         from datetime import date
         today = date.today()
-        existing = RoleCandidate.query.filter_by(raw_title=raw_title).first()
+        existing = UnmatchedTitle.query.filter_by(raw_title=raw_title).first()
         if existing:
             if existing.status == 'pending':
                 existing.job_count += 1
                 existing.last_seen = today
         else:
-            db.session.add(RoleCandidate(
+            db.session.add(UnmatchedTitle(
                 raw_title=raw_title,
                 job_count=1,
                 company_count=1,
