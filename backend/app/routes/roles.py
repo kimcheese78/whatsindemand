@@ -683,7 +683,7 @@ def get_role_insights():
         JobSkill.job_id.in_(job_ids)
     ).group_by(Skill.id).order_by(
         func.count(JobSkill.id).desc()
-    ).all()
+    ).limit(150).all()
 
     # Get all skill IDs for bulk growth calculation
     all_skill_ids = [s[0] for s in skill_counts]
