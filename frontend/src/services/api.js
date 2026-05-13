@@ -32,9 +32,13 @@ class API {
 
   async request(endpoint, options = {}) {
     const url = `${this.baseURL}${endpoint}`;
-    
+    const timeoutMs = options.timeout ?? 15000;
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
+
     const config = {
       ...options,
+      signal: controller.signal,
       headers: {
         ...this.getHeaders(options.auth !== false),
         ...options.headers,
@@ -43,6 +47,7 @@ class API {
 
     try {
       const response = await fetch(url, config);
+      clearTimeout(timeoutId);
       
       // Handle non-JSON responses
       const contentType = response.headers.get('content-type');
@@ -66,6 +71,10 @@ class API {
 
       return data;
     } catch (error) {
+      clearTimeout(timeoutId);
+      if (error.name === 'AbortError') {
+        throw new Error('Request timed out. Please check your connection and try again.');
+      }
       console.error('API Error:', error);
       throw error;
     }
