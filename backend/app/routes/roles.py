@@ -721,7 +721,7 @@ def get_role_insights():
         Job.id.in_(job_ids)
     ).group_by(Company.id).order_by(
         func.count(Job.id).desc()
-    ).all()
+    ).limit(100).all()
 
     # Get all company IDs for bulk growth calculation
     all_company_ids = [c[0] for c in top_companies]
