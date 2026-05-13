@@ -35,6 +35,14 @@ def create_app(config_name=None):
     def ratelimit_handler(e):
         return jsonify({'error': 'Too many requests. Please try again later.'}), 429
 
+    @app.after_request
+    def set_security_headers(response):
+        response.headers['X-Content-Type-Options'] = 'nosniff'
+        response.headers['X-Frame-Options'] = 'DENY'
+        response.headers['Referrer-Policy'] = 'strict-origin-when-cross-origin'
+        response.headers['Strict-Transport-Security'] = 'max-age=63072000; includeSubDomains; preload'
+        return response
+
     # Enable CORS — origin allowlist comes from config (env-driven).
     CORS(app,
         origins=app.config['CORS_ORIGINS'],
