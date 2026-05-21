@@ -277,7 +277,10 @@ class Job(db.Model):
     closed_at = db.Column(db.DateTime, nullable=True)
     skills_dirty = db.Column(db.Boolean, default=True, index=True)
 
-    
+    __table_args__ = (
+        db.UniqueConstraint('source_ats', 'source_job_id', name='uq_jobs_source_job'),
+    )
+
     # Relationships
     required_skills = db.relationship('JobSkill', backref='job', cascade='all, delete-orphan')
     

@@ -408,13 +408,17 @@ def _promote_candidate(candidate, taxonomy_set: set) -> bool:
 
 
 def _check_and_promote(taxonomy_set: set) -> int:
-    """Check all pending candidates against the threshold and promote eligible ones."""
-    from app.models import db, SkillCandidate
+    """Report qualifying candidates for manual review. No auto-promotion.
 
-    # Compute accurate company counts via skill_candidate_jobs → jobs join
+    Candidates meeting the threshold are left as 'pending' and reviewed
+    in conversation with Claude on review day. After approval, promote via
+    DB inserts then run scripts/backfill_skills.py for historical jobs.
+    """
+    from app.models import db
+
     rows = db.session.execute(db.text(
         """
-        SELECT sc.id, sc.name, sc.job_count, COUNT(DISTINCT j.company_id) AS co_count
+        SELECT sc.name, sc.job_count, COUNT(DISTINCT j.company_id) AS co_count
         FROM skill_candidates sc
         JOIN skill_candidate_jobs scj ON scj.candidate_id = sc.id
         JOIN jobs j ON j.id = scj.job_id
@@ -422,35 +426,21 @@ def _check_and_promote(taxonomy_set: set) -> int:
         GROUP BY sc.id, sc.name, sc.job_count
         HAVING sc.job_count >= :min_jobs
            AND COUNT(DISTINCT j.company_id) >= :min_cos
+        ORDER BY sc.job_count DESC
         """
     ), {'min_jobs': AUTO_PROMOTE_MIN_JOBS, 'min_cos': AUTO_PROMOTE_MIN_COMPANIES}).fetchall()
 
     if not rows:
+        log('  No new candidates meet the promotion threshold.')
         return 0
 
-    row_map = {r.name: r for r in rows}
-
-    try:
-        llm_results = _llm_validate_candidates(list(row_map.keys()))
-    except RuntimeError as e:
-        log(f'  ⚠ LLM validation unavailable — {e}')
-        log(f'  {len(rows)} candidate(s) left as pending for manual review')
-        return 0
-
-    promote_names = {name for name, is_skill in llm_results.items() if is_skill}
-
-    if not promote_names:
-        return 0
-
-    promoted = 0
-    for name in promote_names:
-        candidate = SkillCandidate.query.get(row_map[name].id)
-        if candidate and _promote_candidate(candidate, taxonomy_set):
-            promoted += 1
-            log(f'  ✓ Promoted: {name}')
-
-    db.session.commit()
-    return promoted
+    log(f'  {len(rows)} candidate(s) meet threshold (>={AUTO_PROMOTE_MIN_JOBS} jobs, >={AUTO_PROMOTE_MIN_COMPANIES} companies) — pending manual review:')
+    for r in rows[:20]:
+        log(f'    {r[0]:<45} jobs={r[1]}  cos={r[2]}')
+    if len(rows) > 20:
+        log(f'    ... and {len(rows) - 20} more')
+    log('  Review candidates in conversation with Claude, then promote approved ones to taxonomy.')
+    return 0
 
 
 # ---------------------------------------------------------------------------

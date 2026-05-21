@@ -348,10 +348,7 @@
 "forward-deployed data scientist": forward_deployed_data_scientist
 "forward deployed product manager": product_manager
 "forward deployed ai accelerator, marketing": software_engineer
-"deployment strategist": deployment_strategist
-"deployment strategist - us government": deployment_strategist
-"deployment strategist, build to apply - us government": deployment_strategist
-"technical deployment lead": deployment_strategist
+"technical deployment lead": implementation_manager
 "customer success engineer": product_support_engineer
 "customer support engineer": product_support_engineer
 "product support engineer": product_support_engineer
@@ -682,9 +679,7 @@
 "area manager": area_manager
 "global operations associate": global_operations_manager
 "global operations specialist": global_operations_manager
-"ocean operations associate": ocean_operations_associate
 "customs specialist": customs_specialist
-"trade advisory lead": trade_advisory_lead
 "global supply manager": global_supply_manager
 "material planner": material_planner
 "procurement manager": procurement_manager
@@ -841,11 +836,7 @@
 # =============================================================================
 # Real Estate (Compass)
 # =============================================================================
-"agent experience manager": agent_experience_manager
-"agent experience coordinator": agent_experience_coordinator
 "transaction coordinator": transaction_coordinator
-"strategic growth manager": strategic_growth_manager
-"strategic growth partner": strategic_growth_partner
 
 # =============================================================================
 # Executive support / Misc
@@ -1027,7 +1018,7 @@
 "senior procurement analyst": procurement_manager
 "senior procurement specialist": procurement_manager
 "director, procurement": procurement_manager
-"senior trade advisory associate": trade_advisory_lead
+"senior trade advisory associate": customs_specialist
 "strategic finance analyst": strategic_finance_manager
 "strategic finance, gtm": strategic_finance_manager
 "financial analyst, fp&a": financial_analyst
@@ -1361,3 +1352,437 @@
 "animator": graphic_designer
 "technical animator": graphic_designer
 "data creator": data_analyst
+
+# =============================================================================
+# HEALTHCARE — Nursing
+# =============================================================================
+"registered nurse": registered_nurse
+"rn": registered_nurse
+"staff nurse": registered_nurse
+"clinical nurse": registered_nurse
+"clinical research nurse": clinical_research_nurse
+"research nurse": clinical_research_nurse
+"licensed practical nurse": licensed_practical_nurse
+"lpn": licensed_practical_nurse
+"certified nursing assistant": certified_nursing_assistant
+"cna": certified_nursing_assistant
+"nursing assistant": certified_nursing_assistant
+"home health aide": home_health_aide
+"home health assistant": home_health_aide
+"hospice aide": hospice_aide
+"prn hospice aide": hospice_aide
+"caregiver": caregiver
+"direct care worker": caregiver
+"personal care aide": caregiver
+
+# =============================================================================
+# HEALTHCARE — Clinical Specialties
+# =============================================================================
+"veterinarian": veterinarian
+"dvm": veterinarian
+"associate veterinarian": veterinarian
+"veterinary technician": veterinary_technician
+"vet tech": veterinary_technician
+"veterinary technologist": veterinary_technician
+"veterinary assistant": veterinary_technician
+"veterinary receptionist": receptionist
+"dental hygienist": dental_hygienist
+"dentist": dentist
+"associate dentist": dentist
+"dental associate": dentist
+"dental assistant": dental_assistant
+"podiatrist": podiatrist
+"optometrist": optometrist
+"respiratory therapist": respiratory_therapist
+"physical therapist": physical_therapist
+"pt": physical_therapist
+"occupational therapist": occupational_therapist
+"ot": occupational_therapist
+"speech-language pathologist": speech_language_pathologist
+"speech language pathologist": speech_language_pathologist
+"slp": speech_language_pathologist
+"speech therapist": speech_language_pathologist
+"radiologic technologist": radiologic_technologist
+"radiographer": radiologic_technologist
+"x-ray technologist": radiologic_technologist
+"surgical technologist": surgical_technologist
+"surgical tech": surgical_technologist
+"scrub tech": surgical_technologist
+"pharmacy technician": pharmacy_technician
+"pharmacist": pharmacist
+"pharm d": pharmacist
+"staff pharmacist": pharmacist
+"medical scribe": medical_scribe
+"clinical scribe": medical_scribe
+"medical assistant": medical_assistant
+
+# =============================================================================
+# HEALTHCARE — Behavioral Health
+# =============================================================================
+"psychotherapist": mental_health_therapist
+"psychotherapists": mental_health_therapist
+"licensed psychologist": clinical_psychologist
+"clinical psychologist": clinical_psychologist
+"licensed clinical psychologist": clinical_psychologist
+"neuropsychologist": neuropsychologist
+"behavioral specialist": behavioral_specialist
+"behavior specialist": behavioral_specialist
+"behavior technician": behavioral_specialist
+"direct support professional": direct_support_professional
+"dsp": direct_support_professional
+
+# =============================================================================
+# HEALTHCARE — Physicians
+# =============================================================================
+"physician": physician
+"doctor": physician
+"medical doctor": physician
+"md": physician
+"attending physician": physician
+"staff physician": physician
+
+# =============================================================================
+# TECHNOLOGY / OPERATIONS
+# =============================================================================
+"scrum master": scrum_master
+"agile coach": scrum_master
+
+# =============================================================================
+# MARKETING / CONTENT
+# =============================================================================
+"content creator": content_creator
+"creator": content_creator
+"social media content creator": content_creator
+"journalist": journalist
+"reporter": journalist
+"photojournalist": journalist
+"multiskilled journalist": journalist
+"broadcast journalist": journalist
+"news anchor": journalist
+"multimedia journalist": journalist
+
+# =============================================================================
+# PEOPLE / HR
+# =============================================================================
+"hr generalist": hr_generalist
+"human resources generalist": hr_generalist
+"hr specialist": hr_generalist
+"human resources specialist": hr_generalist
+
+# =============================================================================
+# LEGAL
+# =============================================================================
+"attorney": attorney
+"lawyer": attorney
+"associate attorney": attorney
+"staff attorney": attorney
+"immigration attorney": attorney
+"litigation attorney": attorney
+"corporate attorney": attorney
+"general liability attorney": attorney
+"process server": attorney
+
+# =============================================================================
+# OPERATIONS / ADMIN
+# =============================================================================
+"receptionist": receptionist
+"front desk receptionist": receptionist
+"medical receptionist": receptionist
+"front desk coordinator": receptionist
+
+# =============================================================================
+# HOSPITALITY / FOOD SERVICE
+# =============================================================================
+"server": server
+"waiter": server
+"waitress": server
+"line cook": line_cook
+"cook": line_cook
+"prep cook": line_cook
+"deli cook": line_cook
+"grill cook": line_cook
+"dishwasher": dishwasher
+"dish washer": dishwasher
+"host": host
+"hostess": host
+"barista": barista
+"coffee specialist": barista
+"chef": chef
+"head chef": chef
+"sous chef": chef
+"executive chef": chef
+"private chef": chef
+"porter": porter
+"bus person": porter
+"busser": porter
+"housekeeper": housekeeper
+"housekeeping": housekeeper
+"cosmetologist": cosmetologist
+"licensed cosmetologist": cosmetologist
+"hair stylist": cosmetologist
+"colorist": cosmetologist
+"hair colorist": cosmetologist
+"esthetician": cosmetologist
+"nail technician": cosmetologist
+
+# =============================================================================
+# TRANSPORTATION / FIELD
+# =============================================================================
+"delivery driver": delivery_driver
+"driver": delivery_driver
+"courier": delivery_driver
+"truck driver": truck_driver
+"cdl driver": truck_driver
+"cdl-a driver": truck_driver
+"commercial driver": truck_driver
+"flight attendant": flight_attendant
+"cabin crew": flight_attendant
+
+# =============================================================================
+# TRADES / CONSTRUCTION
+# =============================================================================
+"superintendent": superintendent
+"construction superintendent": superintendent
+"project superintendent": superintendent
+"landscape foreman": landscape_technician
+"landscaper": landscape_technician
+"grounds maintenance": landscape_technician
+"landscape technician": landscape_technician
+
+# =============================================================================
+# ADDITIONAL COVERAGE
+# =============================================================================
+"stylist": cosmetologist
+"hair color specialist": cosmetologist
+"shift lead": shift_supervisor
+"outside sales consultant": sales_representative
+"outside sales representative": sales_representative
+"sales consultant": sales_representative
+"telematics installer": field_service_technician
+"installer": field_service_technician
+"stormwater foreman": superintendent
+"construction foreman": superintendent
+"foreman": superintendent
+"business development executive": business_development_manager
+"conference volunteer": null
+"event volunteer": null
+"volunteer coordinator": null
+"internship": null
+
+# =============================================================================
+# MISSING ROLE-NAME ALIASES (canonical name ≠ common phrase)
+# =============================================================================
+"medical director": medical_director
+
+# =============================================================================
+# TRADES / TECHNICAL
+# =============================================================================
+"electrician": electrician
+"journeyman electrician": electrician
+"apprentice electrician": electrician
+"master electrician": electrician
+"licensed electrician": electrician
+"electrical contractor": electrician
+"ev charging electrician": electrician
+"diesel mechanic": diesel_mechanic
+"diesel technician": diesel_mechanic
+"heavy equipment mechanic": diesel_mechanic
+"heavy equipment mobile mechanic": diesel_mechanic
+"machinist": machinist
+"cnc machinist": machinist
+"cnc operator": machinist
+"cnc programmer": machinist
+"estimator": estimator
+"construction estimator": estimator
+"project estimator": estimator
+"cost estimator": estimator
+"electrical estimator": estimator
+"senior estimator": estimator
+"dispatcher": dispatcher
+"service dispatcher": dispatcher
+"logistics dispatcher": dispatcher
+"dispatch coordinator": dispatcher
+"maintenance technician": maintenance_technician
+"maintenance tech": maintenance_technician
+"building maintenance technician": maintenance_technician
+"facilities technician": maintenance_technician
+"inspector": inspector
+"building inspector": inspector
+"quality inspector": inspector
+"fire inspector": inspector
+"code inspector": inspector
+"property inspector": inspector
+"surveyor": surveyor
+"land surveyor": surveyor
+"project surveyor": surveyor
+"survey crew chief": surveyor
+"licensed surveyor": surveyor
+"fire sprinkler fitter": fire_protection_technician
+"fire sprinkler trainee": fire_protection_technician
+"fire sprinkler designer": fire_protection_technician
+"fire protection technician": fire_protection_technician
+"fire protection engineer": fire_protection_technician
+"sprinkler fitter": fire_protection_technician
+"material handler": warehouse_associate
+"materials handler": warehouse_associate
+"material handling": warehouse_associate
+"groundskeeper": landscape_technician
+"grounds technician": landscape_technician
+"grounds maintenance": landscape_technician
+
+# =============================================================================
+# HEALTHCARE — SPECIALTY
+# =============================================================================
+"obstetrician": obstetrician_gynecologist
+"gynecologist": obstetrician_gynecologist
+"ob/gyn": obstetrician_gynecologist
+"ob-gyn": obstetrician_gynecologist
+"obstetrician gynecologist": obstetrician_gynecologist
+"obstetrician/gynecologist": obstetrician_gynecologist
+"nurse midwife": nurse_midwife
+"certified nurse midwife": nurse_midwife
+"cnm": nurse_midwife
+"dermatologist": dermatologist
+"dermatology physician": dermatologist
+"pediatrician": pediatrician
+"general pediatrician": pediatrician
+"medical coder": medical_coder
+"medical billing specialist": medical_coder
+"coding specialist": medical_coder
+"medical billing": medical_coder
+"licensed vocational nurse": licensed_practical_nurse
+"lvn": licensed_practical_nurse
+"ct technologist": radiologic_technologist
+"ct tech": radiologic_technologist
+"mammography technologist": radiologic_technologist
+"mammography tech": radiologic_technologist
+"mri technologist": radiologic_technologist
+"mri tech": radiologic_technologist
+"x-ray technologist": radiologic_technologist
+"xray technologist": radiologic_technologist
+"diagnostic imaging technologist": radiologic_technologist
+"veterinary internist": veterinarian
+"veterinary cardiologist": veterinarian
+"veterinary oncologist": veterinarian
+"veterinary specialist": veterinarian
+"vet specialist": veterinarian
+"vet internist": veterinarian
+"veterinary medical oncologist": veterinarian
+"child and adolescent therapist": mental_health_therapist
+"adolescent therapist": mental_health_therapist
+"school-based mental health clinician": mental_health_therapist
+"school based mental health clinician": mental_health_therapist
+"licensed mental health clinician": mental_health_therapist
+"whnp": nurse_practitioner
+"women's health np": nurse_practitioner
+"women's health nurse practitioner": nurse_practitioner
+"women's health pa": nurse_practitioner
+"advanced practice provider": nurse_practitioner
+"certified nurse practitioner": nurse_practitioner
+
+# =============================================================================
+# FINANCE / INSURANCE
+# =============================================================================
+"trader": trader
+"quantitative trader": trader
+"quant trader": trader
+"equity trader": trader
+"options trader": trader
+"fx trader": trader
+"fixed income trader": trader
+"graduate trader": trader
+"experienced trader": trader
+"junior trader": trader
+"underwriter": underwriter
+"insurance underwriter": underwriter
+"senior underwriter": underwriter
+"commercial underwriter": underwriter
+"actuary": actuary
+"senior actuary": actuary
+"actuarial analyst": actuary
+"actuarial associate": actuary
+"loan officer": loan_officer
+"mortgage loan originator": loan_officer
+"mortgage broker": loan_officer
+"loan originator": loan_officer
+"mortgage officer": loan_officer
+"loan consultant": loan_officer
+"escrow officer": loan_officer
+
+# =============================================================================
+# LEGAL
+# =============================================================================
+"legal assistant": legal_assistant
+"legal secretary": legal_assistant
+"paralegal assistant": legal_assistant
+
+# =============================================================================
+# REAL ESTATE / PROPERTY
+# =============================================================================
+"leasing specialist": leasing_consultant
+"leasing agent": leasing_consultant
+"leasing manager": leasing_consultant
+"leasing consultant": leasing_consultant
+"leasing coordinator": leasing_consultant
+"apartment leasing": leasing_consultant
+"property leasing specialist": leasing_consultant
+
+# =============================================================================
+# EDUCATION
+# =============================================================================
+"teacher": teacher
+"classroom teacher": teacher
+"k-12 teacher": teacher
+"elementary teacher": teacher
+"middle school teacher": teacher
+"high school teacher": teacher
+"english teacher": teacher
+"math teacher": teacher
+"science teacher": teacher
+"history teacher": teacher
+"substitute teacher": teacher
+"lead teacher": teacher
+"preschool teacher": teacher
+"kindergarten teacher": teacher
+"special education teacher": special_education_teacher
+"special educator": special_education_teacher
+"sped teacher": special_education_teacher
+"special ed teacher": special_education_teacher
+"special education specialist": special_education_teacher
+"early intervention specialist": special_education_teacher
+"social worker": social_worker
+"licensed social worker": social_worker
+"lcsw": social_worker
+"licensed clinical social worker": social_worker
+"msw": social_worker
+"case manager": social_worker
+"community social worker": social_worker
+"school social worker": social_worker
+"youth advocate": social_worker
+"family advocate": social_worker
+"child welfare specialist": social_worker
+
+# =============================================================================
+# HOSPITALITY (ADDITIONAL)
+# =============================================================================
+"bartender": bartender
+"lead bartender": bartender
+"bar manager": bartender
+
+# =============================================================================
+# ADDITIONAL CATCHALL ALIASES
+# =============================================================================
+"office assistant": administrative_assistant
+"tax senior": accountant
+"tax accountant": accountant
+"senior tax associate": accountant
+"personal chef": chef
+"private chef": chef
+"penetration tester": security_engineer
+"pen tester": security_engineer
+"ethical hacker": security_engineer
+"youth advocate": social_worker
+"content publisher": content_creator
+"health coach": null
+"instructor": null
+"sales internship": null

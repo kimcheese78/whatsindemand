@@ -403,7 +403,9 @@ _SUFFIX_DEFAULTS = [
     ("advisor", "solutions_consultant"),
     ("agent", "sales_representative"),
     ("clerk", "administrative_assistant"),
-    ("assistant", "administrative_assistant"),
+    # "assistant" alone is too broad — nursing/dental/vet assistants are healthcare,
+    # not admin. Specific forms are handled via aliases.yaml instead.
+    # ("assistant", "administrative_assistant"),  # removed: causes false matches
     ("operator", "manufacturing_technician"),
     ("editor", "technical_writer"),
     ("writer", "technical_writer"),

@@ -50,8 +50,14 @@ class JobAggregator:
             company.industry = industry
             db.session.commit()
         
-        # Scrape jobs using appropriate scraper
-        scraper = self.scrapers[ats_type]
+        # Fresh scraper per call — safe for concurrent use
+        _scraper_classes = {
+            'greenhouse': GreenhouseScraper,
+            'lever': LeverScraper,
+            'ashby': AshbyScraper,
+            'workable': WorkableScraper,
+        }
+        scraper = _scraper_classes[ats_type]()
         raw_jobs = scraper.get_company_jobs(company_slug)
         
         # Track which source_job_ids we found in this scrape
@@ -63,7 +69,9 @@ class JobAggregator:
             saved = self._save_job(company.id, job_data)
             if saved:
                 saved_count += 1
-        
+        # Commit once per company instead of once per job
+        db.session.commit()
+
         # === NEW: Mark jobs as inactive if not in scrape results ===
         closed_count = self._mark_inactive_jobs(company.id, ats_type, scraped_job_ids)
         if closed_count > 0:
@@ -73,9 +81,6 @@ class JobAggregator:
         company.last_scraped_at = datetime.utcnow()
         company.total_jobs_scraped = Job.query.filter_by(company_id=company.id, is_active=True).count()
         db.session.commit()
-        
-        # Update role job counts
-        self._update_role_counts()
         
         return saved_count
     
@@ -109,11 +114,16 @@ class JobAggregator:
         
         return closed_count
     
-    def scrape_from_db(self, ats_type: str = None):
+    def scrape_from_db(self, ats_type: str = None, resume_after: datetime = None, max_workers: int = 5):
         """
         Scrape every Company row in the DB that has scrape_enabled=True and a slug.
         This is the full-coverage variant (vs. the static registry).
+
+        resume_after: if provided, skip companies already scraped at or after this datetime.
+        max_workers: number of parallel threads (default 5, use 1 for sequential).
         """
+        from concurrent.futures import ThreadPoolExecutor, as_completed
+        from flask import current_app
         from app.models import Company
 
         q = Company.query.filter(
@@ -123,6 +133,10 @@ class JobAggregator:
         )
         if ats_type:
             q = q.filter(Company.ats_type == ats_type)
+        if resume_after:
+            q = q.filter(
+                (Company.last_scraped_at == None) | (Company.last_scraped_at < resume_after)
+            )
         companies = q.order_by(Company.name.asc()).all()
 
         results = {
@@ -134,28 +148,44 @@ class JobAggregator:
         }
 
         print(f"\n{'=' * 60}")
-        print(f"Scraping {len(companies)} companies (from DB)")
+        print(f"Scraping {len(companies)} companies (from DB, workers={max_workers})")
         print(f"{'=' * 60}\n")
 
-        for i, company in enumerate(companies):
-            print(f"\n[{i+1}/{len(companies)}] {company.name} ({company.ats_type})")
-            try:
-                count = self.scrape_company_jobs(
-                    company_name=company.name,
-                    company_slug=company.greenhouse_slug,
-                    ats_type=company.ats_type,
-                    industry=company.industry,
-                )
-                if count > 0:
+        app = current_app._get_current_object()
+
+        def _scrape_one(company):
+            with app.app_context():
+                try:
+                    count = self.scrape_company_jobs(
+                        company_name=company.name,
+                        company_slug=company.greenhouse_slug,
+                        ats_type=company.ats_type,
+                        industry=company.industry,
+                    )
+                    return company.name, count, None
+                except Exception as e:
+                    return company.name, 0, str(e)
+                finally:
+                    db.session.remove()
+
+        with ThreadPoolExecutor(max_workers=max_workers) as executor:
+            futures = {executor.submit(_scrape_one, c): c for c in companies}
+            for i, future in enumerate(as_completed(futures), 1):
+                name, count, error = future.result()
+                if error:
+                    results['failed'] += 1
+                    results['errors'].append({'company': name, 'error': error})
+                    print(f"[{i}/{len(companies)}] {name}: ❌ {error}")
+                elif count > 0:
                     results['successful'] += 1
                     results['total_jobs'] += count
-                    print(f"  ✅ Saved {count} jobs")
+                    print(f"[{i}/{len(companies)}] {name}: ✅ {count} jobs")
                 else:
                     results['failed'] += 1
-            except Exception as e:
-                results['failed'] += 1
-                results['errors'].append({'company': company.name, 'error': str(e)})
-                print(f"  ❌ Error: {e}")
+                    print(f"[{i}/{len(companies)}] {name}: 0 jobs")
+
+        print("\n── Updating role counts ──")
+        self._update_role_counts()
 
         return results
 
@@ -331,7 +361,7 @@ class JobAggregator:
                 # That's the slowest step in the scrape (spaCy + regex over the
                 # full description text), and there's nothing to update.
                 if description_unchanged:
-                    db.session.commit()
+                    db.session.flush()
                     return True
             else:
                 # Create new job - set posted_at and scraped_at only here
@@ -360,9 +390,9 @@ class JobAggregator:
                 db.session.flush()
             
             job.skills_dirty = True
-            db.session.commit()
+            db.session.flush()
             return True
-            
+
         except Exception as e:
             print(f"Error saving job: {e}")
             db.session.rollback()
@@ -381,49 +411,75 @@ class JobAggregator:
             )
             db.session.add(job_skill)
     
-    def extract_dirty_jobs(self):
+    def extract_dirty_jobs(self, batch_size: int = 500):
         """Extract skills for all jobs flagged skills_dirty=True.
 
         Called after incremental discovery so the SkillExtractor loads a fresh
         copy of the taxonomy (which may include skills just auto-promoted).
+        Commits every batch_size jobs so progress survives interruption.
         """
         from app.services.skill_extractor import SkillExtractor
         extractor = SkillExtractor()  # fresh instance — picks up newly promoted skills
 
-        dirty_jobs = Job.query.filter_by(skills_dirty=True).filter(
+        total = Job.query.filter_by(skills_dirty=True).filter(
             Job.description_text.isnot(None),
             Job.description_text != '',
-        ).all()
+        ).count()
 
-        if not dirty_jobs:
+        if not total:
             return 0
 
-        print(f"  Extracting skills for {len(dirty_jobs)} jobs...", flush=True)
-        for job in dirty_jobs:
-            skills_found = extractor.extract_skills(job.description_text)
-            for skill_data in skills_found:
-                db.session.add(JobSkill(
-                    job_id=job.id,
-                    skill_id=skill_data['skill_id'],
-                    is_required=skill_data['confidence'] >= 80,
-                ))
-            job.skills_dirty = False
+        print(f"  Extracting skills for {total:,} jobs (batch_size={batch_size})...", flush=True)
+        processed = 0
+        start = datetime.utcnow()
 
-        db.session.commit()
-        return len(dirty_jobs)
+        while True:
+            batch = Job.query.filter_by(skills_dirty=True).filter(
+                Job.description_text.isnot(None),
+                Job.description_text != '',
+            ).limit(batch_size).all()
+
+            if not batch:
+                break
+
+            for job in batch:
+                skills_found = extractor.extract_skills(job.description_text)
+                for skill_data in skills_found:
+                    db.session.add(JobSkill(
+                        job_id=job.id,
+                        skill_id=skill_data['skill_id'],
+                        is_required=skill_data['confidence'] >= 80,
+                    ))
+                job.skills_dirty = False
+
+            db.session.commit()
+            processed += len(batch)
+            elapsed = (datetime.utcnow() - start).total_seconds()
+            rate = processed / elapsed if elapsed > 0 else 0
+            remaining = (total - processed) / rate / 60 if rate > 0 else 0
+            print(f"  {processed:,}/{total:,} jobs  ({rate:.1f}/s  ~{remaining:.0f} min left)", flush=True)
+
+        return processed
 
     def _update_role_counts(self, role_ids: set = None):
-        """Update total_active_jobs count for specified roles (or all if none specified)"""
+        """Update total_active_jobs count for specified roles (or all if none specified)."""
         if role_ids:
-            roles = Role.query.filter(Role.id.in_(role_ids)).all()
+            db.session.execute(db.text("""
+                UPDATE roles
+                SET total_active_jobs = (
+                    SELECT COUNT(*) FROM jobs j
+                    WHERE j.role_id = roles.id AND j.is_active = TRUE
+                )
+                WHERE id = ANY(:ids)
+            """), {'ids': list(role_ids)})
         else:
-            roles = Role.query.all()
-        
-        for role in roles:
-            role.total_active_jobs = Job.query.filter_by(
-                role_id=role.id,
-                is_active=True
-            ).count()
+            db.session.execute(db.text("""
+                UPDATE roles
+                SET total_active_jobs = (
+                    SELECT COUNT(*) FROM jobs j
+                    WHERE j.role_id = roles.id AND j.is_active = TRUE
+                )
+            """))
         db.session.commit()
     
     def get_jobs_count_by_company(self, company_name: str) -> int:

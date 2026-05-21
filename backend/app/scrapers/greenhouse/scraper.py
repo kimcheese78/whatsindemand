@@ -18,8 +18,8 @@ class GreenhouseScraper(BaseScraper):
     def get_company_jobs(self, company_slug: str) -> List[Dict]:
         """Fetch all jobs for a company using Greenhouse API"""
         self.rate_limit()
-        
-        api_url = self.api_base_template.format(company=company_slug)
+
+        api_url = self.api_base_template.format(company=company_slug) + "?content=true"
         
         try:
             response = self.session.get(api_url, timeout=15)
@@ -27,7 +27,12 @@ class GreenhouseScraper(BaseScraper):
             
             data = response.json()
             raw_jobs = data.get('jobs', [])
-            
+
+            MAX_JOBS_PER_COMPANY = 5000
+            if len(raw_jobs) > MAX_JOBS_PER_COMPANY:
+                print(f"⚠️  {company_slug}: {len(raw_jobs)} jobs returned, capping at {MAX_JOBS_PER_COMPANY}")
+                raw_jobs = raw_jobs[:MAX_JOBS_PER_COMPANY]
+
             print(f"📋 Found {len(raw_jobs)} jobs for {company_slug}")
             
             if not raw_jobs:
@@ -137,10 +142,10 @@ class GreenhouseScraper(BaseScraper):
             'source_job_id': str(raw_job.get('id', '')),
             'source_url': raw_job.get('absolute_url', ''),
             'title': title,
-            'location_raw': location_name,
-            'location_city': location['city'],
-            'location_state': location['state'],
-            'location_country': location['country'],
+            'location_raw': location_name[:512],
+            'location_city': (location['city'] or '')[:255] or None,
+            'location_state': (location['state'] or '')[:100] or None,
+            'location_country': (location['country'] or '')[:100] or None,
             'location_is_remote': location['is_remote'],
             'department': department,
             'seniority_level': role_info['seniority_level'] or self.parser.infer_seniority(title),

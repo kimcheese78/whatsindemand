@@ -265,10 +265,6 @@ field_engineer:
   category: Engineering
   job_family: Customer Engineering
 
-deployment_strategist:
-  name: Deployment Strategist
-  category: Engineering
-  job_family: Customer Engineering
 
 # =============================================================================
 # ENGINEERING — Quality / Test / Support
@@ -918,32 +914,32 @@ nurse_care_manager:
 # =============================================================================
 restaurant_manager:
   name: Restaurant Manager
-  category: Retail / Hospitality
+  category: Retail / Hospitality / Hospitality
   job_family: Store Operations
 
 restaurant_general_manager:
   name: Restaurant General Manager
-  category: Retail / Hospitality
+  category: Retail / Hospitality / Hospitality
   job_family: Store Operations
 
 shift_supervisor:
   name: Shift Supervisor
-  category: Retail / Hospitality
+  category: Retail / Hospitality / Hospitality
   job_family: Store Operations
 
 store_advisor:
   name: Store Advisor
-  category: Retail / Hospitality
+  category: Retail / Hospitality / Hospitality
   job_family: Store Operations
 
 retail_ambassador:
   name: Retail Ambassador
-  category: Retail / Hospitality
+  category: Retail / Hospitality / Hospitality
   job_family: Store Operations
 
 brand_ambassador:
   name: Brand Ambassador
-  category: Retail / Hospitality
+  category: Retail / Hospitality / Hospitality
   job_family: Store Operations
 
 # =============================================================================
@@ -984,11 +980,6 @@ production_supervisor:
   category: Operations
   job_family: Manufacturing
 
-ocean_operations_associate:
-  name: Ocean Operations Associate
-  category: Operations
-  job_family: Logistics
-
 global_operations_manager:
   name: Global Operations Manager
   category: Operations
@@ -999,41 +990,13 @@ customs_specialist:
   category: Operations
   job_family: Logistics
 
-trade_advisory_lead:
-  name: Trade Advisory Lead
-  category: Operations
-  job_family: Logistics
-
 area_manager:
   name: Area Manager
   category: Operations
   job_family: Operations Management
 
-# =============================================================================
-# REAL ESTATE — Compass-specific
-# =============================================================================
-agent_experience_manager:
-  name: Agent Experience Manager
-  category: Real Estate
-  job_family: Real Estate Operations
-
-agent_experience_coordinator:
-  name: Agent Experience Coordinator
-  category: Real Estate
-  job_family: Real Estate Operations
-
 transaction_coordinator:
   name: Transaction Coordinator
-  category: Real Estate
-  job_family: Real Estate Operations
-
-strategic_growth_manager:
-  name: Strategic Growth Manager
-  category: Real Estate
-  job_family: Real Estate Operations
-
-strategic_growth_partner:
-  name: Strategic Growth Partner
   category: Real Estate
   job_family: Real Estate Operations
 
@@ -1297,20 +1260,432 @@ talent_manager:
 
 cashier:
   name: Cashier
-  category: Retail
+  category: Retail / Hospitality
   job_family: Retail Floor
 
 store_associate:
   name: Store Associate
-  category: Retail
+  category: Retail / Hospitality
   job_family: Retail Floor
 
 retail_store_manager:
   name: Retail Store Manager
-  category: Retail
+  category: Retail / Hospitality
   job_family: Retail Management
 
 field_service_technician:
   name: Field Service Technician
   category: Operations
   job_family: Field Operations
+
+# =============================================================================
+# HEALTHCARE — Nursing
+# =============================================================================
+registered_nurse:
+  name: Registered Nurse
+  category: Healthcare
+  job_family: Nursing
+
+licensed_practical_nurse:
+  name: Licensed Practical Nurse
+  category: Healthcare
+  job_family: Nursing
+
+certified_nursing_assistant:
+  name: Certified Nursing Assistant
+  category: Healthcare
+  job_family: Nursing
+
+clinical_research_nurse:
+  name: Clinical Research Nurse
+  category: Healthcare
+  job_family: Clinical Research
+
+home_health_aide:
+  name: Home Health Aide
+  category: Healthcare
+  job_family: Home Health
+
+hospice_aide:
+  name: Hospice Aide
+  category: Healthcare
+  job_family: Home Health
+
+# =============================================================================
+# HEALTHCARE — Clinical Specialties
+# =============================================================================
+veterinarian:
+  name: Veterinarian
+  category: Healthcare
+  job_family: Veterinary
+
+veterinary_technician:
+  name: Veterinary Technician
+  category: Healthcare
+  job_family: Veterinary
+
+dental_hygienist:
+  name: Dental Hygienist
+  category: Healthcare
+  job_family: Dental
+
+dentist:
+  name: Dentist
+  category: Healthcare
+  job_family: Dental
+
+dental_assistant:
+  name: Dental Assistant
+  category: Healthcare
+  job_family: Dental
+
+podiatrist:
+  name: Podiatrist
+  category: Healthcare
+  job_family: Clinical
+
+optometrist:
+  name: Optometrist
+  category: Healthcare
+  job_family: Clinical
+
+respiratory_therapist:
+  name: Respiratory Therapist
+  category: Healthcare
+  job_family: Clinical
+
+physical_therapist:
+  name: Physical Therapist
+  category: Healthcare
+  job_family: Rehabilitation
+
+occupational_therapist:
+  name: Occupational Therapist
+  category: Healthcare
+  job_family: Rehabilitation
+
+speech_language_pathologist:
+  name: Speech-Language Pathologist
+  category: Healthcare
+  job_family: Rehabilitation
+
+radiologic_technologist:
+  name: Radiologic Technologist
+  category: Healthcare
+  job_family: Imaging
+
+surgical_technologist:
+  name: Surgical Technologist
+  category: Healthcare
+  job_family: Clinical
+
+pharmacy_technician:
+  name: Pharmacy Technician
+  category: Healthcare
+  job_family: Pharmacy
+
+pharmacist:
+  name: Pharmacist
+  category: Healthcare
+  job_family: Pharmacy
+
+# =============================================================================
+# HEALTHCARE — Behavioral Health
+# =============================================================================
+clinical_psychologist:
+  name: Clinical Psychologist
+  category: Healthcare
+  job_family: Behavioral Health
+
+behavioral_specialist:
+  name: Behavioral Specialist
+  category: Healthcare
+  job_family: Behavioral Health
+
+direct_support_professional:
+  name: Direct Support Professional
+  category: Healthcare
+  job_family: Behavioral Health
+
+caregiver:
+  name: Caregiver
+  category: Healthcare
+  job_family: Home Health
+
+# =============================================================================
+# HEALTHCARE — Administrative
+# =============================================================================
+medical_scribe:
+  name: Medical Scribe
+  category: Healthcare
+  job_family: Clinical Administration
+
+# =============================================================================
+# TECHNOLOGY / OPERATIONS
+# =============================================================================
+scrum_master:
+  name: Scrum Master
+  category: Engineering
+  job_family: Agile / Program Management
+
+# =============================================================================
+# MARKETING / CONTENT
+# =============================================================================
+content_creator:
+  name: Content Creator
+  category: Marketing
+  job_family: Content
+
+journalist:
+  name: Journalist
+  category: Marketing
+  job_family: Media & Communications
+
+# =============================================================================
+# PEOPLE / HR
+# =============================================================================
+hr_generalist:
+  name: HR Generalist
+  category: People
+  job_family: HR
+
+# =============================================================================
+# LEGAL
+# =============================================================================
+attorney:
+  name: Attorney
+  category: Legal
+  job_family: Legal
+
+# =============================================================================
+# OPERATIONS / ADMIN
+# =============================================================================
+receptionist:
+  name: Receptionist
+  category: Operations
+  job_family: Office Operations
+
+# =============================================================================
+# HOSPITALITY / FOOD SERVICE
+# =============================================================================
+server:
+  name: Server
+  category: Retail / Hospitality / Hospitality
+  job_family: Food Service
+
+line_cook:
+  name: Line Cook
+  category: Retail / Hospitality / Hospitality
+  job_family: Food Service
+
+chef:
+  name: Chef
+  category: Retail / Hospitality / Hospitality
+  job_family: Food Service
+
+dishwasher:
+  name: Dishwasher
+  category: Retail / Hospitality / Hospitality
+  job_family: Food Service
+
+barista:
+  name: Barista
+  category: Retail / Hospitality / Hospitality
+  job_family: Food Service
+
+host:
+  name: Host
+  category: Retail / Hospitality / Hospitality
+  job_family: Food Service
+
+porter:
+  name: Porter
+  category: Retail / Hospitality / Hospitality
+  job_family: Hospitality
+
+housekeeper:
+  name: Housekeeper
+  category: Retail / Hospitality / Hospitality
+  job_family: Hospitality
+
+cosmetologist:
+  name: Cosmetologist
+  category: Retail / Hospitality / Hospitality
+  job_family: Beauty & Wellness
+
+# =============================================================================
+# TRANSPORTATION / FIELD
+# =============================================================================
+delivery_driver:
+  name: Delivery Driver
+  category: Operations
+  job_family: Transportation
+
+truck_driver:
+  name: Truck Driver
+  category: Operations
+  job_family: Transportation
+
+flight_attendant:
+  name: Flight Attendant
+  category: Operations
+  job_family: Transportation
+
+# =============================================================================
+# TRADES / CONSTRUCTION
+# =============================================================================
+superintendent:
+  name: Superintendent
+  category: Operations
+  job_family: Construction
+
+landscape_technician:
+  name: Landscape Technician
+  category: Operations
+  job_family: Field Operations
+
+# =============================================================================
+# TRADES / TECHNICAL
+# =============================================================================
+electrician:
+  name: Electrician
+  category: Operations
+  job_family: Trades
+
+diesel_mechanic:
+  name: Diesel Mechanic
+  category: Operations
+  job_family: Trades
+
+machinist:
+  name: Machinist
+  category: Operations
+  job_family: Manufacturing
+
+estimator:
+  name: Estimator
+  category: Operations
+  job_family: Construction
+
+dispatcher:
+  name: Dispatcher
+  category: Operations
+  job_family: Logistics
+
+warehouse_associate:
+  name: Warehouse Associate
+  category: Operations
+  job_family: Logistics
+
+maintenance_technician:
+  name: Maintenance Technician
+  category: Operations
+  job_family: Facilities
+
+inspector:
+  name: Inspector
+  category: Operations
+  job_family: Trades
+
+surveyor:
+  name: Surveyor
+  category: Operations
+  job_family: Construction
+
+fire_protection_technician:
+  name: Fire Protection Technician
+  category: Operations
+  job_family: Trades
+
+# =============================================================================
+# HEALTHCARE — SPECIALTY
+# =============================================================================
+obstetrician_gynecologist:
+  name: Obstetrician/Gynecologist
+  category: Healthcare
+  job_family: Specialty Medicine
+
+nurse_midwife:
+  name: Nurse Midwife
+  category: Healthcare
+  job_family: Nursing
+
+dermatologist:
+  name: Dermatologist
+  category: Healthcare
+  job_family: Specialty Medicine
+
+pediatrician:
+  name: Pediatrician
+  category: Healthcare
+  job_family: Specialty Medicine
+
+medical_coder:
+  name: Medical Coder
+  category: Healthcare
+  job_family: Healthcare Admin
+
+# =============================================================================
+# FINANCE / INSURANCE
+# =============================================================================
+trader:
+  name: Trader
+  category: Finance
+  job_family: Trading
+
+underwriter:
+  name: Underwriter
+  category: Finance
+  job_family: Insurance
+
+actuary:
+  name: Actuary
+  category: Finance
+  job_family: Insurance
+
+loan_officer:
+  name: Loan Officer
+  category: Finance
+  job_family: Financial Services
+
+# =============================================================================
+# LEGAL
+# =============================================================================
+legal_assistant:
+  name: Legal Assistant
+  category: Legal
+  job_family: Legal Support
+
+# =============================================================================
+# REAL ESTATE / PROPERTY
+# =============================================================================
+leasing_consultant:
+  name: Leasing Consultant
+  category: Operations
+  job_family: Real Estate
+
+# =============================================================================
+# EDUCATION
+# =============================================================================
+teacher:
+  name: Teacher
+  category: Education
+  job_family: Teaching
+
+special_education_teacher:
+  name: Special Education Teacher
+  category: Education
+  job_family: Teaching
+
+social_worker:
+  name: Social Worker
+  category: Healthcare
+  job_family: Social Services
+
+# =============================================================================
+# HOSPITALITY (ADDITIONAL)
+# =============================================================================
+bartender:
+  name: Bartender
+  category: Operations
+  job_family: Hospitality

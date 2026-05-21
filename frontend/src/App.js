@@ -2917,10 +2917,10 @@ const OverviewTab = () => {
                     <div
                       key={d.date}
                       className="flex-1 flex flex-col items-center justify-end h-full"
-                      title={`${formatMonth(d.date)}${isPartial ? ' (MTD)' : ''}: ${d.count.toLocaleString()} jobs`}
+                      title={`${formatMonth(d.date)}${isPartial ? ' (this month, partial)' : ''}: ${d.count.toLocaleString()} jobs`}
                     >
                       <div className={`num text-small font-medium mb-1 ${numTone}`}>
-                        {d.count.toLocaleString()}{isPartial ? ' (MTD)' : ''}
+                        {d.count.toLocaleString()}{isPartial ? '*' : ''}
                       </div>
                       <div
                         className={barClass}
@@ -2945,6 +2945,7 @@ const OverviewTab = () => {
                 })}
               </div>
               <p className="text-meta text-ink-faint mt-2">
+                * This month is in progress — the count will grow as more jobs are posted.
                 Recently added companies are excluded until they have 4+ months of history, so each month compares the same set of companies.
               </p>
             </div>
