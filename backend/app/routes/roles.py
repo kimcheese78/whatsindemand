@@ -786,6 +786,11 @@ def get_role_insights():
     
     onsite_count = total_jobs - remote_count
 
+    # Last scrape timestamp — max last_scraped_at across all active companies
+    last_scraped = db.session.execute(
+        db.text("SELECT MAX(last_scraped_at) FROM companies WHERE scrape_enabled = TRUE AND last_scraped_at IS NOT NULL")
+    ).scalar()
+
     return jsonify({
         'success': True,
         'role': {
@@ -804,7 +809,8 @@ def get_role_insights():
         'trend_data': trend_data,
         'market_trend': market_trend,
         'remote_count': remote_count,
-        'onsite_count': onsite_count
+        'onsite_count': onsite_count,
+        'data_as_of': last_scraped.isoformat() if last_scraped else None,
     })
 
 

@@ -2831,7 +2831,11 @@ const OverviewTab = () => {
       <Panel>
         <div className="flex items-center gap-2 mb-3">
           <Pill tone={growthDir}>{verdictLabel}</Pill>
-          <span className="text-small text-ink-faint">Updated today</span>
+          <span className="text-small text-ink-faint">
+            {roleData?.data_as_of
+              ? `Updated ${new Date(roleData.data_as_of).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}`
+              : 'Updated recently'}
+          </span>
         </div>
 
         <div className="flex items-baseline gap-3 mb-2">
