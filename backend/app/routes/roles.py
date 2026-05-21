@@ -473,6 +473,8 @@ def get_role_insights():
     location = data.get('location')
     industries = data.get('industry')
     company_ids = data.get('company_id')
+    user_skill_ids_raw = data.get('user_skills') or []
+    user_skill_ids = set(int(s) for s in user_skill_ids_raw) if user_skill_ids_raw else None
     
     if not role_name:
         return jsonify({'success': False, 'error': 'role is required'}), 400
@@ -744,7 +746,7 @@ def get_role_insights():
     # ============================================
     
 
-    alternative_roles = _get_alternative_roles(role.id, job_ids)
+    alternative_roles = _get_alternative_roles(role.id, job_ids, user_skill_ids=user_skill_ids)
 
     # ============================================
     # GET SALARY INFO (ALL CONVERTED TO USD)
@@ -934,19 +936,18 @@ def _suggest_similar_roles(query: str) -> List[Dict]:
 def _get_alternative_roles(
     current_role_id: int,
     job_ids: List[int],
+    user_skill_ids: set = None,
 ) -> List[Dict]:
     """
-    Find adjacent roles a user could plausibly transition into.
+    Find roles that fit the user's skill profile.
 
-    Ranks by transferable-skill coverage (|shared| / |my skills|) — i.e. what
-    fraction of the user's current skillset is reusable in the candidate role —
-    blended with posting growth so dying roles don't surface as "promising".
+    If user_skill_ids is provided (the skills the user selected on their profile),
+    ranks by how much of their skillset each candidate role demands. Otherwise
+    falls back to skill overlap with the current role.
 
-    De-duplicates by Role.category (max 2 per category) so a role family
-    (e.g. SWE → Senior SWE → SWE II) doesn't dominate the list.
-
-    All skill demand is computed against the *full* candidate role, not a 100-row
-    sample. All salary numbers are USD.
+    Blends with posting growth so dying roles don't surface as "promising".
+    De-duplicates by Role.category (max 2 per category).
+    All salary numbers are USD.
     """
     from collections import defaultdict
 
@@ -969,7 +970,10 @@ def _get_alternative_roles(
     ).group_by(JobSkill.skill_id).all()
 
     current_skill_demand = {sid: cnt for sid, cnt in current_counts}
-    my_skill_ids = set(current_skill_demand.keys())
+    if user_skill_ids:
+        my_skill_ids = user_skill_ids
+    else:
+        my_skill_ids = set(current_skill_demand.keys())
     if len(my_skill_ids) < MIN_SHARED_SKILLS:
         return []
 

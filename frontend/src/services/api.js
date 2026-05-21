@@ -259,16 +259,17 @@ class API {
   // ROLE INTELLIGENCE ENDPOINTS
   // ============================================
 
-  async getRoleInsights(role, seniority, location, industry = null, companyId = null) {
+  async getRoleInsights(role, seniority, location, industry = null, companyId = null, userSkills = null) {
     const params = {
       role,
       seniority,
       location,
     };
-  
+
     if (industry) params.industry = industry;
     if (companyId) params.company_id = companyId;
-  
+    if (userSkills && userSkills.length > 0) params.user_skills = userSkills.map(s => s.skill_id);
+
     return this.request('/api/roles/insights', {
       method: 'POST',
       body: JSON.stringify(params),

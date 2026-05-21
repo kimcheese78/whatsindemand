@@ -302,6 +302,9 @@ const AppProvider = ({ children }) => {
               session.target_role,
               session.seniority_level,
               parsedLocation,
+              null,
+              null,
+              userSkills
             );
             if (fresh && fresh.success) {
               setRoleData(fresh);
@@ -356,7 +359,8 @@ const AppProvider = ({ children }) => {
         selectedSeniority,
         selectedLocation,
         !selectedIndustries.includes('All') ? selectedIndustries : null,
-        !selectedCompanies.includes('All') ? selectedCompanies.map(id => parseInt(id, 10)) : null
+        !selectedCompanies.includes('All') ? selectedCompanies.map(id => parseInt(id, 10)) : null,
+        userSkills
       );
 
       if (data.success) {
@@ -410,7 +414,8 @@ const AppProvider = ({ children }) => {
         selectedSeniority,
         selectedLocation,
         !selectedIndustries.includes('All') ? selectedIndustries : null,
-        !selectedCompanies.includes('All') ? selectedCompanies.map(id => parseInt(id, 10)) : null
+        !selectedCompanies.includes('All') ? selectedCompanies.map(id => parseInt(id, 10)) : null,
+        userSkills
       );
 
       if (data.success) {
@@ -2242,6 +2247,7 @@ const DashboardScreen = () => {
     setRoleData,
     setCurrentScreen,
     user,
+    userSkills,
   } = useApp();
 
   const [verifyBannerDismissed, setVerifyBannerDismissed] = useState(() => {
@@ -2311,7 +2317,8 @@ const DashboardScreen = () => {
         newSeniority,
         newLocation,
         industriesParam,
-        companiesParam
+        companiesParam,
+        userSkills
       );
 
       if (data.success) {
@@ -2375,7 +2382,8 @@ const DashboardScreen = () => {
           selectedSeniority,
           selectedLocation,
           industriesParam,
-          companiesParam
+          companiesParam,
+          userSkills
         );
 
         if (data.success) {
@@ -3512,11 +3520,13 @@ const SkillDetailModal = ({ skill, onClose }) => {
 // PATHS TAB (FIXED)
 // ============================================
 const AlternativesTab = () => {
-  const { 
-    roleData, 
-    selectedRole, 
+  const {
+    roleData,
+    selectedRole,
     switchToRole,
-    loading
+    loading,
+    userSkills,
+    setCurrentScreen
   } = useApp();
 
   const alternativeRoles = roleData?.alternative_roles || [];
@@ -3543,18 +3553,35 @@ const AlternativesTab = () => {
     await switchToRole(roleTitle);
   };
 
+  if (!userSkills || userSkills.length === 0) {
+    return (
+      <div className="p-12 bg-surface border border-line text-center">
+        <div className="text-xl font-medium mb-3">Add your skills to get personalized role recommendations.</div>
+        <div className="text-ink-muted max-w-md mx-auto mb-6">
+          We'll match roles that fit what you already know — and show you the gap for each one.
+        </div>
+        <button
+          onClick={() => setCurrentScreen('skills-input')}
+          className="px-6 py-2.5 bg-white text-black font-medium text-sm hover:bg-gray-200 transition-colors inline-flex items-center gap-2"
+        >
+          Add Skills
+          <ArrowRight className="w-4 h-4" />
+        </button>
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-6">
       <div className="text-ink-muted">
-        Based on skill overlap with <span className="text-white font-medium">{selectedRole}</span>, 
-        here are roles you might also consider.
+        Based on your skills, here are roles that fit your profile.
       </div>
 
       {alternativeRoles.length === 0 ? (
         <div className="p-12 bg-surface border border-line text-center">
           <div className="text-xl font-medium mb-2">No close matches yet</div>
           <div className="text-ink-muted max-w-md mx-auto">
-            We couldn't find adjacent roles with enough postings and shared skills to recommend confidently. Try a broader location or seniority filter.
+            We couldn't find roles that closely match your skills with enough postings. Try a broader location or seniority filter.
           </div>
         </div>
       ) : (
@@ -3596,7 +3623,7 @@ const AlternativesTab = () => {
                   }`}>
                     {role.skill_overlap}%
                   </div>
-                  <div className="text-xs text-ink-muted">SKILL OVERLAP</div>
+                  <div className="text-xs text-ink-muted">SKILLS MATCH</div>
                 </div>
               </div>
 
