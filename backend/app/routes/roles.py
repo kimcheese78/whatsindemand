@@ -1023,35 +1023,55 @@ def _get_alternative_roles(
     for rid in candidate_role_ids:
         skills_map = role_skill_demand.get(rid, {})
         their_skill_ids = set(skills_map.keys())
+        total_role_jobs = role_meta[rid]['job_count']
 
-        shared_ids = my_skill_ids & their_skill_ids
-        if len(shared_ids) < min_shared:
-            continue
+        if user_skill_ids:
+            # Coverage = what % of this role's CORE skills (≥15% demand rate) the user has.
+            # This avoids the 100%-everywhere problem from generic skills like Communication.
+            if total_role_jobs > 0:
+                core_skill_ids = {sid for sid, cnt in skills_map.items()
+                                  if cnt / total_role_jobs >= 0.15}
+            else:
+                core_skill_ids = set()
+            # Floor: always include at least the top 5 most-demanded skills
+            if len(core_skill_ids) < 5:
+                core_skill_ids = set(sorted(skills_map, key=lambda s: skills_map[s], reverse=True)[:20])
+            # Cap at 25 so denominator is bounded and meaningful
+            if len(core_skill_ids) > 25:
+                core_skill_ids = set(sorted(core_skill_ids, key=lambda s: skills_map[s], reverse=True)[:25])
+
+            shared_ids = my_skill_ids & core_skill_ids
+            if len(shared_ids) < min_shared:
+                continue
+
+            coverage = len(shared_ids) / len(core_skill_ids) if core_skill_ids else 0
+            new_ids = core_skill_ids - my_skill_ids
+        else:
+            shared_ids = my_skill_ids & their_skill_ids
+            if len(shared_ids) < min_shared:
+                continue
+            coverage = len(shared_ids) / len(my_skill_ids)
+            new_ids = their_skill_ids - my_skill_ids
 
         union_ids = my_skill_ids | their_skill_ids
-        new_ids = their_skill_ids - my_skill_ids
-
-        coverage = len(shared_ids) / len(my_skill_ids)        # transferability — primary
         jaccard = len(shared_ids) / len(union_ids) if union_ids else 0
 
-        # Growth signal — clamp so a single hot role doesn't outrank a strong-coverage match.
+        # Growth signal — clamp so a hot role doesn't outrank a strong-coverage match.
         growth = role_growth_map.get(rid)
         growth_signal = 0.0
         if growth is not None:
-            growth_signal = max(-30.0, min(30.0, growth)) / 100.0  # -0.3..0.3
+            growth_signal = max(-30.0, min(30.0, growth)) / 100.0
         score = coverage + 0.15 * growth_signal
 
-        # Rank shared skills by combined demand share in both roles
-        total_role_jobs = role_meta[rid]['job_count']
+        # Rank shared skills by how central they are to the role
         shared_scored = []
         for sid in shared_ids:
-            mine_pct = current_skill_demand.get(sid, 0) / total_current_jobs
-            theirs_pct = skills_map.get(sid, 0) / total_role_jobs
-            shared_scored.append((sid, mine_pct + theirs_pct))
+            theirs_pct = skills_map.get(sid, 0) / total_role_jobs if total_role_jobs else 0
+            shared_scored.append((sid, theirs_pct))
         shared_scored.sort(key=lambda x: x[1], reverse=True)
         top_shared_ids = [sid for sid, _ in shared_scored[:8]]
 
-        # Rank new skills by demand inside the alt role
+        # Gap: core skills the user doesn't have, ranked by role demand
         top_new_ids = sorted(
             new_ids,
             key=lambda s: skills_map.get(s, 0),

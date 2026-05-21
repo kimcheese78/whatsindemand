@@ -2714,13 +2714,19 @@ const DashboardSidebar = () => {
 
       {/* Bottom Actions */}
       <div className="p-4 border-t border-line space-y-2">
-        <button 
+        <button
           onClick={() => setCurrentScreen('role-selection')}
           className="w-full px-4 py-3 bg-white text-black font-medium text-sm hover:bg-gray-200 transition-colors"
         >
           EXPLORE A NEW ROLE
         </button>
-        <button 
+        <button
+          onClick={() => setCurrentScreen('skills-input')}
+          className="w-full px-4 py-3 bg-white/10 text-white font-medium text-sm hover:bg-white/20 transition-colors border border-white/20"
+        >
+          EDIT MY SKILLS
+        </button>
+        <button
           onClick={handleLogout}
           className="w-full px-4 py-3 text-left text-sm text-ink-muted hover:text-white hover:bg-surface transition-colors"
         >
