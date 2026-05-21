@@ -2528,6 +2528,12 @@ const DashboardScreen = () => {
                 <h1 className="text-3xl sm:text-4xl lg:text-5xl font-semibold tracking-tight mb-3 lg:mb-4">
                   Role Matches
                 </h1>
+                <div className="text-base lg:text-lg text-ink-muted">
+                  {userSkills?.length > 0
+                    ? <>Based on your <span className="text-white font-medium">{userSkills.length} skill{userSkills.length !== 1 ? 's' : ''}</span></>
+                    : 'Add your skills to see personalized role matches.'
+                  }
+                </div>
               </>
             ) : (
               <>
@@ -3602,19 +3608,6 @@ const AlternativesTab = () => {
 
   return (
     <div>
-      {/* Subtitle */}
-      <div className="flex items-center justify-between mb-6">
-        <p className="text-ink-muted text-sm">
-          Ranked by how much of your <span className="text-white">{userSkills.length} skill{userSkills.length !== 1 ? 's' : ''}</span> each role demands.
-        </p>
-        <button
-          onClick={() => setCurrentScreen('skills-input')}
-          className="text-xs text-ink-muted hover:text-white transition-colors underline underline-offset-2"
-        >
-          Edit skills
-        </button>
-      </div>
-
       <div className="space-y-px">
         {alternativeRoles.map((role, idx) => {
           const matchPct = role.skill_overlap ?? 0;

@@ -972,9 +972,11 @@ def _get_alternative_roles(
     current_skill_demand = {sid: cnt for sid, cnt in current_counts}
     if user_skill_ids:
         my_skill_ids = user_skill_ids
+        min_shared = 1  # user may have few skills; any overlap is signal
     else:
         my_skill_ids = set(current_skill_demand.keys())
-    if len(my_skill_ids) < MIN_SHARED_SKILLS:
+        min_shared = MIN_SHARED_SKILLS
+    if len(my_skill_ids) < 1:
         return []
 
     # Candidate roles: must clear the demand floor
@@ -1023,7 +1025,7 @@ def _get_alternative_roles(
         their_skill_ids = set(skills_map.keys())
 
         shared_ids = my_skill_ids & their_skill_ids
-        if len(shared_ids) < MIN_SHARED_SKILLS:
+        if len(shared_ids) < min_shared:
             continue
 
         union_ids = my_skill_ids | their_skill_ids
