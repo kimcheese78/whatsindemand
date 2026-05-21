@@ -3202,12 +3202,9 @@ const SkillsTab = () => {
 
   const categories = [...new Set(skills.map(s => s.category).filter(Boolean))];
 
-  // Reset category filter if the selected category no longer exists in the current data
-  const activeCategoryFilter = categories.includes(categoryFilter) ? categoryFilter : 'All';
-
-  const filteredSkills = activeCategoryFilter === 'All'
+  const filteredSkills = categoryFilter === 'All'
     ? skills
-    : skills.filter(s => s.category === activeCategoryFilter);
+    : skills.filter(s => s.category === categoryFilter);
 
   // Sort skills
   const sortedSkills = [...filteredSkills].sort((a, b) => {
@@ -3285,7 +3282,7 @@ const SkillsTab = () => {
             { value: 'All', label: 'All Categories' },
             ...categories.map(cat => ({ value: cat, label: cat.charAt(0).toUpperCase() + cat.slice(1) }))
           ]}
-          value={activeCategoryFilter}
+          value={categoryFilter}
           onChange={setCategoryFilter}
           getOptionLabel={(opt) => opt.label}
           getOptionValue={(opt) => opt.value}
