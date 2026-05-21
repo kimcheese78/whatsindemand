@@ -2482,31 +2482,27 @@ const DashboardScreen = () => {
 
           {/* Header - Responsive */}
           <div className="mb-6 lg:mb-8">
-            <div className="flex flex-wrap items-center gap-2 text-xs sm:text-sm text-ink-muted mb-2">
-              <span>
-                {Array.isArray(appliedLocation) 
-                  ? appliedLocation.includes('All') 
-                    ? 'All Locations' 
-                    : appliedLocation.length === 1 
-                      ? appliedLocation[0]
-                      : `${appliedLocation.length} locations`
-                  : appliedLocation
-                }
-              </span>
-              <span>•</span>
-              <span>{seniorityLabel}</span>
-            </div>
+            {activeTab !== 'paths' && (
+              <div className="flex flex-wrap items-center gap-2 text-xs sm:text-sm text-ink-muted mb-2">
+                <span>
+                  {Array.isArray(appliedLocation)
+                    ? appliedLocation.includes('All')
+                      ? 'All Locations'
+                      : appliedLocation.length === 1
+                        ? appliedLocation[0]
+                        : `${appliedLocation.length} locations`
+                    : appliedLocation
+                  }
+                </span>
+                <span>•</span>
+                <span>{seniorityLabel}</span>
+              </div>
+            )}
             {activeTab === 'paths' ? (
               <>
                 <h1 className="text-3xl sm:text-4xl lg:text-5xl font-semibold tracking-tight mb-3 lg:mb-4">
-                  Role Matches
+                  WHERE YOUR SKILLS CAN TAKE YOU
                 </h1>
-                <div className="text-base lg:text-lg text-ink-muted">
-                  {userSkills?.length > 0
-                    ? <>Roles that fit your <span className="text-white font-medium">{userSkills.length} skill{userSkills.length !== 1 ? 's' : ''}</span></>
-                    : 'Add your skills to see personalized role recommendations.'
-                  }
-                </div>
               </>
             ) : (
               <>
@@ -2527,8 +2523,8 @@ const DashboardScreen = () => {
             )}
           </div>
 
-          {/* Filter Bar - Responsive */}
-          <div className="mb-6 lg:mb-8 p-3 lg:p-4 bg-surface border border-line">
+          {/* Filter Bar - hidden on Paths tab */}
+          {activeTab !== 'paths' && <div className="mb-6 lg:mb-8 p-3 lg:p-4 bg-surface border border-line">
             <div className="flex flex-wrap items-center gap-2 lg:gap-4">
               <div className="flex items-center gap-2 text-xs lg:text-sm text-ink-muted">
                 <Filter className="w-4 h-4" />
@@ -2591,17 +2587,18 @@ const DashboardScreen = () => {
                 </div>
               )}
             </div>
-          </div>
+          </div>}
 
-          {/* Tab Content */}          
-          {roleData?.total_jobs_analyzed === 0 ? (
+          {/* Tab Content */}
+          {activeTab === 'paths' ? (
+            <AlternativesTab />
+          ) : roleData?.total_jobs_analyzed === 0 ? (
             <NoResultsMessage onClearFilters={handleClearFilters} loading={loading} />
           ) : (
             <>
               {activeTab === 'overview' && <OverviewTab />}
               {activeTab === 'employers' && <EmployersTab />}
               {activeTab === 'skills' && <SkillsTab />}
-              {activeTab === 'paths' && <AlternativesTab />}
             </>
           )}
         </div>
@@ -3530,15 +3527,11 @@ const SkillDetailModal = ({ skill, onClose }) => {
 };
 
 // ============================================
-// PATHS TAB (WITH SALARY RANGE)
-// ============================================
-// ============================================
-// PATHS TAB (FIXED)
+// PATHS TAB
 // ============================================
 const AlternativesTab = () => {
   const {
     roleData,
-    selectedRole,
     switchToRole,
     loading,
     userSkills,
@@ -3547,172 +3540,139 @@ const AlternativesTab = () => {
 
   const alternativeRoles = roleData?.alternative_roles || [];
 
-  // Format salary with currency support
-  const formatSalary = (value) => {
-    if (!value) return '—';
-    if (value >= 1000) {
-      return `$${Math.round(value / 1000)}K`;
-    }
-    return `$${value.toLocaleString()}`;
-  };
-
-  const formatSalaryRange = (min, max, currency = 'USD') => {
+  const fmtSalary = (v) => v >= 1000 ? `$${Math.round(v / 1000)}K` : `$${v}`;
+  const fmtRange = (min, max) => {
     if (!min && !max) return null;
-    if (min && max && min !== max) {
-      return `${formatSalary(min, currency)} - ${formatSalary(max, currency)}`;
-    }
-    if (min) return formatSalary(min, currency);
-    return null;
-  };
-
-  const handleExploreRole = async (roleTitle) => {
-    await switchToRole(roleTitle);
+    if (min && max && min !== max) return `${fmtSalary(min)} – ${fmtSalary(max)}`;
+    return min ? fmtSalary(min) : null;
   };
 
   if (!userSkills || userSkills.length === 0) {
     return (
-      <div className="p-12 bg-surface border border-line text-center">
-        <div className="text-xl font-medium mb-3">Add your skills to get personalized role recommendations.</div>
-        <div className="text-ink-muted max-w-md mx-auto mb-6">
-          We'll match roles that fit what you already know — and show you the gap for each one.
+      <div className="py-16 text-center">
+        <div className="text-xl font-semibold mb-3">Add your skills first</div>
+        <div className="text-ink-muted max-w-sm mx-auto mb-8 text-sm">
+          Tell us what you know and we'll show you the roles that fit — and what's missing.
         </div>
         <button
           onClick={() => setCurrentScreen('skills-input')}
           className="px-6 py-2.5 bg-white text-black font-medium text-sm hover:bg-gray-200 transition-colors inline-flex items-center gap-2"
         >
-          Add Skills
-          <ArrowRight className="w-4 h-4" />
+          Add Skills <ArrowRight className="w-4 h-4" />
         </button>
       </div>
     );
   }
 
+  if (alternativeRoles.length === 0) {
+    return (
+      <div className="py-16 text-center">
+        <div className="text-xl font-semibold mb-2">No strong matches yet</div>
+        <div className="text-ink-muted max-w-sm mx-auto text-sm">
+          Not enough overlap between your skills and other roles with sufficient job postings. Try adding more skills.
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <div className="space-y-6">
-      <div className="text-ink-muted">
-        Based on your skills, here are roles that fit your profile.
+    <div>
+      {/* Subtitle */}
+      <div className="flex items-center justify-between mb-6">
+        <p className="text-ink-muted text-sm">
+          Ranked by how much of your <span className="text-white">{userSkills.length} skill{userSkills.length !== 1 ? 's' : ''}</span> each role demands.
+        </p>
+        <button
+          onClick={() => setCurrentScreen('skills-input')}
+          className="text-xs text-ink-muted hover:text-white transition-colors underline underline-offset-2"
+        >
+          Edit skills
+        </button>
       </div>
 
-      {alternativeRoles.length === 0 ? (
-        <div className="p-12 bg-surface border border-line text-center">
-          <div className="text-xl font-medium mb-2">No close matches yet</div>
-          <div className="text-ink-muted max-w-md mx-auto">
-            We couldn't find roles that closely match your skills with enough postings. Try a broader location or seniority filter.
-          </div>
-        </div>
-      ) : (
-        <div className="space-y-4">
-          {alternativeRoles.map((role, idx) => (
-            <div 
+      <div className="space-y-px">
+        {alternativeRoles.map((role, idx) => {
+          const matchPct = role.skill_overlap ?? 0;
+          const matchColor = matchPct >= 70 ? 'text-accent-up' : matchPct >= 45 ? 'text-yellow-400' : 'text-orange-400';
+          const barColor  = matchPct >= 70 ? 'bg-accent-up'   : matchPct >= 45 ? 'bg-yellow-400'   : 'bg-orange-400';
+          const salary = fmtRange(role.salary_min, role.salary_max);
+          const growth = role.posting_growth_pct;
+
+          return (
+            <div
               key={idx}
-              className="p-6 bg-surface border border-line hover:bg-white/[0.07] transition-colors"
+              className="p-5 bg-surface border border-line hover:border-line-strong transition-colors"
             >
-              <div className="flex items-start justify-between mb-4">
-                <div>
-                  <h3 className="text-xl font-semibold mb-1">{role.title}</h3>
-                  <div className="text-sm text-ink-muted flex flex-wrap items-center gap-x-3 gap-y-1">
-                    <span>{role.job_count?.toLocaleString() || '—'} open positions</span>
-                    {role.posting_growth_pct != null && (
-                      <span className={`font-medium ${
-                        role.posting_growth_pct > 0 ? 'text-accent-up' :
-                        role.posting_growth_pct < 0 ? 'text-accent-down' :
-                        'text-ink-muted'
-                      }`}>
-                        ({role.posting_growth_pct > 0 ? '+' : ''}{role.posting_growth_pct}% growth)
-                      </span>
-                    )}
-                  </div>
-                  
-                  {(role.salary_min || role.salary_max) && (
-                    <div className="mt-2 flex items-center gap-2">
-                      <span className="text-accent-up font-medium">
-                        {formatSalaryRange(role.salary_min, role.salary_max)}
-                      </span>
-                    </div>
+              {/* Row 1: role name + match */}
+              <div className="flex items-start gap-4">
+                <div className="flex-1 min-w-0">
+                  {role.category && (
+                    <div className="text-xs text-ink-muted tracking-widest mb-1">{role.category.toUpperCase()}</div>
                   )}
+                  <h3 className="text-lg font-semibold leading-tight">{role.title}</h3>
                 </div>
-                <div className="text-right">
-                  <div className={`text-3xl font-semibold ${
-                    role.skill_overlap >= 70 ? 'text-accent-up' :
-                    role.skill_overlap >= 50 ? 'text-yellow-500' :
-                    'text-orange-500'
-                  }`}>
-                    {role.skill_overlap}%
+                <div className="shrink-0 text-right">
+                  <div className={`text-2xl font-semibold tabular-nums leading-none ${matchColor}`}>{matchPct}%</div>
+                  <div className="text-xs text-ink-muted mt-0.5 tracking-wider">MATCH</div>
+                  <div className="mt-1.5 h-1 w-14 bg-white/10 ml-auto">
+                    <div className={`h-full ${barColor}`} style={{ width: `${matchPct}%` }} />
                   </div>
-                  <div className="text-xs text-ink-muted">SKILLS MATCH</div>
                 </div>
               </div>
 
-              {/* Shared Skills */}
-              {role.shared_skills && role.shared_skills.length > 0 && (
-                <div className="mb-4">
-                  <div className="text-xs text-ink-muted mb-2">SHARED SKILLS</div>
-                  <div className="flex flex-wrap gap-2">
-                    {role.shared_skills.slice(0, 6).map((skill, skillIdx) => (
-                      <span 
-                        key={skillIdx}
-                        className="px-2 py-1 bg-accent-up/20 border border-green-500/30 text-xs text-accent-up"
-                      >
-                        {skill}
-                      </span>
-                    ))}
-                    {role.shared_skills.length > 6 && (
-                      <span className="px-2 py-1 text-xs text-ink-muted">
-                        +{role.shared_skills.length - 6} more
-                      </span>
-                    )}
-                  </div>
-                </div>
-              )}
-
-              {/* Skills You'd Need to Learn */}
-              {role.new_skills && role.new_skills.length > 0 && (
-                <div className="mb-4">
-                  <div className="text-xs text-ink-muted mb-2">SKILLS GAP</div>
-                  <div className="flex flex-wrap gap-2">
-                    {role.new_skills.slice(0, 4).map((skill, skillIdx) => (
-                      <span 
-                        key={skillIdx}
-                        className="px-2 py-1 bg-orange-500/20 border border-orange-500/30 text-xs text-orange-400"
-                      >
-                        {skill}
-                      </span>
-                    ))}
-                    {role.new_skills.length > 4 && (
-                      <span className="px-2 py-1 text-xs text-ink-muted">
-                        +{role.new_skills.length - 4} more
-                      </span>
-                    )}
-                  </div>
-                </div>
-              )}
-
-              {/* Action Button */}
-              <button
-                onClick={() => handleExploreRole(role.title)}
-                disabled={loading}
-                className={`px-4 py-2 font-medium text-sm flex items-center gap-2 transition-colors ${
-                  loading 
-                    ? 'bg-white/20 text-ink-muted cursor-not-allowed' 
-                    : 'bg-white text-black hover:bg-gray-200'
-                }`}
-              >
-                {loading ? (
-                  <>
-                    <DotSpinner size={16} tone="black" />
-                    LOADING...
-                  </>
-                ) : (
-                  <>
-                    EXPLORE THIS ROLE
-                    <ArrowRight className="w-4 h-4" />
-                  </>
+              {/* Row 2: stats */}
+              <div className="flex flex-wrap items-center gap-x-4 gap-y-0.5 mt-2 text-sm text-ink-muted">
+                {role.job_count > 0 && <span>{role.job_count.toLocaleString()} open</span>}
+                {salary && <span className="text-white font-medium">{salary}</span>}
+                {growth != null && (
+                  <span className={growth > 0 ? 'text-accent-up' : growth < 0 ? 'text-accent-down' : ''}>
+                    {growth > 0 ? '+' : ''}{growth}% growth
+                  </span>
                 )}
-              </button>
+              </div>
+
+              {/* Row 3: skills */}
+              {(role.shared_skills?.length > 0 || role.new_skills?.length > 0) && (
+                <div className="mt-4 flex flex-col gap-2">
+                  {role.shared_skills?.length > 0 && (
+                    <div className="flex flex-wrap items-center gap-1.5">
+                      <span className="text-xs text-ink-muted w-16 shrink-0">YOU KNOW</span>
+                      {role.shared_skills.slice(0, 5).map((s, i) => (
+                        <span key={i} className="px-2 py-0.5 text-xs border border-green-500/40 text-accent-up bg-accent-up/10">{s}</span>
+                      ))}
+                      {role.shared_skills.length > 5 && (
+                        <span className="text-xs text-ink-muted">+{role.shared_skills.length - 5}</span>
+                      )}
+                    </div>
+                  )}
+                  {role.new_skills?.length > 0 && (
+                    <div className="flex flex-wrap items-center gap-1.5">
+                      <span className="text-xs text-ink-muted w-16 shrink-0">TO LEARN</span>
+                      {role.new_skills.slice(0, 4).map((s, i) => (
+                        <span key={i} className="px-2 py-0.5 text-xs border border-white/20 text-ink-muted">{s}</span>
+                      ))}
+                      {role.new_skills.length > 4 && (
+                        <span className="text-xs text-ink-muted">+{role.new_skills.length - 4}</span>
+                      )}
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {/* Row 4: action */}
+              <div className="mt-4 flex justify-end">
+                <button
+                  onClick={() => switchToRole(role.title)}
+                  disabled={loading}
+                  className="text-xs text-ink-muted hover:text-white transition-colors flex items-center gap-1 disabled:opacity-40"
+                >
+                  {loading ? 'Loading…' : <>Explore this role <ArrowRight className="w-3 h-3" /></>}
+                </button>
+              </div>
             </div>
-          ))}
-        </div>
-      )}
+          );
+        })}
+      </div>
     </div>
   );
 };
