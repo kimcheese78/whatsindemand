@@ -1026,19 +1026,19 @@ def _get_alternative_roles(
         total_role_jobs = role_meta[rid]['job_count']
 
         if user_skill_ids:
-            # Coverage = what % of this role's CORE skills (≥15% demand rate) the user has.
-            # This avoids the 100%-everywhere problem from generic skills like Communication.
+            # Coverage = what % of this role's CORE skills the user has.
+            # 5% threshold: skill must appear in ≥5% of the role's job postings.
+            # Floor of 15 and cap of 40 keep the denominator meaningful even for
+            # niche roles (few jobs) or very broad roles (hundreds of skills).
             if total_role_jobs > 0:
                 core_skill_ids = {sid for sid, cnt in skills_map.items()
-                                  if cnt / total_role_jobs >= 0.15}
+                                  if cnt / total_role_jobs >= 0.05}
             else:
                 core_skill_ids = set()
-            # Floor: always include at least the top 5 most-demanded skills
-            if len(core_skill_ids) < 5:
-                core_skill_ids = set(sorted(skills_map, key=lambda s: skills_map[s], reverse=True)[:20])
-            # Cap at 25 so denominator is bounded and meaningful
-            if len(core_skill_ids) > 25:
-                core_skill_ids = set(sorted(core_skill_ids, key=lambda s: skills_map[s], reverse=True)[:25])
+            if len(core_skill_ids) < 15:
+                core_skill_ids = set(sorted(skills_map, key=lambda s: skills_map[s], reverse=True)[:30])
+            if len(core_skill_ids) > 40:
+                core_skill_ids = set(sorted(core_skill_ids, key=lambda s: skills_map[s], reverse=True)[:40])
 
             shared_ids = my_skill_ids & core_skill_ids
             if len(shared_ids) < min_shared:
