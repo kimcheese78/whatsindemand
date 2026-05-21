@@ -2496,19 +2496,35 @@ const DashboardScreen = () => {
               <span>•</span>
               <span>{seniorityLabel}</span>
             </div>
-            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-semibold tracking-tight mb-3 lg:mb-4">
-              {selectedRole}
-            </h1>
-            <div className="text-base lg:text-lg text-ink-muted">
-              Based on <span className="text-white font-medium">
-                {roleData?.total_jobs_analyzed?.toLocaleString() || '0'}
-              </span> job postings
-              {roleData?.company_count > 0 && (
-                <span className="text-ink-muted">
-                  {' '}from {roleData.company_count} {roleData.company_count === 1 ? 'company' : 'companies'}
-                </span>
-              )}
-            </div>
+            {activeTab === 'paths' ? (
+              <>
+                <h1 className="text-3xl sm:text-4xl lg:text-5xl font-semibold tracking-tight mb-3 lg:mb-4">
+                  Role Matches
+                </h1>
+                <div className="text-base lg:text-lg text-ink-muted">
+                  {userSkills?.length > 0
+                    ? <>Roles that fit your <span className="text-white font-medium">{userSkills.length} skill{userSkills.length !== 1 ? 's' : ''}</span></>
+                    : 'Add your skills to see personalized role recommendations.'
+                  }
+                </div>
+              </>
+            ) : (
+              <>
+                <h1 className="text-3xl sm:text-4xl lg:text-5xl font-semibold tracking-tight mb-3 lg:mb-4">
+                  {selectedRole}
+                </h1>
+                <div className="text-base lg:text-lg text-ink-muted">
+                  Based on <span className="text-white font-medium">
+                    {roleData?.total_jobs_analyzed?.toLocaleString() || '0'}
+                  </span> job postings
+                  {roleData?.company_count > 0 && (
+                    <span className="text-ink-muted">
+                      {' '}from {roleData.company_count} {roleData.company_count === 1 ? 'company' : 'companies'}
+                    </span>
+                  )}
+                </div>
+              </>
+            )}
           </div>
 
           {/* Filter Bar - Responsive */}
