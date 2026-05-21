@@ -401,7 +401,29 @@ const AppProvider = ({ children }) => {
     }
   }, [selectedRole, selectedSeniority, selectedLocation, selectedIndustries, selectedCompanies, user, userSkills, setUserSkills]);
 
-  // FIX #2: New function to switch roles (used by AlternativesTab)
+  // Re-fetch role data with a specific skills list (called after user picks skills on skills-input).
+  // Does not navigate — caller is responsible for routing.
+  const refreshInsights = useCallback(async (skills) => {
+    if (!selectedRole) return;
+    setLoading(true);
+    try {
+      const data = await api.getRoleInsights(
+        selectedRole,
+        selectedSeniority,
+        selectedLocation,
+        !selectedIndustries.includes('All') ? selectedIndustries : null,
+        !selectedCompanies.includes('All') ? selectedCompanies.map(id => parseInt(id, 10)) : null,
+        skills
+      );
+      if (data.success) setRoleData(data);
+    } catch (err) {
+      console.error('refreshInsights failed:', err);
+    } finally {
+      setLoading(false);
+    }
+  }, [selectedRole, selectedSeniority, selectedLocation, selectedIndustries, selectedCompanies]);
+
+  // New function to switch roles (used by AlternativesTab)
   const switchToRole = useCallback(async (roleTitle) => {
     setSelectedRole(roleTitle);
     setRoleSearchQuery(roleTitle);
@@ -631,6 +653,7 @@ const AppProvider = ({ children }) => {
     // Actions
     exploreRole,
     switchToRole,
+    refreshInsights,
   };
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;
@@ -1897,6 +1920,7 @@ const SkillsInputScreen = () => {
     userSkills,
     setUserSkills,
     setCurrentScreen,
+    refreshInsights,
   } = useApp();
 
   const SENIORITY_LABELS = { All: '', entry: 'entry-level', mid: 'mid-level', senior: 'senior', lead: 'lead/principal' };
@@ -2037,10 +2061,11 @@ const SkillsInputScreen = () => {
       .slice(0, 8);
   }, [skillQuery, allSkills, allSelectable]);
 
-  const handleContinue = () => {
+  const handleContinue = async () => {
     const chosen = allSelectable.filter(s => selectedIds.has(s.skill_id))
       .map(s => ({ skill_id: s.skill_id, name: s.name, category: s.category }));
     setUserSkills(chosen);
+    await refreshInsights(chosen);
     setCurrentScreen('dashboard');
   };
 
@@ -2501,7 +2526,7 @@ const DashboardScreen = () => {
             {activeTab === 'paths' ? (
               <>
                 <h1 className="text-3xl sm:text-4xl lg:text-5xl font-semibold tracking-tight mb-3 lg:mb-4">
-                  WHERE YOUR SKILLS CAN TAKE YOU
+                  Role Matches
                 </h1>
               </>
             ) : (
