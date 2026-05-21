@@ -3200,9 +3200,14 @@ const SkillsTab = () => {
   const userSkillIds = useMemo(() => new Set((userSkills || []).map(s => s.skill_id)), [userSkills]);
   const hasUserSkills = userSkillIds.size > 0;
 
-  const filteredSkills = categoryFilter === 'All'
+  const categories = [...new Set(skills.map(s => s.category).filter(Boolean))];
+
+  // Reset category filter if the selected category no longer exists in the current data
+  const activeCategoryFilter = categories.includes(categoryFilter) ? categoryFilter : 'All';
+
+  const filteredSkills = activeCategoryFilter === 'All'
     ? skills
-    : skills.filter(s => s.category === categoryFilter);
+    : skills.filter(s => s.category === activeCategoryFilter);
 
   // Sort skills
   const sortedSkills = [...filteredSkills].sort((a, b) => {
@@ -3267,8 +3272,6 @@ const SkillsTab = () => {
     </button>
   );
 
-  const categories = [...new Set(skills.map(s => s.category).filter(Boolean))];
-
   return (
     <div className="space-y-6">
       {/* Filters */}
@@ -3282,7 +3285,7 @@ const SkillsTab = () => {
             { value: 'All', label: 'All Categories' },
             ...categories.map(cat => ({ value: cat, label: cat.charAt(0).toUpperCase() + cat.slice(1) }))
           ]}
-          value={categoryFilter}
+          value={activeCategoryFilter}
           onChange={setCategoryFilter}
           getOptionLabel={(opt) => opt.label}
           getOptionValue={(opt) => opt.value}
