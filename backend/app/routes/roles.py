@@ -1026,17 +1026,24 @@ def _get_alternative_roles(
         total_role_jobs = role_meta[rid]['job_count']
 
         if user_skill_ids:
+            # Skip roles with too little skill data — can't score them meaningfully.
+            if len(skills_map) < 10:
+                continue
+
             # Coverage = what % of this role's CORE skills the user has.
             # 5% threshold: skill must appear in ≥5% of the role's job postings.
-            # Floor of 15 and cap of 40 keep the denominator meaningful even for
-            # niche roles (few jobs) or very broad roles (hundreds of skills).
             if total_role_jobs > 0:
                 core_skill_ids = {sid for sid, cnt in skills_map.items()
                                   if cnt / total_role_jobs >= 0.05}
             else:
                 core_skill_ids = set()
+            # Fallback: if fewer than 15 qualify, take the top 30 by raw count
             if len(core_skill_ids) < 15:
                 core_skill_ids = set(sorted(skills_map, key=lambda s: skills_map[s], reverse=True)[:30])
+            # After fallback, if still too few, the role has sparse data — skip it
+            if len(core_skill_ids) < 10:
+                continue
+            # Cap at 40
             if len(core_skill_ids) > 40:
                 core_skill_ids = set(sorted(core_skill_ids, key=lambda s: skills_map[s], reverse=True)[:40])
 
@@ -1044,7 +1051,7 @@ def _get_alternative_roles(
             if len(shared_ids) < min_shared:
                 continue
 
-            coverage = len(shared_ids) / len(core_skill_ids) if core_skill_ids else 0
+            coverage = len(shared_ids) / len(core_skill_ids)
             new_ids = core_skill_ids - my_skill_ids
         else:
             shared_ids = my_skill_ids & their_skill_ids
