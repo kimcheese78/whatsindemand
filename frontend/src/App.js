@@ -2224,11 +2224,6 @@ const SkillsInputScreen = () => {
               <span className="text-small text-accent-down">{extractError}</span>
             )}
           </div>
-          {lastExtractedIds && !extracting && (
-            <p className="text-small text-accent-up mt-3">
-              {lastExtractedIds.size} skill{lastExtractedIds.size !== 1 ? 's' : ''} found in your resume and selected above.
-            </p>
-          )}
         </Panel>
 
         {/* Footer actions */}
