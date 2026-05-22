@@ -1,6 +1,6 @@
 // App.js - WhatsInDemand Career Intelligence App
 
-import React, { useState, useEffect, useRef, createContext, useContext, useCallback, useMemo } from 'react';
+import React, { useState, useEffect, useLayoutEffect, useRef, createContext, useContext, useCallback, useMemo } from 'react';
 import { BrowserRouter, Routes, Route, useNavigate, useLocation } from 'react-router-dom';
 import {
   ArrowRight, Search, ChevronDown, X, Filter,
@@ -4942,8 +4942,8 @@ const ScreenSync = () => {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location.pathname]);
 
-  // state -> URL
-  useEffect(() => {
+  // state -> URL (useLayoutEffect so navigate fires before browser paint, eliminating screen flash)
+  useLayoutEffect(() => {
     const path = SCREEN_TO_PATH[currentScreen];
     if (path && path !== location.pathname) {
       navigate(path);
