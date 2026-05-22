@@ -1780,7 +1780,7 @@ const SignupScreen = () => {
                     : 'bg-white/10 text-ink-faint cursor-not-allowed'
                 }`}
               >
-                {loading && <DotSpinner size={16} tone="black" />}
+                {loading && <DotSpinner size={16} tone="white" />}
                 {loading ? 'CREATING ACCOUNT...' : 'CREATE ACCOUNT'}
               </button>
             </div>
@@ -2241,7 +2241,7 @@ const SkillsInputScreen = () => {
           >
             {submitting ? (
               <>
-                <DotSpinner size={16} tone="black" />
+                <DotSpinner size={16} tone="white" />
                 Loading...
               </>
             ) : (
