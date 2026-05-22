@@ -3630,7 +3630,7 @@ const AlternativesTab = () => {
 
   return (
     <div>
-      <div className="space-y-px">
+      <div className="space-y-3">
         {alternativeRoles.map((role, idx) => {
           const matchPct = role.skill_overlap ?? 0;
           const matchColor = matchPct >= 70 ? 'text-accent-up' : matchPct >= 45 ? 'text-yellow-400' : 'text-orange-400';

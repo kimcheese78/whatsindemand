@@ -199,6 +199,7 @@ p-4 bg-accent-down/20 border border-accent-down text-accent-down
 - Between form fields: `mb-6` / `space-y-3`
 - Between label and input: `mb-2`
 - Between items in a list: `gap-3`
+- Between stacked cards: `space-y-3` — never `space-y-px` (too compressed)
 
 ---
 
