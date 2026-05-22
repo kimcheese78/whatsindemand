@@ -1611,34 +1611,34 @@ const RoleSelectionScreen = () => {
           </div>
 
           {/* CTA Button */}
-          <button
-            onClick={handleExplore}
-            disabled={!canProceed || loading}
-            className={`w-full py-5 font-medium text-xl transition-colors flex items-center justify-center gap-3 ${
-              canProceed && !loading
-                ? 'bg-white text-black hover:bg-gray-200'
-                : 'bg-white/10 text-ink-faint cursor-not-allowed'
-            }`}
-          >
-            {loading ? (
-              <>
-                <DotSpinner size={20} tone="white" />
-                ANALYZING...
-              </>
-            ) : (
-              <>
-                EXPLORE THIS ROLE
-                <ArrowRight className="w-5 h-5" />
-              </>
-            )}
-          </button>
-
-          <div className="flex justify-start pt-4">
+          <div className="flex gap-3">
             <button
+              type="button"
               onClick={() => setCurrentScreen('landing')}
-              className="text-small text-ink-muted hover:text-white transition-colors flex items-center gap-2"
+              className="px-5 py-3 border border-line-strong text-sm font-medium hover:bg-surface transition-colors"
             >
-              ← Back
+              BACK
+            </button>
+            <button
+              onClick={handleExplore}
+              disabled={!canProceed || loading}
+              className={`flex-1 py-3 font-medium text-sm tracking-wide transition-colors flex items-center justify-center gap-2 ${
+                canProceed && !loading
+                  ? 'bg-white text-black hover:bg-gray-200'
+                  : 'bg-white/10 text-ink-faint cursor-not-allowed'
+              }`}
+            >
+              {loading ? (
+                <>
+                  <DotSpinner size={16} tone="white" />
+                  ANALYZING...
+                </>
+              ) : (
+                <>
+                  EXPLORE THIS ROLE
+                  <ArrowRight className="w-4 h-4" />
+                </>
+              )}
             </button>
           </div>
         </div>
@@ -2217,21 +2217,21 @@ const SkillsInputScreen = () => {
         </Panel>
 
         {/* Footer actions */}
-        <div className="flex items-center justify-between pt-4">
-          <div className="flex items-center gap-5">
-            <button
-              onClick={() => setCurrentScreen('role-selection')}
-              className="text-small text-ink-muted hover:text-white transition-colors flex items-center gap-2"
-            >
-              ← Back
-            </button>
-            <button
-              onClick={handleSkip}
-              className="text-small text-ink-muted hover:text-white transition-colors"
-            >
-              Skip for now
-            </button>
-          </div>
+        <div className="flex items-center gap-3 pt-4">
+          <button
+            type="button"
+            onClick={() => setCurrentScreen('role-selection')}
+            className="px-5 py-3 border border-line-strong text-sm font-medium hover:bg-surface transition-colors"
+          >
+            BACK
+          </button>
+          <button
+            onClick={handleSkip}
+            className="text-small text-ink-muted hover:text-white transition-colors px-2"
+          >
+            Skip for now
+          </button>
+          <div className="flex-1" />
           <button
             onClick={handleContinue}
             disabled={submitting}

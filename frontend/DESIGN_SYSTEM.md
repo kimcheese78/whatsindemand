@@ -216,6 +216,26 @@ All live in `frontend/src/App.js`.
 
 ---
 
+## Screen Footer Pattern
+
+Every multi-step screen uses the same footer row:
+
+```
+[BACK]  [Skip for now (ghost)]          [PRIMARY CTA →]
+```
+
+- **BACK** — secondary button (border, fixed width `px-5 py-3`)
+- **Skip for now** — ghost text link, only present when the step is optional
+- **Spacer** — `flex-1` pushes CTA to the right
+- **Primary CTA** — white fill, `flex-1` or fixed `px-6 py-3`
+
+Rules:
+- BACK is always ALL CAPS
+- Skip sits on the left next to BACK, never on the right
+- Never put two primary buttons in the footer
+
+---
+
 ## Rules
 
 1. **One primary button per screen.** Secondary and ghost for everything else.
