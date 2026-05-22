@@ -1110,7 +1110,7 @@ def _get_alternative_roles(
         for s in Skill.query.filter(Skill.id.in_(referenced_ids)).all()
     }
 
-    candidates.sort(key=lambda c: c['score'], reverse=True)
+    candidates.sort(key=lambda c: (c['score'], role_meta[c['role_id']]['job_count']), reverse=True)
 
     # Same-category dedupe so role families don't sweep the list
     out = []
