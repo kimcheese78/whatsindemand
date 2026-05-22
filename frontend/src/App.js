@@ -1942,6 +1942,7 @@ const SkillsInputScreen = () => {
   const [resumeText, setResumeText] = useState('');
   const [extracting, setExtracting] = useState(false);
   const [extractError, setExtractError] = useState(null);
+  const [lastExtractedIds, setLastExtractedIds] = useState(null);
   const [extractedExtra, setExtractedExtra] = useState(() => {
     const suggestedIds = new Set(suggestedSkills.map(s => s.skill_id));
     return (userSkills || []).filter(s => !suggestedIds.has(s.skill_id));
@@ -1996,7 +1997,9 @@ const SkillsInputScreen = () => {
   // reselecting from a fresh source of truth, not appending to the old one.
   const replaceWithExtracted = (extracted) => {
     const list = extracted || [];
-    setSelectedIds(new Set(list.map(s => s.skill_id)));
+    const extractedIdSet = new Set(list.map(s => s.skill_id));
+    setSelectedIds(extractedIdSet);
+    setLastExtractedIds(extractedIdSet);
     const suggestedIds = new Set(suggestedSkills.map(s => s.skill_id));
     setExtractedExtra(list.filter(s => !suggestedIds.has(s.skill_id)));
   };
@@ -2112,6 +2115,7 @@ const SkillsInputScreen = () => {
             <div className="flex flex-wrap gap-2">
               {allSelectable.map(skill => {
                 const on = selectedIds.has(skill.skill_id);
+                const fromResume = lastExtractedIds?.has(skill.skill_id);
                 return (
                   <button
                     key={skill.skill_id}
@@ -2120,7 +2124,8 @@ const SkillsInputScreen = () => {
                       'px-3 py-1.5 text-small border transition-colors ' +
                       (on
                         ? 'bg-white text-black border-white'
-                        : 'bg-surface text-ink border-line hover:border-line-strong')
+                        : 'bg-surface text-ink border-line hover:border-line-strong') +
+                      (fromResume && !on ? ' ring-1 ring-white/40' : '')
                     }
                   >
                     {skill.name}
@@ -2179,7 +2184,7 @@ const SkillsInputScreen = () => {
 
         {/* Resume input */}
         <Panel pad="lg" className="mb-6">
-          <label className="block text-sm text-ink-muted mb-2 tracking-wider font-medium">
+          <label className="block text-eyebrow text-ink-faint mb-2 tracking-widest">
             OR EXTRACT FROM YOUR RESUME
           </label>
           <p className="text-small text-ink-muted mb-4">
@@ -2190,7 +2195,7 @@ const SkillsInputScreen = () => {
             onChange={(e) => setResumeText(e.target.value)}
             placeholder="Paste resume text here…"
             rows={6}
-            className="w-full bg-black border border-line p-3 text-small text-ink placeholder-ink-faint focus:border-line-strong focus:outline-none resize-none"
+            className="w-full bg-black border border-line p-3 text-small text-ink placeholder-ink-faint focus:border-white focus:outline-none resize-none"
           />
           <div className="flex flex-wrap items-center gap-3 mt-3">
             <button
@@ -2219,6 +2224,11 @@ const SkillsInputScreen = () => {
               <span className="text-small text-accent-down">{extractError}</span>
             )}
           </div>
+          {lastExtractedIds && !extracting && (
+            <p className="text-small text-accent-up mt-3">
+              {lastExtractedIds.size} skill{lastExtractedIds.size !== 1 ? 's' : ''} found in your resume and selected above.
+            </p>
+          )}
         </Panel>
 
         {/* Footer actions */}
