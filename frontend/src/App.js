@@ -2235,7 +2235,7 @@ const SkillsInputScreen = () => {
           <button
             onClick={handleContinue}
             disabled={submitting}
-            className={`px-6 py-3 text-small font-medium transition-colors flex items-center gap-2 ${
+            className={`px-6 py-3 text-sm font-medium tracking-wide transition-colors flex items-center gap-2 ${
               submitting ? 'bg-white/10 text-ink-faint cursor-not-allowed' : 'bg-white text-black hover:bg-gray-200'
             }`}
           >
