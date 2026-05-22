@@ -681,7 +681,7 @@ const NavBar = () => {
             <button
               onClick={() => setCurrentScreen(roleData ? 'dashboard' : 'role-selection')}
               aria-label={roleData ? 'Go to dashboard' : 'Pick your role'}
-              className="flex items-center gap-2 px-2 py-1 -mx-2 -my-1 rounded hover:bg-white/5 transition-colors"
+              className="flex items-center gap-2 px-2 py-1 -mx-2 -my-1 hover:bg-white/5 transition-colors"
             >
               <div className="w-8 h-8 bg-white/10 rounded-full flex items-center justify-center">
                 <span className="text-sm font-medium">
@@ -1489,7 +1489,7 @@ const RoleSelectionScreen = () => {
 
           {/* Role Search */}
           <div className="mb-6">
-            <label className="block text-sm text-ink-muted mb-2 tracking-wider font-medium">
+            <label className="block text-eyebrow text-ink-faint mb-2 tracking-widest">
               ROLE TITLE
             </label>
             <div className="relative" ref={dropdownRef}>
@@ -1577,7 +1577,7 @@ const RoleSelectionScreen = () => {
 
           {/* Seniority Selection */}
           <div className="mb-6">
-            <label className="block text-sm text-ink-muted mb-2 tracking-wider font-medium">
+            <label className="block text-eyebrow text-ink-faint mb-2 tracking-widest">
               EXPERIENCE LEVEL
             </label>
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3">
@@ -1600,7 +1600,7 @@ const RoleSelectionScreen = () => {
 
           {/* Location Selection */}
           <div className="mb-10">
-            <label className="block text-sm text-ink-muted mb-2 tracking-wider font-medium">
+            <label className="block text-eyebrow text-ink-faint mb-2 tracking-widest">
               LOCATION <span className="text-ink-faint"></span>
             </label>
             <LocationDropdown
@@ -2098,7 +2098,7 @@ const SkillsInputScreen = () => {
 
         {/* Suggested skill chips */}
         <Panel pad="lg" className="mb-6">
-          <label className="block text-sm text-ink-muted mb-4 tracking-wider font-medium">
+          <label className="block text-eyebrow text-ink-faint mb-4 tracking-widest">
             SKILLS FOR THIS ROLE
           </label>
           {allSelectable.length === 0 ? (
@@ -2126,7 +2126,7 @@ const SkillsInputScreen = () => {
           )}
           {/* Add another skill */}
           <div className="mt-5 pt-5 border-t border-line-faint" ref={searchRef}>
-            <label className="block text-sm text-ink-muted mb-2 tracking-wider font-medium">
+            <label className="block text-eyebrow text-ink-faint mb-2 tracking-widest">
               ADD ANOTHER SKILL
             </label>
             <div className="relative">
@@ -2136,7 +2136,7 @@ const SkillsInputScreen = () => {
                 onChange={(e) => { setSkillQuery(e.target.value); setShowSkillDropdown(true); }}
                 onFocus={() => setShowSkillDropdown(true)}
                 placeholder="Search skills…"
-                className="w-full bg-black border border-line p-3 text-small text-ink placeholder-ink-faint focus:border-line-strong focus:outline-none"
+                className="w-full bg-black border border-line p-3 text-small text-ink placeholder-ink-faint focus:border-white focus:outline-none"
               />
               {showSkillDropdown && skillQuery && (
                 <div className="absolute left-0 right-0 top-full mt-1 bg-zinc-900 border border-line-strong z-10 max-h-60 overflow-y-auto shadow-lg">
@@ -2191,7 +2191,7 @@ const SkillsInputScreen = () => {
             <button
               onClick={handlePaste}
               disabled={extracting || !resumeText.trim()}
-              className="px-4 py-2 bg-white text-black text-small font-medium hover:bg-ink-muted disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+              className="px-4 py-2 bg-white text-black text-small font-medium hover:bg-gray-200 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
             >
               {extracting ? 'Extracting…' : 'Extract from text'}
             </button>
@@ -2236,7 +2236,7 @@ const SkillsInputScreen = () => {
             onClick={handleContinue}
             disabled={submitting}
             className={`px-6 py-3 text-small font-medium transition-colors flex items-center gap-2 ${
-              submitting ? 'bg-white/20 text-ink-faint cursor-not-allowed' : 'bg-white text-black hover:bg-ink-muted'
+              submitting ? 'bg-white/10 text-ink-faint cursor-not-allowed' : 'bg-white text-black hover:bg-gray-200'
             }`}
           >
             {submitting ? (
@@ -2690,7 +2690,7 @@ const DashboardSidebar = () => {
         {user && (
           <button
             onClick={() => setCurrentScreen('account')}
-            className="w-full flex items-center gap-3 p-2 -m-2 rounded hover:bg-surface transition-colors text-left"
+            className="w-full flex items-center gap-3 p-2 -m-2 hover:bg-surface transition-colors text-left"
           >
             <div className="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center">
               <span className="text-lg font-medium">

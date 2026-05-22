@@ -220,7 +220,7 @@ All live in `frontend/src/App.js`.
 1. **One primary button per screen.** Secondary and ghost for everything else.
 2. **All loading states use `DotSpinner`.** No raw SVG spinners.
 3. **Loading buttons always drop to dark background** (`bg-white/10`) + `tone="white"` spinner.
-4. **No border-radius on buttons or cards** unless it's a circular icon button.
+4. **No border-radius on buttons or cards** unless it's a circular icon button (`rounded-full`). Exception: progress bars and pill/badge indicators may use `rounded-full`.
 5. **ALL CAPS for primary actions and section labels.** Sentence case for body copy and descriptions.
 6. **`text-ink-muted` for descriptions, `text-ink-faint` for metadata/labels.** Don't mix them.
 7. **Never hardcode colors** — use tokens from `tailwind.config.js`.
