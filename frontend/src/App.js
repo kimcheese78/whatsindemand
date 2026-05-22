@@ -1774,12 +1774,18 @@ const SignupScreen = () => {
               <button
                 type="submit"
                 disabled={loading || !signupEmail || !signupPassword || !signupFullName}
-                className={`flex-1 py-3 font-medium text-sm tracking-wide transition-colors ${
+                className={`flex-1 py-3 font-medium text-sm tracking-wide transition-colors flex items-center justify-center gap-2 ${
                   !loading && signupEmail && signupPassword && signupFullName
                     ? 'bg-white text-black hover:bg-gray-200'
                     : 'bg-white/10 text-ink-faint cursor-not-allowed'
                 }`}
               >
+                {loading && (
+                  <svg className="animate-spin w-4 h-4" viewBox="0 0 24 24" fill="none">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"/>
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"/>
+                  </svg>
+                )}
                 {loading ? 'CREATING ACCOUNT...' : 'CREATE ACCOUNT'}
               </button>
             </div>
@@ -1944,6 +1950,7 @@ const SkillsInputScreen = () => {
   const [allSkills, setAllSkills] = useState([]);
   const [skillQuery, setSkillQuery] = useState('');
   const [showSkillDropdown, setShowSkillDropdown] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
   const fileRef = useRef(null);
   const searchRef = useRef(null);
 
@@ -2062,11 +2069,13 @@ const SkillsInputScreen = () => {
   }, [skillQuery, allSkills, allSelectable]);
 
   const handleContinue = async () => {
+    setSubmitting(true);
     const chosen = allSelectable.filter(s => selectedIds.has(s.skill_id))
       .map(s => ({ skill_id: s.skill_id, name: s.name, category: s.category }));
     setUserSkills(chosen);
     await refreshInsights(chosen);
     setCurrentScreen('dashboard');
+    setSubmitting(false);
   };
 
   const handleSkip = () => {
@@ -2230,10 +2239,25 @@ const SkillsInputScreen = () => {
           </div>
           <button
             onClick={handleContinue}
-            className="px-6 py-3 bg-white text-black text-small font-medium hover:bg-ink-muted transition-colors flex items-center gap-2"
+            disabled={submitting}
+            className={`px-6 py-3 text-small font-medium transition-colors flex items-center gap-2 ${
+              submitting ? 'bg-white/20 text-ink-faint cursor-not-allowed' : 'bg-white text-black hover:bg-ink-muted'
+            }`}
           >
-            Continue to dashboard
-            <ArrowRight className="w-4 h-4" />
+            {submitting ? (
+              <>
+                <svg className="animate-spin w-4 h-4" viewBox="0 0 24 24" fill="none">
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"/>
+                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"/>
+                </svg>
+                Loading...
+              </>
+            ) : (
+              <>
+                Continue to dashboard
+                <ArrowRight className="w-4 h-4" />
+              </>
+            )}
           </button>
         </div>
         </div>
