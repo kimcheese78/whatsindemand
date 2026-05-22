@@ -64,8 +64,12 @@ def extract_skills_from_input():
     if not text or len(text) < 30:
         return jsonify({'error': 'Not enough text to extract skills from.'}), 400
 
+    # document_type='resume' skips JD section filtering and matches against full text
+    body = request.get_json(silent=True) or {}
+    is_resume = (body.get('document_type') == 'resume') or ('file' in request.files)
+
     extractor = SkillExtractor()
-    extracted = extractor.extract_skills(text)
+    extracted = extractor.extract_skills(text, is_resume=is_resume)
 
     # Hydrate with skill metadata
     skill_ids = [s['skill_id'] for s in extracted]

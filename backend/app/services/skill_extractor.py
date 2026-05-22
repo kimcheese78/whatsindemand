@@ -718,28 +718,36 @@ class SkillExtractor:
         
         return True
     
-    def extract_skills(self, text: str, company_name: str = None) -> List[Dict]:
+    def extract_skills(self, text: str, company_name: str = None, is_resume: bool = False) -> List[Dict]:
         """
-        Extract skills from job description text.
-        
-        Only searches within requirements/preferred sections to avoid
-        extracting skills from "About Us", responsibilities, benefits, etc.
-        
+        Extract skills from text.
+
+        For job descriptions (is_resume=False): only searches within
+        requirements/preferred sections to avoid noise from About Us, benefits, etc.
+
+        For resumes (is_resume=True): matches against the full text since resumes
+        have Skills/Experience sections, not requirements sections.
+
         Args:
-            text: Full job description text
+            text: Input text (JD or resume)
             company_name: Optional company name (reduces confidence for matching skills)
-            
+            is_resume: If True, skip JD section filtering and use full text
+
         Returns:
             List of dicts with skill info and confidence scores
         """
         if not text:
             return []
-        
+
         if self.skill_cache is None:
             self._load_skills()
-        
-        # === Extract only requirements/preferred sections ===
-        search_text, extraction_meta = extract_requirements_text(text)
+
+        if is_resume:
+            search_text = text
+            extraction_meta = {'used_fallback': False}
+        else:
+            # === Extract only requirements/preferred sections ===
+            search_text, extraction_meta = extract_requirements_text(text)
         
         company_name_lower = company_name.lower() if company_name else None
         found_skills = []

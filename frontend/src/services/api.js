@@ -324,7 +324,7 @@ class API {
   async extractSkillsFromText(text) {
     return this.request('/api/skills/extract', {
       method: 'POST',
-      body: JSON.stringify({ text }),
+      body: JSON.stringify({ text, document_type: 'resume' }),
       auth: false,
     });
   }
