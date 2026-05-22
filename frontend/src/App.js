@@ -1210,7 +1210,7 @@ const NoResultsMessage = ({ onClearFilters, loading }) => (
           : 'bg-white text-black hover:bg-gray-200'
       }`}
     >
-      {loading ? 'Loading...' : 'Clear All Filters'}
+      {loading ? 'LOADING...' : 'CLEAR ALL FILTERS'}
     </button>
   </div>
 );
@@ -2229,7 +2229,7 @@ const SkillsInputScreen = () => {
             onClick={handleSkip}
             className="text-small text-ink-muted hover:text-white transition-colors px-2"
           >
-            Skip for now
+            SKIP FOR NOW
           </button>
           <div className="flex-1" />
           <button
@@ -2242,11 +2242,11 @@ const SkillsInputScreen = () => {
             {submitting ? (
               <>
                 <DotSpinner size={16} tone="white" />
-                Loading...
+                LOADING...
               </>
             ) : (
               <>
-                Continue to dashboard
+                CONTINUE TO DASHBOARD
                 <ArrowRight className="w-4 h-4" />
               </>
             )}
@@ -3611,7 +3611,7 @@ const AlternativesTab = () => {
           onClick={() => setCurrentScreen('skills-input')}
           className="px-6 py-2.5 bg-white text-black font-medium text-sm hover:bg-gray-200 transition-colors inline-flex items-center gap-2"
         >
-          Add Skills <ArrowRight className="w-4 h-4" />
+          ADD SKILLS <ArrowRight className="w-4 h-4" />
         </button>
       </div>
     );
@@ -3706,7 +3706,7 @@ const AlternativesTab = () => {
                   disabled={loading}
                   className="text-xs text-ink-muted hover:text-white transition-colors flex items-center gap-1 disabled:opacity-40"
                 >
-                  {loading ? 'Loading…' : <>Explore this role <ArrowRight className="w-3 h-3" /></>}
+                  {loading ? 'LOADING...' : <>EXPLORE THIS ROLE <ArrowRight className="w-3 h-3" /></>}
                 </button>
               </div>
             </div>
