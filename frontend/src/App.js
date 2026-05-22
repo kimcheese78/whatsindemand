@@ -1187,7 +1187,7 @@ const GoogleSignInButton = ({ onSuccess, onError, text = "continue_with" }) => {
     );
   }
 
-  return <div ref={containerRef} className="flex justify-center" />;
+  return <div ref={containerRef} className="flex justify-center min-h-[40px]" />;
 };
 
 // ============================================
