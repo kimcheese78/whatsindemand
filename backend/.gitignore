@@ -78,3 +78,4 @@ USD
 
 # Archived scripts (old/debug/test scripts)
 scripts/_archive/
+.env.railway
