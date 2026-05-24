@@ -743,7 +743,7 @@ class SkillExtractor:
             self._load_skills()
 
         if is_resume:
-            search_text = text
+            search_text = re.sub(r'\s+', ' ', text).strip()
             extraction_meta = {'used_fallback': False}
         else:
             # === Extract only requirements/preferred sections ===
