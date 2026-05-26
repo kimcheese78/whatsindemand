@@ -5,8 +5,9 @@ from app.scrapers.greenhouse.scraper import GreenhouseScraper
 from app.scrapers.lever.scraper import LeverScraper
 from app.scrapers.ashby.scraper import AshbyScraper
 from app.scrapers.workable.scraper import WorkableScraper
-from app.services.skill_extractor import SkillExtractor
+from app.services.skill_extractor import SkillExtractor, extract_requirements_text
 from app.utils.role_normalizer_v2 import normalize_title, _should_skip as _is_placeholder_title
+from bs4 import BeautifulSoup
 from datetime import datetime
 
 
@@ -334,10 +335,16 @@ class JobAggregator:
                 source_job_id=job_data['source_job_id']
             ).first()
             
+            # Strip HTML to get clean plain text; compute requirements section cache
+            raw_html = job_data.get('description') or ''
+            if raw_html:
+                clean_text = BeautifulSoup(raw_html, 'html.parser').get_text(separator='\n', strip=True)
+            else:
+                clean_text = job_data.get('description_text') or ''
+            req_text, _ = extract_requirements_text(clean_text)
+
             if existing:
-                description_unchanged = (
-                    existing.description_text == job_data['description_text']
-                )
+                description_unchanged = (existing.description == job_data['description'])
                 # Update existing job - but PRESERVE posted_at and scraped_at
                 existing.title = job_data['title']
                 existing.source_url = job_data['source_url']
@@ -350,7 +357,8 @@ class JobAggregator:
                 existing.seniority_level = job_data['seniority_level']
                 existing.employment_type = job_data.get('employment_type')
                 existing.description = job_data['description']
-                existing.description_text = job_data['description_text']
+                existing.description_text = clean_text
+                existing.requirements_text = req_text
                 existing.is_active = True
                 existing.closed_at = None  # Re-opened if it was closed
                 existing.role_id = role_id
@@ -381,7 +389,8 @@ class JobAggregator:
                     seniority_level=job_data['seniority_level'],
                     employment_type=job_data.get('employment_type'),
                     description=job_data['description'],
-                    description_text=job_data['description_text'],
+                    description_text=clean_text,
+                    requirements_text=req_text,
                     posted_at=job_data['posted_at'],  # ← Only set on INSERT
                     scraped_at=job_data['scraped_at'],  # ← Only set on INSERT
                     is_active=True
@@ -401,7 +410,9 @@ class JobAggregator:
     def _extract_job_skills(self, job: Job):
         """Extract skills from job description and save to job_skills table"""
         # Extract skills from description
-        skills_found = self.skill_extractor.extract_skills(job.description_text)
+        skills_found = self.skill_extractor.extract_skills(
+            job.description_text, requirements_text=job.requirements_text
+        )
         
         for skill_data in skills_found:
             job_skill = JobSkill(

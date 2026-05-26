@@ -718,7 +718,7 @@ class SkillExtractor:
         
         return True
     
-    def extract_skills(self, text: str, company_name: str = None, is_resume: bool = False) -> List[Dict]:
+    def extract_skills(self, text: str, company_name: str = None, is_resume: bool = False, requirements_text: str = None) -> List[Dict]:
         """
         Extract skills from text.
 
@@ -744,6 +744,9 @@ class SkillExtractor:
 
         if is_resume:
             search_text = re.sub(r'\s+', ' ', text).strip()
+            extraction_meta = {'used_fallback': False}
+        elif requirements_text:
+            search_text = requirements_text
             extraction_meta = {'used_fallback': False}
         else:
             # === Extract only requirements/preferred sections ===

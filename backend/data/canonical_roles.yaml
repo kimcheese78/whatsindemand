@@ -914,32 +914,32 @@ nurse_care_manager:
 # =============================================================================
 restaurant_manager:
   name: Restaurant Manager
-  category: Retail / Hospitality / Hospitality
+  category: Retail / Hospitality
   job_family: Store Operations
 
 restaurant_general_manager:
   name: Restaurant General Manager
-  category: Retail / Hospitality / Hospitality
+  category: Retail / Hospitality
   job_family: Store Operations
 
 shift_supervisor:
   name: Shift Supervisor
-  category: Retail / Hospitality / Hospitality
+  category: Retail / Hospitality
   job_family: Store Operations
 
 store_advisor:
   name: Store Advisor
-  category: Retail / Hospitality / Hospitality
+  category: Retail / Hospitality
   job_family: Store Operations
 
 retail_ambassador:
   name: Retail Ambassador
-  category: Retail / Hospitality / Hospitality
+  category: Retail / Hospitality
   job_family: Store Operations
 
 brand_ambassador:
   name: Brand Ambassador
-  category: Retail / Hospitality / Hospitality
+  category: Retail / Hospitality
   job_family: Store Operations
 
 # =============================================================================
@@ -1470,47 +1470,47 @@ receptionist:
 # =============================================================================
 server:
   name: Server
-  category: Retail / Hospitality / Hospitality
+  category: Retail / Hospitality
   job_family: Food Service
 
 line_cook:
   name: Line Cook
-  category: Retail / Hospitality / Hospitality
+  category: Retail / Hospitality
   job_family: Food Service
 
 chef:
   name: Chef
-  category: Retail / Hospitality / Hospitality
+  category: Retail / Hospitality
   job_family: Food Service
 
 dishwasher:
   name: Dishwasher
-  category: Retail / Hospitality / Hospitality
+  category: Retail / Hospitality
   job_family: Food Service
 
 barista:
   name: Barista
-  category: Retail / Hospitality / Hospitality
+  category: Retail / Hospitality
   job_family: Food Service
 
 host:
   name: Host
-  category: Retail / Hospitality / Hospitality
+  category: Retail / Hospitality
   job_family: Food Service
 
 porter:
   name: Porter
-  category: Retail / Hospitality / Hospitality
+  category: Retail / Hospitality
   job_family: Hospitality
 
 housekeeper:
   name: Housekeeper
-  category: Retail / Hospitality / Hospitality
+  category: Retail / Hospitality
   job_family: Hospitality
 
 cosmetologist:
   name: Cosmetologist
-  category: Retail / Hospitality / Hospitality
+  category: Retail / Hospitality
   job_family: Beauty & Wellness
 
 # =============================================================================

@@ -265,6 +265,7 @@ class Job(db.Model):
     employment_type = db.Column(db.String(50))
     description = db.Column(db.Text)
     description_text = db.Column(db.Text)
+    requirements_text = db.Column(db.Text)
     salary_min = db.Column(db.Integer)
     salary_max = db.Column(db.Integer)
     salary_currency = db.Column(db.String(10), default='USD')
@@ -308,13 +309,17 @@ class Job(db.Model):
 class JobSkill(db.Model):
     """Skills required by jobs"""
     __tablename__ = 'job_skills'
-    
+
     id = db.Column(db.Integer, primary_key=True)
     job_id = db.Column(db.Integer, db.ForeignKey('jobs.id'), nullable=False)
     skill_id = db.Column(db.Integer, db.ForeignKey('skills.id'), nullable=False)
     is_required = db.Column(db.Boolean, default=True)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
-    
+
+    __table_args__ = (
+        db.UniqueConstraint('job_id', 'skill_id', name='uq_job_skills_job_skill'),
+    )
+
     # Relationship
     skill = db.relationship('Skill', backref='job_skills')
 
