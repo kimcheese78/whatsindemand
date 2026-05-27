@@ -24,13 +24,16 @@ roles_bp = Blueprint('roles', __name__, url_prefix='/api/roles')
 # HELPER FUNCTIONS
 # ============================================
 
+MAX_GROWTH_PCT = 500.0  # cap to avoid noise from tiny-sample periods
+
 def calculate_growth_pct(current_count: float, previous_count: float) -> Optional[float]:
     """Calculate percentage growth between two periods."""
     if previous_count == 0:
         if current_count > 0:
             return 100.0
         return None
-    return round(((current_count - previous_count) / previous_count) * 100, 1)
+    pct = round(((current_count - previous_count) / previous_count) * 100, 1)
+    return min(pct, MAX_GROWTH_PCT) if pct > 0 else pct
 
 
 # Cohort-lock keeps every period drawn from the same set of companies, so
@@ -313,17 +316,23 @@ def get_all_skill_growth_bulk(role_id: int, skill_ids: List[int], window_days: i
     
     previous_map = {skill_id: count for skill_id, count in previous_counts}
     
+    MIN_SKILL_PREV_JOBS = 5  # suppress growth badges for skills with very thin history
+
     # Calculate growth for each skill
     result = {}
     for skill_id in skill_ids:
         current_count = current_map.get(skill_id, 0)
         previous_count = previous_map.get(skill_id, 0)
-        
+
+        if previous_count < MIN_SKILL_PREV_JOBS:
+            result[skill_id] = None
+            continue
+
         current_pct = (current_count / current_total) * 100 if current_total > 0 else 0
         previous_pct = (previous_count / previous_total) * 100 if previous_total > 0 else 0
-        
+
         result[skill_id] = calculate_growth_pct(current_pct, previous_pct)
-    
+
     return result
 
 
@@ -369,13 +378,18 @@ def get_all_company_growth_bulk(role_id: int, company_ids: List[int], window_day
     
     previous_map = {cid: count for cid, count in previous_counts}
     
+    MIN_COMPANY_PREV_JOBS = 3  # suppress growth badges for companies with very thin history
+
     # Calculate growth for each company
     result = {}
     for company_id in company_ids:
         current_count = current_map.get(company_id, 0)
         previous_count = previous_map.get(company_id, 0)
+        if previous_count < MIN_COMPANY_PREV_JOBS:
+            result[company_id] = None
+            continue
         result[company_id] = calculate_growth_pct(current_count, previous_count)
-    
+
     return result
 
 

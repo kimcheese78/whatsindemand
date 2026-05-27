@@ -1939,7 +1939,6 @@ const SkillsInputScreen = () => {
   }, [roleData]);
 
   const [selectedIds, setSelectedIds] = useState(() => new Set((userSkills || []).map(s => s.skill_id)));
-  const [resumeText, setResumeText] = useState('');
   const [extracting, setExtracting] = useState(false);
   const [extractError, setExtractError] = useState(null);
   const [lastExtractedIds, setLastExtractedIds] = useState(null);
@@ -1952,6 +1951,7 @@ const SkillsInputScreen = () => {
   const [skillQuery, setSkillQuery] = useState('');
   const [showSkillDropdown, setShowSkillDropdown] = useState(false);
   const [submitting, setSubmitting] = useState(false);
+  const [isDragging, setIsDragging] = useState(false);
   const fileRef = useRef(null);
   const searchRef = useRef(null);
 
@@ -2004,23 +2004,6 @@ const SkillsInputScreen = () => {
     setExtractedExtra(list.filter(s => !suggestedIds.has(s.skill_id)));
   };
 
-  const handlePaste = async () => {
-    if (!resumeText.trim() || resumeText.trim().length < 30) {
-      setExtractError('Paste at least a few sentences of resume text.');
-      return;
-    }
-    setExtracting(true);
-    setExtractError(null);
-    try {
-      const data = await api.extractSkillsFromText(resumeText);
-      replaceWithExtracted(data.skills || []);
-    } catch (err) {
-      setExtractError(err.message || 'Extraction failed');
-    } finally {
-      setExtracting(false);
-    }
-  };
-
   const handleFile = async (e) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -2034,6 +2017,23 @@ const SkillsInputScreen = () => {
     } finally {
       setExtracting(false);
       if (fileRef.current) fileRef.current.value = '';
+    }
+  };
+
+  const handleDrop = async (e) => {
+    e.preventDefault();
+    setIsDragging(false);
+    const file = e.dataTransfer.files?.[0];
+    if (!file) return;
+    setExtracting(true);
+    setExtractError(null);
+    try {
+      const data = await api.extractSkillsFromFile(file);
+      replaceWithExtracted(data.skills || []);
+    } catch (err) {
+      setExtractError(err.message || 'Extraction failed');
+    } finally {
+      setExtracting(false);
     }
   };
 
@@ -2107,7 +2107,7 @@ const SkillsInputScreen = () => {
         {/* Suggested skill chips */}
         <Panel pad="lg" className="mb-6">
           <label className="block text-eyebrow text-ink-faint mb-4 tracking-widest">
-            SKILLS FOR THIS ROLE
+            CLICK THE SKILLS YOU HAVE
           </label>
           {allSelectable.length === 0 ? (
             <div className="text-ink-muted text-small">No skill data available for this role yet.</div>
@@ -2187,43 +2187,31 @@ const SkillsInputScreen = () => {
           <label className="block text-eyebrow text-ink-faint mb-2 tracking-widest">
             OR EXTRACT FROM YOUR RESUME
           </label>
-          <p className="text-small text-ink-muted mb-4">
-            Paste your resume text or upload a PDF/DOCX. We'll match what we find against the suggested skills.
-          </p>
-          <textarea
-            value={resumeText}
-            onChange={(e) => setResumeText(e.target.value)}
-            placeholder="Paste resume text here…"
-            rows={6}
-            className="w-full bg-black border border-line p-3 text-small text-ink placeholder-ink-faint focus:border-white focus:outline-none resize-none"
+          <input
+            ref={fileRef}
+            type="file"
+            accept=".pdf,.docx,.doc,.txt"
+            onChange={handleFile}
+            className="hidden"
           />
-          <div className="flex flex-wrap items-center gap-3 mt-3">
-            <button
-              onClick={handlePaste}
-              disabled={extracting || !resumeText.trim()}
-              className="px-4 py-2 bg-white text-black text-small font-medium hover:bg-gray-200 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
-            >
-              {extracting ? 'Extracting…' : 'Extract from text'}
-            </button>
-            <span className="text-ink-faint text-small">or</span>
-            <input
-              ref={fileRef}
-              type="file"
-              accept=".pdf,.docx,.doc,.txt"
-              onChange={handleFile}
-              className="hidden"
-            />
-            <button
-              onClick={() => fileRef.current?.click()}
-              disabled={extracting}
-              className="px-4 py-2 bg-surface border border-line text-small text-ink hover:border-line-strong disabled:opacity-40 transition-colors"
-            >
-              Upload PDF or DOCX
-            </button>
-            {extractError && (
-              <span className="text-small text-accent-down">{extractError}</span>
-            )}
+          <div
+            onDrop={handleDrop}
+            onDragOver={(e) => { e.preventDefault(); setIsDragging(true); }}
+            onDragEnter={(e) => { e.preventDefault(); setIsDragging(true); }}
+            onDragLeave={() => setIsDragging(false)}
+            onClick={() => !extracting && fileRef.current?.click()}
+            className={`border-2 border-dashed cursor-pointer flex flex-col items-center justify-center gap-1 py-16 transition-colors
+              ${isDragging ? 'border-white bg-white/5 text-white' : 'border-line text-ink-muted hover:border-line-strong hover:text-ink'}
+              ${extracting ? 'pointer-events-none opacity-40' : ''}`}
+          >
+            <span className="text-small font-medium">
+              {extracting ? 'Extracting…' : isDragging ? 'Drop to upload' : 'Drop your resume here'}
+            </span>
+            <span className="text-eyebrow text-ink-faint">PDF, DOCX, or TXT · or click to browse</span>
           </div>
+          {extractError && (
+            <span className="text-small text-accent-down mt-2 block">{extractError}</span>
+          )}
         </Panel>
 
         {/* Footer actions */}
