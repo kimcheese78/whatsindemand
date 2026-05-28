@@ -3280,14 +3280,6 @@ const EmployersTab = () => {
                           </div>
                         </div>
                       )}
-                      <a
-                        href={`https://www.linkedin.com/jobs/search/?keywords=${encodeURIComponent(company.name)}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-flex items-center gap-1.5 text-xs text-ink-muted hover:text-white transition-colors"
-                      >
-                        View jobs on LinkedIn <ExternalLink className="w-3 h-3" />
-                      </a>
                     </div>
                   )}
                 </React.Fragment>
@@ -3321,11 +3313,12 @@ const SkillsTab = () => {
   const userSkillIds = useMemo(() => new Set((userSkills || []).map(s => s.skill_id)), [userSkills]);
   const hasUserSkills = userSkillIds.size > 0;
 
-  const categories = [...new Set(skills.map(s => s.category).filter(Boolean))];
+  const normalizeCategory = (c) => c ? c.charAt(0).toUpperCase() + c.slice(1).toLowerCase() : null;
+  const categories = [...new Set(skills.map(s => normalizeCategory(s.category)).filter(Boolean))];
 
   const filteredSkills = categoryFilter === 'All'
     ? skills
-    : skills.filter(s => s.category === categoryFilter);
+    : skills.filter(s => normalizeCategory(s.category) === categoryFilter);
 
   // Sort skills
   const sortedSkills = [...filteredSkills].sort((a, b) => {
@@ -3509,18 +3502,18 @@ const SkillsTab = () => {
                 </div>
                 {isSelected && (
                   <div className="px-6 py-5 bg-surface border-t border-line">
-                    <div className={`flex gap-6 ${skill.top_companies?.length > 0 ? '' : ''}`}>
-                      {skill.top_companies && skill.top_companies.length > 0 && (
+                    <div className="flex gap-6">
+                      {roleData?.top_companies?.length > 0 && (
                         <div className="flex-1 min-w-0">
-                          <div className="text-xs text-ink-muted tracking-wider mb-3">TOP COMPANIES HIRING FOR THIS SKILL</div>
+                          <div className="text-xs text-ink-muted tracking-wider mb-3">TOP COMPANIES HIRING</div>
                           <div className="space-y-2">
-                            {skill.top_companies.slice(0, 6).map((company, i) => (
+                            {roleData.top_companies.slice(0, 6).map((company, i) => (
                               <div key={i} className="flex items-center justify-between text-sm">
                                 <span className="flex items-center gap-2">
                                   <span className="text-xs text-ink-faint w-4">{i + 1}</span>
-                                  <span className="font-medium">{typeof company === 'string' ? company : company.name}</span>
+                                  <span className="font-medium">{company.name}</span>
                                 </span>
-                                {typeof company === 'object' && company.job_count && (
+                                {company.job_count && (
                                   <span className="text-ink-muted text-xs">{company.job_count.toLocaleString()} jobs</span>
                                 )}
                               </div>
@@ -3528,7 +3521,7 @@ const SkillsTab = () => {
                           </div>
                         </div>
                       )}
-                      <div className={skill.top_companies?.length > 0 ? 'w-56 shrink-0' : 'flex-1'}>
+                      <div className={roleData?.top_companies?.length > 0 ? 'w-56 shrink-0' : 'flex-1'}>
                         <div className="text-xs text-ink-muted tracking-wider mb-3">LEARN THIS SKILL</div>
                         <div className="space-y-1.5">
                           {[
