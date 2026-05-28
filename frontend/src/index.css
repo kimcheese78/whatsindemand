@@ -32,8 +32,6 @@
   .num, table, [role='table'] {
     font-variant-numeric: tabular-nums;
   }
-  /* Sharp corners across the app. */
-  *, *::before, *::after { border-radius: 0 !important; }
 }
 
 code, pre, .mono {

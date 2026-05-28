@@ -753,7 +753,7 @@ const ErrorMessage = ({ error, onClose, onRetry, retryLabel = 'Try again' }) => 
   if (!error) return null;
 
   return (
-    <div className="mb-4 p-4 bg-accent-down/20 border border-red-500 text-accent-down flex items-start gap-3">
+    <div className="mb-4 p-4 bg-accent-down/20 border border-red-500 rounded-xl text-accent-down flex items-start gap-3">
       <div className="flex-1"><strong>Error:</strong> {error}</div>
       {onRetry && (
         <button
@@ -834,7 +834,7 @@ const MultiSelectDropdown = ({
     <div className="relative" ref={dropdownRef}>
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className={`px-4 py-2 bg-surface border text-white text-sm focus:outline-none cursor-pointer flex items-center gap-2 min-w-[160px] transition-colors ${
+        className={`px-4 py-2 bg-surface border rounded-lg text-white text-sm focus:outline-none cursor-pointer flex items-center gap-2 min-w-[160px] transition-colors ${
           isOpen ? 'border-white' : 'border-line-strong hover:border-white/40'
         }`}
       >
@@ -843,7 +843,7 @@ const MultiSelectDropdown = ({
       </button>
 
       {isOpen && (
-        <div className="absolute top-full left-0 mt-1 w-64 bg-zinc-900 border border-line-strong z-30 shadow-xl max-h-72 overflow-y-auto">
+        <div className="absolute top-full left-0 mt-1 w-64 bg-zinc-900 border border-line-strong rounded-xl z-30 shadow-xl max-h-72 overflow-y-auto">
           {/* All option */}
           <label className="flex items-center gap-3 px-4 py-3 hover:bg-surface cursor-pointer border-b border-line">
             <input
@@ -985,7 +985,7 @@ const LocationDropdown = ({ value, onChange, className = '' }) => {
       <button
         type="button"
         onClick={() => setIsOpen(!isOpen)}
-        className={`px-4 py-2 bg-surface border text-white text-sm focus:outline-none cursor-pointer flex items-center gap-2 min-w-[160px] transition-colors ${
+        className={`px-4 py-2 bg-surface border rounded-lg text-white text-sm focus:outline-none cursor-pointer flex items-center gap-2 min-w-[160px] transition-colors ${
           isOpen ? 'border-white' : 'border-line-strong hover:border-white/40'
         }`}
       >
@@ -994,7 +994,7 @@ const LocationDropdown = ({ value, onChange, className = '' }) => {
       </button>
 
       {isOpen && (
-        <div className="absolute top-full left-0 mt-1 w-72 bg-zinc-900 border border-line-strong z-30 shadow-xl max-h-[320px] overflow-y-auto">
+        <div className="absolute top-full left-0 mt-1 w-72 bg-zinc-900 border border-line-strong rounded-xl z-30 shadow-xl max-h-[320px] overflow-y-auto">
           {/* All Locations */}
           <label className="flex items-center gap-3 px-4 py-3 hover:bg-surface cursor-pointer border-b border-line">
             <input
@@ -1083,7 +1083,7 @@ const SingleSelectDropdown = ({
       <button
         type="button"
         onClick={() => setIsOpen(!isOpen)}
-        className={`px-4 py-2 bg-surface border text-white text-sm focus:outline-none cursor-pointer flex items-center gap-2 min-w-[140px] transition-colors ${
+        className={`px-4 py-2 bg-surface border rounded-lg text-white text-sm focus:outline-none cursor-pointer flex items-center gap-2 min-w-[140px] transition-colors ${
           isOpen ? 'border-white' : 'border-line-strong hover:border-white/40'
         }`}
       >
@@ -1092,7 +1092,7 @@ const SingleSelectDropdown = ({
       </button>
 
       {isOpen && (
-        <div className="absolute top-full left-0 mt-1 w-full min-w-[180px] bg-zinc-900 border border-line-strong z-30 shadow-xl max-h-64 overflow-y-auto">
+        <div className="absolute top-full left-0 mt-1 w-full min-w-[180px] bg-zinc-900 border border-line-strong rounded-xl z-30 shadow-xl max-h-64 overflow-y-auto">
           {options.map((option, idx) => {
             const optValue = getOptionValue(option);
             const optLabel = getOptionLabel(option);
@@ -1176,7 +1176,7 @@ const GoogleSignInButton = ({ onSuccess, onError, text = "continue_with" }) => {
       type="button"
       onClick={handleClick}
       disabled={isLoading || !ready}
-      className={`w-full py-3 border border-line-strong text-sm font-medium tracking-wide transition-colors flex items-center justify-center gap-3 ${
+      className={`w-full py-3 border border-line-strong rounded-lg text-sm font-medium tracking-wide transition-colors flex items-center justify-center gap-3 ${
         isLoading || !ready ? 'opacity-50 cursor-not-allowed' : 'hover:bg-surface'
       }`}
     >
@@ -1200,7 +1200,7 @@ const GoogleSignInButton = ({ onSuccess, onError, text = "continue_with" }) => {
 // ============================================
 
 const NoResultsMessage = ({ onClearFilters, loading }) => (
-  <div className="p-12 bg-surface border border-line text-center">
+  <div className="p-12 bg-surface border border-line rounded-xl text-center">
     <div className="text-5xl mb-4">🔍</div>
     <h3 className="text-2xl font-semibold mb-2">No Jobs Found</h3>
     <p className="text-ink-muted mb-6 max-w-md mx-auto">
@@ -1209,7 +1209,7 @@ const NoResultsMessage = ({ onClearFilters, loading }) => (
     <button
       onClick={onClearFilters}
       disabled={loading}
-      className={`px-6 py-3 font-medium transition-colors ${
+      className={`px-6 py-3 font-medium transition-colors rounded-lg ${
         loading
           ? 'bg-white/20 text-ink-muted cursor-not-allowed'
           : 'bg-white text-black hover:bg-gray-200'
@@ -1251,9 +1251,9 @@ const LandingScreen = () => {
           </p>
 
           <div className="inline-flex flex-col items-start gap-3">
-            <button 
+            <button
               onClick={() => setCurrentScreen('role-selection')}
-              className="px-8 sm:px-12 py-4 bg-white text-black font-medium text-lg sm:text-xl hover:bg-gray-200 transition-colors"
+              className="px-8 sm:px-12 py-4 bg-white text-black font-medium text-lg sm:text-xl hover:bg-gray-200 transition-colors rounded-lg"
             >
               EXPLORE MY ROLE
             </button>
@@ -1340,7 +1340,7 @@ const LoginScreen = () => {
                 placeholder="Email address"
                 value={loginEmail}
                 onChange={(e) => setLoginEmail(e.target.value)}
-                className="w-full px-4 py-3 bg-surface border border-line-strong text-white placeholder-gray-500 text-sm focus:outline-none focus:border-white transition-colors"
+                className="w-full px-4 py-3 bg-surface border border-line-strong text-white placeholder-gray-500 text-sm focus:outline-none focus:border-white transition-colors rounded-lg"
                 autoComplete="email"
               />
               <input
@@ -1348,7 +1348,7 @@ const LoginScreen = () => {
                 placeholder="Password"
                 value={loginPassword}
                 onChange={(e) => setLoginPassword(e.target.value)}
-                className="w-full px-4 py-3 bg-surface border border-line-strong text-white placeholder-gray-500 text-sm focus:outline-none focus:border-white transition-colors"
+                className="w-full px-4 py-3 bg-surface border border-line-strong text-white placeholder-gray-500 text-sm focus:outline-none focus:border-white transition-colors rounded-lg"
                 autoComplete="current-password"
               />
             </div>
@@ -1366,7 +1366,7 @@ const LoginScreen = () => {
             <button
               type="submit"
               disabled={loading || !loginEmail || !loginPassword}
-              className={`w-full py-3 font-medium text-sm tracking-wide transition-colors ${
+              className={`w-full py-3 font-medium text-sm tracking-wide transition-colors rounded-lg ${
                 !loading && loginEmail && loginPassword
                   ? 'bg-white text-black hover:bg-gray-200'
                   : 'bg-white/10 text-ink-faint cursor-not-allowed'
@@ -1523,9 +1523,9 @@ const RoleSelectionScreen = () => {
                   }
                 }}
                 placeholder={selectedRole ? '' : 'Search roles (e.g., Product Manager, Software Engineer)'}
-                className={`w-full pl-14 pr-12 py-5 bg-surface border-2 text-white placeholder-gray-500 text-lg focus:outline-none transition-colors ${
-                  selectedRole 
-                    ? 'border-white bg-white/10' 
+                className={`w-full pl-14 pr-12 py-5 bg-surface border-2 rounded-xl text-white placeholder-gray-500 text-lg focus:outline-none transition-colors ${
+                  selectedRole
+                    ? 'border-white bg-white/10'
                     : 'border-line-strong focus:border-white'
                 }`}
                 readOnly={!!selectedRole}
@@ -1549,7 +1549,7 @@ const RoleSelectionScreen = () => {
 
               {/* Dropdown - only show when no role selected */}
               {showRoleDropdown && filteredRoles.length > 0 && !selectedRole && (
-                <div className="absolute w-full mt-2 bg-zinc-900 border-2 border-line-strong max-h-72 overflow-y-auto z-20">
+                <div className="absolute w-full mt-2 bg-zinc-900 border-2 border-line-strong rounded-xl max-h-72 overflow-y-auto z-20">
                   {filteredRoles.slice(0, 12).map(({ role, matchedAlias }, idx) => {
                     const roleTitle = role.title || role;
                     const jobCount = role.job_count;
@@ -1590,7 +1590,7 @@ const RoleSelectionScreen = () => {
                 <button
                   key={level.id}
                   onClick={() => setSelectedSeniority(level.id)}
-                  className={`p-4 text-left border-2 transition-all ${
+                  className={`p-4 text-left border-2 rounded-xl transition-all ${
                     selectedSeniority === level.id
                       ? 'border-white bg-white/10'
                       : 'border-line-strong hover:border-white/40'
@@ -1620,14 +1620,14 @@ const RoleSelectionScreen = () => {
             <button
               type="button"
               onClick={() => setCurrentScreen('landing')}
-              className="px-5 py-3 border border-line-strong text-sm font-medium hover:bg-surface transition-colors"
+              className="px-5 py-3 border border-line-strong text-sm font-medium hover:bg-surface transition-colors rounded-lg"
             >
               BACK
             </button>
             <button
               onClick={handleExplore}
               disabled={!canProceed || loading}
-              className={`flex-1 py-3 font-medium text-sm tracking-wide transition-colors flex items-center justify-center gap-2 ${
+              className={`flex-1 py-3 font-medium text-sm tracking-wide transition-colors flex items-center justify-center gap-2 rounded-lg ${
                 canProceed && !loading
                   ? 'bg-white text-black hover:bg-gray-200'
                   : 'bg-white/10 text-ink-faint cursor-not-allowed'
@@ -1738,7 +1738,7 @@ const SignupScreen = () => {
                 placeholder="Full name"
                 value={signupFullName}
                 onChange={(e) => setSignupFullName(e.target.value)}
-                className="w-full px-4 py-3 bg-surface border border-line-strong text-white placeholder-gray-500 text-sm focus:outline-none focus:border-white transition-colors"
+                className="w-full px-4 py-3 bg-surface border border-line-strong text-white placeholder-gray-500 text-sm focus:outline-none focus:border-white transition-colors rounded-lg"
                 autoComplete="name"
               />
               <input
@@ -1746,7 +1746,7 @@ const SignupScreen = () => {
                 placeholder="Email address"
                 value={signupEmail}
                 onChange={(e) => setSignupEmail(e.target.value)}
-                className="w-full px-4 py-3 bg-surface border border-line-strong text-white placeholder-gray-500 text-sm focus:outline-none focus:border-white transition-colors"
+                className="w-full px-4 py-3 bg-surface border border-line-strong text-white placeholder-gray-500 text-sm focus:outline-none focus:border-white transition-colors rounded-lg"
                 autoComplete="email"
               />
               <input
@@ -1754,7 +1754,7 @@ const SignupScreen = () => {
                 placeholder="Password (min 8 characters)"
                 value={signupPassword}
                 onChange={(e) => setSignupPassword(e.target.value)}
-                className="w-full px-4 py-3 bg-surface border border-line-strong text-white placeholder-gray-500 text-sm focus:outline-none focus:border-white transition-colors"
+                className="w-full px-4 py-3 bg-surface border border-line-strong text-white placeholder-gray-500 text-sm focus:outline-none focus:border-white transition-colors rounded-lg"
                 autoComplete="new-password"
               />
             </div>
@@ -1772,14 +1772,14 @@ const SignupScreen = () => {
               <button
                 type="button"
                 onClick={() => setCurrentScreen('role-selection')}
-                className="px-5 py-3 border border-line-strong text-sm font-medium hover:bg-surface transition-colors"
+                className="px-5 py-3 border border-line-strong text-sm font-medium hover:bg-surface transition-colors rounded-lg"
               >
                 BACK
               </button>
               <button
                 type="submit"
                 disabled={loading || !signupEmail || !signupPassword || !signupFullName}
-                className={`flex-1 py-3 font-medium text-sm tracking-wide transition-colors flex items-center justify-center gap-2 ${
+                className={`flex-1 py-3 font-medium text-sm tracking-wide transition-colors flex items-center justify-center gap-2 rounded-lg ${
                   !loading && signupEmail && signupPassword && signupFullName
                     ? 'bg-white text-black hover:bg-gray-200'
                     : 'bg-white/10 text-ink-faint cursor-not-allowed'
@@ -1868,7 +1868,7 @@ const MobileHeader = () => {
 
       {/* Dropdown Menu */}
       {menuOpen && (
-        <div className="absolute top-14 right-4 z-50 w-64 bg-zinc-900 border border-line shadow-xl">
+        <div className="absolute top-14 right-4 z-50 w-64 bg-zinc-900 border border-line rounded-xl shadow-xl">
           {user && (
             <div className="p-4 border-b border-line">
               <div className="font-medium text-sm">{user.full_name || 'User'}</div>
@@ -2121,7 +2121,7 @@ const SkillsInputScreen = () => {
                     key={skill.skill_id}
                     onClick={() => toggle(skill)}
                     className={
-                      'px-3 py-1.5 text-small border transition-colors ' +
+                      'px-3 py-1.5 text-small border rounded transition-colors ' +
                       (on
                         ? 'bg-white text-black border-white'
                         : 'bg-surface text-ink border-line hover:border-line-strong') +
@@ -2146,10 +2146,10 @@ const SkillsInputScreen = () => {
                 onChange={(e) => { setSkillQuery(e.target.value); setShowSkillDropdown(true); }}
                 onFocus={() => setShowSkillDropdown(true)}
                 placeholder="Search skills…"
-                className="w-full bg-black border border-line p-3 text-small text-ink placeholder-ink-faint focus:border-white focus:outline-none"
+                className="w-full bg-black border border-line rounded-lg p-3 text-small text-ink placeholder-ink-faint focus:border-white focus:outline-none"
               />
               {showSkillDropdown && skillQuery && (
-                <div className="absolute left-0 right-0 top-full mt-1 bg-zinc-900 border border-line-strong z-10 max-h-60 overflow-y-auto shadow-lg">
+                <div className="absolute left-0 right-0 top-full mt-1 bg-zinc-900 border border-line-strong rounded-xl z-10 max-h-60 overflow-y-auto shadow-lg">
                   {skillMatches.length === 0 ? (
                     <div className="px-3 py-2 text-small text-ink-faint">No matching skills.</div>
                   ) : (
@@ -2200,14 +2200,14 @@ const SkillsInputScreen = () => {
             onDragEnter={(e) => { e.preventDefault(); setIsDragging(true); }}
             onDragLeave={() => setIsDragging(false)}
             onClick={() => !extracting && fileRef.current?.click()}
-            className={`border-2 border-dashed cursor-pointer flex flex-col items-center justify-center gap-1 py-16 transition-colors
+            className={`border-2 border-dashed rounded-xl cursor-pointer flex flex-col items-center justify-center gap-1 py-16 transition-colors
               ${isDragging ? 'border-white bg-white/5 text-white' : 'border-line text-ink-muted hover:border-line-strong hover:text-ink'}
               ${extracting ? 'pointer-events-none opacity-40' : ''}`}
           >
-            <span className="text-small font-medium">
+            <span className="text-base font-medium">
               {extracting ? 'Extracting…' : isDragging ? 'Drop to upload' : 'Drop your resume here'}
             </span>
-            <span className="text-eyebrow text-ink-faint">PDF, DOCX, or TXT · or click to browse</span>
+            <span className="text-sm text-ink-faint">PDF, DOCX, or TXT · or click to browse</span>
           </div>
           {extractError && (
             <span className="text-small text-accent-down mt-2 block">{extractError}</span>
@@ -2219,7 +2219,7 @@ const SkillsInputScreen = () => {
           <button
             type="button"
             onClick={() => setCurrentScreen('role-selection')}
-            className="px-5 py-3 border border-line-strong text-sm font-medium hover:bg-surface transition-colors"
+            className="px-5 py-3 border border-line-strong text-sm font-medium hover:bg-surface transition-colors rounded-lg"
           >
             BACK
           </button>
@@ -2233,7 +2233,7 @@ const SkillsInputScreen = () => {
           <button
             onClick={handleContinue}
             disabled={submitting}
-            className={`px-6 py-3 text-sm font-medium tracking-wide transition-colors flex items-center gap-2 ${
+            className={`px-6 py-3 text-sm font-medium tracking-wide transition-colors flex items-center gap-2 rounded-lg ${
               submitting ? 'bg-white/10 text-ink-faint cursor-not-allowed' : 'bg-white text-black hover:bg-gray-200'
             }`}
           >
@@ -2493,7 +2493,7 @@ const DashboardScreen = () => {
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 lg:pt-8 pb-24">
 
           {showVerifyBanner && (
-            <div className="mb-6 px-4 py-3 bg-yellow-500/10 border border-yellow-500/30 flex items-center justify-between gap-4 text-sm">
+            <div className="mb-6 px-4 py-3 bg-yellow-500/10 border border-yellow-500/30 rounded-xl flex items-center justify-between gap-4 text-sm">
               <div className="text-yellow-100">
                 Verify your email to keep your saved skills and preferences.
                 {verifyBannerStatus && (
@@ -2521,55 +2521,73 @@ const DashboardScreen = () => {
 
           {/* Header - Responsive */}
           <div className="mb-6 lg:mb-8">
-            {activeTab !== 'paths' && (
-              <div className="flex flex-wrap items-center gap-2 text-xs sm:text-sm text-ink-muted mb-2">
-                <span>
-                  {Array.isArray(appliedLocation)
-                    ? appliedLocation.includes('All')
-                      ? 'All Locations'
-                      : appliedLocation.length === 1
-                        ? appliedLocation[0]
-                        : `${appliedLocation.length} locations`
-                    : appliedLocation
-                  }
-                </span>
-                <span>•</span>
-                <span>{seniorityLabel}</span>
-              </div>
-            )}
-            {activeTab === 'paths' ? (
-              <>
-                <h1 className="text-3xl sm:text-4xl lg:text-5xl font-semibold tracking-tight mb-3 lg:mb-4">
-                  Roles Within Reach
-                </h1>
-                <div className="text-base lg:text-lg text-ink-muted">
-                  {userSkills?.length > 0
-                    ? <>Based on your <span className="text-white font-medium">{userSkills.length} skill{userSkills.length !== 1 ? 's' : ''}</span></>
-                    : 'See which other roles are looking for your skills.'
-                  }
-                </div>
-              </>
-            ) : (
-              <>
-                <h1 className="text-3xl sm:text-4xl lg:text-5xl font-semibold tracking-tight mb-3 lg:mb-4">
-                  {selectedRole}
-                </h1>
-                <div className="text-base lg:text-lg text-ink-muted">
-                  Based on <span className="text-white font-medium">
-                    {roleData?.total_jobs_analyzed?.toLocaleString() || '0'}
-                  </span> job postings
-                  {roleData?.company_count > 0 && (
-                    <span className="text-ink-muted">
-                      {' '}from {roleData.company_count} {roleData.company_count === 1 ? 'company' : 'companies'}
+            <div className="flex items-start justify-between gap-4">
+              <div className="flex-1 min-w-0">
+                {activeTab !== 'paths' && (
+                  <div className="flex flex-wrap items-center gap-2 text-xs sm:text-sm text-ink-muted mb-2">
+                    <span>
+                      {Array.isArray(appliedLocation)
+                        ? appliedLocation.includes('All')
+                          ? 'All Locations'
+                          : appliedLocation.length === 1
+                            ? appliedLocation[0]
+                            : `${appliedLocation.length} locations`
+                        : appliedLocation
+                      }
                     </span>
-                  )}
-                </div>
-              </>
-            )}
+                    <span>•</span>
+                    <span>{seniorityLabel}</span>
+                  </div>
+                )}
+                {activeTab === 'paths' ? (
+                  <>
+                    <h1 className="text-3xl sm:text-4xl lg:text-5xl font-semibold tracking-tight mb-3 lg:mb-4">
+                      Roles within reach
+                    </h1>
+                    <div className="text-base lg:text-lg text-ink-muted">
+                      {userSkills?.length > 0
+                        ? <>Based on your <span className="text-white font-medium">{userSkills.length} skill{userSkills.length !== 1 ? 's' : ''}</span></>
+                        : 'See which other roles are looking for your skills.'
+                      }
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <h1 className="text-3xl sm:text-4xl lg:text-5xl font-semibold tracking-tight mb-3 lg:mb-4">
+                      {selectedRole}
+                    </h1>
+                    <div className="text-base lg:text-lg text-ink-muted">
+                      Based on <span className="text-white font-medium">
+                        {roleData?.total_jobs_analyzed?.toLocaleString() || '0'}
+                      </span> job postings
+                      {roleData?.company_count > 0 && (
+                        <span className="text-ink-muted">
+                          {' '}from {roleData.company_count} {roleData.company_count === 1 ? 'company' : 'companies'}
+                        </span>
+                      )}
+                    </div>
+                  </>
+                )}
+              </div>
+              <div className="flex items-center gap-2 shrink-0 pt-1">
+                <button
+                  onClick={() => setCurrentScreen('role-selection')}
+                  className="px-3 py-1.5 text-xs font-medium bg-white text-black hover:bg-gray-200 transition-colors rounded-lg"
+                >
+                  EXPLORE A NEW ROLE
+                </button>
+                <button
+                  onClick={() => setCurrentScreen('skills-input')}
+                  className="px-3 py-1.5 text-xs font-medium bg-white/10 text-white hover:bg-white/20 transition-colors border border-white/20 rounded-lg"
+                >
+                  EDIT MY SKILLS
+                </button>
+              </div>
+            </div>
           </div>
 
           {/* Filter Bar - hidden on Paths tab */}
-          {activeTab !== 'paths' && <div className="mb-6 lg:mb-8 p-3 lg:p-4 bg-surface border border-line">
+          {activeTab !== 'paths' && <div className="mb-6 lg:mb-8 p-3 lg:p-4 bg-surface border border-line rounded-xl">
             <div className="flex flex-wrap items-center gap-2 lg:gap-4">
               <div className="flex items-center gap-2 text-xs lg:text-sm text-ink-muted">
                 <Filter className="w-4 h-4" />
@@ -2712,6 +2730,7 @@ const DashboardSidebar = () => {
               onClick={() => {
                 setActiveTab(tab.id);
                 setCurrentScreen('dashboard');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
               }}
               className={`w-full px-4 py-3 text-left transition-colors ${
                 activeTab === tab.id && currentScreen === 'dashboard'
@@ -2726,23 +2745,10 @@ const DashboardSidebar = () => {
         </div>
       </nav>
 
-      {/* Bottom Actions */}
-      <div className="p-4 border-t border-line space-y-2">
-        <button
-          onClick={() => setCurrentScreen('role-selection')}
-          className="w-full px-4 py-3 bg-white text-black font-medium text-sm hover:bg-gray-200 transition-colors"
-        >
-          EXPLORE A NEW ROLE
-        </button>
-        <button
-          onClick={() => setCurrentScreen('skills-input')}
-          className="w-full px-4 py-3 bg-white/10 text-white font-medium text-sm hover:bg-white/20 transition-colors border border-white/20"
-        >
-          EDIT MY SKILLS
-        </button>
+      <div className="p-4 border-t border-line">
         <button
           onClick={handleLogout}
-          className="w-full px-4 py-3 text-left text-sm text-ink-muted hover:text-white hover:bg-surface transition-colors"
+          className="w-full px-4 py-3 text-left text-sm text-ink-muted hover:text-white hover:bg-surface transition-colors rounded-lg"
         >
           SIGN OUT
         </button>
@@ -2874,7 +2880,7 @@ const OverviewTab = () => {
 
       {/* ACTION STRIP — one specific thing to do */}
       {leverageSkill && (
-        <div className="flex items-start gap-3 p-4 bg-accent-warn/10 border border-accent-warn/20">
+        <div className="flex items-start gap-3 p-4 bg-accent-warn/10 border border-accent-warn/20 rounded-xl">
           <Clock className="w-5 h-5 text-accent-warn flex-shrink-0 mt-0.5" />
           <div>
             <Eyebrow className="text-accent-warn mb-1">
@@ -2951,7 +2957,7 @@ const OverviewTab = () => {
                     <span className="num text-small text-ink-faint w-4 flex-shrink-0">{idx + 1}</span>
                     <span className="text-body text-ink flex-1 px-2 truncate">{company.name}</span>
                     {company.id === surgingId && (
-                      <span className="text-[9px] px-1.5 py-0.5 bg-accent-up/15 text-accent-up font-medium mr-2 flex-shrink-0 uppercase tracking-wider">
+                      <span className="text-[9px] px-1.5 py-0.5 bg-accent-up/15 text-accent-up font-medium mr-2 flex-shrink-0 uppercase tracking-wider rounded">
                         new
                       </span>
                     )}
@@ -3080,18 +3086,6 @@ const OverviewTab = () => {
         )}
       </Panel>
 
-      <button
-        onClick={() => setCurrentScreen('skills-input')}
-        className="w-full p-5 border border-dashed border-line-strong text-left hover:bg-surface transition-colors group"
-      >
-        <Eyebrow className="text-ink-muted mb-2">Your skill coverage</Eyebrow>
-        <div className="text-body text-ink mb-1">
-          You have <span className="num">{coverageHave}</span> of the top <span className="num">{topMarketSkills.length}</span> most-demanded skills (<span className="num">{coveragePct}%</span>).
-        </div>
-        <div className="text-meta text-ink-muted inline-flex items-center gap-1 group-hover:text-ink transition-colors">
-          Update skills <ArrowRight className="w-3 h-3" />
-        </div>
-      </button>
     </div>
   );
 };
@@ -3104,6 +3098,7 @@ const EmployersTab = () => {
   const { roleData } = useApp();
   const [sortColumn, setSortColumn] = useState('jobs');
   const [sortDirection, setSortDirection] = useState('desc');
+  const [selectedCompany, setSelectedCompany] = useState(null);
 
   const topCompanies = roleData?.top_companies || [];
 
@@ -3178,7 +3173,7 @@ const EmployersTab = () => {
       </div>
 
       {/* Employers Table */}
-      <div className="bg-surface border border-line overflow-hidden">
+      <div className="bg-surface border border-line rounded-xl overflow-hidden">
         {/* Header */}
         <div className="grid grid-cols-12 gap-4 px-6 py-4 border-b border-line text-xs font-medium text-ink-muted tracking-wider">
           <div className="col-span-4">
@@ -3202,51 +3197,107 @@ const EmployersTab = () => {
               No employers found matching your criteria.
             </div>
           ) : (
-            sortedCompanies.map((company, idx) => (
-              <div
-                key={company.id}
-                className="grid grid-cols-12 gap-4 px-6 py-4 hover:bg-surface transition-colors"
-              >
-                {/* Company Name */}
-                <div className="col-span-4">
-                  <div className="flex items-center gap-3">
-                    <span className="text-xs text-ink-faint w-6">{idx + 1}</span>
-                    <span className="font-medium">{company.name}</span>
+            sortedCompanies.map((company, idx) => {
+              const isSelected = selectedCompany?.id === company.id;
+              return (
+                <React.Fragment key={company.id}>
+                  <div
+                    onClick={() => setSelectedCompany(isSelected ? null : company)}
+                    className={`grid grid-cols-12 gap-4 px-6 py-4 cursor-pointer transition-colors ${isSelected ? 'bg-surface' : 'hover:bg-surface'}`}
+                  >
+                    {/* Company Name */}
+                    <div className="col-span-4">
+                      <div className="flex items-center gap-3">
+                        <span className="text-xs text-ink-faint w-6">{idx + 1}</span>
+                        <span className="font-medium">{company.name}</span>
+                      </div>
+                    </div>
+
+                    {/* Industry */}
+                    <div className="col-span-3">
+                      {company.industry ? (
+                        <span className="px-2 py-1 text-xs bg-white/10 border border-line text-ink rounded">
+                          {company.industry}
+                        </span>
+                      ) : (
+                        <span className="text-ink-faint">—</span>
+                      )}
+                    </div>
+
+                    {/* Job Count */}
+                    <div className="col-span-3">
+                      <span className="font-medium">{company.job_count?.toLocaleString() || '—'}</span>
+                    </div>
+
+                    {/* Growth */}
+                    <div className="col-span-2">
+                      {company.growth_pct != null ? (
+                        <span className={`font-medium ${
+                          company.growth_pct > 0 ? 'text-accent-up' :
+                          company.growth_pct < 0 ? 'text-accent-down' :
+                          'text-ink-muted'
+                        }`}>
+                          {company.growth_pct > 100 ? '+100%+' : `${company.growth_pct > 0 ? '+' : ''}${company.growth_pct}%`}
+                        </span>
+                      ) : (
+                        <span className="text-ink-faint">—</span>
+                      )}
+                    </div>
                   </div>
-                </div>
-
-                {/* Industry */}
-                <div className="col-span-3">
-                  {company.industry ? (
-                    <span className="px-2 py-1 text-xs bg-white/10 border border-line text-ink">
-                      {company.industry}
-                    </span>
-                  ) : (
-                    <span className="text-ink-faint">—</span>
+                  {isSelected && (
+                    <div className="px-6 py-5 bg-surface border-t border-line">
+                      <div className="flex flex-wrap gap-6">
+                        <div>
+                          <div className="text-xs text-ink-muted mb-1 tracking-wider">COMPANY</div>
+                          <div className="font-semibold text-lg">{company.name}</div>
+                          {company.industry && (
+                            <span className="mt-1 inline-block px-2 py-0.5 text-xs bg-white/10 border border-line rounded text-ink">{company.industry}</span>
+                          )}
+                        </div>
+                        <div>
+                          <div className="text-xs text-ink-muted mb-1 tracking-wider">OPEN ROLES</div>
+                          <div className="text-2xl font-semibold">{company.job_count?.toLocaleString() || '—'}</div>
+                        </div>
+                        {company.growth_pct != null && (
+                          <div>
+                            <div className="text-xs text-ink-muted mb-1 tracking-wider">GROWTH (90D)</div>
+                            <div className={`text-2xl font-semibold ${company.growth_pct > 0 ? 'text-accent-up' : company.growth_pct < 0 ? 'text-accent-down' : 'text-ink-muted'}`}>
+                              {company.growth_pct > 100 ? '+100%+' : `${company.growth_pct > 0 ? '+' : ''}${company.growth_pct}%`}
+                            </div>
+                          </div>
+                        )}
+                        {company.avg_salary && (
+                          <div>
+                            <div className="text-xs text-ink-muted mb-1 tracking-wider">AVG SALARY</div>
+                            <div className="text-2xl font-semibold">${Math.round(company.avg_salary / 1000)}K</div>
+                          </div>
+                        )}
+                      </div>
+                      {company.top_skills && company.top_skills.length > 0 && (
+                        <div className="mt-4">
+                          <div className="text-xs text-ink-muted mb-2 tracking-wider">TOP SKILLS THEY HIRE FOR</div>
+                          <div className="flex flex-wrap gap-1.5">
+                            {company.top_skills.slice(0, 8).map((skill, i) => (
+                              <span key={i} className="px-2 py-0.5 text-xs border border-line bg-white/5 text-ink rounded">{skill}</span>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+                      <div className="mt-4">
+                        <a
+                          href={`https://www.linkedin.com/jobs/search/?keywords=${encodeURIComponent(company.name)}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center gap-1.5 text-xs text-ink-muted hover:text-white transition-colors"
+                        >
+                          View jobs on LinkedIn <ExternalLink className="w-3 h-3" />
+                        </a>
+                      </div>
+                    </div>
                   )}
-                </div>
-
-                {/* Job Count */}
-                <div className="col-span-3">
-                  <span className="font-medium">{company.job_count?.toLocaleString() || '—'}</span>
-                </div>
-
-                {/* Growth */}
-                <div className="col-span-2">
-                  {company.growth_pct != null ? (
-                    <span className={`font-medium ${
-                      company.growth_pct > 0 ? 'text-accent-up' :
-                      company.growth_pct < 0 ? 'text-accent-down' :
-                      'text-ink-muted'
-                    }`}>
-                      {company.growth_pct > 100 ? '+100%+' : `${company.growth_pct > 0 ? '+' : ''}${company.growth_pct}%`}
-                    </span>
-                  ) : (
-                    <span className="text-ink-faint">—</span>
-                  )}
-                </div>
-              </div>
-            ))
+                </React.Fragment>
+              );
+            })
           )}
         </div>
       </div>
@@ -3365,7 +3416,7 @@ const SkillsTab = () => {
       </div>
 
       {/* Skills Table */}
-      <div className="bg-surface border border-line overflow-hidden">
+      <div className="bg-surface border border-line rounded-xl overflow-hidden">
         {/* Header */}
         <div className="grid grid-cols-12 gap-4 px-6 py-4 border-b border-line text-xs font-medium text-ink-muted tracking-wider">
           <div className="col-span-3">
@@ -3376,12 +3427,12 @@ const SkillsTab = () => {
             <SortHeader column="category" label="CATEGORY" />
           </div>
 
-          <div className="col-span-4 pr-6">
-            <SortHeader column="demand" label="CURRENT DEMAND" />
+          <div className="col-span-5 pr-6">
+            <SortHeader column="demand" label="PREVALENCE" />
           </div>
 
-          <div className="col-span-2 pl-6 border-l border-line">
-            <SortHeader column="growth" label="GROWTH (Δ)" />
+          <div className="col-span-1 pl-4 border-l border-line">
+            <SortHeader column="growth" label="TREND" />
           </div>
 
           <div className="col-span-1 pl-4 border-l border-line">
@@ -3412,25 +3463,34 @@ const SkillsTab = () => {
                 </div>
 
                 <div className="col-span-2">
-                  <span className="px-2 py-1 text-xs font-medium bg-white/10 text-gray-200 border border-line">
+                  <span className="px-2 py-1 text-xs font-medium bg-white/10 text-gray-200 border border-line rounded">
                     {(skill.category || 'other').toUpperCase()}
                   </span>
                 </div>
 
-                <div className="col-span-4 pr-6">
+                <div className="col-span-5 pr-6">
                   <div className="flex items-center gap-3">
                     <div className="flex-1 h-2 bg-white/10 rounded-full overflow-hidden">
                       <div className="h-full bg-white" style={{ width: `${skill.demand}%` }} />
                     </div>
                     <span className="text-sm font-medium w-14 text-right">{skill.demand}%</span>
                   </div>
-                  <div className="mt-1 text-xs text-ink-muted">
-                    {skill.job_count?.toLocaleString() || '—'} jobs
-                  </div>
+                  {(skill.required_pct > 0 || skill.preferred_pct > 0) ? (
+                    <div className="mt-1.5 flex items-center gap-3 text-xs">
+                      {skill.required_pct > 0 && (
+                        <span className="font-medium text-white/80">{skill.required_pct}% <span className="font-normal text-ink-muted">req</span></span>
+                      )}
+                      {skill.preferred_pct > 0 && (
+                        <span className="font-medium text-white/50">{skill.preferred_pct}% <span className="font-normal text-ink-faint">pref</span></span>
+                      )}
+                    </div>
+                  ) : (
+                    <div className="mt-1.5 text-xs text-ink-faint">{skill.job_count?.toLocaleString() || '—'} jobs</div>
+                  )}
                 </div>
-                <div className="col-span-2 pl-6 border-l border-line">
+                <div className="col-span-1 pl-4 border-l border-line">
                   {skill.growth_pct != null ? (
-                    <span className={`text-sm font-medium ${
+                    <span className={`text-xs font-medium ${
                       skill.growth_pct > 0 ? 'text-accent-up' :
                       skill.growth_pct < 0 ? 'text-accent-down' :
                       'text-ink-muted'
@@ -3438,7 +3498,7 @@ const SkillsTab = () => {
                       {skill.growth_pct > 100 ? '+100%+' : `${skill.growth_pct > 0 ? '+' : ''}${skill.growth_pct}%`}
                     </span>
                   ) : (
-                    <span className="text-sm text-ink-faint">—</span>
+                    <span className="text-xs text-ink-faint">—</span>
                   )}
                 </div>
                 <div className="col-span-1 pl-4 border-l border-line text-center">
@@ -3493,76 +3553,113 @@ const SkillDetailModal = ({ skill, onClose }) => {
   };
 
   return (
-    <div 
+    <div
       className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4"
       onClick={handleBackdropClick}
     >
-      <div className="bg-zinc-900 border border-line-strong max-w-lg w-full max-h-[80vh] overflow-y-auto">
+      <div className="bg-zinc-900 border border-line-strong rounded-2xl max-w-lg w-full max-h-[80vh] overflow-y-auto">
         <div className="p-6 border-b border-line flex items-center justify-between">
           <h2 className="text-2xl font-semibold">{skill.name}</h2>
-          <button 
-            onClick={onClose} 
-            className="text-ink-muted hover:text-white transition-colors"
+          <button
+            onClick={onClose}
+            className="text-ink-muted hover:text-white transition-colors rounded-lg"
           >
             <X className="w-6 h-6" />
           </button>
         </div>
-        
-        <div className="p-6 space-y-6">
-          {/* Demand */}
-          <div>
-            <div className="text-sm text-ink-muted mb-2">DEMAND FOR {selectedRole?.toUpperCase()}</div>
-            <div className="flex items-center gap-4">
+
+        <div className="p-6 space-y-5">
+          {/* Section 1 — Demand */}
+          <div className="p-5 bg-surface border border-line rounded-xl">
+            <div className="text-xs text-ink-muted tracking-wider mb-3">DEMAND FOR {selectedRole?.toUpperCase()}</div>
+            <div className="flex items-end gap-4 mb-4">
               <div className="text-5xl font-semibold">{skill.demand}%</div>
-              <div className="text-ink-muted">
-                of jobs require this skill
+              <div className="text-sm text-ink-muted mb-1">of job postings</div>
+            </div>
+            <div className="flex flex-wrap gap-3 mb-4">
+              {skill.category && (
+                <span className="px-2.5 py-1 text-xs font-medium bg-white/10 text-gray-200 border border-line rounded">
+                  {skill.category.toUpperCase()}
+                </span>
+              )}
+              {skill.job_count > 0 && (
+                <span className="text-xs text-ink-muted self-center">{skill.job_count.toLocaleString()} jobs</span>
+              )}
+            </div>
+            {(skill.required_pct > 0 || skill.preferred_pct > 0) && (
+              <div className="flex gap-4 pt-3 border-t border-line">
+                {skill.required_pct > 0 && (
+                  <div>
+                    <div className="text-xs text-ink-muted mb-0.5">REQUIRED</div>
+                    <div className="text-xl font-semibold text-white">{skill.required_pct}%</div>
+                  </div>
+                )}
+                {skill.preferred_pct > 0 && (
+                  <div>
+                    <div className="text-xs text-ink-muted mb-0.5">PREFERRED</div>
+                    <div className="text-xl font-semibold text-white/60">{skill.preferred_pct}%</div>
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+
+          {/* Section 2 — Top companies */}
+          {skill.top_companies && skill.top_companies.length > 0 && (
+            <div className="p-5 bg-surface border border-line rounded-xl">
+              <div className="text-xs text-ink-muted tracking-wider mb-3">TOP COMPANIES HIRING FOR THIS SKILL</div>
+              <div className="space-y-2">
+                {skill.top_companies.slice(0, 5).map((company, i) => (
+                  <div key={i} className="flex items-center justify-between text-sm">
+                    <span className="flex items-center gap-2">
+                      <span className="text-xs text-ink-faint w-4">{i + 1}</span>
+                      <span className="font-medium">{typeof company === 'string' ? company : company.name}</span>
+                    </span>
+                    {typeof company === 'object' && company.job_count && (
+                      <span className="text-ink-muted text-xs">{company.job_count.toLocaleString()} jobs</span>
+                    )}
+                  </div>
+                ))}
               </div>
             </div>
-          </div>
+          )}
 
-          {/* Category */}
-          <div>
-            <div className="text-sm text-ink-muted mb-2">CATEGORY</div>
-            <span className="px-3 py-1 text-sm font-medium bg-white/10 text-gray-200 border border-line">
-              {(skill.category || 'other').toUpperCase()}
-            </span>
-          </div>
-
-          {/* Job Count */}
-          <div>
-            <div className="text-sm text-ink-muted mb-2">APPEARING IN</div>
-            <div className="text-2xl font-medium">
-              {skill.job_count?.toLocaleString() || '—'} jobs
-            </div>
-          </div>
-
-          {/* Learning Resources */}
-          <div className="pt-4 border-t border-line">
-            <div className="text-sm text-ink-muted mb-3">LEARN THIS SKILL</div>
+          {/* Section 3 — Online courses */}
+          <div className="p-5 bg-surface border border-line rounded-xl">
+            <div className="text-xs text-ink-muted tracking-wider mb-3">LEARN THIS SKILL</div>
             <div className="space-y-2">
-              <a 
+              <a
                 href={`https://www.coursera.org/search?query=${encodeURIComponent(skill.name)}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-full p-3 bg-surface border border-line hover:bg-white/10 transition-colors text-left flex items-center justify-between"
+                className="w-full p-3 bg-black/30 border border-line rounded-lg hover:bg-white/10 transition-colors text-left flex items-center justify-between text-sm"
               >
                 <span>Search on Coursera</span>
                 <ExternalLink className="w-4 h-4 text-ink-muted" />
               </a>
-              <a 
+              <a
+                href={`https://www.linkedin.com/learning/search?keywords=${encodeURIComponent(skill.name)}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-full p-3 bg-black/30 border border-line rounded-lg hover:bg-white/10 transition-colors text-left flex items-center justify-between text-sm"
+              >
+                <span>Search on LinkedIn Learning</span>
+                <ExternalLink className="w-4 h-4 text-ink-muted" />
+              </a>
+              <a
                 href={`https://www.udemy.com/courses/search/?q=${encodeURIComponent(skill.name)}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-full p-3 bg-surface border border-line hover:bg-white/10 transition-colors text-left flex items-center justify-between"
+                className="w-full p-3 bg-black/30 border border-line rounded-lg hover:bg-white/10 transition-colors text-left flex items-center justify-between text-sm"
               >
                 <span>Search on Udemy</span>
                 <ExternalLink className="w-4 h-4 text-ink-muted" />
               </a>
-              <a 
+              <a
                 href={`https://www.youtube.com/results?search_query=${encodeURIComponent(skill.name + ' tutorial')}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-full p-3 bg-surface border border-line hover:bg-white/10 transition-colors text-left flex items-center justify-between"
+                className="w-full p-3 bg-black/30 border border-line rounded-lg hover:bg-white/10 transition-colors text-left flex items-center justify-between text-sm"
               >
                 <span>Search on YouTube</span>
                 <ExternalLink className="w-4 h-4 text-ink-muted" />
@@ -3588,6 +3685,7 @@ const AlternativesTab = () => {
   } = useApp();
 
   const alternativeRoles = roleData?.alternative_roles || [];
+  const sortedRoles = [...alternativeRoles].sort((a, b) => (b.skill_overlap ?? 0) - (a.skill_overlap ?? 0));
 
   const fmtSalary = (v) => v >= 1000 ? `$${Math.round(v / 1000)}K` : `$${v}`;
   const fmtRange = (min, max) => {
@@ -3605,7 +3703,7 @@ const AlternativesTab = () => {
         </div>
         <button
           onClick={() => setCurrentScreen('skills-input')}
-          className="px-6 py-2.5 bg-white text-black font-medium text-sm hover:bg-gray-200 transition-colors inline-flex items-center gap-2"
+          className="px-6 py-2.5 bg-white text-black font-medium text-sm hover:bg-gray-200 transition-colors inline-flex items-center gap-2 rounded-lg"
         >
           ADD SKILLS <ArrowRight className="w-4 h-4" />
         </button>
@@ -3627,7 +3725,7 @@ const AlternativesTab = () => {
   return (
     <div>
       <div className="space-y-3">
-        {alternativeRoles.map((role, idx) => {
+        {sortedRoles.map((role, idx) => {
           const matchPct = role.skill_overlap ?? 0;
           const matchColor = matchPct >= 70 ? 'text-accent-up' : matchPct >= 45 ? 'text-yellow-400' : 'text-orange-400';
           const barColor  = matchPct >= 70 ? 'bg-accent-up'   : matchPct >= 45 ? 'bg-yellow-400'   : 'bg-orange-400';
@@ -3637,7 +3735,7 @@ const AlternativesTab = () => {
           return (
             <div
               key={idx}
-              className="p-5 bg-surface border border-line hover:border-line-strong transition-colors"
+              className="p-5 bg-surface border border-line rounded-xl hover:border-line-strong transition-colors"
             >
               {/* Row 1: role name + match */}
               <div className="flex items-start gap-4">
@@ -3674,7 +3772,7 @@ const AlternativesTab = () => {
                     <div className="flex flex-wrap items-center gap-1.5">
                       <span className="text-xs text-ink-muted w-16 shrink-0">YOU KNOW</span>
                       {role.shared_skills.slice(0, 5).map((s, i) => (
-                        <span key={i} className="px-2 py-0.5 text-xs border border-green-500/40 text-accent-up bg-accent-up/10">{s}</span>
+                        <span key={i} className="px-2 py-0.5 text-xs border border-green-500/40 text-accent-up bg-accent-up/10 rounded">{s}</span>
                       ))}
                       {role.shared_skills.length > 5 && (
                         <span className="text-xs text-ink-muted">+{role.shared_skills.length - 5}</span>
@@ -3685,7 +3783,7 @@ const AlternativesTab = () => {
                     <div className="flex flex-wrap items-center gap-1.5">
                       <span className="text-xs text-ink-muted w-16 shrink-0">TO LEARN</span>
                       {role.new_skills.slice(0, 4).map((s, i) => (
-                        <span key={i} className="px-2 py-0.5 text-xs border border-white/20 text-ink-muted">{s}</span>
+                        <span key={i} className="px-2 py-0.5 text-xs border border-white/20 text-ink-muted rounded">{s}</span>
                       ))}
                       {role.new_skills.length > 4 && (
                         <span className="text-xs text-ink-muted">+{role.new_skills.length - 4}</span>
@@ -3810,7 +3908,7 @@ const ForgotPasswordScreen = () => {
           <ErrorMessage error={error} onClose={() => setError(null)} />
 
           {submitted ? (
-            <div className="p-4 bg-surface border border-line-strong text-sm">
+            <div className="p-4 bg-surface border border-line-strong rounded-xl text-sm">
               A reset link has been sent to <span className="font-medium">{email}</span>. Please check your inbox (and spam folder).
             </div>
           ) : (
@@ -3827,7 +3925,7 @@ const ForgotPasswordScreen = () => {
               <button
                 type="submit"
                 disabled={submitting || !email}
-                className={`w-full py-3 font-medium text-sm tracking-wide transition-colors ${
+                className={`w-full py-3 font-medium text-sm tracking-wide transition-colors rounded-lg ${
                   !submitting && email
                     ? 'bg-white text-black hover:bg-gray-200'
                     : 'bg-white/10 text-ink-faint cursor-not-allowed'
@@ -3900,7 +3998,7 @@ const ResetPasswordScreen = () => {
                 placeholder="New password (min 8 chars)"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full px-4 py-3 bg-surface border border-line-strong text-white placeholder-gray-500 text-sm focus:outline-none focus:border-white transition-colors"
+                className="w-full px-4 py-3 bg-surface border border-line-strong text-white placeholder-gray-500 text-sm focus:outline-none focus:border-white transition-colors rounded-lg"
                 autoComplete="new-password"
                 required
               />
@@ -3909,7 +4007,7 @@ const ResetPasswordScreen = () => {
                 placeholder="Confirm new password"
                 value={confirm}
                 onChange={(e) => setConfirm(e.target.value)}
-                className="w-full px-4 py-3 bg-surface border border-line-strong text-white placeholder-gray-500 text-sm focus:outline-none focus:border-white transition-colors"
+                className="w-full px-4 py-3 bg-surface border border-line-strong text-white placeholder-gray-500 text-sm focus:outline-none focus:border-white transition-colors rounded-lg"
                 autoComplete="new-password"
                 required
               />
@@ -3917,7 +4015,7 @@ const ResetPasswordScreen = () => {
             <button
               type="submit"
               disabled={submitting || !password || !confirm}
-              className={`w-full py-3 font-medium text-sm tracking-wide transition-colors ${
+              className={`w-full py-3 font-medium text-sm tracking-wide transition-colors rounded-lg ${
                 !submitting && password && confirm
                   ? 'bg-white text-black hover:bg-gray-200'
                   : 'bg-white/10 text-ink-faint cursor-not-allowed'
@@ -3984,10 +4082,10 @@ const VerifyEmailScreen = () => {
           )}
           {state === 'success' && (
             <>
-              <div className="p-4 bg-surface border border-line-strong text-sm mb-6">{message}</div>
+              <div className="p-4 bg-surface border border-line-strong rounded-xl text-sm mb-6">{message}</div>
               <button
                 onClick={() => setCurrentScreen(user ? 'dashboard' : 'login')}
-                className="px-6 py-3 bg-white text-black font-medium text-sm hover:bg-gray-200 transition-colors"
+                className="px-6 py-3 bg-white text-black font-medium text-sm hover:bg-gray-200 transition-colors rounded-lg"
               >
                 CONTINUE
               </button>
@@ -4424,7 +4522,7 @@ const AccountScreen = () => {
           <div className="space-y-6">
 
             {/* Profile */}
-            <section className="p-6 bg-surface border border-line">
+            <section className="p-6 bg-surface border border-line rounded-xl">
               <div className="text-eyebrow text-ink-faint mb-4">PROFILE</div>
               <div className="flex items-center gap-4 mb-6">
                 <div className="w-16 h-16 bg-white/10 flex items-center justify-center">
@@ -4450,19 +4548,19 @@ const AccountScreen = () => {
                           onChange={(e) => setNameDraft(e.target.value)}
                           onKeyDown={(e) => { if (e.key === 'Enter') saveName(); if (e.key === 'Escape') setEditingName(false); }}
                           disabled={nameSaving}
-                          className="px-3 py-1 bg-black border border-line-strong text-sm focus:outline-none focus:border-white"
+                          className="px-3 py-1 bg-black border border-line-strong text-sm focus:outline-none focus:border-white rounded-lg"
                         />
                         <button
                           onClick={saveName}
                           disabled={nameSaving}
-                          className="text-sm px-3 py-1 bg-white text-black hover:bg-white/90 disabled:opacity-50"
+                          className="text-sm px-3 py-1 bg-white text-black hover:bg-white/90 disabled:opacity-50 rounded-lg"
                         >
                           {nameSaving ? 'Saving…' : 'Save'}
                         </button>
                         <button
                           onClick={() => setEditingName(false)}
                           disabled={nameSaving}
-                          className="text-sm px-3 py-1 border border-line-strong hover:bg-white/5"
+                          className="text-sm px-3 py-1 border border-line-strong hover:bg-white/5 rounded-lg"
                         >
                           Cancel
                         </button>
@@ -4511,7 +4609,7 @@ const AccountScreen = () => {
             </section>
 
             {/* Career preferences */}
-            <section className="p-6 bg-surface border border-line">
+            <section className="p-6 bg-surface border border-line rounded-xl">
               <div className="flex items-center justify-between mb-4">
                 <div className="text-eyebrow text-ink-faint">CAREER PREFERENCES</div>
                 <button
@@ -4556,7 +4654,7 @@ const AccountScreen = () => {
             </section>
 
             {/* Security */}
-            <section className="p-6 bg-surface border border-line">
+            <section className="p-6 bg-surface border border-line rounded-xl">
               <div className="text-eyebrow text-ink-faint mb-4">SECURITY</div>
 
               <div>
@@ -4584,12 +4682,12 @@ const AccountScreen = () => {
                     <span className="text-ink-muted">Email verification</span>
                     <div className="flex items-center gap-3">
                       {user.email_verified ? (
-                        <span className="text-xs px-2 py-1 bg-emerald-500/15 text-emerald-300 border border-emerald-500/30">
+                        <span className="text-xs px-2 py-1 bg-emerald-500/15 text-emerald-300 border border-emerald-500/30 rounded">
                           Verified
                         </span>
                       ) : (
                         <>
-                          <span className="text-xs px-2 py-1 bg-yellow-500/15 text-yellow-300 border border-yellow-500/30">
+                          <span className="text-xs px-2 py-1 bg-yellow-500/15 text-yellow-300 border border-yellow-500/30 rounded">
                             Unverified
                           </span>
                           <button
@@ -4611,7 +4709,7 @@ const AccountScreen = () => {
             </section>
 
             {/* Data */}
-            <section className="p-6 bg-surface border border-line">
+            <section className="p-6 bg-surface border border-line rounded-xl">
               <div className="text-eyebrow text-ink-faint mb-4">DATA</div>
 
               <div className="flex items-start justify-between gap-6 py-3 border-b border-line">
@@ -4623,7 +4721,7 @@ const AccountScreen = () => {
                 </div>
                 <button
                   onClick={handleResetPreferences}
-                  className="shrink-0 px-4 py-2 border border-line-strong text-sm hover:bg-white/5 transition-colors"
+                  className="shrink-0 px-4 py-2 border border-line-strong text-sm hover:bg-white/5 transition-colors rounded-lg"
                 >
                   Reset
                 </button>
@@ -4642,7 +4740,7 @@ const AccountScreen = () => {
                 <button
                   onClick={handleExport}
                   disabled={exporting}
-                  className="shrink-0 px-4 py-2 border border-line-strong text-sm hover:bg-white/5 transition-colors disabled:opacity-50"
+                  className="shrink-0 px-4 py-2 border border-line-strong text-sm hover:bg-white/5 transition-colors disabled:opacity-50 rounded-lg"
                 >
                   {exporting ? 'Preparing…' : 'Export'}
                 </button>
@@ -4650,7 +4748,7 @@ const AccountScreen = () => {
             </section>
 
             {/* Danger zone */}
-            <section className="p-6 bg-surface border border-red-500/40">
+            <section className="p-6 bg-surface border border-red-500/40 rounded-xl">
               <div className="flex items-start justify-between gap-6">
                 <div>
                   <div className="font-medium mb-1">Delete account</div>
@@ -4660,7 +4758,7 @@ const AccountScreen = () => {
                 </div>
                 <button
                   onClick={() => setShowDeleteModal(true)}
-                  className="shrink-0 px-4 py-2 border border-red-500/50 text-red-400 text-sm hover:bg-red-500/10 transition-colors"
+                  className="shrink-0 px-4 py-2 border border-red-500/50 text-red-400 text-sm hover:bg-red-500/10 transition-colors rounded-lg"
                 >
                   Delete
                 </button>
@@ -4736,28 +4834,28 @@ const ChangePasswordForm = ({ onDone }) => {
         placeholder="Current password"
         value={current}
         onChange={(e) => setCurrent(e.target.value)}
-        className="w-full px-3 py-2 bg-black border border-line-strong text-sm focus:outline-none focus:border-white"
+        className="w-full px-3 py-2 bg-black border border-line-strong rounded-lg text-sm focus:outline-none focus:border-white"
       />
       <input
         type="password"
         placeholder="New password (min 8 characters)"
         value={next}
         onChange={(e) => setNext(e.target.value)}
-        className="w-full px-3 py-2 bg-black border border-line-strong text-sm focus:outline-none focus:border-white"
+        className="w-full px-3 py-2 bg-black border border-line-strong rounded-lg text-sm focus:outline-none focus:border-white"
       />
       <input
         type="password"
         placeholder="Confirm new password"
         value={confirm}
         onChange={(e) => setConfirm(e.target.value)}
-        className="w-full px-3 py-2 bg-black border border-line-strong text-sm focus:outline-none focus:border-white"
+        className="w-full px-3 py-2 bg-black border border-line-strong rounded-lg text-sm focus:outline-none focus:border-white"
       />
       {error && <div className="text-xs text-red-400">{error}</div>}
       {success && <div className="text-xs text-emerald-400">{success}</div>}
       <button
         type="submit"
         disabled={saving || !current || !next || !confirm}
-        className="px-4 py-2 bg-white text-black text-sm hover:bg-white/90 disabled:opacity-50"
+        className="px-4 py-2 bg-white text-black text-sm hover:bg-white/90 disabled:opacity-50 rounded-lg"
       >
         {saving ? 'Updating…' : 'Update password'}
       </button>
@@ -4789,7 +4887,7 @@ const ChangeEmailModal = ({ onClose, onSubmitted }) => {
 
   return (
     <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4" onClick={onClose}>
-      <div className="bg-surface border border-line p-6 max-w-md w-full" onClick={(e) => e.stopPropagation()}>
+      <div className="bg-surface border border-line rounded-2xl p-6 max-w-md w-full" onClick={(e) => e.stopPropagation()}>
         <h3 className="text-xl font-medium mb-2">Change email</h3>
         <p className="text-sm text-ink-muted mb-4">
           We'll send a confirmation link to your new address. Your email won't change until you click it.
@@ -4806,7 +4904,7 @@ const ChangeEmailModal = ({ onClose, onSubmitted }) => {
               required
               value={newEmail}
               onChange={(e) => setNewEmail(e.target.value)}
-              className="w-full px-3 py-2 bg-black border border-line-strong text-sm focus:outline-none focus:border-white"
+              className="w-full px-3 py-2 bg-black border border-line-strong rounded-lg text-sm focus:outline-none focus:border-white"
             />
             <input
               type="password"
@@ -4814,21 +4912,21 @@ const ChangeEmailModal = ({ onClose, onSubmitted }) => {
               required
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full px-3 py-2 bg-black border border-line-strong text-sm focus:outline-none focus:border-white"
+              className="w-full px-3 py-2 bg-black border border-line-strong rounded-lg text-sm focus:outline-none focus:border-white"
             />
             {error && <div className="text-xs text-red-400">{error}</div>}
             <div className="flex gap-2 justify-end pt-2">
               <button
                 type="button"
                 onClick={onClose}
-                className="px-4 py-2 border border-line-strong text-sm hover:bg-white/5"
+                className="px-4 py-2 border border-line-strong text-sm hover:bg-white/5 rounded-lg"
               >
                 Cancel
               </button>
               <button
                 type="submit"
                 disabled={submitting || !newEmail || !password}
-                className="px-4 py-2 bg-white text-black text-sm hover:bg-white/90 disabled:opacity-50"
+                className="px-4 py-2 bg-white text-black text-sm hover:bg-white/90 disabled:opacity-50 rounded-lg"
               >
                 {submitting ? 'Sending…' : 'Send confirmation'}
               </button>
@@ -4865,7 +4963,7 @@ const DeleteAccountModal = ({ isGoogleAccount, onClose, onDeleted }) => {
 
   return (
     <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4" onClick={onClose}>
-      <div className="bg-surface border border-red-500/50 p-6 max-w-md w-full" onClick={(e) => e.stopPropagation()}>
+      <div className="bg-surface border border-red-500/50 rounded-2xl p-6 max-w-md w-full" onClick={(e) => e.stopPropagation()}>
         <h3 className="text-xl font-medium mb-2 text-red-400">Delete account</h3>
         <p className="text-sm text-ink-muted mb-4">
           This permanently deletes your account, saved preferences, and skills. This action cannot be undone.
@@ -4879,7 +4977,7 @@ const DeleteAccountModal = ({ isGoogleAccount, onClose, onDeleted }) => {
                 placeholder="DELETE"
                 value={confirmText}
                 onChange={(e) => setConfirmText(e.target.value)}
-                className="w-full px-3 py-2 bg-black border border-line-strong text-sm focus:outline-none focus:border-red-500"
+                className="w-full px-3 py-2 bg-black border border-line-strong rounded-lg text-sm focus:outline-none focus:border-red-500"
               />
             </>
           ) : (
@@ -4890,7 +4988,7 @@ const DeleteAccountModal = ({ isGoogleAccount, onClose, onDeleted }) => {
                 placeholder="Current password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full px-3 py-2 bg-black border border-line-strong text-sm focus:outline-none focus:border-red-500"
+                className="w-full px-3 py-2 bg-black border border-line-strong rounded-lg text-sm focus:outline-none focus:border-red-500"
               />
             </>
           )}
@@ -4899,14 +4997,14 @@ const DeleteAccountModal = ({ isGoogleAccount, onClose, onDeleted }) => {
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 border border-line-strong text-sm hover:bg-white/5"
+              className="px-4 py-2 border border-line-strong text-sm hover:bg-white/5 rounded-lg"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={!canSubmit || submitting}
-              className="px-4 py-2 bg-red-500 text-white text-sm hover:bg-red-500/90 disabled:opacity-50"
+              className="px-4 py-2 bg-red-500 text-white text-sm hover:bg-red-500/90 disabled:opacity-50 rounded-lg"
             >
               {submitting ? 'Deleting…' : 'Delete my account'}
             </button>

@@ -694,7 +694,9 @@ def get_role_insights():
         Skill.id,
         Skill.name,
         Skill.category,
-        func.count(JobSkill.id).label('job_count')
+        func.count(JobSkill.id).label('job_count'),
+        func.sum(func.cast(JobSkill.is_required, db.Integer)).label('required_count'),
+        func.sum(func.cast(~JobSkill.is_required, db.Integer)).label('preferred_count')
     ).join(JobSkill).filter(
         JobSkill.job_id.in_(job_ids)
     ).group_by(Skill.id).order_by(
@@ -703,20 +705,24 @@ def get_role_insights():
 
     # Get all skill IDs for bulk growth calculation
     all_skill_ids = [s[0] for s in skill_counts]
-    
+
     # Bulk calculate growth for all skills at once
     skill_growth_map = get_all_skill_growth_bulk(role.id, all_skill_ids, window_days=30)
 
     skills = []
-    for skill_id, skill_name, category, job_count in skill_counts:
+    for skill_id, skill_name, category, job_count, required_count, preferred_count in skill_counts:
         demand = round(job_count / total_jobs * 100, 1)
-        
+        required_count = required_count or 0
+        preferred_count = preferred_count or 0
+
         skills.append({
             'skill_id': skill_id,
             'name': skill_name,
             'category': category or 'technical',
             'job_count': job_count,
             'demand': demand,
+            'required_pct': round(required_count / job_count * 100) if job_count else 0,
+            'preferred_pct': round(preferred_count / job_count * 100) if job_count else 0,
             'growth_pct': skill_growth_map.get(skill_id)
         })
 

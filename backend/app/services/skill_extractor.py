@@ -2,6 +2,7 @@
 
 import re
 from typing import List, Dict, Tuple
+from bs4 import BeautifulSoup
 from app.models import db, Skill
 
 # ============================================
@@ -292,30 +293,175 @@ SECTION_PATTERNS = {
         # Healthcare / One Medical
         r"education(?:,? licenses?,?)?(?: and .+)? required",
         r"(?:licenses?|certifications?) required",
+        r"an ideal candidate should have",
+        r"what we are looking for",
+        r"you (?:may |might )?(?:be a (?:great |strong |good )?fit|thrive)(?: if| in this role)?",
+        r"technical skills",
+        r"what success looks like",
+        r"what you will need",
+        r"what you love about",
+        r"qualities that make (?:\w+ )?candidates?",
+        r"you(?:['']ll| will) need to (?:have|bring)",
+        r"job requirements?",
+        r"position requirements?",
+        r"what we expect from you",
+        r"what we['']?re looking for(?: in you)?",
+        r"what you['']?ll bring(?: to the (?:role|team|table))?",
+        r"minimum requirements?",
+        r"(?:required|necessary) (?:skills?|experience|qualifications?|background)",
+        r"to be successful(?: in this role)?",
+        r"to thrive in this role",
+        r"we['']?re looking for someone with",
+        r"the successful candidate",
+        r"at a minimum(?:,)? you(?:['']?ll| will)? need",
+        r"minimum(?:,)? you(?:['']?ll| will)? need",
+        r"(?:core|key|required|essential|critical) competencies",
+        r"essential criteria",
+        r"must be able to",
+        r"candidates? must have",
+        r"you must have",
+        # "Skills we're/you're looking for" variants
+        r"skills we['']?re looking for",
+        r"who we(?:['']?re| are) looking for",
+        r"whom we(?:['']?re| are) looking for",
+        r"what we(?:['']?re| are) looking for",
+        r"what we need",
+        r"we(?:['']?re| are| were) looking for",
+        # "You bring" / "What you bring" variants
+        r"what you will bring(?: to the (?:role|table|team))?",
+        r"what you will bring",
+        r"you(?:['']?ll)? bring these qualifications",
+        r"the skillset you(?:['']?ll)? bring",
+        r"the experience you(?:['']?ll)? bring",
+        r"you bring",
+        # Experience / background sections
+        r"your experience",
+        r"background (?:&|and) requirements?",
+        r"education (?:and|&|and\/or|/) (?:experience|requirements?)",
+        r"education\/experience",
+        # Candidate profile variants
+        r"our ideal candidate",
+        r"the ideal candidate",
+        r"candidate profile",
+        r"ideal candidate profile",
+        r"what skills do (?:i|you) need",
+        r"what are we looking for",
+        r"the basics you(?:['']?ll)? need",
+        r"the experience you(?:['']?ll)? need",
+        r"skills you(?:['']?ll| will)? need",
+        r"you(?:['']?ll)? be set up for success if you have",
+        r"(?:a )?perfect fit for you if",
+        r"(?:this (?:role|position|opportunity) (?:is|could be) )?a perfect fit",
+        r"this (?:role|position) (?:is|would be) (?:a )?(?:great|perfect) fit(?: for you)?",
+        r"who we think will be a great fit",
+        r"what makes you a (?:good|great) fit",
+        r"you['']?(?:ll|d) be (?:a |an )?(?:great|good|strong|ideal|perfect) (?:addition|fit|candidate)",
+        r"you['']?re (?:a |an )?(?:great|good|strong|ideal|perfect) fit if",
+        # Portuguese/Spanish (common in multi-market JDs)
+        r"requisitos",
+        # Remaining patterns from fallback audit
+        r"minimum(?: job)? qualifications?",
+        r"minimum(?: required)? (?:knowledge,? skills?,? (?:and|&) abilities|requirements?)",
+        r"education,? experience,? (?:and|&) skills?",
+        r"education,? experience(?: &|/) skills?(?: requirements?)?",
+        r"skills? you(?:['']?ll)? bring",
+        r"what you should bring(?: with you)?",
+        r"who are we looking for",
+        r"what we(?:['']?ll| will) expect from you",
+        r"ideal profile",
+        r"the ideal profile",
+        r"some things we(?:['']?re| are) looking for",
+        r"skills?\s*\+\s*experience",
+        r"you\s*\(?must[- ]haves?\)?",
+        r"you need to have",
+        r"core experience",
+        r"the basics you bring",
+        r"be a great fit if you bring",
+        r"role requirements?(?: [-–] (?:skills?|experience|qualifications?))?",
+        r"other experience (?:&|and) requirements?",
+        r"skills? you must have",
+        r"the ideal match",
+        r"who we need",
+        r"what do we need from you",
+        r"you(?:(?:'re| are| might be| may be)) a (?:good|great) fit if you have",
+        r"skill requirements?(?:\s*[-–]\s*essential)?",
+        r"as part of (?:the journey|this role),? we(?:['']?d| would) expect you to",
+        r"background$",
+        r"minimum required(?: qualifications?)?",
+        r"education and (?:general |minimum )?(?:experience|qualifications?)",
+        r"key success criteria",
+        r"what we expect(?! from)",
+        r"what will you bring(?: to the (?:team|role|table))?",
+        r"the experience you will bring",
+        r"you could be (?:a |an )?(?:great|good|strong|ideal|perfect) fit if",
+        # Additional patterns from full-scan fallback audit
+        r"success in this role looks like",
+        r"factors for success",
+        r"your skills and experience",
+        r"the required profile",
+        r"minimum education(?: &|,? and|/) experience",
+        r"what do you bring(?: to the table)?",
+        r"to apply,? you(?:['']?ll| must)? (?:need to |must )?have",
+        r"why you(?:['']?d|['']?ll| would| will) be a (?:great|good|strong) fit",
+        r"skills you (?:will|would) need to be successful",
+        r"you possess",
+        r"(?:knowledge,? skills?,? (?:and|&) abilities)(?: for (?:the )?(?:role|position|success))?$",
+        r"specific experience we(?:['']?re| are) seeking",
+        r"what we think you(?:['']?ll| will) need",
+        r"candidate requirements?",
+        r"minimum$",
     ],
     'preferred': [
-        r"(?:preferred|desired)(?: skills| experience| qualifications)?",
+        r"(?:preferred|desired)(?: skills?| experience| qualifications?| background)?",
         r"nice[- ]to[- ]have",
         r"bonus(?: points)?",
         r"it['']?s (?:great|nice|a plus) if",
         r"strong candidates",
         r"a\s+plus",
         r"extra credit",
-        r"additional(?: desired)? (?:skills|qualifications)",
+        r"additional(?: desired)? (?:skills?|qualifications?)",
         r"even better if",
         r"bonus if you have",
         r"ideally you",
         r"these qualifications would be nice to have",
-        r"what will make you stand out(?: \(.*?\))?",
+        r"what (?:will|would|makes?) (?:you )?(?:make you )?stand out",
+        r"what sets you apart",
+        r"what makes you a great fit",
         # Parenthetical preferred — e.g. "What will help you stand out (Nonessential Skills/Nice to Haves)"
         r".{5,60}\((?:preferred|desired|nice[- ]to[- ]haves?|nonessential|bonus)\)",
         # Figma-style
         r"(?:while )?not required,?.{0,30}(?:plus|bonus|added)",
         r"it['']?s an (?:added )?plus if",
+        r"it['']?s a (?:big )?plus if",
         # Okta-style
         r"and extra credit if",
         # "Nice to Haves" (plural)
         r"nice[- ]to[- ]haves?",
+        r"bonus points? for",
+        r"would be (?:a plus|great|ideal) if",
+        r"(?:preferred|desired) but not required",
+        r"recommended qualifications?",
+        r"preferred (?:skills?|experience|qualifications?|background)",
+        r"preferred skills? and experience",
+        r"strongly preferred",
+        r"highly desired",
+        r"great if you(?:['']?d)? (?:also )?have",
+        r"we['']?d (?:love|prefer)(?: it)? if you(?:['']?d)? (?:also )?have",
+        r"an? (?:added )?bonus if you(?:['']?d)? (?:also )?have",
+        r"ideal candidate (?:profile|will possess|should also)",
+        r"additional differentiators?",
+        r"additional differentiators?",
+        r"desired skills?(?: and| &| \+)? experience",
+        r"desired skills? and experience",
+        r"preferred experience",
+        r"preferred experience and qualifications?",
+        r"ideal skills? and experience",
+        r"(?:examples of )?(?:desirable|desired) skills?,? knowledge,? (?:and|&) experience",
+        r"advantageous",
+        r"what (?:will|would) make you a (?:good|great) fit",
+        # Portuguese/Spanish
+        r"diferenciais",
+        r"diferencial",
     ],
     'responsibilities': [
         r"(?:key )?responsibilities",
@@ -335,6 +481,19 @@ SECTION_PATTERNS = {
         r"what you['']?ll achieve",
         # Parenthetical responsibilities
         r".{5,60}\(responsibilities\)",
+        r"the role",
+        r"about the job",
+        r"how to be successful in this role",
+        r"your responsibilities",
+        r"(?:job|position|role) summary",
+        r"the opportunity",
+        r"what you will do",
+        r"what you['']?ll be doing",
+        r"job responsibilities",
+        r"primary responsibilities",
+        r"core responsibilities",
+        r"essential (?:functions|duties|responsibilities)",
+        r"duties (?:and|&) responsibilities",
     ],
     'about_company': [
         r"about (?:us|the company|the team|\w+(?:\s+\w+)?)",
@@ -410,23 +569,32 @@ def _score_paragraph(text: str) -> float:
 def parse_jd_sections(jd_text: str) -> List[Dict]:
     """
     Parse JD into labeled sections with character ranges.
-    
+
     Returns: [
         {'name': 'unknown', 'start': 0, 'end': 500, 'text': '...'},
         {'name': 'requirements', 'start': 500, 'end': 1200, 'text': '...'},
         ...
     ]
     """
+    if '<' in jd_text and '>' in jd_text:
+        jd_text = BeautifulSoup(jd_text, 'html.parser').get_text(separator='\n', strip=True)
+    jd_text = jd_text.replace('\xa0', ' ').replace('’', "'").replace('‘', "'")
     text = jd_text.strip()
     if not text:
         return [{'name': 'unknown', 'start': 0, 'end': 0, 'text': ''}]
-    
+
     # Find all section headers
     headers = []
     for section_name, patterns in SECTION_PATTERNS.items():
         for pattern in patterns:
-            # Match section headers (with optional markdown/emoji/formatting prefix)
-            full_pattern = r'(?:^|\n)\s*(?:[\U00002600-\U000027BF\U0001F300-\U0001FAFF]\s*)*(?:\*{1,2}|#{1,4})?\s*' + pattern + r'\s*(?:\*{1,2}|:)?\s*(?:\n|$)'
+            # Match section headers (with optional "Here’s" prefix, emoji, markdown; allow trailing text/emoji up to 60 chars)
+            full_pattern = (
+                "(?:^|\n)\\s*(?:\\:\\w+\\:\\s*)*(?:here\\x27?s\\s+)?"
+                "(?:[\U00002600-\U000027BF\U0001F300-\U0001FAFF]\\s*)*"
+                "(?:\\*{1,2}|#{1,4})?\\s*"
+                + pattern +
+                "[^\\n]{0,60}(?:\\n|$)"
+            )
             for match in re.finditer(full_pattern, text, re.IGNORECASE | re.MULTILINE):
                 headers.append({
                     'name': section_name,
@@ -438,16 +606,18 @@ def parse_jd_sections(jd_text: str) -> List[Dict]:
         # No sections found - return entire text as 'unknown'
         return [{'name': 'unknown', 'start': 0, 'end': len(text), 'text': text}]
     
-    # Sort by position
-    headers.sort(key=lambda x: x['header_start'])
-    
-    # Remove overlapping headers (keep first)
+    # Sort by content_start so adjacent headers sharing a \n boundary are ordered correctly
+    headers.sort(key=lambda x: x['content_start'])
+
+    # Remove overlapping headers (keep first match per content position)
+    # Use content_start for comparison: two headers sharing the same \n anchor
+    # have different content_starts, so both are kept correctly.
     unique_headers = []
-    last_end = -1
+    last_content_end = -1
     for h in headers:
-        if h['header_start'] >= last_end:
+        if h['content_start'] > last_content_end:
             unique_headers.append(h)
-            last_end = h['content_start']
+            last_content_end = h['content_start']
     
     # Build sections with text content
     sections = []
@@ -478,10 +648,13 @@ def parse_jd_sections(jd_text: str) -> List[Dict]:
 def extract_requirements_text(jd_text: str) -> Tuple[str, dict]:
     """
     Extract ONLY the requirements/preferred sections from a JD.
-    
+
     Returns:
         (extracted_text, metadata)
     """
+    if '<' in jd_text and '>' in jd_text:
+        jd_text = BeautifulSoup(jd_text, 'html.parser').get_text(separator='\n', strip=True)
+    jd_text = jd_text.replace('\xa0', ' ').replace(''', "'").replace(''', "'")
     sections = parse_jd_sections(jd_text)
     
     # Collect text from extraction sections only

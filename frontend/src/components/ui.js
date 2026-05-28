@@ -13,7 +13,7 @@ export const Panel = ({ as: Tag = 'div', tone = 'default', pad = 'md', className
   const bg = tone === 'raised' ? 'bg-surface-raised' : 'bg-surface';
   const padding = pad === 'sm' ? 'p-3' : pad === 'lg' ? 'p-6' : 'p-5';
   return (
-    <Tag className={cx(bg, 'border border-line', padding, className)} {...rest}>
+    <Tag className={cx(bg, 'border border-line rounded-xl', padding, className)} {...rest}>
       {children}
     </Tag>
   );
