@@ -3476,18 +3476,16 @@ const SkillsTab = () => {
                       </div>
                       <span className="text-sm font-medium w-14 text-right">{skill.demand}%</span>
                     </div>
-                    {(skill.required_pct > 0 || skill.preferred_pct > 0) ? (
-                      <div className="mt-1.5 flex items-center gap-3 text-xs text-ink-muted">
-                        {skill.required_pct > 0 && (
-                          <span><span className="font-medium text-white">{skill.required_pct}%</span> required</span>
-                        )}
-                        {skill.preferred_pct > 0 && (
-                          <span><span className="font-medium text-white">{skill.preferred_pct}%</span> preferred</span>
-                        )}
-                      </div>
-                    ) : (
-                      <div className="mt-1.5 text-xs text-ink-faint">{skill.job_count?.toLocaleString() || '—'} jobs</div>
-                    )}
+                    <div className="mt-1.5 text-xs text-ink-muted">
+                      <span className="font-medium text-white">{skill.job_count?.toLocaleString() || '—'}</span> jobs
+                      {(skill.required_pct > 0 || skill.preferred_pct > 0) && (
+                        <span className="ml-1">
+                          ({skill.required_pct > 0 && <><span className="font-medium text-white">{skill.required_pct}%</span> required</>}
+                          {skill.required_pct > 0 && skill.preferred_pct > 0 && <> · </>}
+                          {skill.preferred_pct > 0 && <><span className="font-medium text-white">{skill.preferred_pct}%</span> preferred</>})
+                        </span>
+                      )}
+                    </div>
                   </div>
                   <div className="col-span-1 pl-4 border-l border-line">
                     {skill.growth_pct != null ? (
