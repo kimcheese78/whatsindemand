@@ -3478,9 +3478,9 @@ const SkillsTab = () => {
                     </div>
                     <div className="mt-0.5 flex items-center gap-3">
                       <div className="flex-1 text-xs text-ink-muted">
-                        {skill.required_pct > 0 && <><span className="font-medium text-white">{skill.required_pct}%</span> required</>}
+                        {skill.required_pct > 0 && <><span className="font-medium">{skill.required_pct}%</span> required</>}
                         {skill.required_pct > 0 && skill.preferred_pct > 0 && <> · </>}
-                        {skill.preferred_pct > 0 && <><span className="font-medium text-white">{skill.preferred_pct}%</span> preferred</>}
+                        {skill.preferred_pct > 0 && <><span className="font-medium">{skill.preferred_pct}%</span> preferred</>}
                       </div>
                       <div className="w-20 text-right shrink-0 text-xs text-ink-faint">{skill.job_count?.toLocaleString() || '—'} jobs</div>
                     </div>
