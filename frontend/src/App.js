@@ -3477,12 +3477,12 @@ const SkillsTab = () => {
                       <span className="text-sm font-medium w-14 text-right">{skill.demand}%</span>
                     </div>
                     {(skill.required_pct > 0 || skill.preferred_pct > 0) ? (
-                      <div className="mt-1.5 flex items-center gap-3 text-xs">
+                      <div className="mt-1.5 flex items-center gap-3 text-xs text-ink-muted">
                         {skill.required_pct > 0 && (
-                          <span className="font-medium text-white/80">{skill.required_pct}% <span className="font-normal text-ink-muted">req</span></span>
+                          <span><span className="font-medium text-white">{skill.required_pct}%</span> required</span>
                         )}
                         {skill.preferred_pct > 0 && (
-                          <span className="font-medium text-white/50">{skill.preferred_pct}% <span className="font-normal text-ink-faint">pref</span></span>
+                          <span><span className="font-medium text-white">{skill.preferred_pct}%</span> preferred</span>
                         )}
                       </div>
                     ) : (
