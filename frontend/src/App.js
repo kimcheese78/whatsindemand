@@ -3502,26 +3502,24 @@ const SkillsTab = () => {
                 </div>
                 {isSelected && (
                   <div className="px-6 py-5 bg-surface border-t border-line">
-                    <div className="flex gap-6">
-                      {roleData?.top_companies?.length > 0 && (
+                    <div className="flex gap-8">
+                      {skill.top_companies?.length > 0 && (
                         <div className="flex-1 min-w-0">
-                          <div className="text-xs text-ink-muted tracking-wider mb-3">TOP COMPANIES HIRING</div>
-                          <div className="space-y-2">
-                            {roleData.top_companies.slice(0, 6).map((company, i) => (
-                              <div key={i} className="flex items-center justify-between text-sm">
-                                <span className="flex items-center gap-2">
-                                  <span className="text-xs text-ink-faint w-4">{i + 1}</span>
-                                  <span className="font-medium">{company.name}</span>
+                          <div className="text-xs text-ink-muted tracking-wider mb-3">TOP COMPANIES HIRING FOR THIS SKILL</div>
+                          <div className="grid grid-cols-2 gap-x-6 gap-y-1.5">
+                            {skill.top_companies.map((company, i) => (
+                              <div key={i} className="flex items-center justify-between text-sm min-w-0">
+                                <span className="flex items-center gap-1.5 min-w-0">
+                                  <span className="text-xs text-ink-faint w-4 shrink-0">{i + 1}</span>
+                                  <span className="font-medium truncate">{company.name}</span>
                                 </span>
-                                {company.job_count && (
-                                  <span className="text-ink-muted text-xs">{company.job_count.toLocaleString()} jobs</span>
-                                )}
+                                <span className="text-xs text-ink-muted shrink-0 ml-2">{company.job_count}</span>
                               </div>
                             ))}
                           </div>
                         </div>
                       )}
-                      <div className={roleData?.top_companies?.length > 0 ? 'w-56 shrink-0' : 'flex-1'}>
+                      <div className="w-48 shrink-0">
                         <div className="text-xs text-ink-muted tracking-wider mb-3">LEARN THIS SKILL</div>
                         <div className="space-y-1.5">
                           {[

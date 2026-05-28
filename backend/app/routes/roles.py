@@ -709,6 +709,27 @@ def get_role_insights():
     # Bulk calculate growth for all skills at once
     skill_growth_map = get_all_skill_growth_bulk(role.id, all_skill_ids, window_days=30)
 
+    # Bulk fetch top companies per skill (single query, grouped in Python)
+    from collections import defaultdict
+    skill_company_rows = db.session.query(
+        JobSkill.skill_id,
+        Company.name,
+        func.count(Job.id).label('job_count')
+    ).join(Job, JobSkill.job_id == Job.id
+    ).join(Company, Job.company_id == Company.id
+    ).filter(
+        JobSkill.job_id.in_(job_ids),
+        JobSkill.skill_id.in_(all_skill_ids),
+        Job.company_id.isnot(None)
+    ).group_by(JobSkill.skill_id, Company.id, Company.name
+    ).order_by(JobSkill.skill_id, func.count(Job.id).desc()
+    ).all()
+
+    skill_companies_map = defaultdict(list)
+    for s_id, c_name, c_count in skill_company_rows:
+        if len(skill_companies_map[s_id]) < 8:
+            skill_companies_map[s_id].append({'name': c_name, 'job_count': c_count})
+
     skills = []
     for skill_id, skill_name, category, job_count, required_count, preferred_count in skill_counts:
         demand = round(job_count / total_jobs * 100, 1)
@@ -723,7 +744,8 @@ def get_role_insights():
             'demand': demand,
             'required_pct': round(required_count / job_count * 100) if job_count else 0,
             'preferred_pct': round(preferred_count / job_count * 100) if job_count else 0,
-            'growth_pct': skill_growth_map.get(skill_id)
+            'growth_pct': skill_growth_map.get(skill_id),
+            'top_companies': skill_companies_map.get(skill_id, [])
         })
 
     # ============================================
