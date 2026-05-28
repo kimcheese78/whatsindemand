@@ -313,7 +313,10 @@ def get_all_skill_growth_bulk(role_id: int, skill_ids: List[int], window_days: i
     
     previous_map = {skill_id: count for skill_id, count in previous_counts}
     
-    MIN_SKILL_PREV_JOBS = 5  # suppress growth badges for skills with very thin history
+    # Scale minimum with role size: 0.5% of previous pool, floored at 5.
+    # For SWE (~17K jobs) this is ~85 — keeps fringe skills from dominating growth sort.
+    # For small roles (~100 jobs) this degrades gracefully to 5.
+    min_skill_prev_jobs = max(5, int(previous_total * 0.005))
 
     # Calculate growth for each skill
     result = {}
@@ -321,7 +324,7 @@ def get_all_skill_growth_bulk(role_id: int, skill_ids: List[int], window_days: i
         current_count = current_map.get(skill_id, 0)
         previous_count = previous_map.get(skill_id, 0)
 
-        if previous_count < MIN_SKILL_PREV_JOBS:
+        if previous_count < min_skill_prev_jobs:
             result[skill_id] = None
             continue
 
@@ -375,14 +378,17 @@ def get_all_company_growth_bulk(role_id: int, company_ids: List[int], window_day
     
     previous_map = {cid: count for cid, count in previous_counts}
     
-    MIN_COMPANY_PREV_JOBS = 3  # suppress growth badges for companies with very thin history
+    # Use a proportional floor: require at least 1% of the largest company's previous count,
+    # but no less than 3. Prevents newly-scraped companies with sparse history from topping the list.
+    max_prev = max(previous_map.values(), default=0)
+    min_company_prev_jobs = max(3, int(max_prev * 0.01))
 
     # Calculate growth for each company
     result = {}
     for company_id in company_ids:
         current_count = current_map.get(company_id, 0)
         previous_count = previous_map.get(company_id, 0)
-        if previous_count < MIN_COMPANY_PREV_JOBS:
+        if previous_count < min_company_prev_jobs:
             result[company_id] = None
             continue
         result[company_id] = calculate_growth_pct(current_count, previous_count)
