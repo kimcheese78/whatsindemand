@@ -3476,7 +3476,7 @@ const SkillsTab = () => {
                       </div>
                       <div className="w-20 text-right shrink-0">
                         <div className="text-sm font-medium">{skill.demand}%</div>
-                        <div className="text-xs text-ink-faint">{skill.job_count?.toLocaleString() || '—'} jobs</div>
+                        <div className="mt-1 text-xs text-ink-faint">{skill.job_count?.toLocaleString() || '—'} jobs</div>
                       </div>
                     </div>
                     {(skill.required_pct > 0 || skill.preferred_pct > 0) && (
