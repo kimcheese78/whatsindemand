@@ -2545,7 +2545,7 @@ const DashboardScreen = () => {
                 <div className="text-base lg:text-lg text-ink-muted">
                   {userSkills?.length > 0
                     ? <>Based on your <span className="text-white font-medium">{userSkills.length} skill{userSkills.length !== 1 ? 's' : ''}</span></>
-                    : 'Add your skills to see roles within reach.'
+                    : 'Add your skills to see where you already qualify.'
                   }
                 </div>
               </>
