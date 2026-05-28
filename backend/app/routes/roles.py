@@ -313,10 +313,7 @@ def get_all_skill_growth_bulk(role_id: int, skill_ids: List[int], window_days: i
     
     previous_map = {skill_id: count for skill_id, count in previous_counts}
     
-    # Scale minimum with role size: 0.5% of previous pool, floored at 5.
-    # For SWE (~17K jobs) this is ~85 — keeps fringe skills from dominating growth sort.
-    # For small roles (~100 jobs) this degrades gracefully to 5.
-    min_skill_prev_jobs = max(5, int(previous_total * 0.005))
+    MIN_SKILL_PREV_JOBS = 5
 
     # Calculate growth for each skill
     result = {}
@@ -324,7 +321,7 @@ def get_all_skill_growth_bulk(role_id: int, skill_ids: List[int], window_days: i
         current_count = current_map.get(skill_id, 0)
         previous_count = previous_map.get(skill_id, 0)
 
-        if previous_count < min_skill_prev_jobs:
+        if previous_count < MIN_SKILL_PREV_JOBS:
             result[skill_id] = None
             continue
 
