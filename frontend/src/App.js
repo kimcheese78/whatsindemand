@@ -2540,12 +2540,12 @@ const DashboardScreen = () => {
             {activeTab === 'paths' ? (
               <>
                 <h1 className="text-3xl sm:text-4xl lg:text-5xl font-semibold tracking-tight mb-3 lg:mb-4">
-                  Role Matches
+                  Roles Within Reach
                 </h1>
                 <div className="text-base lg:text-lg text-ink-muted">
                   {userSkills?.length > 0
                     ? <>Based on your <span className="text-white font-medium">{userSkills.length} skill{userSkills.length !== 1 ? 's' : ''}</span></>
-                    : 'Add your skills to see personalized role matches.'
+                    : 'Add your skills to see roles within reach.'
                   }
                 </div>
               </>
