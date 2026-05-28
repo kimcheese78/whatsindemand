@@ -3474,18 +3474,16 @@ const SkillsTab = () => {
                       <div className="flex-1 h-2 bg-white/10 rounded-full overflow-hidden">
                         <div className="h-full bg-white" style={{ width: `${skill.demand}%` }} />
                       </div>
-                      <div className="w-20 text-right shrink-0">
-                        <div className="text-sm font-medium">{skill.demand}%</div>
-                        <div className="mt-1 text-xs text-ink-faint">{skill.job_count?.toLocaleString() || '—'} jobs</div>
-                      </div>
+                      <span className="text-sm font-medium w-20 text-right shrink-0">{skill.demand}%</span>
                     </div>
-                    {(skill.required_pct > 0 || skill.preferred_pct > 0) && (
-                      <div className="mt-0.5 text-xs text-ink-muted">
+                    <div className="mt-0.5 flex items-center gap-3">
+                      <div className="flex-1 text-xs text-ink-muted">
                         {skill.required_pct > 0 && <><span className="font-medium text-white">{skill.required_pct}%</span> required</>}
                         {skill.required_pct > 0 && skill.preferred_pct > 0 && <> · </>}
                         {skill.preferred_pct > 0 && <><span className="font-medium text-white">{skill.preferred_pct}%</span> preferred</>}
                       </div>
-                    )}
+                      <div className="w-20 text-right shrink-0 text-xs text-ink-faint">{skill.job_count?.toLocaleString() || '—'} jobs</div>
+                    </div>
                   </div>
                   <div className="col-span-1 pl-4 border-l border-line">
                     {skill.growth_pct != null ? (
