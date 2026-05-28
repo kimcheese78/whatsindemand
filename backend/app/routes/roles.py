@@ -718,7 +718,7 @@ def get_role_insights():
         skills.append({
             'skill_id': skill_id,
             'name': skill_name,
-            'category': category or 'technical',
+            'category': category or 'Technical',
             'job_count': job_count,
             'demand': demand,
             'required_pct': round(required_count / job_count * 100) if job_count else 0,

@@ -3423,7 +3423,7 @@ const SkillsTab = () => {
           </div>
 
           <div className="col-span-5 pr-6">
-            <SortHeader column="demand" label="PREVALENCE" />
+            <SortHeader column="demand" label="DEMAND" />
           </div>
 
           <div className="col-span-1 pl-4 border-l border-line">
