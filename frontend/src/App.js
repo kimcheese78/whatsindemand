@@ -3515,22 +3515,40 @@ const SkillsTab = () => {
                 {isSelected && (
                   <div className="px-6 py-5 bg-surface border-t border-line">
                     <div className="flex gap-8">
-                      {skill.top_companies?.length > 0 && (
-                        <div className="flex-1 min-w-0">
-                          <div className="text-xs text-ink-muted tracking-wider mb-3">TOP COMPANIES HIRING FOR THIS SKILL</div>
-                          <div className="grid grid-cols-2 gap-x-6 gap-y-1.5">
-                            {skill.top_companies.map((company, i) => (
-                              <div key={i} className="flex items-center justify-between text-sm min-w-0">
-                                <span className="flex items-center gap-1.5 min-w-0">
-                                  <span className="text-xs text-ink-faint w-4 shrink-0">{i + 1}</span>
-                                  <span className="font-medium truncate">{company.name}</span>
-                                </span>
-                                <span className="text-xs text-ink-muted shrink-0 ml-2">{company.job_count}</span>
+                      {skill.top_companies?.length > 0 && (() => {
+                        const half = Math.ceil(skill.top_companies.length / 2);
+                        const leftCol = skill.top_companies.slice(0, half);
+                        const rightCol = skill.top_companies.slice(half);
+                        return (
+                          <div className="flex-1 min-w-0">
+                            <div className="text-xs text-ink-muted tracking-wider mb-3">TOP COMPANIES HIRING FOR THIS SKILL</div>
+                            <div className="flex gap-6">
+                              <div className="flex-1 space-y-1.5">
+                                {leftCol.map((company, i) => (
+                                  <div key={i} className="flex items-center justify-between text-sm min-w-0">
+                                    <span className="flex items-center gap-1.5 min-w-0">
+                                      <span className="text-xs text-ink-faint w-4 shrink-0">{i + 1}</span>
+                                      <span className="font-medium truncate">{company.name}</span>
+                                    </span>
+                                    <span className="text-xs text-ink-muted shrink-0 ml-2">{company.job_count} jobs</span>
+                                  </div>
+                                ))}
                               </div>
-                            ))}
+                              <div className="flex-1 space-y-1.5">
+                                {rightCol.map((company, i) => (
+                                  <div key={i} className="flex items-center justify-between text-sm min-w-0">
+                                    <span className="flex items-center gap-1.5 min-w-0">
+                                      <span className="text-xs text-ink-faint w-4 shrink-0">{half + i + 1}</span>
+                                      <span className="font-medium truncate">{company.name}</span>
+                                    </span>
+                                    <span className="text-xs text-ink-muted shrink-0 ml-2">{company.job_count} jobs</span>
+                                  </div>
+                                ))}
+                              </div>
+                            </div>
                           </div>
-                        </div>
-                      )}
+                        );
+                      })()}
                       <div className="w-48 shrink-0">
                         <div className="text-xs text-ink-muted tracking-wider mb-3">LEARN THIS SKILL</div>
                         <div className="space-y-1.5">

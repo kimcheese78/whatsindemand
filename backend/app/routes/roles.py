@@ -727,7 +727,7 @@ def get_role_insights():
 
     skill_companies_map = defaultdict(list)
     for s_id, c_name, c_count in skill_company_rows:
-        if len(skill_companies_map[s_id]) < 8:
+        if len(skill_companies_map[s_id]) < 10:
             skill_companies_map[s_id].append({'name': c_name, 'job_count': c_count})
 
     skills = []
