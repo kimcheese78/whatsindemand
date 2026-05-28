@@ -2730,7 +2730,7 @@ const DashboardSidebar = () => {
               onClick={() => {
                 setActiveTab(tab.id);
                 setCurrentScreen('dashboard');
-                window.scrollTo({ top: 0, behavior: 'smooth' });
+                window.scrollTo(0, 0);
               }}
               className={`w-full px-4 py-3 text-left transition-colors ${
                 activeTab === tab.id && currentScreen === 'dashboard'
@@ -3246,35 +3246,32 @@ const EmployersTab = () => {
                   </div>
                   {isSelected && (
                     <div className="px-6 py-5 bg-surface border-t border-line">
-                      <div className="flex flex-wrap gap-6">
+                      <div className="flex flex-wrap gap-6 mb-4">
                         <div>
-                          <div className="text-xs text-ink-muted mb-1 tracking-wider">COMPANY</div>
-                          <div className="font-semibold text-lg">{company.name}</div>
-                          {company.industry && (
-                            <span className="mt-1 inline-block px-2 py-0.5 text-xs bg-white/10 border border-line rounded text-ink">{company.industry}</span>
-                          )}
+                          <div className="text-xs text-ink-muted mb-1 tracking-wider">LOCATION</div>
+                          <div className="font-medium">{company.location || '—'}</div>
                         </div>
                         <div>
-                          <div className="text-xs text-ink-muted mb-1 tracking-wider">OPEN ROLES</div>
-                          <div className="text-2xl font-semibold">{company.job_count?.toLocaleString() || '—'}</div>
+                          <div className="text-xs text-ink-muted mb-1 tracking-wider">FOUNDED</div>
+                          <div className="font-medium">{company.founded_year || '—'}</div>
                         </div>
-                        {company.growth_pct != null && (
-                          <div>
-                            <div className="text-xs text-ink-muted mb-1 tracking-wider">GROWTH (90D)</div>
-                            <div className={`text-2xl font-semibold ${company.growth_pct > 0 ? 'text-accent-up' : company.growth_pct < 0 ? 'text-accent-down' : 'text-ink-muted'}`}>
-                              {company.growth_pct > 100 ? '+100%+' : `${company.growth_pct > 0 ? '+' : ''}${company.growth_pct}%`}
-                            </div>
-                          </div>
-                        )}
+                        <div>
+                          <div className="text-xs text-ink-muted mb-1 tracking-wider">TYPE</div>
+                          <div className="font-medium">{company.company_type || '—'}</div>
+                        </div>
+                        <div>
+                          <div className="text-xs text-ink-muted mb-1 tracking-wider">VALUATION</div>
+                          <div className="font-medium">{company.valuation || '—'}</div>
+                        </div>
                         {company.avg_salary && (
                           <div>
                             <div className="text-xs text-ink-muted mb-1 tracking-wider">AVG SALARY</div>
-                            <div className="text-2xl font-semibold">${Math.round(company.avg_salary / 1000)}K</div>
+                            <div className="font-medium">${Math.round(company.avg_salary / 1000)}K</div>
                           </div>
                         )}
                       </div>
                       {company.top_skills && company.top_skills.length > 0 && (
-                        <div className="mt-4">
+                        <div className="mb-4">
                           <div className="text-xs text-ink-muted mb-2 tracking-wider">TOP SKILLS THEY HIRE FOR</div>
                           <div className="flex flex-wrap gap-1.5">
                             {company.top_skills.slice(0, 8).map((skill, i) => (
@@ -3283,16 +3280,14 @@ const EmployersTab = () => {
                           </div>
                         </div>
                       )}
-                      <div className="mt-4">
-                        <a
-                          href={`https://www.linkedin.com/jobs/search/?keywords=${encodeURIComponent(company.name)}`}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="inline-flex items-center gap-1.5 text-xs text-ink-muted hover:text-white transition-colors"
-                        >
-                          View jobs on LinkedIn <ExternalLink className="w-3 h-3" />
-                        </a>
-                      </div>
+                      <a
+                        href={`https://www.linkedin.com/jobs/search/?keywords=${encodeURIComponent(company.name)}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-1.5 text-xs text-ink-muted hover:text-white transition-colors"
+                      >
+                        View jobs on LinkedIn <ExternalLink className="w-3 h-3" />
+                      </a>
                     </div>
                   )}
                 </React.Fragment>
@@ -3449,228 +3444,125 @@ const SkillsTab = () => {
           ) : (
             sortedSkills.map((skill, idx) => {
               const userHas = hasUserSkills && userSkillIds.has(skill.skill_id);
+              const isSelected = selectedSkill?.skill_id === skill.skill_id;
               return (
-              <button
-                key={skill.skill_id || idx}
-                onClick={() => setSelectedSkill(skill)}
-                className="w-full grid grid-cols-12 gap-4 px-6 py-4 hover:bg-surface transition-colors text-left items-center"
-              >
-                <div className="col-span-3">
-                  <div className="flex items-center gap-3">
-                    <span className="text-xs text-ink-faint w-6">{idx + 1}</span>
-                    <span className="font-medium">{skill.name}</span>
-                  </div>
-                </div>
-
-                <div className="col-span-2">
-                  <span className="px-2 py-1 text-xs font-medium bg-white/10 text-gray-200 border border-line rounded">
-                    {(skill.category || 'other').toUpperCase()}
-                  </span>
-                </div>
-
-                <div className="col-span-5 pr-6">
-                  <div className="flex items-center gap-3">
-                    <div className="flex-1 h-2 bg-white/10 rounded-full overflow-hidden">
-                      <div className="h-full bg-white" style={{ width: `${skill.demand}%` }} />
+              <React.Fragment key={skill.skill_id || idx}>
+                <div
+                  onClick={() => setSelectedSkill(isSelected ? null : skill)}
+                  className={`w-full grid grid-cols-12 gap-4 px-6 py-4 cursor-pointer transition-colors text-left items-center ${isSelected ? 'bg-surface' : 'hover:bg-surface'}`}
+                >
+                  <div className="col-span-3">
+                    <div className="flex items-center gap-3">
+                      <span className="text-xs text-ink-faint w-6">{idx + 1}</span>
+                      <span className="font-medium">{skill.name}</span>
                     </div>
-                    <span className="text-sm font-medium w-14 text-right">{skill.demand}%</span>
                   </div>
-                  {(skill.required_pct > 0 || skill.preferred_pct > 0) ? (
-                    <div className="mt-1.5 flex items-center gap-3 text-xs">
-                      {skill.required_pct > 0 && (
-                        <span className="font-medium text-white/80">{skill.required_pct}% <span className="font-normal text-ink-muted">req</span></span>
-                      )}
-                      {skill.preferred_pct > 0 && (
-                        <span className="font-medium text-white/50">{skill.preferred_pct}% <span className="font-normal text-ink-faint">pref</span></span>
-                      )}
-                    </div>
-                  ) : (
-                    <div className="mt-1.5 text-xs text-ink-faint">{skill.job_count?.toLocaleString() || '—'} jobs</div>
-                  )}
-                </div>
-                <div className="col-span-1 pl-4 border-l border-line">
-                  {skill.growth_pct != null ? (
-                    <span className={`text-xs font-medium ${
-                      skill.growth_pct > 0 ? 'text-accent-up' :
-                      skill.growth_pct < 0 ? 'text-accent-down' :
-                      'text-ink-muted'
-                    }`}>
-                      {skill.growth_pct > 100 ? '+100%+' : `${skill.growth_pct > 0 ? '+' : ''}${skill.growth_pct}%`}
+
+                  <div className="col-span-2">
+                    <span className="px-2 py-1 text-xs font-medium bg-white/10 text-gray-200 border border-line rounded">
+                      {(skill.category || 'other').toUpperCase()}
                     </span>
-                  ) : (
-                    <span className="text-xs text-ink-faint">—</span>
-                  )}
+                  </div>
+
+                  <div className="col-span-5 pr-6">
+                    <div className="flex items-center gap-3">
+                      <div className="flex-1 h-2 bg-white/10 rounded-full overflow-hidden">
+                        <div className="h-full bg-white" style={{ width: `${skill.demand}%` }} />
+                      </div>
+                      <span className="text-sm font-medium w-14 text-right">{skill.demand}%</span>
+                    </div>
+                    {(skill.required_pct > 0 || skill.preferred_pct > 0) ? (
+                      <div className="mt-1.5 flex items-center gap-3 text-xs">
+                        {skill.required_pct > 0 && (
+                          <span className="font-medium text-white/80">{skill.required_pct}% <span className="font-normal text-ink-muted">req</span></span>
+                        )}
+                        {skill.preferred_pct > 0 && (
+                          <span className="font-medium text-white/50">{skill.preferred_pct}% <span className="font-normal text-ink-faint">pref</span></span>
+                        )}
+                      </div>
+                    ) : (
+                      <div className="mt-1.5 text-xs text-ink-faint">{skill.job_count?.toLocaleString() || '—'} jobs</div>
+                    )}
+                  </div>
+                  <div className="col-span-1 pl-4 border-l border-line">
+                    {skill.growth_pct != null ? (
+                      <span className={`text-xs font-medium ${
+                        skill.growth_pct > 0 ? 'text-accent-up' :
+                        skill.growth_pct < 0 ? 'text-accent-down' :
+                        'text-ink-muted'
+                      }`}>
+                        {skill.growth_pct > 100 ? '+100%+' : `${skill.growth_pct > 0 ? '+' : ''}${skill.growth_pct}%`}
+                      </span>
+                    ) : (
+                      <span className="text-xs text-ink-faint">—</span>
+                    )}
+                  </div>
+                  <div className="col-span-1 pl-4 border-l border-line text-center">
+                    {!hasUserSkills ? (
+                      <span className="text-ink-faint text-sm">—</span>
+                    ) : userHas ? (
+                      <span className="text-accent-up text-base font-medium" title="You have this skill">✓</span>
+                    ) : (
+                      <span className="text-ink-faint text-base" title="Gap">·</span>
+                    )}
+                  </div>
                 </div>
-                <div className="col-span-1 pl-4 border-l border-line text-center">
-                  {!hasUserSkills ? (
-                    <span className="text-ink-faint text-sm">—</span>
-                  ) : userHas ? (
-                    <span className="text-accent-up text-base font-medium" title="You have this skill">✓</span>
-                  ) : (
-                    <span className="text-ink-faint text-base" title="Gap">·</span>
-                  )}
-                </div>
-              </button>
+                {isSelected && (
+                  <div className="px-6 py-5 bg-surface border-t border-line">
+                    <div className={`flex gap-6 ${skill.top_companies?.length > 0 ? '' : ''}`}>
+                      {skill.top_companies && skill.top_companies.length > 0 && (
+                        <div className="flex-1 min-w-0">
+                          <div className="text-xs text-ink-muted tracking-wider mb-3">TOP COMPANIES HIRING FOR THIS SKILL</div>
+                          <div className="space-y-2">
+                            {skill.top_companies.slice(0, 6).map((company, i) => (
+                              <div key={i} className="flex items-center justify-between text-sm">
+                                <span className="flex items-center gap-2">
+                                  <span className="text-xs text-ink-faint w-4">{i + 1}</span>
+                                  <span className="font-medium">{typeof company === 'string' ? company : company.name}</span>
+                                </span>
+                                {typeof company === 'object' && company.job_count && (
+                                  <span className="text-ink-muted text-xs">{company.job_count.toLocaleString()} jobs</span>
+                                )}
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+                      <div className={skill.top_companies?.length > 0 ? 'w-56 shrink-0' : 'flex-1'}>
+                        <div className="text-xs text-ink-muted tracking-wider mb-3">LEARN THIS SKILL</div>
+                        <div className="space-y-1.5">
+                          {[
+                            { label: 'Coursera', href: `https://www.coursera.org/search?query=${encodeURIComponent(skill.name)}` },
+                            { label: 'LinkedIn Learning', href: `https://www.linkedin.com/learning/search?keywords=${encodeURIComponent(skill.name)}` },
+                            { label: 'Udemy', href: `https://www.udemy.com/courses/search/?q=${encodeURIComponent(skill.name)}` },
+                            { label: 'YouTube', href: `https://www.youtube.com/results?search_query=${encodeURIComponent(skill.name + ' tutorial')}` },
+                          ].map(({ label, href }) => (
+                            <a
+                              key={label}
+                              href={href}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="flex items-center justify-between px-3 py-2 text-xs bg-black/30 border border-line rounded-lg hover:bg-white/10 transition-colors"
+                            >
+                              <span>{label}</span>
+                              <ExternalLink className="w-3 h-3 text-ink-muted" />
+                            </a>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </React.Fragment>
               );
             })
           )}
         </div>
       </div>
-
-      {/* Skill Detail Modal */}
-      {selectedSkill && (
-        <SkillDetailModal 
-          skill={selectedSkill} 
-          onClose={() => setSelectedSkill(null)} 
-        />
-      )}
     </div>
   );
 };
 
-// ============================================
-// SKILL DETAIL MODAL
-// ============================================
-const SkillDetailModal = ({ skill, onClose }) => {
-  const { selectedRole } = useApp();
-
-  // Close on escape key
-  useEffect(() => {
-    const handleEscape = (e) => {
-      if (e.key === 'Escape') {
-        onClose();
-      }
-    };
-    document.addEventListener('keydown', handleEscape);
-    return () => document.removeEventListener('keydown', handleEscape);
-  }, [onClose]);
-
-  // Close on backdrop click
-  const handleBackdropClick = (e) => {
-    if (e.target === e.currentTarget) {
-      onClose();
-    }
-  };
-
-  return (
-    <div
-      className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4"
-      onClick={handleBackdropClick}
-    >
-      <div className="bg-zinc-900 border border-line-strong rounded-2xl max-w-lg w-full max-h-[80vh] overflow-y-auto">
-        <div className="p-6 border-b border-line flex items-center justify-between">
-          <h2 className="text-2xl font-semibold">{skill.name}</h2>
-          <button
-            onClick={onClose}
-            className="text-ink-muted hover:text-white transition-colors rounded-lg"
-          >
-            <X className="w-6 h-6" />
-          </button>
-        </div>
-
-        <div className="p-6 space-y-5">
-          {/* Section 1 — Demand */}
-          <div className="p-5 bg-surface border border-line rounded-xl">
-            <div className="text-xs text-ink-muted tracking-wider mb-3">DEMAND FOR {selectedRole?.toUpperCase()}</div>
-            <div className="flex items-end gap-4 mb-4">
-              <div className="text-5xl font-semibold">{skill.demand}%</div>
-              <div className="text-sm text-ink-muted mb-1">of job postings</div>
-            </div>
-            <div className="flex flex-wrap gap-3 mb-4">
-              {skill.category && (
-                <span className="px-2.5 py-1 text-xs font-medium bg-white/10 text-gray-200 border border-line rounded">
-                  {skill.category.toUpperCase()}
-                </span>
-              )}
-              {skill.job_count > 0 && (
-                <span className="text-xs text-ink-muted self-center">{skill.job_count.toLocaleString()} jobs</span>
-              )}
-            </div>
-            {(skill.required_pct > 0 || skill.preferred_pct > 0) && (
-              <div className="flex gap-4 pt-3 border-t border-line">
-                {skill.required_pct > 0 && (
-                  <div>
-                    <div className="text-xs text-ink-muted mb-0.5">REQUIRED</div>
-                    <div className="text-xl font-semibold text-white">{skill.required_pct}%</div>
-                  </div>
-                )}
-                {skill.preferred_pct > 0 && (
-                  <div>
-                    <div className="text-xs text-ink-muted mb-0.5">PREFERRED</div>
-                    <div className="text-xl font-semibold text-white/60">{skill.preferred_pct}%</div>
-                  </div>
-                )}
-              </div>
-            )}
-          </div>
-
-          {/* Section 2 — Top companies */}
-          {skill.top_companies && skill.top_companies.length > 0 && (
-            <div className="p-5 bg-surface border border-line rounded-xl">
-              <div className="text-xs text-ink-muted tracking-wider mb-3">TOP COMPANIES HIRING FOR THIS SKILL</div>
-              <div className="space-y-2">
-                {skill.top_companies.slice(0, 5).map((company, i) => (
-                  <div key={i} className="flex items-center justify-between text-sm">
-                    <span className="flex items-center gap-2">
-                      <span className="text-xs text-ink-faint w-4">{i + 1}</span>
-                      <span className="font-medium">{typeof company === 'string' ? company : company.name}</span>
-                    </span>
-                    {typeof company === 'object' && company.job_count && (
-                      <span className="text-ink-muted text-xs">{company.job_count.toLocaleString()} jobs</span>
-                    )}
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {/* Section 3 — Online courses */}
-          <div className="p-5 bg-surface border border-line rounded-xl">
-            <div className="text-xs text-ink-muted tracking-wider mb-3">LEARN THIS SKILL</div>
-            <div className="space-y-2">
-              <a
-                href={`https://www.coursera.org/search?query=${encodeURIComponent(skill.name)}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-full p-3 bg-black/30 border border-line rounded-lg hover:bg-white/10 transition-colors text-left flex items-center justify-between text-sm"
-              >
-                <span>Search on Coursera</span>
-                <ExternalLink className="w-4 h-4 text-ink-muted" />
-              </a>
-              <a
-                href={`https://www.linkedin.com/learning/search?keywords=${encodeURIComponent(skill.name)}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-full p-3 bg-black/30 border border-line rounded-lg hover:bg-white/10 transition-colors text-left flex items-center justify-between text-sm"
-              >
-                <span>Search on LinkedIn Learning</span>
-                <ExternalLink className="w-4 h-4 text-ink-muted" />
-              </a>
-              <a
-                href={`https://www.udemy.com/courses/search/?q=${encodeURIComponent(skill.name)}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-full p-3 bg-black/30 border border-line rounded-lg hover:bg-white/10 transition-colors text-left flex items-center justify-between text-sm"
-              >
-                <span>Search on Udemy</span>
-                <ExternalLink className="w-4 h-4 text-ink-muted" />
-              </a>
-              <a
-                href={`https://www.youtube.com/results?search_query=${encodeURIComponent(skill.name + ' tutorial')}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-full p-3 bg-black/30 border border-line rounded-lg hover:bg-white/10 transition-colors text-left flex items-center justify-between text-sm"
-              >
-                <span>Search on YouTube</span>
-                <ExternalLink className="w-4 h-4 text-ink-muted" />
-              </a>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-};
 
 // ============================================
 // PATHS TAB
@@ -3685,7 +3577,7 @@ const AlternativesTab = () => {
   } = useApp();
 
   const alternativeRoles = roleData?.alternative_roles || [];
-  const sortedRoles = [...alternativeRoles].sort((a, b) => (b.skill_overlap ?? 0) - (a.skill_overlap ?? 0));
+  const sortedRoles = [...alternativeRoles].sort((a, b) => (b.shared_skills?.length ?? 0) - (a.shared_skills?.length ?? 0));
 
   const fmtSalary = (v) => v >= 1000 ? `$${Math.round(v / 1000)}K` : `$${v}`;
   const fmtRange = (min, max) => {
