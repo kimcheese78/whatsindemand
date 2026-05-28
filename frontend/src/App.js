@@ -3239,8 +3239,7 @@ const EmployersTab = () => {
                       company.growth_pct < 0 ? 'text-accent-down' :
                       'text-ink-muted'
                     }`}>
-                      {company.growth_pct > 0 ? '+' : ''}
-                      {company.growth_pct}%
+                      {company.growth_pct > 100 ? '+100%+' : `${company.growth_pct > 0 ? '+' : ''}${company.growth_pct}%`}
                     </span>
                   ) : (
                     <span className="text-ink-faint">—</span>
@@ -3436,8 +3435,7 @@ const SkillsTab = () => {
                       skill.growth_pct < 0 ? 'text-accent-down' :
                       'text-ink-muted'
                     }`}>
-                      {skill.growth_pct > 0 ? '+' : ''}
-                      {skill.growth_pct}%
+                      {skill.growth_pct > 100 ? '+100%+' : `${skill.growth_pct > 0 ? '+' : ''}${skill.growth_pct}%`}
                     </span>
                   ) : (
                     <span className="text-sm text-ink-faint">—</span>

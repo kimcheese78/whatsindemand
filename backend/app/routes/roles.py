@@ -24,16 +24,13 @@ roles_bp = Blueprint('roles', __name__, url_prefix='/api/roles')
 # HELPER FUNCTIONS
 # ============================================
 
-MAX_GROWTH_PCT = 500.0  # cap to avoid noise from tiny-sample periods
-
 def calculate_growth_pct(current_count: float, previous_count: float) -> Optional[float]:
     """Calculate percentage growth between two periods."""
     if previous_count == 0:
         if current_count > 0:
             return 100.0
         return None
-    pct = round(((current_count - previous_count) / previous_count) * 100, 1)
-    return min(pct, MAX_GROWTH_PCT) if pct > 0 else pct
+    return round(((current_count - previous_count) / previous_count) * 100, 1)
 
 
 # Cohort-lock keeps every period drawn from the same set of companies, so
