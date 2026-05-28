@@ -3480,7 +3480,7 @@ const SkillsTab = () => {
                       </div>
                     </div>
                     {(skill.required_pct > 0 || skill.preferred_pct > 0) && (
-                      <div className="mt-1.5 text-xs text-ink-muted">
+                      <div className="mt-0.5 text-xs text-ink-muted">
                         {skill.required_pct > 0 && <><span className="font-medium text-white">{skill.required_pct}%</span> required</>}
                         {skill.required_pct > 0 && skill.preferred_pct > 0 && <> · </>}
                         {skill.preferred_pct > 0 && <><span className="font-medium text-white">{skill.preferred_pct}%</span> preferred</>}
