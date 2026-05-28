@@ -2544,12 +2544,24 @@ const DashboardScreen = () => {
                     <h1 className="text-3xl sm:text-4xl lg:text-5xl font-semibold tracking-tight mb-3 lg:mb-4">
                       Roles within reach
                     </h1>
-                    <div className="text-base lg:text-lg text-ink-muted">
-                      {userSkills?.length > 0
-                        ? <>Based on your <span className="text-white font-medium">{userSkills.length} skill{userSkills.length !== 1 ? 's' : ''}</span></>
-                        : 'See which other roles are looking for your skills.'
-                      }
-                    </div>
+                    {userSkills?.length > 0 ? (
+                      <>
+                        <div className="text-base lg:text-lg text-ink-muted mb-3">
+                          Based on your <span className="text-white font-medium">{userSkills.length} skill{userSkills.length !== 1 ? 's' : ''}</span>
+                        </div>
+                        <div className="flex flex-wrap gap-1.5">
+                          {userSkills.map((s) => (
+                            <span key={s.skill_id} className="px-2.5 py-1 text-xs font-medium border border-white/20 text-ink bg-white/5 rounded-lg">
+                              {s.name}
+                            </span>
+                          ))}
+                        </div>
+                      </>
+                    ) : (
+                      <div className="text-base lg:text-lg text-ink-muted">
+                        See which other roles are looking for your skills.
+                      </div>
+                    )}
                   </>
                 ) : (
                   <>
@@ -3654,11 +3666,11 @@ const AlternativesTab = () => {
                   {role.shared_skills?.length > 0 && (
                     <div className="flex flex-wrap items-center gap-1.5">
                       <span className="text-xs text-ink-muted w-16 shrink-0">YOU KNOW</span>
-                      {role.shared_skills.slice(0, 5).map((s, i) => (
+                      {role.shared_skills.map((s, i) => (
                         <span key={i} className="px-2 py-0.5 text-xs border border-green-500/40 text-accent-up bg-accent-up/10 rounded">{s}</span>
                       ))}
-                      {role.shared_skills.length > 5 && (
-                        <span className="text-xs text-ink-muted">+{role.shared_skills.length - 5}</span>
+                      {(role.shared_count ?? role.shared_skills.length) > role.shared_skills.length && (
+                        <span className="text-xs text-ink-muted">+{(role.shared_count ?? role.shared_skills.length) - role.shared_skills.length}</span>
                       )}
                     </div>
                   )}
