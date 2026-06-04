@@ -1153,11 +1153,17 @@ def _get_alternative_roles(
         )[:10]
 
         # MATCH % shown in the UI.
-        # "What fraction of what this role demands do you already know?"
-        # Demand-weighted role coverage gives intuitive numbers: high when you
-        # have the skills the role actually cares about most.
+        # F1 of demand-weighted coverage and breadth — harmonic mean of:
+        #   demand_weighted_coverage: what fraction of this role's demand you cover
+        #   breadth: what fraction of YOUR skills are relevant here
+        # Pure coverage alone rates Neuropsychologist (2 soft skills, small role)
+        # above AI Engineer (6 technical skills) because Communication+Collaboration
+        # happen to dominate a small denominator. F1 fixes this by also requiring
+        # that a meaningful fraction of the user's own skills transfer.
         if user_skill_ids:
-            display_pct = round(demand_weighted_coverage * 100)
+            f1 = (2 * demand_weighted_coverage * breadth / (demand_weighted_coverage + breadth)
+                  if (demand_weighted_coverage + breadth) > 0 else 0)
+            display_pct = round(f1 * 100)
         else:
             display_pct = round(coverage * 100)
 
