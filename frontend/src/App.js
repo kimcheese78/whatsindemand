@@ -286,12 +286,26 @@ const AppProvider = ({ children }) => {
         setBaseSeniority(session.seniority_level || '');
         setBaseLocation(parsedLocation);
         
-        // If we have cached analysis data, use it
+        // If we have cached analysis data, use it immediately for fast load,
+        // then silently refresh in the background so alternatives reflect the
+        // user's current skills (the cache may pre-date skill selection).
         if (session.analysis) {
           setRoleData(session.analysis);
           setCurrentScreen('dashboard');
           setAppliedSeniority(session.seniority_level || '');
           setAppliedLocation(parsedLocation);
+          if (session.target_role && session.seniority_level && userSkills?.length > 0) {
+            api.getRoleInsights(
+              session.target_role,
+              session.seniority_level,
+              parsedLocation,
+              null,
+              null,
+              userSkills
+            ).then(fresh => {
+              if (fresh?.success) setRoleData(fresh);
+            }).catch(() => {});
+          }
           return true;
         }
 
@@ -370,12 +384,9 @@ const AppProvider = ({ children }) => {
         setAppliedLocation(selectedLocation);
         setBaseSeniority(selectedSeniority);
         setBaseLocation(selectedLocation);
-        // Skills are role-specific. Drop any held skills not present in the
-        // new role's skill set so the user only confirms the overlap.
-        const newRoleIds = new Set((data.skills || []).map(s => s.skill_id));
-        setUserSkills((userSkills || []).filter(s => newRoleIds.has(s.skill_id)));
-        // Always route through skills-input so users can confirm/edit their
-        // gap mapping for the new role.
+        // Route through skills-input so users can confirm/edit their
+        // gap mapping for the new role. User skills are preserved as-is —
+        // they represent what the user knows, not what any one role demands.
         setCurrentScreen('skills-input');
 
         // Save session if user is logged in
@@ -447,8 +458,6 @@ const AppProvider = ({ children }) => {
         setAppliedLocation(selectedLocation);
         setBaseSeniority(selectedSeniority);
         setBaseLocation(selectedLocation);
-        const newRoleIds = new Set((data.skills || []).map(s => s.skill_id));
-        setUserSkills((userSkills || []).filter(s => newRoleIds.has(s.skill_id)));
         setCurrentScreen('skills-input');
 
         // Save session if user is logged in
