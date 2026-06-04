@@ -1145,12 +1145,19 @@ def _get_alternative_roles(
         shared_scored.sort(key=lambda x: x[1], reverse=True)
         top_shared_ids = [sid for sid, _ in shared_scored[:8]]
 
-        # Gap: core skills the user doesn't have, ranked by role demand
-        top_new_ids = sorted(
-            new_ids,
-            key=lambda s: skills_map.get(s, 0),
-            reverse=True,
-        )[:10]
+        # Gap: core skills the user doesn't have, ranked by demand %.
+        # Filter to ≥10% demand so fringe skills don't surface (e.g. "Google Ads"
+        # in Operations Manager passes the 5% core threshold but isn't a real gap
+        # worth surfacing). Fall back to top-10 by demand % if nothing clears 10%.
+        MIN_GAP_DEMAND = 0.10
+        new_ids_scored = [
+            (sid, skills_map.get(sid, 0) / total_role_jobs)
+            for sid in new_ids
+            if total_role_jobs
+        ]
+        new_ids_scored.sort(key=lambda x: x[1], reverse=True)
+        filtered = [sid for sid, pct in new_ids_scored if pct >= MIN_GAP_DEMAND]
+        top_new_ids = (filtered or [sid for sid, _ in new_ids_scored])[:10]
 
         # MATCH % shown in the UI.
         # F1 of demand-weighted coverage and breadth — harmonic mean of:
