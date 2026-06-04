@@ -3266,41 +3266,77 @@ const EmployersTab = () => {
                     </div>
                   </div>
                   {isSelected && (
-                    <div className="px-6 py-5 bg-surface border-t border-line">
-                      <div className="flex flex-wrap gap-6 mb-4">
-                        <div>
-                          <div className="text-xs text-ink-muted mb-1 tracking-wider">LOCATION</div>
-                          <div className="font-medium">{company.location || '—'}</div>
+                    <div className="border-t border-line">
+                      {/* Header: logo + name + link */}
+                      <div className="flex items-center gap-4 px-6 py-4 border-b border-line/50">
+                        {company.logo_url ? (
+                          <img
+                            src={company.logo_url}
+                            alt={company.name}
+                            className="w-10 h-10 rounded-lg object-contain bg-white/5 p-1 shrink-0"
+                            onError={e => { e.target.style.display = 'none'; }}
+                          />
+                        ) : (
+                          <div className="w-10 h-10 rounded-lg bg-white/10 flex items-center justify-center shrink-0">
+                            <span className="text-sm font-bold text-ink-muted">{company.name?.[0]}</span>
+                          </div>
+                        )}
+                        <div className="flex-1 min-w-0">
+                          <div className="font-semibold truncate">{company.name}</div>
+                          {company.industry && (
+                            <div className="text-xs text-ink-muted mt-0.5">{company.industry}</div>
+                          )}
                         </div>
-                        <div>
-                          <div className="text-xs text-ink-muted mb-1 tracking-wider">FOUNDED</div>
-                          <div className="font-medium">{company.founded_year || '—'}</div>
-                        </div>
-                        <div>
-                          <div className="text-xs text-ink-muted mb-1 tracking-wider">TYPE</div>
-                          <div className="font-medium">{company.company_type || '—'}</div>
-                        </div>
-                        <div>
-                          <div className="text-xs text-ink-muted mb-1 tracking-wider">VALUATION</div>
-                          <div className="font-medium">{company.valuation || '—'}</div>
-                        </div>
+                        {company.website && (
+                          <a
+                            href={company.website.startsWith('http') ? company.website : `https://${company.website}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            onClick={e => e.stopPropagation()}
+                            className="flex items-center gap-1.5 text-xs text-ink-muted hover:text-white transition-colors border border-line px-3 py-1.5 rounded-lg shrink-0"
+                          >
+                            <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                            </svg>
+                            Visit
+                          </a>
+                        )}
+                      </div>
+
+                      {/* Stats grid */}
+                      <div className="grid grid-cols-4 divide-x divide-line/50 border-b border-line/50">
+                        {[
+                          { label: 'LOCATION', value: company.location },
+                          { label: 'FOUNDED', value: company.founded_year },
+                          { label: 'TYPE', value: company.company_type },
+                          { label: 'VALUATION', value: company.valuation },
+                        ].map(({ label, value }) => (
+                          <div key={label} className="px-5 py-4">
+                            <div className="text-xs text-ink-muted tracking-wider mb-1">{label}</div>
+                            <div className="font-medium text-sm">{value || '—'}</div>
+                          </div>
+                        ))}
+                      </div>
+
+                      {/* Skills + salary */}
+                      <div className="px-6 py-4">
                         {company.avg_salary && (
+                          <div className="mb-4">
+                            <div className="text-xs text-ink-muted tracking-wider mb-1">AVG SALARY</div>
+                            <div className="font-medium text-sm">${Math.round(company.avg_salary / 1000)}K</div>
+                          </div>
+                        )}
+                        {company.top_skills && company.top_skills.length > 0 && (
                           <div>
-                            <div className="text-xs text-ink-muted mb-1 tracking-wider">AVG SALARY</div>
-                            <div className="font-medium">${Math.round(company.avg_salary / 1000)}K</div>
+                            <div className="text-xs text-ink-muted tracking-wider mb-2">TOP SKILLS THEY HIRE FOR</div>
+                            <div className="flex flex-wrap gap-1.5">
+                              {company.top_skills.slice(0, 8).map((skill, i) => (
+                                <span key={i} className="px-2 py-0.5 text-xs border border-line bg-white/5 text-ink rounded">{skill}</span>
+                              ))}
+                            </div>
                           </div>
                         )}
                       </div>
-                      {company.top_skills && company.top_skills.length > 0 && (
-                        <div className="mb-4">
-                          <div className="text-xs text-ink-muted mb-2 tracking-wider">TOP SKILLS THEY HIRE FOR</div>
-                          <div className="flex flex-wrap gap-1.5">
-                            {company.top_skills.slice(0, 8).map((skill, i) => (
-                              <span key={i} className="px-2 py-0.5 text-xs border border-line bg-white/5 text-ink rounded">{skill}</span>
-                            ))}
-                          </div>
-                        </div>
-                      )}
                     </div>
                   )}
                 </React.Fragment>
