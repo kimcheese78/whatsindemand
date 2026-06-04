@@ -698,7 +698,8 @@ def get_role_insights():
         func.sum(func.cast(JobSkill.is_required, db.Integer)).label('required_count'),
         func.sum(func.cast(~JobSkill.is_required, db.Integer)).label('preferred_count')
     ).join(JobSkill).filter(
-        JobSkill.job_id.in_(job_ids)
+        JobSkill.job_id.in_(job_ids),
+        Skill.is_verified == True
     ).group_by(Skill.id).order_by(
         func.count(JobSkill.id).desc()
     ).limit(150).all()
@@ -1072,8 +1073,7 @@ def _get_alternative_roles(
             if len(skills_map) < 10:
                 continue
 
-            # Coverage = what % of this role's CORE skills the user has.
-            # 5% threshold: skill must appear in ≥5% of the role's job postings.
+            # Core skills: appear in ≥5% of this role's job postings.
             if total_role_jobs > 0:
                 core_skill_ids = {sid for sid, cnt in skills_map.items()
                                   if cnt / total_role_jobs >= 0.05}
@@ -1082,10 +1082,8 @@ def _get_alternative_roles(
             # Fallback: if fewer than 15 qualify, take the top 30 by raw count
             if len(core_skill_ids) < 15:
                 core_skill_ids = set(sorted(skills_map, key=lambda s: skills_map[s], reverse=True)[:30])
-            # After fallback, if still too few, the role has sparse data — skip it
             if len(core_skill_ids) < 10:
                 continue
-            # Cap at 40
             if len(core_skill_ids) > 40:
                 core_skill_ids = set(sorted(core_skill_ids, key=lambda s: skills_map[s], reverse=True)[:40])
 
@@ -1093,7 +1091,23 @@ def _get_alternative_roles(
             if len(shared_ids) < min_shared:
                 continue
 
-            coverage = len(shared_ids) / len(core_skill_ids)
+            # Demand-weighted score: sum how strongly each of the user's matched
+            # skills is demanded by this role, normalised by user skill count.
+            # This rewards roles where the user's skills are CORE (demanded at 40%)
+            # over roles where they appear as afterthoughts (demanded at 5%).
+            matched_demand = sum(
+                skills_map.get(sid, 0) / total_role_jobs
+                for sid in shared_ids
+            ) if total_role_jobs else 0
+            demand_score = matched_demand / len(my_skill_ids)
+
+            # Breadth: what fraction of the user's own skills transfer.
+            # Shown as the match % in the UI — intuitive and user-centric.
+            breadth = len(shared_ids) / len(my_skill_ids)
+
+            # Combined: demand strength drives ranking, breadth shown to user.
+            coverage = 0.7 * demand_score + 0.3 * breadth
+
             new_ids = core_skill_ids - my_skill_ids
         else:
             shared_ids = my_skill_ids & their_skill_ids
@@ -1105,12 +1119,12 @@ def _get_alternative_roles(
         union_ids = my_skill_ids | their_skill_ids
         jaccard = len(shared_ids) / len(union_ids) if union_ids else 0
 
-        # Growth signal — clamp so a hot role doesn't outrank a strong-coverage match.
+        # Growth signal — clamp tightly so a hot role can't outrank a strong skill match.
         growth = role_growth_map.get(rid)
         growth_signal = 0.0
         if growth is not None:
             growth_signal = max(-30.0, min(30.0, growth)) / 100.0
-        score = coverage + 0.15 * growth_signal
+        score = coverage + 0.05 * growth_signal
 
         # Rank shared skills by how central they are to the role
         shared_scored = []
@@ -1127,13 +1141,21 @@ def _get_alternative_roles(
             reverse=True,
         )[:10]
 
+        # coverage_pct shown as "MATCH" in the UI.
+        # When user skills are provided: show breadth (what % of YOUR skills transfer).
+        # Otherwise: show the role-overlap coverage already stored in `coverage`.
+        if user_skill_ids:
+            display_pct = round((len(shared_ids) / len(my_skill_ids)) * 100)
+        else:
+            display_pct = round(coverage * 100)
+
         candidates.append({
             'role_id': rid,
             'shared_ids': top_shared_ids,
             'new_ids': top_new_ids,
             'shared_count': len(shared_ids),
             'new_count': len(new_ids),
-            'coverage_pct': round(coverage * 100),
+            'coverage_pct': display_pct,
             'jaccard_pct': round(jaccard * 100),
             'score': score,
             'growth': growth,
