@@ -60,7 +60,6 @@ _REJECT_KEYWORDS = [
     'requerimiento', 'medio tiempo', 'bono garantizado', 'tiempo completo',
     'descrizione', 'mansioni', 'requisiti', 'offerta', 'diseñador',
     'ambassador program',
-    'seasonal property',
     'summer networking',
     'casting call', 'audition',
     'ea test', 'most questions',
@@ -135,7 +134,6 @@ EXPLICIT_MAPS: list[tuple[str, list[str]]] = [
         'nicu nurse', 'picu nurse', 'pacu nurse', 'or nurse',
         'pre-op nurse', 'home health rn', 'hospice rn',
         'clinic nurse', 'infusion nurse', 'float pool rn',
-        'float pool certified nursing assistant',  # catch-all for float pool
         'senior living',  # "Registered Nurse - Senior Living"
     ]),
     ('Licensed Practical Nurse', [
@@ -179,7 +177,7 @@ EXPLICIT_MAPS: list[tuple[str, list[str]]] = [
     ]),
     ('Occupational Therapist', [
         'occupational therapist', 'certified occupational therapy assistant',
-        'cota ', 'ota ',
+        'cota ',
     ]),
     ('Speech-Language Pathologist', [
         'speech-language pathologist', 'speech therapist', 'slp,', ' slp ',
@@ -211,7 +209,8 @@ EXPLICIT_MAPS: list[tuple[str, list[str]]] = [
         'dermatologist', 'mohs surgeon', 'cosmetic dermatologist',
     ]),
     ('Obstetrician/Gynecologist', [
-        'obstetrician', 'gynecologist', 'ob/gyn', 'obstetrics',
+        'obstetrician', 'gynecologist', 'obstetrics',
+        'ob/gyn physician', 'ob/gyn doctor', 'ob/gyn specialist',
     ]),
     ('Pediatrician', [
         'pediatrician', 'child health physician',
@@ -230,6 +229,11 @@ EXPLICIT_MAPS: list[tuple[str, list[str]]] = [
         'associate veterinarian', 'emergency veterinarian',
         'relief veterinarian', 'veterinary internist',
         'veterinary specialist', 'veterinary surgeon',
+        # Specialty vets — must appear before Dermatologist/Dentist entries
+        'veterinary dermatologist', 'veterinary dentist',
+        'veterinary cardiologist', 'veterinary neurologist',
+        'veterinary oncologist', 'veterinary radiologist',
+        'veterinary criticalist',
     ]),
     ('Veterinary Technician', [
         'veterinary technician', 'vet tech', 'veterinary assistant',
@@ -245,7 +249,7 @@ EXPLICIT_MAPS: list[tuple[str, list[str]]] = [
         'home health aide', 'hhc,', 'hhc ', 'home care specialist',
     ]),
     ('Hospice Aide', [
-        'hospice aide', 'hospice caregiver', 'end of life care aide', 'prn hospice',
+        'hospice aide', 'hospice caregiver', 'end of life care aide', 'prn hospice aide',
     ]),
     ('Social Worker', [
         'social worker', 'case manager', 'case worker', 'care coordinator',
@@ -339,7 +343,7 @@ EXPLICIT_MAPS: list[tuple[str, list[str]]] = [
         'store advisor', 'retail advisor', 'beauty advisor',
     ]),
     ('Shift Supervisor', [
-        'shift supervisor', 'shift lead', 'shift manager', 'team lead,',
+        'shift supervisor', 'shift lead', 'shift manager',
         'floor supervisor', 'key holder', 'key-holder',
     ]),
 
@@ -374,6 +378,7 @@ EXPLICIT_MAPS: list[tuple[str, list[str]]] = [
         'maintenance specialist', 'janitor', 'custodian',
         'facilities specialist', 'pool attendant', 'pool technician',
         'property caretaker', 'property maintenance', 'estate caretaker',
+        'property operations support', 'apartment turnover',
     ]),
     ('Field Service Technician', [
         'field service technician', 'field technician', 'service technician',
@@ -471,7 +476,7 @@ EXPLICIT_MAPS: list[tuple[str, list[str]]] = [
         'director of partnerships', 'head of business development',
         'vp of business development', 'head of bd',
     ]),
-    ('Business Development Representative', [
+    ('Sales Development Representative', [
         'business development rep', 'bdr,', ' bdr ', 'outbound bdr',
         'inbound bdr', 'allbound bdr', 'allbound sdr',
     ]),
@@ -505,7 +510,8 @@ EXPLICIT_MAPS: list[tuple[str, list[str]]] = [
     ]),
     ('Journalist', [
         'anchor', 'news anchor', 'tv anchor', 'broadcast journalist',
-        'reporter', 'correspondent', 'photojournalist',
+        'tv reporter', 'news reporter', 'staff reporter', 'field reporter',
+        'investigative reporter', 'photojournalist',
         'copy editor', 'news editor', 'msj ',
     ]),
 
@@ -533,8 +539,8 @@ EXPLICIT_MAPS: list[tuple[str, list[str]]] = [
         'leasing consultant', 'leasing agent', 'property leasing',
         'apartment leasing', 'rental agent', 'leasing specialist',
     ]),
-    ('Maintenance Technician', [  # duplicate: property management also maintenance
-        'property manager', 'facilities manager',
+    ('Operations Manager', [
+        'facilities manager',
     ]),
 
     # ── Finance ──────────────────────────────────────────────────────────────
@@ -546,7 +552,7 @@ EXPLICIT_MAPS: list[tuple[str, list[str]]] = [
     ]),
 
     # ── Legal ────────────────────────────────────────────────────────────────
-    ('Attorney', [
+    ('Legal Counsel', [
         'immigration attorney', 'immigration lawyer', 'criminal attorney',
         'family attorney', 'employment attorney', 'real estate attorney',
         'corporate attorney', 'litigation attorney', 'tax attorney',
@@ -569,7 +575,7 @@ EXPLICIT_MAPS: list[tuple[str, list[str]]] = [
         'recruiter', 'talent acquisition partner', 'talent partner',
         'sourcing specialist', 'recruiting coordinator', 'hr recruiter',
     ]),
-    ('Talent Acquisition Specialist', [
+    ('Recruiter', [
         'talent acquisition specialist', 'talent specialist',
         'recruitment specialist', 'staffing specialist',
         'staffing coordinator',
@@ -633,6 +639,8 @@ EXPLICIT_MAPS: list[tuple[str, list[str]]] = [
     # ── Data / Analytics ─────────────────────────────────────────────────────
     ('Data Analyst', [
         'data management and bi', 'bi senior', 'bi analyst',
+        'business intelligence analyst', 'business intelligence engineer',
+        'business intelligence manager', 'business intelligence developer',
     ]),
 
     # ── Marketing / Content (executive titles with clear function) ────────────
@@ -660,7 +668,7 @@ EXPLICIT_MAPS: list[tuple[str, list[str]]] = [
     ]),
 
     # ── Engineering — Security ────────────────────────────────────────────────
-    ('Information Security Engineer', [
+    ('Security Engineer', [
         'director of information security', 'head of information security',
         'vp of information security', 'ciso',
         'information security officer',
@@ -736,8 +744,9 @@ NEW_ROLES = [
         'category': 'Engineering',
         'job_family': 'Defense & Intelligence',
         'seniority_level': None,
-        'patterns': ['intelligence analyst', 'intelligence officer',
-                     'intelligence operations', 'geospatial analyst',
+        'patterns': ['intelligence officer',
+                     'intelligence operations',
+                     'geospatial analyst',
                      'signals analyst', 'imagery analyst', 'all-source analyst',
                      'collection manager', 'intelligence operations integrator'],
         'reason': 'Defense/government intelligence cluster, ~50 jobs',
@@ -816,9 +825,13 @@ def _should_reject(title: str) -> str | None:
     return None
 
 
-def build_explicit_lookup(roles_by_title: dict[str, int]) -> dict[str, int]:
-    """Build pattern → role_id lookup. Resolves role IDs by title at runtime."""
-    lookup: dict[str, int] = {}
+def build_explicit_lookup(roles_by_title: dict[str, int]) -> list[tuple[str, int]]:
+    """Build pattern → role_id lookup sorted longest-first.
+
+    Longest patterns are checked first so specific patterns ('veterinary dermatologist')
+    win over shorter overlapping ones ('dermatologist').
+    """
+    raw: dict[str, int] = {}
     missing: list[str] = []
     for role_title, patterns in EXPLICIT_MAPS:
         role_id = roles_by_title.get(role_title.lower())
@@ -828,21 +841,22 @@ def build_explicit_lookup(roles_by_title: dict[str, int]) -> dict[str, int]:
             continue
         for pat in patterns:
             pat_l = pat.lower()
-            if pat_l not in lookup:
-                lookup[pat_l] = role_id
+            if pat_l not in raw:
+                raw[pat_l] = role_id
     if missing:
         print(f'  Warning: {len(missing)} canonical titles not found in DB:')
         for t in missing:
             print(f'    - {t!r}')
-    return lookup
+    # Sort longest pattern first — more specific always beats less specific
+    return sorted(raw.items(), key=lambda x: -len(x[0]))
 
 
-def match_candidate(title: str, roles_norm: dict, explicit_lookup: dict) -> int | None:
+def match_candidate(title: str, roles_norm: dict, explicit_lookup: list[tuple[str, int]]) -> int | None:
     title_l = title.lower()
     title_n = _normalize(title)
 
-    # 1. Explicit substring patterns (highest priority)
-    for pat, role_id in explicit_lookup.items():
+    # 1. Explicit substring patterns (highest priority, longest-first)
+    for pat, role_id in explicit_lookup:
         if pat in title_l:
             return role_id
 
