@@ -1101,10 +1101,20 @@ def _get_alternative_roles(
             ) if total_role_jobs else 0
             demand_score = matched_demand / len(my_skill_ids)
 
-            # Breadth: fraction of the user's skills that transfer.
+            # Breadth: fraction of the user's skills that transfer (used in ranking).
             breadth = len(shared_ids) / len(my_skill_ids)
-            # Role coverage: fraction of this role's core skills the user has.
-            role_coverage = len(shared_ids) / len(core_skill_ids)
+
+            # Demand-weighted role coverage: what fraction of this role's total
+            # skill demand does the user already cover?
+            # Σ(demand% for matched skills) / Σ(demand% for all core skills)
+            total_role_demand = sum(
+                skills_map.get(sid, 0) / total_role_jobs
+                for sid in core_skill_ids
+            ) if total_role_jobs else 0
+            demand_weighted_coverage = (
+                matched_demand / total_role_demand
+                if total_role_demand > 0 else 0
+            )
 
             # Combined ranking score: demand strength drives ordering.
             coverage = 0.7 * demand_score + 0.3 * breadth
@@ -1143,14 +1153,11 @@ def _get_alternative_roles(
         )[:10]
 
         # MATCH % shown in the UI.
-        # F1 score: harmonic mean of breadth (user-centric) and role_coverage
-        # (role-centric). Hits 100% only when both are 100%, so a user whose
-        # skills all appear in a role but who still has lots to learn gets a
-        # realistic mid-range score rather than a misleading 100%.
+        # "What fraction of what this role demands do you already know?"
+        # Demand-weighted role coverage gives intuitive numbers: high when you
+        # have the skills the role actually cares about most.
         if user_skill_ids:
-            f1 = (2 * breadth * role_coverage / (breadth + role_coverage)
-                  if (breadth + role_coverage) > 0 else 0)
-            display_pct = round(f1 * 100)
+            display_pct = round(demand_weighted_coverage * 100)
         else:
             display_pct = round(coverage * 100)
 
