@@ -1101,11 +1101,12 @@ def _get_alternative_roles(
             ) if total_role_jobs else 0
             demand_score = matched_demand / len(my_skill_ids)
 
-            # Breadth: what fraction of the user's own skills transfer.
-            # Shown as the match % in the UI — intuitive and user-centric.
+            # Breadth: fraction of the user's skills that transfer.
             breadth = len(shared_ids) / len(my_skill_ids)
+            # Role coverage: fraction of this role's core skills the user has.
+            role_coverage = len(shared_ids) / len(core_skill_ids)
 
-            # Combined: demand strength drives ranking, breadth shown to user.
+            # Combined ranking score: demand strength drives ordering.
             coverage = 0.7 * demand_score + 0.3 * breadth
 
             new_ids = core_skill_ids - my_skill_ids
@@ -1141,11 +1142,15 @@ def _get_alternative_roles(
             reverse=True,
         )[:10]
 
-        # coverage_pct shown as "MATCH" in the UI.
-        # When user skills are provided: show breadth (what % of YOUR skills transfer).
-        # Otherwise: show the role-overlap coverage already stored in `coverage`.
+        # MATCH % shown in the UI.
+        # F1 score: harmonic mean of breadth (user-centric) and role_coverage
+        # (role-centric). Hits 100% only when both are 100%, so a user whose
+        # skills all appear in a role but who still has lots to learn gets a
+        # realistic mid-range score rather than a misleading 100%.
         if user_skill_ids:
-            display_pct = round((len(shared_ids) / len(my_skill_ids)) * 100)
+            f1 = (2 * breadth * role_coverage / (breadth + role_coverage)
+                  if (breadth + role_coverage) > 0 else 0)
+            display_pct = round(f1 * 100)
         else:
             display_pct = round(coverage * 100)
 
