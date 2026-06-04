@@ -95,23 +95,27 @@ class Skill(db.Model):
     
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(255), unique=True, nullable=False)
-    category = db.Column(db.String(50))   # 'technical', 'soft', 'domain'
+    category = db.Column(db.String(50))        # 'technical', 'soft', 'domain'
+    subcategory = db.Column(db.String(100))    # e.g. 'AI & Machine Learning'
+    industry = db.Column(db.String(100))       # sector tag, e.g. 'Healthcare' (NULL = universal)
     aliases = db.Column(db.ARRAY(db.String))
     is_verified = db.Column(db.Boolean, default=False)
-    
-    # NEW: Aggregated stats for performance
+
+    # Aggregated stats for performance
     total_job_count = db.Column(db.Integer, default=0)
     trending_score = db.Column(db.Float, default=0.0)
-    
+
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
-    
+
     def to_dict(self):
         return {
             'id': self.id,
             'skill_id': self.id,
             'name': self.name,
             'category': self.category,
+            'subcategory': self.subcategory,
+            'industry': self.industry,
             'total_job_count': self.total_job_count,
             'trending_score': self.trending_score
         }
@@ -157,6 +161,12 @@ class Company(db.Model):
     logo_url = db.Column(db.String(500))
     last_scraped_at = db.Column(db.DateTime)
     is_active = db.Column(db.Boolean, default=True)
+
+    # Company profile fields
+    location = db.Column(db.String(255))        # e.g. "San Francisco, CA"
+    founded_year = db.Column(db.Integer)         # e.g. 2012
+    company_type = db.Column(db.String(50))      # "Public", "Private", "Nonprofit", etc.
+    valuation = db.Column(db.String(100))        # e.g. "$4.5B", "Public (NYSE: X)"
     
     # NEW: Scraping configuration
     scrape_enabled = db.Column(db.Boolean, default=True)

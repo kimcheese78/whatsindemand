@@ -761,6 +761,12 @@ def get_role_insights():
         Company.id,
         Company.name,
         Company.industry,
+        Company.logo_url,
+        Company.website,
+        Company.location,
+        Company.founded_year,
+        Company.company_type,
+        Company.valuation,
         func.count(Job.id).label('job_count')
     ).join(Job).filter(
         Job.id.in_(job_ids)
@@ -768,18 +774,21 @@ def get_role_insights():
         func.count(Job.id).desc()
     ).limit(100).all()
 
-    # Get all company IDs for bulk growth calculation
     all_company_ids = [c[0] for c in top_companies]
-    
-    # Bulk calculate growth for all companies at once
     company_growth_map = get_all_company_growth_bulk(role.id, all_company_ids, window_days=30)
 
     top_companies_list = []
-    for cid, cname, industry, jcount in top_companies:
+    for cid, cname, industry, logo_url, website, location, founded_year, company_type, valuation, jcount in top_companies:
         top_companies_list.append({
             'id': cid,
             'name': cname,
             'industry': industry,
+            'logo_url': logo_url,
+            'website': website,
+            'location': location,
+            'founded_year': founded_year,
+            'company_type': company_type,
+            'valuation': valuation,
             'job_count': jcount,
             'growth_pct': company_growth_map.get(cid)
         })
