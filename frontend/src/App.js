@@ -3266,18 +3266,18 @@ const EmployersTab = () => {
                     </div>
                   </div>
                   {isSelected && (
-                    <div className="border-t border-line">
-                      {/* Header: logo + website */}
-                      <div className="flex items-center gap-4 px-6 py-4 border-b border-line/50">
+                    <div className="border-t border-line/30">
+                      {/* Row 1: logo + website */}
+                      <div className="flex items-center gap-3 px-6 pt-4 pb-3">
                         {company.logo_url ? (
                           <img
                             src={company.logo_url}
                             alt={company.name}
-                            className="w-10 h-10 rounded-lg object-contain bg-white/5 p-1 shrink-0"
+                            className="w-9 h-9 rounded-lg object-contain bg-white/5 p-1 shrink-0"
                             onError={e => { e.target.style.display = 'none'; }}
                           />
                         ) : (
-                          <div className="w-10 h-10 rounded-lg bg-white/10 flex items-center justify-center shrink-0">
+                          <div className="w-9 h-9 rounded-lg bg-white/10 flex items-center justify-center shrink-0">
                             <span className="text-sm font-bold text-ink-muted">{company.name?.[0]}</span>
                           </div>
                         )}
@@ -3287,30 +3287,28 @@ const EmployersTab = () => {
                             target="_blank"
                             rel="noopener noreferrer"
                             onClick={e => e.stopPropagation()}
-                            className="flex items-center gap-1.5 text-sm text-ink-muted hover:text-white transition-colors min-w-0"
+                            className="flex items-center gap-1.5 text-sm font-medium text-white hover:text-white/70 transition-colors border border-white/20 rounded-full px-3 py-1 hover:bg-white/5"
                           >
-                            <svg className="w-3.5 h-3.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                            </svg>
                             <span className="truncate">
                               {company.website.replace(/^https?:\/\//, '').replace(/\/$/, '')}
                             </span>
+                            <span className="text-xs shrink-0">↗</span>
                           </a>
                         ) : (
                           <span className="text-sm text-ink-faint">No website</span>
                         )}
                       </div>
 
-                      {/* Stats grid */}
-                      <div className="grid grid-cols-4 divide-x divide-line/50 border-b border-line/50">
+                      {/* Row 2: stats — no dividers, just spacing */}
+                      <div className="flex gap-8 px-6 pb-4 border-b border-white/10">
                         {[
                           { label: 'LOCATION', value: company.location },
                           { label: 'FOUNDED', value: company.founded_year },
                           { label: 'TYPE', value: company.company_type },
                           { label: 'VALUATION', value: company.valuation },
                         ].map(({ label, value }) => (
-                          <div key={label} className="px-5 py-4">
-                            <div className="text-xs text-ink-muted tracking-wider mb-1">{label}</div>
+                          <div key={label}>
+                            <div className="text-xs text-ink-muted tracking-wider mb-0.5">{label}</div>
                             <div className="font-medium text-sm">{value || '—'}</div>
                           </div>
                         ))}
