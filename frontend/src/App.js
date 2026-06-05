@@ -2593,13 +2593,13 @@ const DashboardScreen = () => {
               <div className="flex items-center gap-2 shrink-0 pt-1">
                 <button
                   onClick={() => setCurrentScreen('role-selection')}
-                  className="px-3 py-1.5 text-xs font-medium bg-white text-black hover:bg-gray-200 transition-colors rounded-lg"
+                  className="px-5 py-2.5 text-sm font-medium bg-white text-black hover:bg-gray-200 transition-colors rounded-lg"
                 >
                   EXPLORE A NEW ROLE
                 </button>
                 <button
                   onClick={() => setCurrentScreen('skills-input')}
-                  className="px-3 py-1.5 text-xs font-medium bg-white/10 text-white hover:bg-white/20 transition-colors border border-white/20 rounded-lg"
+                  className="px-5 py-2.5 text-sm font-medium bg-white/10 text-white hover:bg-white/20 transition-colors border border-white/20 rounded-lg"
                 >
                   EDIT MY SKILLS
                 </button>
