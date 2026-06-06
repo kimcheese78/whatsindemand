@@ -163,6 +163,8 @@ def get_skill_details(skill_id):
             'id': skill.id,
             'name': skill.name,
             'category': skill.category,
+            'subcategory': skill.subcategory,
+            'industry': skill.industry,
             'total_job_count': total_jobs,
             'demand_percentage': demand_percentage,
             'trending_score': skill.trending_score
@@ -185,7 +187,7 @@ def get_skill_details(skill_id):
 @skills_bp.route('', methods=['GET'])
 def get_all_skills():
     """Get all skills organized by category."""
-    skills = Skill.query.order_by(Skill.category, Skill.name).all()
+    skills = Skill.query.filter(Skill.is_verified == True).order_by(Skill.category, Skill.name).all()
     
     categorized = {
         'technical': [],
@@ -199,6 +201,8 @@ def get_all_skills():
             'id': skill.id,
             'name': skill.name,
             'category': skill.category,
+            'subcategory': skill.subcategory,
+            'industry': skill.industry,
             'total_job_count': skill.total_job_count,
             'trending_score': skill.trending_score
         }

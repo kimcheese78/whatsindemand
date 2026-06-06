@@ -1,87 +1,160 @@
-"""Re-extract skills for all active jobs with descriptions.
+"""Re-extract skills for all active jobs.
 
-Wipes existing JobSkill rows per job, runs SkillExtractor, saves top-10.
-Matches JobAggregator._extract_skills behavior.
+Batch-optimised: eliminates per-job SELECT/DELETE/INSERT roundtrips.
 
-Run: PYTHONPATH=. python3 scripts/reextract_all_skills.py
-     PYTHONPATH=. python3 scripts/reextract_all_skills.py --limit 100  # test
+Run:
+    DATABASE_URL='postgresql://...' PYTHONPATH=. venv/bin/python scripts/reextract_all_skills.py
+    ... --limit 2000        # smoke test
+    ... --batch-size 1000   # tune batch size (default 1000)
 """
+import argparse
+import os
 import sys
 import time
-import traceback
-from datetime import datetime
+from datetime import datetime, timedelta
+
+PROD_DSN = 'postgresql://postgres:gnhrxOkYHTPaEIYuetmcXptfkTcvnLPp@switchyard.proxy.rlwy.net:48202/railway'
+os.environ.setdefault('DATABASE_URL', PROD_DSN)
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+from dotenv import load_dotenv
+load_dotenv(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), '.env'))
 
 from app import create_app
-from app.models import db, Job, JobSkill
+from app.models import db, Job, JobSkill, Skill
 from app.services.skill_extractor import SkillExtractor
 
-LIMIT = None
-for i, a in enumerate(sys.argv):
-    if a == '--limit' and i + 1 < len(sys.argv):
-        LIMIT = int(sys.argv[i + 1])
-
-LOG_EVERY = 200
-COMMIT_EVERY = 100
+MAX_SKILLS_PER_JOB = 10
 
 
 def log(msg):
     print(f'[{datetime.now().strftime("%H:%M:%S")}] {msg}', flush=True)
 
 
-def main():
+def update_job_counts():
+    """Rebuild Skill.total_job_count from job_skills for all verified skills."""
+    log('Updating Skill.total_job_count ...')
+    db.session.execute(db.text("""
+        UPDATE skills s
+        SET total_job_count = sub.cnt
+        FROM (
+            SELECT js.skill_id, COUNT(DISTINCT js.job_id) AS cnt
+            FROM job_skills js
+            JOIN jobs j ON js.job_id = j.id
+            WHERE j.is_active = true
+            GROUP BY js.skill_id
+        ) sub
+        WHERE s.id = sub.skill_id
+          AND s.is_verified = true
+    """))
+    # Zero out skills that lost all their jobs
+    db.session.execute(db.text("""
+        UPDATE skills
+        SET total_job_count = 0
+        WHERE is_verified = true
+          AND id NOT IN (
+              SELECT DISTINCT js.skill_id FROM job_skills js
+              JOIN jobs j ON js.job_id = j.id WHERE j.is_active = true
+          )
+          AND (total_job_count IS NULL OR total_job_count > 0)
+    """))
+    db.session.commit()
+    log('total_job_count updated.')
+
+
+def run(limit: int | None, batch_size: int):
     app = create_app()
     with app.app_context():
         extractor = SkillExtractor()
         extractor._load_skills()
-        log(f'SkillExtractor ready ({len(extractor.skill_cache)} verified skills)')
+        log(f'SkillExtractor ready — {len(extractor.skill_cache)} verified skills, '
+            f'{sum(len(v) for v in extractor._skill_patterns.values())} patterns')
 
-        id_q = db.session.query(Job.id).filter(Job.is_active == True, Job.description_text.isnot(None))
-        if LIMIT:
-            id_q = id_q.limit(LIMIT)
-        job_ids = [row[0] for row in id_q.all()]
-        total = len(job_ids)
-        log(f'Re-extracting over {total} jobs')
+        # All jobs with descriptions — active and inactive.
+        # Full consistency across all historical trend windows.
+        id_rows = db.session.query(Job.id).filter(
+            Job.description_text.isnot(None),
+            Job.description_text != '',
+        ).all()
+        all_ids = [r[0] for r in id_rows]
+        if limit:
+            all_ids = all_ids[:limit]
+        total = len(all_ids)
+        log(f'{total:,} jobs to process in batches of {batch_size} (all jobs)')
 
         t0 = time.time()
         stats = {'done': 0, 'errors': 0, 'skills_saved': 0}
+        now = datetime.utcnow()
 
-        for job_id in job_ids:
-            job = Job.query.get(job_id)
-            if job is None or not job.description_text:
-                continue
+        for batch_start in range(0, total, batch_size):
+            batch_ids = all_ids[batch_start:batch_start + batch_size]
+
             try:
-                JobSkill.query.filter_by(job_id=job.id).delete(synchronize_session=False)
+                # 1. Bulk-fetch description_text for this batch (one query)
+                rows = db.session.query(Job.id, Job.description_text).filter(
+                    Job.id.in_(batch_ids)
+                ).all()
 
-                results = extractor.extract_skills(job.description_text)
-                for r in results[:10]:
-                    db.session.add(JobSkill(
-                        job_id=job.id,
-                        skill_id=r['skill_id'],
-                        is_required=r['confidence'] >= 80,
-                    ))
-                    stats['skills_saved'] += 1
+                # 2. Bulk-delete existing job_skills for this batch (one query)
+                db.session.execute(
+                    db.text('DELETE FROM job_skills WHERE job_id = ANY(:ids)'),
+                    {'ids': batch_ids}
+                )
 
-                stats['done'] += 1
+                # 3. Extract and accumulate new records
+                new_records = []
+                for job_id, description_text in rows:
+                    if not description_text:
+                        continue
+                    try:
+                        results = extractor.extract_skills(description_text)
+                        for r in results[:MAX_SKILLS_PER_JOB]:
+                            new_records.append({
+                                'job_id': job_id,
+                                'skill_id': r['skill_id'],
+                                'is_required': r['confidence'] >= 80,
+                                'created_at': now,
+                            })
+                        stats['done'] += 1
+                    except Exception as e:
+                        stats['errors'] += 1
+                        log(f'  ERROR job {job_id}: {e}')
 
-                if stats['done'] % COMMIT_EVERY == 0:
-                    db.session.commit()
+                # 4. Bulk-insert all new records (one query)
+                if new_records:
+                    db.session.bulk_insert_mappings(JobSkill, new_records)
+                    stats['skills_saved'] += len(new_records)
 
-                if stats['done'] % LOG_EVERY == 0:
-                    elapsed = time.time() - t0
-                    rate = stats['done'] / elapsed
-                    eta = (total - stats['done']) / rate if rate > 0 else 0
-                    log(f'{stats["done"]}/{total} ({100*stats["done"]/total:.1f}%) '
-                        f'rate={rate:.1f}/s eta={eta/60:.0f}min skills={stats["skills_saved"]} errs={stats["errors"]}')
+                db.session.commit()
 
             except Exception as e:
-                stats['errors'] += 1
-                log(f'ERROR job {job.id}: {e}')
-                traceback.print_exc()
                 db.session.rollback()
+                stats['errors'] += len(batch_ids)
+                log(f'  BATCH ERROR at {batch_start}: {e}')
+                continue
 
-        db.session.commit()
+            # Progress
+            elapsed = time.time() - t0
+            rate = stats['done'] / max(elapsed, 1)
+            eta = (total - stats['done']) / rate if rate > 0 else 0
+            log(f'{stats["done"]:,}/{total:,} ({100*stats["done"]/total:.1f}%)  '
+                f'{rate:.0f} jobs/s  ETA {eta/60:.0f}min  '
+                f'skills={stats["skills_saved"]:,}  errs={stats["errors"]}')
+
         elapsed = time.time() - t0
-        log(f'=== DONE === {stats} in {elapsed/60:.1f}min')
+        log(f'=== Extraction done: {stats["done"]:,} jobs, '
+            f'{stats["skills_saved"]:,} job_skills, '
+            f'{stats["errors"]} errors in {elapsed/60:.1f}min ===')
+
+        # 5. Rebuild denormalised job counts
+        update_job_counts()
+
+
+def main():
+    p = argparse.ArgumentParser()
+    p.add_argument('--limit', type=int, default=None)
+    p.add_argument('--batch-size', type=int, default=1000)
+    args = p.parse_args()
+    run(args.limit, args.batch_size)
 
 
 if __name__ == '__main__':

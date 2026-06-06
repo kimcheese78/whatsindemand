@@ -1,5 +1,5 @@
 """
-Enrich Company rows with location, founded_year, company_type, valuation
+Enrich Company rows with location, founded_year, company_type, valuation, website, logo_url
 using the Claude API. Processes in batches of 30 companies per request.
 
 Usage:
@@ -17,7 +17,6 @@ os.environ.setdefault('DATABASE_URL', PROD_DSN)
 
 from app import create_app
 from app.models import Company, db
-from sqlalchemy import func
 
 APPLY  = '--apply'  in sys.argv
 LIMIT  = int(next((sys.argv[sys.argv.index('--limit')  + 1] for _ in ['x'] if '--limit'  in sys.argv), 9999))
@@ -32,19 +31,20 @@ Each object must have exactly these keys:
   founded_year - 4-digit integer year founded. null if unknown.
   company_type - one of: "Public", "Private", "Nonprofit", "Government", "Subsidiary". null if unknown.
   valuation    - market cap or last known valuation as a short string (e.g. "$4.5B", "$800M", "Public (NASDAQ: AAPL)"). null if unknown or private with no disclosed valuation.
+  website      - primary website domain only, no protocol or trailing slash (e.g. "stripe.com"). null if unknown.
+  logo_url     - URL to the company's logo image (prefer Clearbit: "https://logo.clearbit.com/<domain>"). null if unknown.
 
 Return ONLY a valid JSON array, no prose, no markdown fences."""
 
 def ask_claude(client, names: list[str]) -> list[dict]:
     prompt = "Enrich these companies:\n" + "\n".join(f"- {n}" for n in names)
     msg = client.messages.create(
-        model="claude-opus-4-8",
+        model="claude-sonnet-4-6",
         max_tokens=4096,
         system=SYSTEM,
         messages=[{"role": "user", "content": prompt}],
     )
     text = msg.content[0].text.strip()
-    # Strip any accidental markdown fences
     if text.startswith("```"):
         text = text.split("```")[1]
         if text.startswith("json"):
@@ -56,13 +56,14 @@ app = create_app()
 with app.app_context():
     client = anthropic.Anthropic(api_key=os.environ["ANTHROPIC_API_KEY"])
 
-    # Only enrich companies that are missing at least one field
     companies = db.session.query(Company).filter(
         Company.is_active == True,
         db.or_(
             Company.location.is_(None),
             Company.founded_year.is_(None),
             Company.company_type.is_(None),
+            Company.website.is_(None),
+            Company.logo_url.is_(None),
         )
     ).order_by(Company.name).offset(OFFSET).limit(LIMIT).all()
 
@@ -83,7 +84,6 @@ with app.app_context():
             time.sleep(5)
             continue
 
-        # Match results back by position
         for company, result in zip(batch, results):
             changes = []
             if company.location is None and result.get("location"):
@@ -98,13 +98,19 @@ with app.app_context():
             if company.valuation is None and result.get("valuation"):
                 changes.append(f"valuation={result['valuation']}")
                 if APPLY: company.valuation = result["valuation"]
+            if company.website is None and result.get("website"):
+                changes.append(f"website={result['website']}")
+                if APPLY: company.website = result["website"]
+            if company.logo_url is None and result.get("logo_url"):
+                changes.append(f"logo={result['logo_url']}")
+                if APPLY: company.logo_url = result["logo_url"]
             if changes:
                 print(f"  {company.name}: {', '.join(changes)}")
                 updated += 1
 
         if APPLY:
             db.session.commit()
-        time.sleep(1)  # rate limit courtesy pause
+        time.sleep(1)
 
     print(f"\n{'Applied' if APPLY else 'Would update'}: {updated}/{total} companies")
     if not APPLY:

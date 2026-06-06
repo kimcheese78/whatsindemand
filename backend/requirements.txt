@@ -79,3 +79,4 @@ wrapt==2.0.1
 gunicorn==21.2.0
 resend>=0.7.0
 anthropic>=0.40.0
+pyahocorasick>=2.0.0

@@ -1,15 +1,17 @@
 """Incremental skill discovery — runs after each scrape.
 
-Scans only jobs scraped since the last discovery run and upserts candidates
-into the skill_candidates table. Promotion to the skills taxonomy is done
-manually via scripts/review_skill_candidates.py.
+Scans only jobs scraped since the last discovery run and writes candidates
+to a JSON file for review. Approved candidates are added to the skills
+taxonomy manually. Promotion to job_skills happens via extract_skills.py.
 
 Full-corpus mode (first run or --full flag): processes all jobs.
 
 Run standalone:
     PYTHONPATH=. venv/bin/python scripts/discover_new_skills.py
     PYTHONPATH=. venv/bin/python scripts/discover_new_skills.py --full
+    PYTHONPATH=. venv/bin/python scripts/discover_new_skills.py --output /tmp/candidates.json
 """
+import json
 import os
 import re
 import sys
@@ -452,7 +454,7 @@ from dotenv import load_dotenv
 load_dotenv(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), '.env'))
 
 from app import create_app
-from app.models import db, Job, Skill, SkillCandidate, SkillCandidateJob, DiscoveryRun
+from app.models import db, Job, Skill, DiscoveryRun
 from app.services.skill_extractor import extract_requirements_text
 
 app = create_app()
@@ -479,13 +481,17 @@ def _get_since_dt(force_full: bool) -> datetime:
 # ---------------------------------------------------------------------------
 # Entry point
 # ---------------------------------------------------------------------------
-def run(since_dt: datetime | None = None, force_full: bool = False):
+def run(since_dt: datetime | None = None, force_full: bool = False,
+        output_path: str | None = None):
     """Run incremental discovery. Called by weekly_scrape.py or standalone."""
+    if output_path is None:
+        output_path = f'/tmp/candidates_{datetime.utcnow().strftime("%Y%m%d")}.json'
     with app.app_context():
         if since_dt is None:
             since_dt = _get_since_dt(force_full)
 
         run_record = DiscoveryRun(started_at=datetime.utcnow(), status='running')
+        run_record._output_path = output_path
         db.session.add(run_record)
         db.session.commit()
 
@@ -527,16 +533,9 @@ def _run_inner(run_record: 'DiscoveryRun', since_dt: datetime):
         db.session.commit()
         return
 
-    # Load existing pending candidates for fast upsert lookup
-    existing_candidates = {
-        c.name.lower(): c
-        for c in SkillCandidate.query.filter_by(status='pending').all()
-    }
-    # Also track approved/rejected names to skip re-discovery
-    closed_names = {
-        c.name.lower()
-        for c in SkillCandidate.query.filter(SkillCandidate.status.in_(['approved', 'rejected'])).all()
-    }
+    # in-memory candidate accumulator: lower(name) → dict
+    candidates: dict = {}
+    closed_names: set = set()
 
     # batch_agg: candidate_lower → extraction data for this run's new jobs
     batch_agg = defaultdict(lambda: {
@@ -587,69 +586,59 @@ def _run_inner(run_record: 'DiscoveryRun', since_dt: datetime):
     elapsed = time.time() - t0
     log(f'Extraction done in {elapsed:.0f}s — {len(batch_agg):,} unique candidates found')
 
-    # Upsert into skill_candidates + skill_candidate_jobs
-    upserted = 0
+    # Build in-memory candidate list (no DB writes for candidates)
     for key, rec in batch_agg.items():
         display_name = max(rec['display_votes'], key=rec['display_votes'].get)
-        job_ids = rec['job_ids']
         company_count_new = len(rec['company_ids'])
-        job_count_new = len(job_ids)
+        job_count_new = len(rec['job_ids'])
 
-        existing = existing_candidates.get(key)
-        if existing:
-            existing.job_count += job_count_new
-            existing.company_count = max(existing.company_count, company_count_new)  # crude; real count via SQL at promote time
-            if rec['last_seen'] and (existing.last_seen is None or rec['last_seen'].date() > existing.last_seen):
-                existing.last_seen = rec['last_seen'].date()
-            existing.methods = list(set(existing.methods or []) | rec['methods'])
-            # Merge example contexts (keep up to 3)
-            existing_ctx = list(existing.example_contexts or [])
+        if key in candidates:
+            c = candidates[key]
+            c['job_count'] += job_count_new
+            c['company_count'] = max(c['company_count'], company_count_new)
+            if rec['last_seen']:
+                last = rec['last_seen'].date().isoformat()
+                if c['last_seen'] is None or last > c['last_seen']:
+                    c['last_seen'] = last
+            c['methods'] = list(set(c['methods']) | rec['methods'])
             for ctx in rec['contexts']:
-                if ctx not in existing_ctx and len(existing_ctx) < 3:
-                    existing_ctx.append(ctx)
-            existing.example_contexts = existing_ctx
-            candidate_obj = existing
+                if ctx not in c['example_contexts'] and len(c['example_contexts']) < 3:
+                    c['example_contexts'].append(ctx)
         else:
-            candidate_obj = SkillCandidate(
-                name=display_name,
-                job_count=job_count_new,
-                company_count=company_count_new,
-                first_seen=rec['first_seen'].date() if rec['first_seen'] else None,
-                last_seen=rec['last_seen'].date() if rec['last_seen'] else None,
-                methods=list(rec['methods']),
-                example_contexts=rec['contexts'],
-                status='pending',
-            )
-            db.session.add(candidate_obj)
-            db.session.flush()
-            existing_candidates[key] = candidate_obj
+            candidates[key] = {
+                'name': display_name,
+                'job_count': job_count_new,
+                'company_count': company_count_new,
+                'first_seen': rec['first_seen'].date().isoformat() if rec['first_seen'] else None,
+                'last_seen': rec['last_seen'].date().isoformat() if rec['last_seen'] else None,
+                'methods': list(rec['methods']),
+                'example_contexts': rec['contexts'][:3],
+            }
 
-        # Insert new job associations (ON CONFLICT DO NOTHING via primary key)
-        for job_id in job_ids:
-            db.session.execute(db.text(
-                'INSERT INTO skill_candidate_jobs (candidate_id, job_id) '
-                'VALUES (:cid, :jid) ON CONFLICT DO NOTHING'
-            ), {'cid': candidate_obj.id, 'jid': job_id})
-
-        upserted += 1
-
-    db.session.commit()
-    log(f'Upserted {upserted} candidates into skill_candidates')
+    output_path = run_record._output_path
+    sorted_candidates = sorted(candidates.values(), key=lambda x: x['job_count'], reverse=True)
+    with open(output_path, 'w') as f:
+        json.dump(sorted_candidates, f, indent=2)
+    log(f'Wrote {len(sorted_candidates)} candidates to {output_path}')
 
     run_record.jobs_processed = len(jobs)
-    run_record.candidates_upserted = upserted
+    run_record.candidates_upserted = len(sorted_candidates)
     run_record.candidates_promoted = 0
     run_record.status = 'completed'
     run_record.completed_at = datetime.utcnow()
     db.session.commit()
 
-    log(f'Discovery run complete: {len(jobs)} jobs, {upserted} candidates pending review')
-    log(f'Run `scripts/review_skill_candidates.py` to review and promote candidates')
+    log(f'Discovery run complete: {len(jobs)} jobs, {len(sorted_candidates)} candidates pending review')
+    log(f'Review {output_path} and add approved skills via update_ai_taxonomy.py pattern')
 
 
 def main():
-    force_full = '--full' in sys.argv
-    run(force_full=force_full)
+    import argparse
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--output', default=f'/tmp/candidates_{datetime.utcnow().strftime("%Y%m%d")}.json')
+    parser.add_argument('--full', action='store_true')
+    args = parser.parse_args()
+    run(force_full=args.full, output_path=args.output)
 
 
 if __name__ == '__main__':

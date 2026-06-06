@@ -410,6 +410,9 @@ SECTION_PATTERNS = {
         r"what we think you(?:['']?ll| will) need",
         r"candidate requirements?",
         r"minimum$",
+        r"who should apply",
+        r"what you(?:['']?ve| have)(?: to offer)?",
+        r"what you(?:['']?re| are) bringing",
     ],
     'preferred': [
         r"(?:preferred|desired)(?: skills?| experience| qualifications?| background)?",
@@ -512,6 +515,33 @@ SECTION_PATTERNS = {
         r"our benefits",
         r"salary",
         r"pay range",
+    ],
+    'boilerplate': [
+        # EEO / legal
+        r"equal\s*opportunity\s*(?:employer|employment)",
+        r"\beeo\b",
+        r"\beeoc\b",
+        r"affirmative\s*action",
+        r"(?:diversity|inclusion)\s*(?:and|&|,)\s*(?:equity|inclusion|belonging)",
+        r"our\s*commitment\s*to\s*(?:diversity|inclusion|equity)",
+        r"we\s*(?:do\s*not|don['']t)\s*discriminate",
+        r"(?:race|color|religion|sex|national\s*origin).*(?:disability|veteran)",
+        # Physical / medical requirements
+        r"physical\s*(?:requirements?|demands?|conditions?|capabilities)",
+        r"(?:ability|must\s*be\s*able)\s*to\s*(?:lift|stand|sit|walk|bend|carry|push|pull)\b",
+        r"work(?:ing)?\s*(?:environment|conditions?|hours?|schedule)",
+        # Health / safety / COVID boilerplate
+        r"(?:health|safety|wellness)\s*(?:requirements?|policy|policies|protocols?|standards?)",
+        r"covid(?:\s*-?\s*19)?\s*(?:policy|requirements?|protocols?|vaccination|vaccine)",
+        r"vaccination\s*(?:status|requirements?|policy)",
+        r"(?:background|drug)\s*(?:check|screening|testing)\s*(?:required|policy|may\s*be)?",
+        # Privacy notices
+        r"(?:job\s*applicant|candidate|applicant)\s*privacy\s*(?:notice|policy|statement)",
+        r"privacy\s*(?:notice|policy|statement|rights?)",
+        r"for\s*(?:ca|california|colorado|new\s*york)\s*residents?",
+        r"ccpa",
+        # Tracking / ATS tags that appear as section headers
+        r"#li-",
     ],
 }
 
@@ -677,7 +707,7 @@ def extract_requirements_text(jd_text: str) -> Tuple[str, dict]:
     # Fallback: no requirements sections detected — use paragraph heuristic
     # to extract only requirement-likely paragraphs from the remaining text
     if not extracted_text.strip():
-        NON_SKILL_SECTIONS = {'benefits', 'about_company'}
+        NON_SKILL_SECTIONS = {'benefits', 'about_company', 'boilerplate'}
         candidate_text = '\n\n'.join(
             s['text'] for s in sections
             if s['name'] not in NON_SKILL_SECTIONS
@@ -750,13 +780,15 @@ class SkillExtractor:
     def __init__(self):
         self.skill_cache = None
         self._skill_patterns = None
-    
+        self._automaton = None       # Aho-Corasick automaton (fast path)
+        self._term_to_skill = None   # term_lower → [skill_id, ...]
+
     def _load_skills(self):
         """Load verified skills from database and compile patterns."""
         skills = Skill.query.filter(Skill.is_verified == True).all()
         self.skill_cache = []
         self._skill_patterns = {}
-        
+
         for s in skills:
             skill_data = {
                 'id': s.id,
@@ -766,15 +798,73 @@ class SkillExtractor:
                 'aliases': s.aliases or []
             }
             self.skill_cache.append(skill_data)
-            
-            # Compile patterns for efficient matching
+
+            # Compile regex patterns (used only for strict-match skills and fallback)
             patterns = [re.compile(r'\b' + re.escape(s.name.lower()) + r'\b', re.IGNORECASE)]
             for alias in (s.aliases or []):
                 alias_lower = alias.lower()
                 if alias_lower not in SKILL_BLACKLIST and len(alias_lower) >= 2:
                     patterns.append(re.compile(r'\b' + re.escape(alias_lower) + r'\b', re.IGNORECASE))
-            
+
             self._skill_patterns[s.id] = patterns
+
+        self._build_automaton()
+
+    def _build_automaton(self):
+        """Build Aho-Corasick automaton for O(text) multi-pattern matching."""
+        try:
+            import ahocorasick
+        except ImportError:
+            self._automaton = None
+            return
+
+        A = ahocorasick.Automaton()
+        term_to_skills: Dict[str, List[int]] = {}  # term_lower → [skill_id, ...]
+
+        for skill in self.skill_cache:
+            sid = skill['id']
+            # Skip strict-match skills — they need context patterns, not bare terms
+            if skill['name_lower'] in self.STRICT_MATCH_PATTERNS:
+                continue
+            terms = [skill['name_lower']] + [
+                a.lower() for a in skill['aliases']
+                if a.lower() not in SKILL_BLACKLIST and len(a.strip()) >= 2
+            ]
+            for term in terms:
+                if term not in term_to_skills:
+                    term_to_skills[term] = []
+                    A.add_word(term, term)
+                if sid not in term_to_skills[term]:
+                    term_to_skills[term].append(sid)
+
+        if term_to_skills:
+            A.make_automaton()
+            self._automaton = A
+            self._term_to_skill = term_to_skills
+        else:
+            self._automaton = None
+
+    def _match_with_automaton(self, text: str) -> Dict[int, int]:
+        """
+        Single-pass skill detection using Aho-Corasick.
+        Returns {skill_id: match_count} for skills found with word boundaries.
+        """
+        if not self._automaton:
+            return {}
+
+        text_lower = text.lower()
+        counts: Dict[int, int] = {}
+
+        for end_idx, term in self._automaton.iter(text_lower):
+            start_idx = end_idx - len(term) + 1
+            # Word-boundary check (no alphanumeric or _ adjacent)
+            left_ok = start_idx == 0 or not (text_lower[start_idx - 1].isalnum() or text_lower[start_idx - 1] == '_')
+            right_ok = end_idx + 1 >= len(text_lower) or not (text_lower[end_idx + 1].isalnum() or text_lower[end_idx + 1] == '_')
+            if left_ok and right_ok:
+                for sid in self._term_to_skill[term]:
+                    counts[sid] = counts.get(sid, 0) + 1
+
+        return counts
     
     @staticmethod
     def normalize_skill_name(name: str) -> str:
@@ -928,78 +1018,78 @@ class SkillExtractor:
         company_name_lower = company_name.lower() if company_name else None
         found_skills = []
         seen_skill_ids = set()
-        
+
+        # ── Fast path: Aho-Corasick single-pass for all non-strict skills ──
+        ac_counts: Dict[int, int] = {}
+        if self._automaton:
+            ac_counts = self._match_with_automaton(search_text)
+
+        # ── Per-skill loop: strict-match skills + confidence scoring ──
+        skill_lookup = {s['id']: s for s in self.skill_cache}
+
+        # Union: AC hits + strict-match hits
+        candidate_ids = set(ac_counts.keys())
         for skill in self.skill_cache:
+            if skill['name_lower'] in self.STRICT_MATCH_PATTERNS:
+                candidate_ids.add(skill['id'])
+
+        for sid in candidate_ids:
+            skill = skill_lookup.get(sid)
+            if not skill:
+                continue
+
             skill_name_lower = skill['name_lower']
-            
-            # Skip blacklisted skills
+
             if skill_name_lower in SKILL_BLACKLIST:
                 continue
-            
-            # Skip invalid skills
             if not self.is_valid_skill(skill['name']):
                 continue
-            
-            # Check for match
-            matched = False
-            
-            # Handle strict-match skills (Go, R, Spring)
+            if sid in seen_skill_ids:
+                continue
+
+            # Determine match and count
             if skill_name_lower in self.STRICT_MATCH_PATTERNS:
-                for pattern in self.STRICT_MATCH_PATTERNS[skill_name_lower]:
-                    if pattern.search(search_text):
-                        matched = True
-                        break
+                matched = any(
+                    p.search(search_text)
+                    for p in self.STRICT_MATCH_PATTERNS[skill_name_lower]
+                )
+                if not matched:
+                    continue
+                # Count via regex for confidence
+                count = sum(
+                    len(p.findall(search_text))
+                    for p in self.STRICT_MATCH_PATTERNS[skill_name_lower]
+                )
             else:
-                # Standard matching with pre-compiled patterns
-                for pattern in self._skill_patterns.get(skill['id'], []):
-                    if pattern.search(search_text):
-                        matched = True
-                        break
-            
-            if not matched:
-                continue
-            
-            # Dedupe by skill ID
-            if skill['id'] in seen_skill_ids:
-                continue
-            seen_skill_ids.add(skill['id'])
-            
-            # Calculate confidence based on occurrence count
-            patterns = self._skill_patterns.get(skill['id'], [])
-            count = sum(len(p.findall(search_text)) for p in patterns)
-            
+                count = ac_counts.get(sid, 0)
+                if count == 0:
+                    continue
+
+            seen_skill_ids.add(sid)
+
             if count >= 3:
                 confidence = 95
             elif count == 2:
                 confidence = 85
-            elif count == 1:
-                confidence = 70
             else:
-                confidence = 60
-            
-            # Reduce confidence if skill matches company name
+                confidence = 70
+
             if (company_name_lower and
-                skill_name_lower in self.COMPANY_PRODUCT_SKILLS and
-                skill_name_lower == company_name_lower):
+                    skill_name_lower in self.COMPANY_PRODUCT_SKILLS and
+                    skill_name_lower == company_name_lower):
                 confidence = max(30, confidence - 40)
-            
-            # Slight penalty if we had to use fallback (no sections detected)
+
             if extraction_meta.get('used_fallback'):
                 confidence = max(50, confidence - 10)
-            
-            # Normalize the skill name for consistent display
-            normalized_name = self.normalize_skill_name(skill['name'])
-            
+
             found_skills.append({
-                'skill_id': skill['id'],
-                'name': normalized_name,
+                'skill_id': sid,
+                'name': self.normalize_skill_name(skill['name']),
                 'category': skill['category'],
-                'confidence': confidence
+                'confidence': confidence,
             })
-        
-        # Sort by confidence
+
         found_skills.sort(key=lambda x: x['confidence'], reverse=True)
-        
         return found_skills
     
     def categorize_skills(self, skills: list) -> dict:
