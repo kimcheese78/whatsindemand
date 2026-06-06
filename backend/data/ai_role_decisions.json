@@ -1,0 +1,644 @@
+{
+  "decisions": [
+    {
+      "id": 12625,
+      "title": "Event Coordinator Volunteer",
+      "jobs": 53,
+      "action": "reject",
+      "reason": "intern/volunteer",
+      "raw_title": "Event Coordinator Volunteer"
+    },
+    {
+      "id": 6778,
+      "title": "Design Intern",
+      "jobs": 26,
+      "action": "reject",
+      "reason": "intern/volunteer",
+      "raw_title": "Design Intern"
+    },
+    {
+      "id": 10550,
+      "title": "Hospice Volunteer (unpaid)",
+      "jobs": 24,
+      "action": "reject",
+      "reason": "intern/volunteer",
+      "raw_title": "Hospice Volunteer (unpaid)"
+    },
+    {
+      "id": 5092,
+      "title": "Sales Intern",
+      "jobs": 24,
+      "action": "reject",
+      "reason": "intern/volunteer",
+      "raw_title": "Sales Intern"
+    },
+    {
+      "id": 10549,
+      "title": "Hospice Volunteer",
+      "jobs": 20,
+      "action": "reject",
+      "reason": "intern/volunteer",
+      "raw_title": "Hospice Volunteer"
+    },
+    {
+      "id": 6712,
+      "title": "Global Talent Intern",
+      "jobs": 20,
+      "action": "reject",
+      "reason": "intern/volunteer",
+      "raw_title": "Global Talent Intern"
+    },
+    {
+      "id": 5471,
+      "title": "Quantitative Research Intern",
+      "jobs": 17,
+      "action": "reject",
+      "reason": "intern/volunteer",
+      "raw_title": "Quantitative Research Intern"
+    },
+    {
+      "id": 7477,
+      "title": "Intern",
+      "jobs": 17,
+      "action": "reject",
+      "reason": "intern/volunteer",
+      "raw_title": "Intern"
+    },
+    {
+      "id": 11855,
+      "title": "Business Development Intern",
+      "jobs": 16,
+      "action": "reject",
+      "reason": "intern/volunteer",
+      "raw_title": "Business Development Intern"
+    },
+    {
+      "id": 14577,
+      "title": "Werkstudent (gn) Produktkennzeichnung",
+      "jobs": 16,
+      "action": "reject",
+      "reason": "intern/volunteer",
+      "raw_title": "Werkstudent (gn) Produktkennzeichnung"
+    },
+    {
+      "id": 5684,
+      "title": "Apprentice Electrician",
+      "jobs": 16,
+      "action": "reject",
+      "reason": "intern/volunteer",
+      "raw_title": "Apprentice Electrician"
+    },
+    {
+      "id": 8497,
+      "title": "Commercial Intern",
+      "jobs": 16,
+      "action": "reject",
+      "reason": "intern/volunteer",
+      "raw_title": "Commercial Intern"
+    },
+    {
+      "id": 5347,
+      "title": "Summer Internship",
+      "jobs": 15,
+      "action": "reject",
+      "reason": "intern/volunteer",
+      "raw_title": "Summer Internship"
+    },
+    {
+      "id": 12555,
+      "title": "Volunteer",
+      "jobs": 12,
+      "action": "reject",
+      "reason": "intern/volunteer",
+      "raw_title": "Volunteer"
+    },
+    {
+      "id": 6723,
+      "title": "Startup Intern",
+      "jobs": 12,
+      "action": "reject",
+      "reason": "intern/volunteer",
+      "raw_title": "Startup Intern"
+    },
+    {
+      "id": 17793,
+      "title": "Category Management Intern",
+      "jobs": 12,
+      "action": "reject",
+      "reason": "intern/volunteer",
+      "raw_title": "Category Management Intern"
+    },
+    {
+      "id": 17794,
+      "title": "Customer Support Intern",
+      "jobs": 12,
+      "action": "reject",
+      "reason": "intern/volunteer",
+      "raw_title": "Customer Support Intern"
+    },
+    {
+      "id": 12570,
+      "title": "6 months internship (Danish Speaker)",
+      "jobs": 12,
+      "action": "reject",
+      "reason": "intern/volunteer",
+      "raw_title": "6 months internship (Danish Speaker)"
+    },
+    {
+      "id": 12651,
+      "title": "Event Participant (Volunteer)",
+      "jobs": 12,
+      "action": "reject",
+      "reason": "intern/volunteer",
+      "raw_title": "Event Participant (Volunteer)"
+    },
+    {
+      "id": 12598,
+      "title": "Danish Speaker intern",
+      "jobs": 12,
+      "action": "reject",
+      "reason": "intern/volunteer",
+      "raw_title": "Danish Speaker intern"
+    },
+    {
+      "id": 6709,
+      "title": "Founder Intern",
+      "jobs": 12,
+      "action": "reject",
+      "reason": "intern/volunteer",
+      "raw_title": "Founder Intern"
+    },
+    {
+      "id": 4029,
+      "title": "IT Intern",
+      "jobs": 12,
+      "action": "reject",
+      "reason": "intern/volunteer",
+      "raw_title": "IT Intern"
+    },
+    {
+      "id": 12650,
+      "title": "Event Organizer (Volunteer)",
+      "jobs": 12,
+      "action": "reject",
+      "reason": "intern/volunteer",
+      "raw_title": "Event Organizer (Volunteer)"
+    },
+    {
+      "id": 12821,
+      "title": "Management consulting Volunteer",
+      "jobs": 12,
+      "action": "reject",
+      "reason": "intern/volunteer",
+      "raw_title": "Management consulting Volunteer"
+    },
+    {
+      "id": 12841,
+      "title": "Retail Insights 2023 Volunteer program",
+      "jobs": 12,
+      "action": "reject",
+      "reason": "intern/volunteer",
+      "raw_title": "Retail Insights 2023 Volunteer program"
+    },
+    {
+      "id": 12653,
+      "title": "Event Staff (Volunteer)",
+      "jobs": 12,
+      "action": "reject",
+      "reason": "intern/volunteer",
+      "raw_title": "Event Staff (Volunteer)"
+    },
+    {
+      "id": 12838,
+      "title": "Private Equity Volunteer",
+      "jobs": 12,
+      "action": "reject",
+      "reason": "intern/volunteer",
+      "raw_title": "Private Equity Volunteer"
+    },
+    {
+      "id": 12837,
+      "title": "Private Equity Insights Paris: Volunteer Programme",
+      "jobs": 12,
+      "action": "reject",
+      "reason": "intern/volunteer",
+      "raw_title": "Private Equity Insights Paris: Volunteer Programme"
+    },
+    {
+      "id": 17792,
+      "title": "Case Management Intern",
+      "jobs": 12,
+      "action": "reject",
+      "reason": "intern/volunteer",
+      "raw_title": "Case Management Intern"
+    },
+    {
+      "id": 12631,
+      "title": "Event Helper (Volunteer)",
+      "jobs": 12,
+      "action": "reject",
+      "reason": "intern/volunteer",
+      "raw_title": "Event Helper (Volunteer)"
+    },
+    {
+      "id": 17799,
+      "title": "Partner Management Intern",
+      "jobs": 12,
+      "action": "reject",
+      "reason": "intern/volunteer",
+      "raw_title": "Partner Management Intern"
+    },
+    {
+      "id": 18807,
+      "title": "Event Assistant (volunteer)",
+      "jobs": 12,
+      "action": "reject",
+      "reason": "intern/volunteer",
+      "raw_title": "Event Assistant (volunteer)"
+    },
+    {
+      "id": 11928,
+      "title": "\u793e\u54e1\u7d39\u4ecb\uff08\u30ea\u30d5\u30a1\u30e9\u30eb\uff09",
+      "jobs": 12,
+      "action": "reject",
+      "reason": "non-english",
+      "raw_title": "\u793e\u54e1\u7d39\u4ecb\uff08\u30ea\u30d5\u30a1\u30e9\u30eb\uff09"
+    },
+    {
+      "id": 12812,
+      "title": "ITI London: Volunteer Programme",
+      "jobs": 12,
+      "action": "reject",
+      "reason": "intern/volunteer",
+      "raw_title": "ITI London: Volunteer Programme"
+    },
+    {
+      "id": 13686,
+      "title": "Clinical Internship",
+      "jobs": 11,
+      "action": "reject",
+      "reason": "intern/volunteer",
+      "raw_title": "Clinical Internship"
+    },
+    {
+      "id": 8465,
+      "title": "Logistics Intern",
+      "jobs": 10,
+      "action": "reject",
+      "reason": "intern/volunteer",
+      "raw_title": "Logistics Intern"
+    },
+    {
+      "id": 9140,
+      "title": "INTERN",
+      "jobs": 10,
+      "action": "reject",
+      "reason": "intern/volunteer",
+      "raw_title": "INTERN"
+    },
+    {
+      "id": 5257,
+      "title": "Data Intern",
+      "jobs": 9,
+      "action": "reject",
+      "reason": "intern/volunteer",
+      "raw_title": "Data Intern"
+    },
+    {
+      "id": 13060,
+      "title": "Medical data intern (x/f/m)",
+      "jobs": 9,
+      "action": "reject",
+      "reason": "intern/volunteer",
+      "raw_title": "Medical data intern (x/f/m)"
+    },
+    {
+      "id": 13064,
+      "title": "Praktikum Hospital Sales & Performance Consulting (x/f/m)",
+      "jobs": 9,
+      "action": "reject",
+      "reason": "intern/volunteer",
+      "raw_title": "Praktikum Hospital Sales & Performance Consulting (x/f/m)"
+    },
+    {
+      "id": 13792,
+      "title": "Computer Vision Research Internship: Image to Sequence Modeling (e.g. Transformers)",
+      "jobs": 8,
+      "action": "reject",
+      "reason": "intern/volunteer",
+      "raw_title": "Computer Vision Research Internship: Image to Sequence Modeling (e.g. Transformers)"
+    },
+    {
+      "id": 14551,
+      "title": "Intern (gn) - Amazon Vendor International",
+      "jobs": 8,
+      "action": "reject",
+      "reason": "intern/volunteer",
+      "raw_title": "Intern (gn) - Amazon Vendor International"
+    },
+    {
+      "id": 14552,
+      "title": "Intern International CRM (gn)",
+      "jobs": 8,
+      "action": "reject",
+      "reason": "intern/volunteer",
+      "raw_title": "Intern International CRM (gn)"
+    },
+    {
+      "id": 8533,
+      "title": "Apprentice- Product Management",
+      "jobs": 8,
+      "action": "reject",
+      "reason": "intern/volunteer",
+      "raw_title": "Apprentice- Product Management"
+    },
+    {
+      "id": 6617,
+      "title": "MBA Intern",
+      "jobs": 8,
+      "action": "reject",
+      "reason": "intern/volunteer",
+      "raw_title": "MBA Intern"
+    },
+    {
+      "id": 15250,
+      "title": "Sales Internship at United Media",
+      "jobs": 8,
+      "action": "reject",
+      "reason": "intern/volunteer",
+      "raw_title": "Sales Internship at United Media"
+    },
+    {
+      "id": 9184,
+      "title": "Technical Specialist Apprentice",
+      "jobs": 8,
+      "action": "reject",
+      "reason": "intern/volunteer",
+      "raw_title": "Technical Specialist Apprentice"
+    },
+    {
+      "id": 4020,
+      "title": "HR Internship",
+      "jobs": 8,
+      "action": "reject",
+      "reason": "intern/volunteer",
+      "raw_title": "HR Internship"
+    },
+    {
+      "id": 17222,
+      "title": "\u05de\u05dc\u05e7\u05d8\u05d9\u05dd- \u05d5\u05d5\u05dc\u05d8 \u05de\u05e8\u05e7\u05d8- \u05de\u05d5\u05d3\u05d9\u05e2\u05d9\u05df",
+      "jobs": 8,
+      "action": "reject",
+      "reason": "non-english",
+      "raw_title": "\u05de\u05dc\u05e7\u05d8\u05d9\u05dd- \u05d5\u05d5\u05dc\u05d8 \u05de\u05e8\u05e7\u05d8- \u05de\u05d5\u05d3\u05d9\u05e2\u05d9\u05df"
+    },
+    {
+      "id": 14550,
+      "title": "Intern - Business Insights (gn)",
+      "jobs": 8,
+      "action": "reject",
+      "reason": "intern/volunteer",
+      "raw_title": "Intern - Business Insights (gn)"
+    },
+    {
+      "id": 17701,
+      "title": "WPP Media Internship (July - Dec 2026)",
+      "jobs": 8,
+      "action": "reject",
+      "reason": "intern/volunteer",
+      "raw_title": "WPP Media Internship (July - Dec 2026)"
+    },
+    {
+      "id": 5203,
+      "title": "Merchandise Intern",
+      "jobs": 8,
+      "action": "reject",
+      "reason": "intern/volunteer",
+      "raw_title": "Merchandise Intern"
+    },
+    {
+      "id": 8693,
+      "title": "Sprinkler Apprentice",
+      "jobs": 8,
+      "action": "reject",
+      "reason": "intern/volunteer",
+      "raw_title": "Sprinkler Apprentice"
+    },
+    {
+      "id": 10058,
+      "title": "Springboard Internship - Design (2D)",
+      "jobs": 8,
+      "action": "reject",
+      "reason": "intern/volunteer",
+      "raw_title": "Springboard Internship - Design (2D)"
+    },
+    {
+      "id": 12454,
+      "title": "\u30d7\u30ed\u30b8\u30a7\u30af\u30c8\u30de\u30cd\u30fc\u30b8\u30e3\u30fc",
+      "jobs": 8,
+      "action": "reject",
+      "reason": "non-english",
+      "raw_title": "\u30d7\u30ed\u30b8\u30a7\u30af\u30c8\u30de\u30cd\u30fc\u30b8\u30e3\u30fc"
+    },
+    {
+      "id": 11338,
+      "title": "Index Production Intern",
+      "jobs": 8,
+      "action": "reject",
+      "reason": "intern/volunteer",
+      "raw_title": "Index Production Intern"
+    },
+    {
+      "id": 8797,
+      "title": "Account Servicing/Client Success - Internship (6 months)",
+      "jobs": 8,
+      "action": "reject",
+      "reason": "intern/volunteer",
+      "raw_title": "Account Servicing/Client Success - Internship (6 months)"
+    },
+    {
+      "id": 6695,
+      "title": "Business Intern",
+      "jobs": 8,
+      "action": "reject",
+      "reason": "intern/volunteer",
+      "raw_title": "Business Intern"
+    },
+    {
+      "id": 12706,
+      "title": "Internship Volunteer",
+      "jobs": 8,
+      "action": "reject",
+      "reason": "intern/volunteer",
+      "raw_title": "Internship Volunteer"
+    },
+    {
+      "id": 12552,
+      "title": "Management Intern",
+      "jobs": 8,
+      "action": "reject",
+      "reason": "intern/volunteer",
+      "raw_title": "Management Intern"
+    },
+    {
+      "id": 8671,
+      "title": "Summer 2026 Intern",
+      "jobs": 7,
+      "action": "reject",
+      "reason": "intern/volunteer",
+      "raw_title": "Summer 2026 Intern"
+    },
+    {
+      "id": 12513,
+      "title": "Product Management Intern",
+      "jobs": 7,
+      "action": "reject",
+      "reason": "intern/volunteer",
+      "raw_title": "Product Management Intern"
+    },
+    {
+      "id": 8503,
+      "title": "Internship",
+      "jobs": 6,
+      "action": "reject",
+      "reason": "intern/volunteer",
+      "raw_title": "Internship"
+    },
+    {
+      "id": 18407,
+      "title": "2026 Summer Intern (Volunteer)",
+      "jobs": 6,
+      "action": "reject",
+      "reason": "intern/volunteer",
+      "raw_title": "2026 Summer Intern (Volunteer)"
+    },
+    {
+      "id": 18808,
+      "title": "Event Assistant (Volunteer)",
+      "jobs": 6,
+      "action": "reject",
+      "reason": "intern/volunteer",
+      "raw_title": "Event Assistant (Volunteer)"
+    },
+    {
+      "id": 19564,
+      "title": "Werkstudent Key Account Sales Medical Groups (x/f/m)",
+      "jobs": 6,
+      "action": "reject",
+      "reason": "intern/volunteer",
+      "raw_title": "Werkstudent Key Account Sales Medical Groups (x/f/m)"
+    },
+    {
+      "id": 12528,
+      "title": "Summer 2026 Internship - Medical Writing Intern",
+      "jobs": 6,
+      "action": "reject",
+      "reason": "intern/volunteer",
+      "raw_title": "Summer 2026 Internship - Medical Writing Intern"
+    },
+    {
+      "id": 17566,
+      "title": "Media Planning Internship",
+      "jobs": 6,
+      "action": "reject",
+      "reason": "intern/volunteer",
+      "raw_title": "Media Planning Internship"
+    },
+    {
+      "id": 17952,
+      "title": "\u05de\u05dc\u05e7\u05d8\u05d9\u05dd-\u05d5\u05d5\u05dc\u05d8 \u05de\u05e8\u05e7\u05d8- \u05d1\u05d0\u05e8 \u05e9\u05d1\u05e2",
+      "jobs": 6,
+      "action": "reject",
+      "reason": "non-english",
+      "raw_title": "\u05de\u05dc\u05e7\u05d8\u05d9\u05dd-\u05d5\u05d5\u05dc\u05d8 \u05de\u05e8\u05e7\u05d8- \u05d1\u05d0\u05e8 \u05e9\u05d1\u05e2"
+    },
+    {
+      "id": 12914,
+      "title": "Intern - Customer Solutions",
+      "jobs": 6,
+      "action": "reject",
+      "reason": "intern/volunteer",
+      "raw_title": "Intern - Customer Solutions"
+    },
+    {
+      "id": 16934,
+      "title": "PR Intern",
+      "jobs": 6,
+      "action": "reject",
+      "reason": "intern/volunteer",
+      "raw_title": "PR Intern"
+    },
+    {
+      "id": 8520,
+      "title": "2026 Summer Intern (Non-Paid)",
+      "jobs": 6,
+      "action": "reject",
+      "reason": "intern/volunteer",
+      "raw_title": "2026 Summer Intern (Non-Paid)"
+    },
+    {
+      "id": 17487,
+      "title": "Digital Planning Internship",
+      "jobs": 6,
+      "action": "reject",
+      "reason": "intern/volunteer",
+      "raw_title": "Digital Planning Internship"
+    },
+    {
+      "id": 12534,
+      "title": "IT Operations Intern",
+      "jobs": 6,
+      "action": "reject",
+      "reason": "intern/volunteer",
+      "raw_title": "IT Operations Intern"
+    },
+    {
+      "id": 9944,
+      "title": "RTP Volunteer Team Leader",
+      "jobs": 6,
+      "action": "reject",
+      "reason": "intern/volunteer",
+      "raw_title": "RTP Volunteer Team Leader"
+    },
+    {
+      "id": 13935,
+      "title": "Product Intern",
+      "jobs": 6,
+      "action": "reject",
+      "reason": "intern/volunteer",
+      "raw_title": "Product Intern"
+    },
+    {
+      "id": 17221,
+      "title": "\u05de\u05dc\u05e7\u05d8\u05d9\u05dd - \u05d5\u05d5\u05dc\u05d8 \u05de\u05e8\u05e7\u05d8 - \u05db\u05e4\u05e8 \u05e1\u05d1\u05d0",
+      "jobs": 6,
+      "action": "reject",
+      "reason": "non-english",
+      "raw_title": "\u05de\u05dc\u05e7\u05d8\u05d9\u05dd - \u05d5\u05d5\u05dc\u05d8 \u05de\u05e8\u05e7\u05d8 - \u05db\u05e4\u05e8 \u05e1\u05d1\u05d0"
+    },
+    {
+      "id": 2583,
+      "title": "SRE",
+      "jobs": 5,
+      "action": "reject",
+      "reason": "too-short",
+      "raw_title": "SRE"
+    },
+    {
+      "id": 17110,
+      "title": "Operations Automation Intern",
+      "jobs": 5,
+      "action": "reject",
+      "reason": "intern/volunteer",
+      "raw_title": "Operations Automation Intern"
+    },
+    {
+      "id": 12563,
+      "title": "\u03a3\u03cd\u03bc\u03b2\u03bf\u03c5\u03bb\u03bf\u03c2 \u03a0\u03b5\u03bb\u03b1\u03c4\u03ce\u03bd",
+      "jobs": 5,
+      "action": "reject",
+      "reason": "non-english",
+      "raw_title": "\u03a3\u03cd\u03bc\u03b2\u03bf\u03c5\u03bb\u03bf\u03c2 \u03a0\u03b5\u03bb\u03b1\u03c4\u03ce\u03bd"
+    }
+  ]
+}

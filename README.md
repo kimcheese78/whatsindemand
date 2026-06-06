@@ -1,84 +1,85 @@
 # WhatsInDemand
 
-A real-time job market intelligence platform that tracks skills demand, job trends, and helps professionals stay ahead of market changes.
+Job market intelligence platform — tracks skills demand and job trends across ~3,300 companies. Live at [whatsindemand.com](https://whatsindemand.com).
 
-## Tech Stack
+## Stack
 
-- **Frontend**: React (Create React App) + Tailwind CSS
-- **Backend**: Flask (Python) + SQLAlchemy
-- **Database**: PostgreSQL
-- **Deployment**: Vercel (Frontend) + Render (Backend) + Supabase (Database)
+- **Frontend:** React 19 + Tailwind CSS — deployed on Vercel
+- **Backend:** Flask + SQLAlchemy (Python 3.13) — deployed on Railway
+- **Database:** PostgreSQL on Railway
 
-## Project Structure
+## Project structure
 
 ```
-Whatsindemand/
-├── frontend/          # React frontend application
-│   ├── src/          # Source code
-│   └── public/       # Static assets
-├── backend/          # Flask backend API
-│   ├── app/          # Application code
+WhatsInDemand/
+├── frontend/         # React app (src/, public/)
+├── backend/
+│   ├── app/
 │   │   ├── routes/   # API endpoints
-│   │   ├── models/   # Database models
-│   │   ├── services/ # Business logic
-│   │   └── scrapers/ # Job scraping logic
-│   ├── scripts/      # Utility scripts
-│   └── migrations/   # Database migrations
+│   │   ├── scrapers/ # ATS-specific scrapers (Greenhouse, Lever, Ashby, ...)
+│   │   ├── services/ # skill_extractor, etc.
+│   │   ├── models.py
+│   │   └── config.py
+│   ├── scripts/      # weekly_scrape, discover_new_skills, extract_skills, ...
+│   └── migrations/   # Alembic
+├── CLAUDE.md         # Dev guide for working in this repo
 └── README.md
 ```
 
-## Local Development
+## Pipeline
+
+Jobs flow through four stages, orchestrated by `backend/scripts/weekly_scrape.py`:
+
+1. **Scrape** — pull current job postings from each company's ATS
+2. **Discover** — surface new skill candidates from JD requirements sections
+3. **Review** — approve/reject candidates into the verified `Skill` taxonomy
+4. **Extract** — tag jobs against the taxonomy → `job_skills`
+
+Railway runs a weekly cron (`agent_run.py`) for Step 1. Steps 2–4 are run manually for now.
+
+## Local development
 
 ### Prerequisites
 - Python 3.13+
 - Node.js 18+
-- PostgreSQL (or use Supabase)
+- PostgreSQL (local) or access to the Railway prod DB
 
-### Backend Setup
+### Backend
 
 ```bash
 cd backend
 python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
+source venv/bin/activate
 pip install -r requirements.txt
 
-# Set up environment variables
-cp .env.example .env
-# Edit .env with your database URL and secrets
-
-# Run migrations
+cp .env.example .env       # set DATABASE_URL, SECRET_KEY, JWT_SECRET_KEY
 flask db upgrade
-
-# Start server
-python run.py
+python run.py              # http://localhost:5001
 ```
 
-### Frontend Setup
+### Frontend
 
 ```bash
 cd frontend
 npm install
-npm start
+npm start                  # http://localhost:3000
 ```
+
+## Environment variables
+
+**Backend (.env):** `DATABASE_URL`, `SECRET_KEY`, `JWT_SECRET_KEY`, `FRONTEND_URL`, `BACKEND_URL`. See `ENVIRONMENT_VARIABLES.md` for full list including Stripe and Google OAuth keys.
+
+**Frontend:** `REACT_APP_API_URL` (set in Vercel project settings for prod; defaults to localhost in dev).
 
 ## Deployment
 
-See `DEPLOYMENT.md` for detailed deployment instructions.
+- **Backend:** push to `main` → Railway auto-deploys (`Procfile`: `gunicorn run:app`)
+- **Frontend:** push to `main` → Vercel auto-deploys
 
-## Environment Variables
+## Contributing / working in this repo
 
-### Backend (.env)
-- `SECRET_KEY` - Flask secret key
-- `JWT_SECRET_KEY` - JWT signing key
-- `DATABASE_URL` - PostgreSQL connection string
-- `FRONTEND_URL` - Frontend URL for CORS
-- `BACKEND_URL` - Backend URL
-- `REDIS_URL` - Redis connection (optional)
-
-### Frontend
-- `REACT_APP_API_URL` - Backend API URL
+See [`CLAUDE.md`](./CLAUDE.md) for repo conventions, the `DATABASE_URL` gotcha when running scripts against prod, the script catalogue, and how the skill taxonomy is structured.
 
 ## License
 
 MIT
-

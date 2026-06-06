@@ -1,0 +1,2524 @@
+{
+  "meta": {
+    "source": "hand-curated (LLM key out of credits)",
+    "kept": 166,
+    "missing_from_pending": []
+  },
+  "skills_by_category": {
+    "technical": [
+      {
+        "candidate_id": 33337,
+        "name": "LLM integration",
+        "category": "technical",
+        "subcategory": "AI & Machine Learning",
+        "aliases": [
+          "LLM integrations"
+        ],
+        "company_count": 7,
+        "job_count": 10,
+        "example_contexts": [
+          "LLM integration",
+          "LLM integration",
+          "LLM integration"
+        ]
+      },
+      {
+        "candidate_id": 34318,
+        "name": "Debezium",
+        "category": "technical",
+        "subcategory": "Databases & Data Engineering",
+        "aliases": [
+          "CDC",
+          "Change Data Capture"
+        ],
+        "company_count": 5,
+        "job_count": 9,
+        "example_contexts": [
+          "Debezium",
+          "Debezium",
+          "Debezium"
+        ]
+      },
+      {
+        "candidate_id": 34941,
+        "name": "LLM architectures",
+        "category": "technical",
+        "subcategory": "AI & Machine Learning",
+        "aliases": [],
+        "company_count": 5,
+        "job_count": 7,
+        "example_contexts": [
+          "LLM architectures",
+          "LLM architectures",
+          "LLM architectures"
+        ]
+      },
+      {
+        "candidate_id": 33570,
+        "name": "Flyte",
+        "category": "technical",
+        "subcategory": "AI & Machine Learning",
+        "aliases": [
+          "Flyte orchestration"
+        ],
+        "company_count": 5,
+        "job_count": 7,
+        "example_contexts": [
+          "Flyte",
+          "Flyte",
+          "Flyte"
+        ]
+      },
+      {
+        "candidate_id": 43802,
+        "name": "MFA",
+        "category": "technical",
+        "subcategory": "Security & Compliance",
+        "aliases": [
+          "Multi-Factor Authentication",
+          "2FA"
+        ],
+        "company_count": 4,
+        "job_count": 8,
+        "example_contexts": [
+          "MFA",
+          "MFA",
+          "MFA"
+        ]
+      },
+      {
+        "candidate_id": 36914,
+        "name": "Lever",
+        "category": "technical",
+        "subcategory": "Enterprise Tools & Platforms",
+        "aliases": [],
+        "company_count": 4,
+        "job_count": 7,
+        "example_contexts": [
+          "Lever",
+          "Lever",
+          "Lever"
+        ]
+      },
+      {
+        "candidate_id": 36127,
+        "name": "Houdini",
+        "category": "technical",
+        "subcategory": "Enterprise Tools & Platforms",
+        "aliases": [
+          "SideFX Houdini"
+        ],
+        "company_count": 4,
+        "job_count": 6,
+        "example_contexts": [
+          "Houdini",
+          "Houdini",
+          "Houdini"
+        ]
+      },
+      {
+        "candidate_id": 41539,
+        "name": "IPC-610",
+        "category": "technical",
+        "subcategory": "Hardware & Embedded",
+        "aliases": [
+          "IPC-A-610"
+        ],
+        "company_count": 4,
+        "job_count": 4,
+        "example_contexts": [
+          "IPC-610",
+          "IPC-610",
+          "IPC-610"
+        ]
+      },
+      {
+        "candidate_id": 36957,
+        "name": "FEA software",
+        "category": "technical",
+        "subcategory": "Hardware & Embedded",
+        "aliases": [
+          "Finite Element Analysis",
+          "FEA"
+        ],
+        "company_count": 3,
+        "job_count": 15,
+        "example_contexts": [
+          "FEA software",
+          "FEA software",
+          "FEA software"
+        ]
+      },
+      {
+        "candidate_id": 41336,
+        "name": "lakehouse architectures",
+        "category": "technical",
+        "subcategory": "Databases & Data Engineering",
+        "aliases": [
+          "data lakehouse",
+          "lakehouse"
+        ],
+        "company_count": 3,
+        "job_count": 12,
+        "example_contexts": [
+          "lakehouse architectures",
+          "lakehouse architectures",
+          "lakehouse architectures"
+        ]
+      },
+      {
+        "candidate_id": 32992,
+        "name": "Zemax",
+        "category": "technical",
+        "subcategory": "Hardware & Embedded",
+        "aliases": [],
+        "company_count": 3,
+        "job_count": 9,
+        "example_contexts": [
+          "Zemax",
+          "Zemax",
+          "Zemax"
+        ]
+      },
+      {
+        "candidate_id": 33813,
+        "name": "AFSIM",
+        "category": "technical",
+        "subcategory": "Hardware & Embedded",
+        "aliases": [
+          "Advanced Framework for Simulation, Integration and Modeling"
+        ],
+        "company_count": 3,
+        "job_count": 8,
+        "example_contexts": [
+          "AFSIM",
+          "AFSIM",
+          "AFSIM"
+        ]
+      },
+      {
+        "candidate_id": 39368,
+        "name": "GDAL",
+        "category": "technical",
+        "subcategory": "Data Science & Analytics",
+        "aliases": [],
+        "company_count": 3,
+        "job_count": 7,
+        "example_contexts": [
+          "GDAL",
+          "GDAL",
+          "GDAL"
+        ]
+      },
+      {
+        "candidate_id": 40624,
+        "name": "RMF process",
+        "category": "technical",
+        "subcategory": "Security & Compliance",
+        "aliases": [
+          "Risk Management Framework",
+          "NIST RMF"
+        ],
+        "company_count": 3,
+        "job_count": 5,
+        "example_contexts": [
+          "RMF process",
+          "RMF process",
+          "RMF process"
+        ]
+      },
+      {
+        "candidate_id": 42792,
+        "name": "EtherCAT",
+        "category": "technical",
+        "subcategory": "Hardware & Embedded",
+        "aliases": [],
+        "company_count": 3,
+        "job_count": 5,
+        "example_contexts": [
+          "EtherCAT",
+          "EtherCAT",
+          "EtherCAT"
+        ]
+      },
+      {
+        "candidate_id": 40986,
+        "name": "Shotgrid",
+        "category": "technical",
+        "subcategory": "Enterprise Tools & Platforms",
+        "aliases": [
+          "ShotGrid"
+        ],
+        "company_count": 3,
+        "job_count": 5,
+        "example_contexts": [
+          "ShotGrid",
+          "ShotGrid",
+          "Shotgrid"
+        ]
+      },
+      {
+        "candidate_id": 35845,
+        "name": "HSMs",
+        "category": "technical",
+        "subcategory": "Security & Compliance",
+        "aliases": [
+          "Hardware Security Module"
+        ],
+        "company_count": 3,
+        "job_count": 4,
+        "example_contexts": [
+          "HSMs",
+          "HSMs",
+          "HSMs"
+        ]
+      },
+      {
+        "candidate_id": 33228,
+        "name": "xAPI",
+        "category": "technical",
+        "subcategory": "Enterprise Tools & Platforms",
+        "aliases": [
+          "Experience API",
+          "Tin Can API"
+        ],
+        "company_count": 3,
+        "job_count": 4,
+        "example_contexts": [
+          "xAPI",
+          "xAPI",
+          "xAPI"
+        ]
+      },
+      {
+        "candidate_id": 40698,
+        "name": "concurrent programming",
+        "category": "technical",
+        "subcategory": "Programming Languages",
+        "aliases": [
+          "concurrency",
+          "multithreading",
+          "parallel programming"
+        ],
+        "company_count": 3,
+        "job_count": 3,
+        "example_contexts": [
+          "concurrent programming",
+          "concurrent programming",
+          "concurrent programming"
+        ]
+      },
+      {
+        "candidate_id": 36151,
+        "name": "Jinja",
+        "category": "technical",
+        "subcategory": "Backend & APIs",
+        "aliases": [
+          "Jinja2"
+        ],
+        "company_count": 3,
+        "job_count": 3,
+        "example_contexts": [
+          "Jinja",
+          "Jinja",
+          "Jinja"
+        ]
+      },
+      {
+        "candidate_id": 33328,
+        "name": "Rancher",
+        "category": "technical",
+        "subcategory": "DevOps & CI/CD",
+        "aliases": [],
+        "company_count": 3,
+        "job_count": 3,
+        "example_contexts": [
+          "Rancher",
+          "Rancher",
+          "Rancher"
+        ]
+      },
+      {
+        "candidate_id": 33136,
+        "name": "structured cabling standards",
+        "category": "technical",
+        "subcategory": "Networking & Systems",
+        "aliases": [
+          "structured cabling"
+        ],
+        "company_count": 3,
+        "job_count": 3,
+        "example_contexts": [
+          "structured cabling standards",
+          "structured cabling standards"
+        ]
+      },
+      {
+        "candidate_id": 35202,
+        "name": "FleetDM",
+        "category": "technical",
+        "subcategory": "Security & Compliance",
+        "aliases": [
+          "Fleet"
+        ],
+        "company_count": 3,
+        "job_count": 3,
+        "example_contexts": [
+          "FleetDM",
+          "FleetDM",
+          "FleetDM"
+        ]
+      },
+      {
+        "candidate_id": 34915,
+        "name": "Mastercam",
+        "category": "technical",
+        "subcategory": "Hardware & Embedded",
+        "aliases": [],
+        "company_count": 3,
+        "job_count": 3,
+        "example_contexts": [
+          "Mastercam",
+          "Mastercam",
+          "Mastercam"
+        ]
+      },
+      {
+        "candidate_id": 33158,
+        "name": "DAQ systems",
+        "category": "technical",
+        "subcategory": "Hardware & Embedded",
+        "aliases": [
+          "Data Acquisition",
+          "DAQ"
+        ],
+        "company_count": 3,
+        "job_count": 3,
+        "example_contexts": [
+          "DAQ systems",
+          "DAQ systems",
+          "DAQ systems"
+        ]
+      },
+      {
+        "candidate_id": 42615,
+        "name": "beamforming",
+        "category": "technical",
+        "subcategory": "Hardware & Embedded",
+        "aliases": [],
+        "company_count": 3,
+        "job_count": 3,
+        "example_contexts": [
+          "beamforming",
+          "beamforming"
+        ]
+      },
+      {
+        "candidate_id": 36400,
+        "name": "AWS D17.1",
+        "category": "technical",
+        "subcategory": "Hardware & Embedded",
+        "aliases": [
+          "aerospace welding standard"
+        ],
+        "company_count": 3,
+        "job_count": 3,
+        "example_contexts": [
+          "AWS D17.1",
+          "AWS D17.1",
+          "AWS D17.1"
+        ]
+      },
+      {
+        "candidate_id": 49393,
+        "name": "RTOS environments",
+        "category": "technical",
+        "subcategory": "Hardware & Embedded",
+        "aliases": [
+          "Real-Time Operating System",
+          "RTOS"
+        ],
+        "company_count": 3,
+        "job_count": 3,
+        "example_contexts": [
+          "RTOS environments",
+          "RTOS environments"
+        ]
+      },
+      {
+        "candidate_id": 34024,
+        "name": "manual QA testing",
+        "category": "technical",
+        "subcategory": "QA & Testing",
+        "aliases": [
+          "manual testing",
+          "manual QA"
+        ],
+        "company_count": 2,
+        "job_count": 33,
+        "example_contexts": [
+          "manual QA testing",
+          "manual QA testing",
+          "manual QA testing"
+        ]
+      },
+      {
+        "candidate_id": 35700,
+        "name": "Delta Tables",
+        "category": "technical",
+        "subcategory": "Databases & Data Engineering",
+        "aliases": [
+          "Delta Lake"
+        ],
+        "company_count": 2,
+        "job_count": 25,
+        "example_contexts": [
+          "Delta Tables",
+          "Delta Tables",
+          "Delta Tables"
+        ]
+      },
+      {
+        "candidate_id": 36230,
+        "name": "QNX",
+        "category": "technical",
+        "subcategory": "Hardware & Embedded",
+        "aliases": [],
+        "company_count": 2,
+        "job_count": 24,
+        "example_contexts": [
+          "QNX",
+          "QNX",
+          "QNX"
+        ]
+      },
+      {
+        "candidate_id": 33786,
+        "name": "reverse proxy",
+        "category": "technical",
+        "subcategory": "Networking & Systems",
+        "aliases": [],
+        "company_count": 2,
+        "job_count": 10,
+        "example_contexts": [
+          "reverse proxy",
+          "reverse proxy",
+          "reverse proxy"
+        ]
+      },
+      {
+        "candidate_id": 35942,
+        "name": "Aurora",
+        "category": "technical",
+        "subcategory": "Databases & Data Engineering",
+        "aliases": [
+          "Amazon Aurora",
+          "AWS Aurora"
+        ],
+        "company_count": 2,
+        "job_count": 9,
+        "example_contexts": [
+          "Aurora",
+          "Aurora",
+          "Aurora"
+        ]
+      },
+      {
+        "candidate_id": 35559,
+        "name": "SSR",
+        "category": "technical",
+        "subcategory": "Frontend & Web",
+        "aliases": [
+          "Server-Side Rendering"
+        ],
+        "company_count": 2,
+        "job_count": 9,
+        "example_contexts": [
+          "SSR",
+          "SSR",
+          "SSR"
+        ]
+      },
+      {
+        "candidate_id": 38362,
+        "name": "certificate-based authentication",
+        "category": "technical",
+        "subcategory": "Security & Compliance",
+        "aliases": [],
+        "company_count": 2,
+        "job_count": 8,
+        "example_contexts": [
+          "certificate-based authentication",
+          "certificate-based authentication",
+          "certificate-based authentication"
+        ]
+      },
+      {
+        "candidate_id": 41519,
+        "name": "ABAC",
+        "category": "technical",
+        "subcategory": "Security & Compliance",
+        "aliases": [
+          "Attribute-Based Access Control"
+        ],
+        "company_count": 2,
+        "job_count": 7,
+        "example_contexts": [
+          "ABAC",
+          "ABAC",
+          "ABAC"
+        ]
+      },
+      {
+        "candidate_id": 39225,
+        "name": "Calypso platform",
+        "category": "technical",
+        "subcategory": "Enterprise Tools & Platforms",
+        "aliases": [
+          "Calypso"
+        ],
+        "company_count": 2,
+        "job_count": 7,
+        "example_contexts": [
+          "Calypso platform",
+          "Calypso platform",
+          "Calypso platform"
+        ]
+      },
+      {
+        "candidate_id": 33984,
+        "name": "COMSEC requirements",
+        "category": "technical",
+        "subcategory": "Security & Compliance",
+        "aliases": [
+          "COMSEC"
+        ],
+        "company_count": 2,
+        "job_count": 6,
+        "example_contexts": [
+          "COMSEC requirements",
+          "COMSEC requirements",
+          "COMSEC requirements"
+        ]
+      },
+      {
+        "candidate_id": 37513,
+        "name": "Infor LN",
+        "category": "technical",
+        "subcategory": "Enterprise Tools & Platforms",
+        "aliases": [
+          "Infor"
+        ],
+        "company_count": 2,
+        "job_count": 6,
+        "example_contexts": [
+          "Infor LN",
+          "Infor LN",
+          "Infor LN"
+        ]
+      },
+      {
+        "candidate_id": 35048,
+        "name": "QEMU",
+        "category": "technical",
+        "subcategory": "DevOps & CI/CD",
+        "aliases": [],
+        "company_count": 2,
+        "job_count": 5,
+        "example_contexts": [
+          "QEMU",
+          "QEMU",
+          "QEMU"
+        ]
+      },
+      {
+        "candidate_id": 37148,
+        "name": "HDI",
+        "category": "technical",
+        "subcategory": "Hardware & Embedded",
+        "aliases": [
+          "High Density Interconnect"
+        ],
+        "company_count": 2,
+        "job_count": 5,
+        "example_contexts": [
+          "HDI",
+          "HDI",
+          "HDI"
+        ]
+      },
+      {
+        "candidate_id": 36333,
+        "name": "ParaView",
+        "category": "technical",
+        "subcategory": "Data Science & Analytics",
+        "aliases": [],
+        "company_count": 2,
+        "job_count": 4,
+        "example_contexts": [
+          "ParaView",
+          "ParaView",
+          "ParaView"
+        ]
+      },
+      {
+        "candidate_id": 39353,
+        "name": "Cloudflare Workers",
+        "category": "technical",
+        "subcategory": "Cloud & Infrastructure",
+        "aliases": [],
+        "company_count": 2,
+        "job_count": 4,
+        "example_contexts": [
+          "Cloudflare Workers",
+          "Cloudflare Workers",
+          "Cloudflare Workers"
+        ]
+      },
+      {
+        "candidate_id": 38434,
+        "name": "software composition analysis",
+        "category": "technical",
+        "subcategory": "Security & Compliance",
+        "aliases": [
+          "SCA"
+        ],
+        "company_count": 2,
+        "job_count": 4,
+        "example_contexts": [
+          "software composition analysis",
+          "Software Composition Analysis",
+          "software composition analysis"
+        ]
+      },
+      {
+        "candidate_id": 36734,
+        "name": "MITRE",
+        "category": "technical",
+        "subcategory": "Security & Compliance",
+        "aliases": [
+          "MITRE ATT&CK",
+          "ATT&CK"
+        ],
+        "company_count": 2,
+        "job_count": 4,
+        "example_contexts": [
+          "MITRE",
+          "MITRE",
+          "MITRE"
+        ]
+      },
+      {
+        "candidate_id": 40766,
+        "name": "Vector CANoe",
+        "category": "technical",
+        "subcategory": "Hardware & Embedded",
+        "aliases": [
+          "CANoe"
+        ],
+        "company_count": 2,
+        "job_count": 4,
+        "example_contexts": [
+          "Vector CANoe",
+          "Vector CANoe",
+          "Vector CANoe"
+        ]
+      },
+      {
+        "candidate_id": 43939,
+        "name": "MasterControl",
+        "category": "technical",
+        "subcategory": "Enterprise Tools & Platforms",
+        "aliases": [],
+        "company_count": 2,
+        "job_count": 4,
+        "example_contexts": [
+          "MasterControl",
+          "MasterControl",
+          "MasterControl"
+        ]
+      },
+      {
+        "candidate_id": 33062,
+        "name": "Encompass LOS",
+        "category": "technical",
+        "subcategory": "Enterprise Tools & Platforms",
+        "aliases": [
+          "Encompass"
+        ],
+        "company_count": 2,
+        "job_count": 4,
+        "example_contexts": [
+          "Encompass LOS",
+          "Encompass LOS",
+          "Encompass LOS"
+        ]
+      },
+      {
+        "candidate_id": 41921,
+        "name": "Isaac",
+        "category": "technical",
+        "subcategory": "AI & Machine Learning",
+        "aliases": [
+          "NVIDIA Isaac",
+          "Isaac Sim"
+        ],
+        "company_count": 2,
+        "job_count": 3,
+        "example_contexts": [
+          "Isaac",
+          "Isaac",
+          "Isaac"
+        ]
+      },
+      {
+        "candidate_id": 42865,
+        "name": "Vision-Language-Action",
+        "category": "technical",
+        "subcategory": "AI & Machine Learning",
+        "aliases": [
+          "VLA",
+          "VLA models"
+        ],
+        "company_count": 2,
+        "job_count": 3,
+        "example_contexts": [
+          "Vision-Language-Action",
+          "Vision-Language-Action",
+          "Vision-Language-Action"
+        ]
+      },
+      {
+        "candidate_id": 49169,
+        "name": "Datomic",
+        "category": "technical",
+        "subcategory": "Databases & Data Engineering",
+        "aliases": [],
+        "company_count": 2,
+        "job_count": 3,
+        "example_contexts": [
+          "Datomic",
+          "Datomic",
+          "Datomic"
+        ]
+      },
+      {
+        "candidate_id": 41650,
+        "name": "compiler design",
+        "category": "technical",
+        "subcategory": "Programming Languages",
+        "aliases": [],
+        "company_count": 2,
+        "job_count": 3,
+        "example_contexts": [
+          "compiler design",
+          "compiler design",
+          "compiler design"
+        ]
+      },
+      {
+        "candidate_id": 39933,
+        "name": "ASTs",
+        "category": "technical",
+        "subcategory": "Programming Languages",
+        "aliases": [
+          "Abstract Syntax Tree"
+        ],
+        "company_count": 2,
+        "job_count": 3,
+        "example_contexts": [
+          "ASTs",
+          "ASTs",
+          "ASTs"
+        ]
+      },
+      {
+        "candidate_id": 44759,
+        "name": "COBOL",
+        "category": "technical",
+        "subcategory": "Programming Languages",
+        "aliases": [],
+        "company_count": 2,
+        "job_count": 3,
+        "example_contexts": [
+          "COBOL",
+          "COBOL",
+          "COBOL"
+        ]
+      },
+      {
+        "candidate_id": 38357,
+        "name": "Hapi.js",
+        "category": "technical",
+        "subcategory": "Backend & APIs",
+        "aliases": [
+          "hapi"
+        ],
+        "company_count": 2,
+        "job_count": 3,
+        "example_contexts": [
+          "Hapi.js",
+          "Hapi.js",
+          "Hapi.js"
+        ]
+      },
+      {
+        "candidate_id": 35725,
+        "name": "CAP theorem",
+        "category": "technical",
+        "subcategory": "Backend & APIs",
+        "aliases": [],
+        "company_count": 2,
+        "job_count": 3,
+        "example_contexts": [
+          "CAP theorem",
+          "CAP theorem",
+          "CAP theorem"
+        ]
+      },
+      {
+        "candidate_id": 33851,
+        "name": "domain modeling",
+        "category": "technical",
+        "subcategory": "Backend & APIs",
+        "aliases": [
+          "domain-driven design"
+        ],
+        "company_count": 2,
+        "job_count": 3,
+        "example_contexts": [
+          "domain modeling",
+          "domain modeling",
+          "domain modeling"
+        ]
+      },
+      {
+        "candidate_id": 34770,
+        "name": "VDI",
+        "category": "technical",
+        "subcategory": "Networking & Systems",
+        "aliases": [
+          "Virtual Desktop Infrastructure"
+        ],
+        "company_count": 2,
+        "job_count": 3,
+        "example_contexts": [
+          "VDI",
+          "VDI",
+          "VDI"
+        ]
+      },
+      {
+        "candidate_id": 35607,
+        "name": "IPAM",
+        "category": "technical",
+        "subcategory": "Networking & Systems",
+        "aliases": [
+          "IP Address Management"
+        ],
+        "company_count": 2,
+        "job_count": 3,
+        "example_contexts": [
+          "IPAM",
+          "IPAM",
+          "IPAM"
+        ]
+      },
+      {
+        "candidate_id": 41509,
+        "name": "802.1x Authentication",
+        "category": "technical",
+        "subcategory": "Networking & Systems",
+        "aliases": [
+          "802.1X"
+        ],
+        "company_count": 2,
+        "job_count": 3,
+        "example_contexts": [
+          "802.1x Authentication",
+          "802.1x Authentication",
+          "802.1X authentication"
+        ]
+      },
+      {
+        "candidate_id": 34994,
+        "name": "CyberArk",
+        "category": "technical",
+        "subcategory": "Security & Compliance",
+        "aliases": [],
+        "company_count": 2,
+        "job_count": 3,
+        "example_contexts": [
+          "CyberArk",
+          "CyberArk",
+          "CyberArk"
+        ]
+      },
+      {
+        "candidate_id": 37637,
+        "name": "threat actor TTPs",
+        "category": "technical",
+        "subcategory": "Security & Compliance",
+        "aliases": [
+          "TTPs"
+        ],
+        "company_count": 2,
+        "job_count": 3,
+        "example_contexts": [
+          "threat actor TTPs",
+          "threat actor TTPs",
+          "threat actor TTPs"
+        ]
+      },
+      {
+        "candidate_id": 51664,
+        "name": "Security+",
+        "category": "technical",
+        "subcategory": "Security & Compliance",
+        "aliases": [
+          "CompTIA Security+"
+        ],
+        "company_count": 2,
+        "job_count": 3,
+        "example_contexts": []
+      },
+      {
+        "candidate_id": 43997,
+        "name": "SWG",
+        "category": "technical",
+        "subcategory": "Security & Compliance",
+        "aliases": [
+          "Secure Web Gateway"
+        ],
+        "company_count": 2,
+        "job_count": 3,
+        "example_contexts": [
+          "SWG",
+          "SWG",
+          "SWG"
+        ]
+      },
+      {
+        "candidate_id": 35763,
+        "name": "Verkada",
+        "category": "technical",
+        "subcategory": "Security & Compliance",
+        "aliases": [],
+        "company_count": 2,
+        "job_count": 3,
+        "example_contexts": [
+          "Verkada",
+          "Verkada",
+          "Verkada"
+        ]
+      },
+      {
+        "candidate_id": 41429,
+        "name": "accordance with IPC-A-620 standards",
+        "category": "technical",
+        "subcategory": "Hardware & Embedded",
+        "aliases": [
+          "IPC-A-620",
+          "IPC-620"
+        ],
+        "company_count": 2,
+        "job_count": 3,
+        "example_contexts": [
+          "accordance with IPC-A-620 standards",
+          "accordance with IPC-A-620 standards",
+          "accordance with IPC-A-620 standards"
+        ]
+      },
+      {
+        "candidate_id": 37938,
+        "name": "DFT implementation",
+        "category": "technical",
+        "subcategory": "Hardware & Embedded",
+        "aliases": [
+          "Design for Test",
+          "DFT"
+        ],
+        "company_count": 2,
+        "job_count": 3,
+        "example_contexts": [
+          "DFT implementation",
+          "DFT implementation",
+          "DFT implementation"
+        ]
+      },
+      {
+        "candidate_id": 41570,
+        "name": "CAM programming",
+        "category": "technical",
+        "subcategory": "Hardware & Embedded",
+        "aliases": [
+          "Computer-Aided Manufacturing"
+        ],
+        "company_count": 2,
+        "job_count": 3,
+        "example_contexts": [
+          "CAM programming",
+          "CAM programming",
+          "CAM programming"
+        ]
+      },
+      {
+        "candidate_id": 40354,
+        "name": "Zephyr",
+        "category": "technical",
+        "subcategory": "Hardware & Embedded",
+        "aliases": [
+          "Zephyr RTOS"
+        ],
+        "company_count": 2,
+        "job_count": 3,
+        "example_contexts": [
+          "Zephyr",
+          "Zephyr",
+          "Zephyr"
+        ]
+      },
+      {
+        "candidate_id": 47699,
+        "name": "LoadRunner",
+        "category": "technical",
+        "subcategory": "QA & Testing",
+        "aliases": [],
+        "company_count": 2,
+        "job_count": 3,
+        "example_contexts": [
+          "Loadrunner",
+          "LoadRunner",
+          "LoadRunner"
+        ]
+      },
+      {
+        "candidate_id": 52111,
+        "name": "BDD/TDD testing approaches",
+        "category": "technical",
+        "subcategory": "QA & Testing",
+        "aliases": [
+          "Behavior-Driven Development",
+          "BDD",
+          "Test-Driven Development",
+          "TDD"
+        ],
+        "company_count": 2,
+        "job_count": 3,
+        "example_contexts": [
+          "BDD/TDD testing approaches",
+          "BDD/TDD testing approaches",
+          "BDD/TDD testing approaches"
+        ]
+      },
+      {
+        "candidate_id": 42012,
+        "name": "Reltio",
+        "category": "technical",
+        "subcategory": "Enterprise Tools & Platforms",
+        "aliases": [],
+        "company_count": 2,
+        "job_count": 3,
+        "example_contexts": [
+          "Reltio",
+          "Reltio",
+          "Reltio"
+        ]
+      },
+      {
+        "candidate_id": 40435,
+        "name": "Dovetail",
+        "category": "technical",
+        "subcategory": "Enterprise Tools & Platforms",
+        "aliases": [],
+        "company_count": 2,
+        "job_count": 3,
+        "example_contexts": [
+          "Dovetail",
+          "Dovetail",
+          "Dovetail"
+        ]
+      },
+      {
+        "candidate_id": 42326,
+        "name": "Smartling",
+        "category": "technical",
+        "subcategory": "Enterprise Tools & Platforms",
+        "aliases": [],
+        "company_count": 2,
+        "job_count": 3,
+        "example_contexts": [
+          "Smartling",
+          "Smartling",
+          "Smartling"
+        ]
+      },
+      {
+        "candidate_id": 36042,
+        "name": "Nanite",
+        "category": "technical",
+        "subcategory": "Enterprise Tools & Platforms",
+        "aliases": [
+          "Unreal Nanite"
+        ],
+        "company_count": 2,
+        "job_count": 3,
+        "example_contexts": [
+          "Nanite",
+          "Nanite",
+          "Nanite"
+        ]
+      },
+      {
+        "candidate_id": 34704,
+        "name": "SGLang",
+        "category": "technical",
+        "subcategory": "AI & Machine Learning",
+        "aliases": [],
+        "company_count": 2,
+        "job_count": 2,
+        "example_contexts": [
+          "SGLang",
+          "SGLang"
+        ]
+      },
+      {
+        "candidate_id": 40445,
+        "name": "pretraining",
+        "category": "technical",
+        "subcategory": "AI & Machine Learning",
+        "aliases": [
+          "pre-training"
+        ],
+        "company_count": 2,
+        "job_count": 2,
+        "example_contexts": [
+          "pretraining",
+          "pretraining"
+        ]
+      },
+      {
+        "candidate_id": 47192,
+        "name": "model routing",
+        "category": "technical",
+        "subcategory": "AI & Machine Learning",
+        "aliases": [
+          "LLM routing"
+        ],
+        "company_count": 2,
+        "job_count": 2,
+        "example_contexts": [
+          "model routing",
+          "model routing"
+        ]
+      },
+      {
+        "candidate_id": 49430,
+        "name": "HeyGen",
+        "category": "technical",
+        "subcategory": "AI & Machine Learning",
+        "aliases": [],
+        "company_count": 2,
+        "job_count": 2,
+        "example_contexts": [
+          "HeyGen",
+          "HeyGen"
+        ]
+      },
+      {
+        "candidate_id": 44744,
+        "name": "Unity Catalog",
+        "category": "technical",
+        "subcategory": "Databases & Data Engineering",
+        "aliases": [],
+        "company_count": 2,
+        "job_count": 2,
+        "example_contexts": [
+          "Unity Catalog",
+          "Unity Catalog"
+        ]
+      },
+      {
+        "candidate_id": 39193,
+        "name": "graph technologies",
+        "category": "technical",
+        "subcategory": "Databases & Data Engineering",
+        "aliases": [
+          "graph databases"
+        ],
+        "company_count": 2,
+        "job_count": 2,
+        "example_contexts": [
+          "graph technologies",
+          "graph technologies"
+        ]
+      },
+      {
+        "candidate_id": 38060,
+        "name": "OLAP technologies",
+        "category": "technical",
+        "subcategory": "Databases & Data Engineering",
+        "aliases": [
+          "OLAP"
+        ],
+        "company_count": 2,
+        "job_count": 2,
+        "example_contexts": [
+          "OLAP technologies",
+          "OLAP technologies"
+        ]
+      },
+      {
+        "candidate_id": 43822,
+        "name": "optimizing complex queries for performance",
+        "category": "technical",
+        "subcategory": "Databases & Data Engineering",
+        "aliases": [
+          "query optimization",
+          "SQL tuning"
+        ],
+        "company_count": 2,
+        "job_count": 2,
+        "example_contexts": [
+          "optimizing complex queries for performance",
+          "optimizing complex queries for performance"
+        ]
+      },
+      {
+        "candidate_id": 33505,
+        "name": "QuickSight",
+        "category": "technical",
+        "subcategory": "Data Science & Analytics",
+        "aliases": [
+          "Amazon QuickSight"
+        ],
+        "company_count": 2,
+        "job_count": 2,
+        "example_contexts": [
+          "QuickSight",
+          "QuickSight"
+        ]
+      },
+      {
+        "candidate_id": 47047,
+        "name": "KNIME",
+        "category": "technical",
+        "subcategory": "Data Science & Analytics",
+        "aliases": [],
+        "company_count": 2,
+        "job_count": 2,
+        "example_contexts": [
+          "KNIME",
+          "Knime"
+        ]
+      },
+      {
+        "candidate_id": 47474,
+        "name": "R/R Shiny advantageous",
+        "category": "technical",
+        "subcategory": "Data Science & Analytics",
+        "aliases": [
+          "R Shiny",
+          "Shiny"
+        ],
+        "company_count": 2,
+        "job_count": 2,
+        "example_contexts": [
+          "R/R Shiny advantageous",
+          "R/R Shiny advantageous"
+        ]
+      },
+      {
+        "candidate_id": 49719,
+        "name": "VBScript",
+        "category": "technical",
+        "subcategory": "Programming Languages",
+        "aliases": [],
+        "company_count": 2,
+        "job_count": 2,
+        "example_contexts": [
+          "VBScript",
+          "VBScript"
+        ]
+      },
+      {
+        "candidate_id": 38466,
+        "name": "headless CMS architectures",
+        "category": "technical",
+        "subcategory": "Frontend & Web",
+        "aliases": [
+          "headless CMS"
+        ],
+        "company_count": 2,
+        "job_count": 2,
+        "example_contexts": [
+          "headless CMS architectures",
+          "headless CMS architectures"
+        ]
+      },
+      {
+        "candidate_id": 41574,
+        "name": "module federation",
+        "category": "technical",
+        "subcategory": "Frontend & Web",
+        "aliases": [],
+        "company_count": 2,
+        "job_count": 2,
+        "example_contexts": [
+          "module federation",
+          "Module Federation"
+        ]
+      },
+      {
+        "candidate_id": 36097,
+        "name": "multi-tenancy",
+        "category": "technical",
+        "subcategory": "Backend & APIs",
+        "aliases": [
+          "multi-tenant architecture"
+        ],
+        "company_count": 2,
+        "job_count": 2,
+        "example_contexts": [
+          "multi-tenancy",
+          "multi-tenancy"
+        ]
+      },
+      {
+        "candidate_id": 34781,
+        "name": "AWS Control Tower",
+        "category": "technical",
+        "subcategory": "Cloud & Infrastructure",
+        "aliases": [],
+        "company_count": 2,
+        "job_count": 2,
+        "example_contexts": [
+          "AWS Control Tower",
+          "AWS Control Tower"
+        ]
+      },
+      {
+        "candidate_id": 34430,
+        "name": "AWS Workspaces",
+        "category": "technical",
+        "subcategory": "Cloud & Infrastructure",
+        "aliases": [],
+        "company_count": 2,
+        "job_count": 2,
+        "example_contexts": [
+          "AWS Workspaces",
+          "AWS WorkSpaces"
+        ]
+      },
+      {
+        "candidate_id": 37217,
+        "name": "ELB",
+        "category": "technical",
+        "subcategory": "Cloud & Infrastructure",
+        "aliases": [
+          "Elastic Load Balancing"
+        ],
+        "company_count": 2,
+        "job_count": 2,
+        "example_contexts": [
+          "ELB",
+          "ELB"
+        ]
+      },
+      {
+        "candidate_id": 33578,
+        "name": "HashiCorp Nomad",
+        "category": "technical",
+        "subcategory": "DevOps & CI/CD",
+        "aliases": [
+          "Nomad"
+        ],
+        "company_count": 2,
+        "job_count": 2,
+        "example_contexts": [
+          "HashiCorp Nomad",
+          "Hashicorp Nomad"
+        ]
+      },
+      {
+        "candidate_id": 41397,
+        "name": "Cilium CNI",
+        "category": "technical",
+        "subcategory": "DevOps & CI/CD",
+        "aliases": [
+          "Cilium"
+        ],
+        "company_count": 2,
+        "job_count": 2,
+        "example_contexts": [
+          "Cilium CNI",
+          "Cilium CNI"
+        ]
+      },
+      {
+        "candidate_id": 41482,
+        "name": "Podman",
+        "category": "technical",
+        "subcategory": "DevOps & CI/CD",
+        "aliases": [],
+        "company_count": 2,
+        "job_count": 2,
+        "example_contexts": [
+          "Podman",
+          "Podman"
+        ]
+      },
+      {
+        "candidate_id": 34048,
+        "name": "Junos",
+        "category": "technical",
+        "subcategory": "Networking & Systems",
+        "aliases": [
+          "Juniper Junos"
+        ],
+        "company_count": 2,
+        "job_count": 2,
+        "example_contexts": [
+          "Junos",
+          "Junos"
+        ]
+      },
+      {
+        "candidate_id": 44915,
+        "name": "Tailscale",
+        "category": "technical",
+        "subcategory": "Networking & Systems",
+        "aliases": [],
+        "company_count": 2,
+        "job_count": 2,
+        "example_contexts": [
+          "Tailscale"
+        ]
+      },
+      {
+        "candidate_id": 44521,
+        "name": "DNS management",
+        "category": "technical",
+        "subcategory": "Networking & Systems",
+        "aliases": [
+          "DNS"
+        ],
+        "company_count": 2,
+        "job_count": 2,
+        "example_contexts": [
+          "DNS management",
+          "DNS management"
+        ]
+      },
+      {
+        "candidate_id": 38417,
+        "name": "CVSS",
+        "category": "technical",
+        "subcategory": "Security & Compliance",
+        "aliases": [
+          "Common Vulnerability Scoring System"
+        ],
+        "company_count": 2,
+        "job_count": 2,
+        "example_contexts": [
+          "CVSS",
+          "CVSS"
+        ]
+      },
+      {
+        "candidate_id": 39130,
+        "name": "NIST 800-53 Rev 5",
+        "category": "technical",
+        "subcategory": "Security & Compliance",
+        "aliases": [
+          "NIST 800-53",
+          "NIST SP 800-53"
+        ],
+        "company_count": 2,
+        "job_count": 2,
+        "example_contexts": [
+          "NIST 800-53 Rev 5",
+          "NIST 800-53 Rev 5"
+        ]
+      },
+      {
+        "candidate_id": 37881,
+        "name": "WebAuthn",
+        "category": "technical",
+        "subcategory": "Security & Compliance",
+        "aliases": [],
+        "company_count": 2,
+        "job_count": 2,
+        "example_contexts": [
+          "WebAuthn",
+          "WebAuthn"
+        ]
+      },
+      {
+        "candidate_id": 37241,
+        "name": "SCIM provisioning",
+        "category": "technical",
+        "subcategory": "Security & Compliance",
+        "aliases": [
+          "SCIM"
+        ],
+        "company_count": 2,
+        "job_count": 2,
+        "example_contexts": [
+          "SCIM provisioning",
+          "SCIM provisioning"
+        ]
+      },
+      {
+        "candidate_id": 41013,
+        "name": "tools like Burp Suite",
+        "category": "technical",
+        "subcategory": "Security & Compliance",
+        "aliases": [
+          "Burp Suite"
+        ],
+        "company_count": 2,
+        "job_count": 2,
+        "example_contexts": [
+          "tools like Burp Suite",
+          "Tools like Burp Suite"
+        ]
+      },
+      {
+        "candidate_id": 47324,
+        "name": "Lacework",
+        "category": "technical",
+        "subcategory": "Security & Compliance",
+        "aliases": [],
+        "company_count": 2,
+        "job_count": 2,
+        "example_contexts": [
+          "Lacework",
+          "Lacework"
+        ]
+      },
+      {
+        "candidate_id": 48223,
+        "name": "Trivy",
+        "category": "technical",
+        "subcategory": "Security & Compliance",
+        "aliases": [],
+        "company_count": 2,
+        "job_count": 2,
+        "example_contexts": [
+          "Trivy",
+          "Trivy"
+        ]
+      },
+      {
+        "candidate_id": 33742,
+        "name": "Privacy Enhancing Technologies",
+        "category": "technical",
+        "subcategory": "Security & Compliance",
+        "aliases": [
+          "PETs"
+        ],
+        "company_count": 2,
+        "job_count": 2,
+        "example_contexts": [
+          "Privacy Enhancing Technologies",
+          "Privacy Enhancing Technologies"
+        ]
+      },
+      {
+        "candidate_id": 51101,
+        "name": "secrets management platforms",
+        "category": "technical",
+        "subcategory": "Security & Compliance",
+        "aliases": [
+          "secrets management"
+        ],
+        "company_count": 2,
+        "job_count": 2,
+        "example_contexts": [
+          "secrets management platforms",
+          "secrets management platforms"
+        ]
+      },
+      {
+        "candidate_id": 37276,
+        "name": "SoC integration",
+        "category": "technical",
+        "subcategory": "Hardware & Embedded",
+        "aliases": [
+          "System-on-Chip",
+          "SoC"
+        ],
+        "company_count": 2,
+        "job_count": 2,
+        "example_contexts": [
+          "SoC integration",
+          "SoC integration"
+        ]
+      },
+      {
+        "candidate_id": 33196,
+        "name": "FinFET technologies",
+        "category": "technical",
+        "subcategory": "Hardware & Embedded",
+        "aliases": [
+          "FinFET"
+        ],
+        "company_count": 2,
+        "job_count": 2,
+        "example_contexts": [
+          "FinFET technologies",
+          "FinFET technologies"
+        ]
+      },
+      {
+        "candidate_id": 33512,
+        "name": "OpenBMC",
+        "category": "technical",
+        "subcategory": "Hardware & Embedded",
+        "aliases": [],
+        "company_count": 2,
+        "job_count": 2,
+        "example_contexts": [
+          "OpenBMC",
+          "OpenBMC"
+        ]
+      },
+      {
+        "candidate_id": 35943,
+        "name": "IMUs",
+        "category": "technical",
+        "subcategory": "Hardware & Embedded",
+        "aliases": [
+          "Inertial Measurement Unit"
+        ],
+        "company_count": 2,
+        "job_count": 2,
+        "example_contexts": [
+          "IMUs",
+          "IMUs"
+        ]
+      },
+      {
+        "candidate_id": 41210,
+        "name": "Electrostatic Discharge",
+        "category": "technical",
+        "subcategory": "Hardware & Embedded",
+        "aliases": [
+          "ESD"
+        ],
+        "company_count": 2,
+        "job_count": 2,
+        "example_contexts": [
+          "Electrostatic Discharge",
+          "electrostatic discharge"
+        ]
+      },
+      {
+        "candidate_id": 40168,
+        "name": "UWB",
+        "category": "technical",
+        "subcategory": "Hardware & Embedded",
+        "aliases": [
+          "Ultra-Wideband"
+        ],
+        "company_count": 2,
+        "job_count": 2,
+        "example_contexts": [
+          "UWB",
+          "UWB"
+        ]
+      },
+      {
+        "candidate_id": 37574,
+        "name": "Industrial IoT systems",
+        "category": "technical",
+        "subcategory": "Hardware & Embedded",
+        "aliases": [
+          "IIoT",
+          "Industrial IoT"
+        ],
+        "company_count": 2,
+        "job_count": 2,
+        "example_contexts": [
+          "Industrial IoT systems",
+          "Industrial IoT systems"
+        ]
+      },
+      {
+        "candidate_id": 34916,
+        "name": "5-axis milling",
+        "category": "technical",
+        "subcategory": "Hardware & Embedded",
+        "aliases": [],
+        "company_count": 2,
+        "job_count": 2,
+        "example_contexts": [
+          "5-axis milling",
+          "5-axis milling"
+        ]
+      },
+      {
+        "candidate_id": 33187,
+        "name": "SAP/S4 Hana",
+        "category": "technical",
+        "subcategory": "Enterprise Tools & Platforms",
+        "aliases": [
+          "SAP S/4HANA",
+          "S/4HANA"
+        ],
+        "company_count": 2,
+        "job_count": 2,
+        "example_contexts": [
+          "SAP/S4 Hana",
+          "SAP/S4 HANA"
+        ]
+      },
+      {
+        "candidate_id": 33227,
+        "name": "SCORM",
+        "category": "technical",
+        "subcategory": "Enterprise Tools & Platforms",
+        "aliases": [],
+        "company_count": 2,
+        "job_count": 2,
+        "example_contexts": [
+          "SCORM",
+          "SCORM"
+        ]
+      },
+      {
+        "candidate_id": 33399,
+        "name": "Esri App Builders",
+        "category": "technical",
+        "subcategory": "Enterprise Tools & Platforms",
+        "aliases": [
+          "Esri",
+          "ArcGIS"
+        ],
+        "company_count": 2,
+        "job_count": 2,
+        "example_contexts": [
+          "Esri App Builders",
+          "Esri App Builders"
+        ]
+      },
+      {
+        "candidate_id": 33713,
+        "name": "CLO 3D",
+        "category": "technical",
+        "subcategory": "Enterprise Tools & Platforms",
+        "aliases": [],
+        "company_count": 2,
+        "job_count": 2,
+        "example_contexts": [
+          "CLO 3D",
+          "CLO 3D"
+        ]
+      },
+      {
+        "candidate_id": 35802,
+        "name": "Linksquares",
+        "category": "technical",
+        "subcategory": "Enterprise Tools & Platforms",
+        "aliases": [],
+        "company_count": 2,
+        "job_count": 2,
+        "example_contexts": [
+          "Linksquares",
+          "LinkSquares"
+        ]
+      },
+      {
+        "candidate_id": 36001,
+        "name": "CAT platforms",
+        "category": "technical",
+        "subcategory": "Enterprise Tools & Platforms",
+        "aliases": [
+          "Computer-Assisted Translation",
+          "CAT tools"
+        ],
+        "company_count": 2,
+        "job_count": 2,
+        "example_contexts": [
+          "CAT platforms",
+          "CAT platforms"
+        ]
+      },
+      {
+        "candidate_id": 37121,
+        "name": "no-code/low-code",
+        "category": "technical",
+        "subcategory": "Enterprise Tools & Platforms",
+        "aliases": [
+          "low-code",
+          "no-code"
+        ],
+        "company_count": 2,
+        "job_count": 2,
+        "example_contexts": [
+          "no-code/low-code",
+          "no-code/low-code"
+        ]
+      },
+      {
+        "candidate_id": 43960,
+        "name": "AOSP",
+        "category": "technical",
+        "subcategory": "Mobile",
+        "aliases": [
+          "Android Open Source Project"
+        ],
+        "company_count": 2,
+        "job_count": 2,
+        "example_contexts": [
+          "AOSP",
+          "AOSP"
+        ]
+      }
+    ],
+    "domain": [
+      {
+        "candidate_id": 43077,
+        "name": "Core HCM",
+        "category": "domain",
+        "subcategory": "People & HR",
+        "aliases": [
+          "HCM"
+        ],
+        "company_count": 5,
+        "job_count": 7,
+        "example_contexts": [
+          "Core HCM",
+          "Core HCM",
+          "Core HCM"
+        ]
+      },
+      {
+        "candidate_id": 34746,
+        "name": "EMV",
+        "category": "domain",
+        "subcategory": "Finance & Accounting",
+        "aliases": [
+          "EMV chip",
+          "chip and PIN"
+        ],
+        "company_count": 3,
+        "job_count": 9,
+        "example_contexts": [
+          "EMV",
+          "EMV",
+          "EMV"
+        ]
+      },
+      {
+        "candidate_id": 38734,
+        "name": "clinical trial methodology",
+        "category": "domain",
+        "subcategory": "Methodologies",
+        "aliases": [],
+        "company_count": 3,
+        "job_count": 6,
+        "example_contexts": [
+          "clinical trial methodology",
+          "clinical trial methodology",
+          "clinical trial methodology"
+        ]
+      },
+      {
+        "candidate_id": 35804,
+        "name": "PMP",
+        "category": "domain",
+        "subcategory": "Methodologies",
+        "aliases": [
+          "Project Management Professional"
+        ],
+        "company_count": 3,
+        "job_count": 5,
+        "example_contexts": [
+          "PMP",
+          "PMP"
+        ]
+      },
+      {
+        "candidate_id": 46609,
+        "name": "geospatial intelligence",
+        "category": "domain",
+        "subcategory": "Industries",
+        "aliases": [
+          "GEOINT"
+        ],
+        "company_count": 3,
+        "job_count": 4,
+        "example_contexts": [
+          "Geospatial Intelligence",
+          "geospatial intelligence",
+          "geospatial intelligence"
+        ]
+      },
+      {
+        "candidate_id": 36607,
+        "name": "ligand binding assays",
+        "category": "domain",
+        "subcategory": "Industries",
+        "aliases": [],
+        "company_count": 3,
+        "job_count": 3,
+        "example_contexts": [
+          "ligand binding assays",
+          "ligand binding assays",
+          "ligand binding assays"
+        ]
+      },
+      {
+        "candidate_id": 41090,
+        "name": "Quality by Design",
+        "category": "domain",
+        "subcategory": "Methodologies",
+        "aliases": [
+          "QbD"
+        ],
+        "company_count": 3,
+        "job_count": 3,
+        "example_contexts": [
+          "Quality by Design",
+          "Quality by Design",
+          "quality by design"
+        ]
+      },
+      {
+        "candidate_id": 33110,
+        "name": "factory acceptance testing",
+        "category": "domain",
+        "subcategory": "Methodologies",
+        "aliases": [
+          "FAT"
+        ],
+        "company_count": 3,
+        "job_count": 3,
+        "example_contexts": [
+          "Factory Acceptance Testing",
+          "factory acceptance testing",
+          "factory acceptance testing"
+        ]
+      },
+      {
+        "candidate_id": 35063,
+        "name": "non-pharmacological interventions",
+        "category": "domain",
+        "subcategory": "Industries",
+        "aliases": [],
+        "company_count": 2,
+        "job_count": 384,
+        "example_contexts": [
+          "non-pharmacological interventions",
+          "non-pharmacological interventions",
+          "non-pharmacological interventions"
+        ]
+      },
+      {
+        "candidate_id": 37785,
+        "name": "cash handling",
+        "category": "domain",
+        "subcategory": "Business & Operations",
+        "aliases": [],
+        "company_count": 2,
+        "job_count": 163,
+        "example_contexts": [
+          "cash handling",
+          "cash handling",
+          "cash handling"
+        ]
+      },
+      {
+        "candidate_id": 40183,
+        "name": "Order to Cash",
+        "category": "domain",
+        "subcategory": "Finance & Accounting",
+        "aliases": [
+          "O2C"
+        ],
+        "company_count": 2,
+        "job_count": 8,
+        "example_contexts": [
+          "Order to Cash",
+          "Order to Cash",
+          "Order to Cash"
+        ]
+      },
+      {
+        "candidate_id": 34912,
+        "name": "MIL-STD-882",
+        "category": "domain",
+        "subcategory": "Legal & Compliance",
+        "aliases": [],
+        "company_count": 2,
+        "job_count": 7,
+        "example_contexts": [
+          "MIL-STD-882",
+          "MIL-STD-882",
+          "MIL-STD-882"
+        ]
+      },
+      {
+        "candidate_id": 33846,
+        "name": "UAVs",
+        "category": "domain",
+        "subcategory": "Industries",
+        "aliases": [
+          "drones",
+          "unmanned aerial vehicles"
+        ],
+        "company_count": 2,
+        "job_count": 5,
+        "example_contexts": [
+          "UAVs",
+          "UAVs",
+          "UAVs"
+        ]
+      },
+      {
+        "candidate_id": 35430,
+        "name": "patent litigation",
+        "category": "domain",
+        "subcategory": "Legal & Compliance",
+        "aliases": [],
+        "company_count": 2,
+        "job_count": 5,
+        "example_contexts": [
+          "patent litigation",
+          "patent litigation",
+          "patent litigation"
+        ]
+      },
+      {
+        "candidate_id": 35557,
+        "name": "genetic testing",
+        "category": "domain",
+        "subcategory": "Industries",
+        "aliases": [],
+        "company_count": 2,
+        "job_count": 4,
+        "example_contexts": [
+          "genetic testing",
+          "genetic testing",
+          "genetic testing"
+        ]
+      },
+      {
+        "candidate_id": 36724,
+        "name": "NCQA standards",
+        "category": "domain",
+        "subcategory": "Legal & Compliance",
+        "aliases": [
+          "NCQA"
+        ],
+        "company_count": 2,
+        "job_count": 4,
+        "example_contexts": [
+          "NCQA standards",
+          "NCQA standards",
+          "NCQA standards"
+        ]
+      },
+      {
+        "candidate_id": 33966,
+        "name": "funnel analysis",
+        "category": "domain",
+        "subcategory": "Marketing & Growth",
+        "aliases": [],
+        "company_count": 2,
+        "job_count": 4,
+        "example_contexts": [
+          "funnel analysis",
+          "funnel analysis",
+          "funnel analysis"
+        ]
+      },
+      {
+        "candidate_id": 37522,
+        "name": "short-form video production",
+        "category": "domain",
+        "subcategory": "Marketing & Growth",
+        "aliases": [],
+        "company_count": 2,
+        "job_count": 4,
+        "example_contexts": [
+          "short-form video production",
+          "short-form video production",
+          "short-form video production"
+        ]
+      },
+      {
+        "candidate_id": 34574,
+        "name": "D2C environments",
+        "category": "domain",
+        "subcategory": "Marketing & Growth",
+        "aliases": [
+          "DTC",
+          "Direct-to-Consumer"
+        ],
+        "company_count": 2,
+        "job_count": 4,
+        "example_contexts": [
+          "D2C environments",
+          "D2C environments",
+          "D2C environments"
+        ]
+      },
+      {
+        "candidate_id": 34575,
+        "name": "brand building",
+        "category": "domain",
+        "subcategory": "Marketing & Growth",
+        "aliases": [],
+        "company_count": 2,
+        "job_count": 4,
+        "example_contexts": [
+          "brand building",
+          "brand building",
+          "brand building"
+        ]
+      },
+      {
+        "candidate_id": 33579,
+        "name": "3PL",
+        "category": "domain",
+        "subcategory": "Business & Operations",
+        "aliases": [
+          "Third-Party Logistics"
+        ],
+        "company_count": 2,
+        "job_count": 4,
+        "example_contexts": [
+          "3PL",
+          "3PL",
+          "3PL"
+        ]
+      },
+      {
+        "candidate_id": 44937,
+        "name": "Team Topologies",
+        "category": "domain",
+        "subcategory": "Methodologies",
+        "aliases": [],
+        "company_count": 2,
+        "job_count": 4,
+        "example_contexts": [
+          "Team Topologies",
+          "Team Topologies",
+          "Team Topologies"
+        ]
+      },
+      {
+        "candidate_id": 38562,
+        "name": "CPG industry",
+        "category": "domain",
+        "subcategory": "Industries",
+        "aliases": [
+          "Consumer Packaged Goods",
+          "CPG"
+        ],
+        "company_count": 2,
+        "job_count": 3,
+        "example_contexts": [
+          "CPG industry",
+          "CPG industry",
+          "CPG industry"
+        ]
+      },
+      {
+        "candidate_id": 36158,
+        "name": "EV architectures",
+        "category": "domain",
+        "subcategory": "Industries",
+        "aliases": [
+          "electric vehicle architectures"
+        ],
+        "company_count": 2,
+        "job_count": 3,
+        "example_contexts": [
+          "EV architectures",
+          "EV architectures",
+          "EV architectures"
+        ]
+      },
+      {
+        "candidate_id": 38069,
+        "name": "AML/CFT risks",
+        "category": "domain",
+        "subcategory": "Legal & Compliance",
+        "aliases": [
+          "AML",
+          "CFT",
+          "Anti-Money Laundering",
+          "AML/BSA",
+          "BSA",
+          "Bank Secrecy Act"
+        ],
+        "company_count": 2,
+        "job_count": 3,
+        "example_contexts": [
+          "AML/CFT risks",
+          "AML/CFT risks",
+          "AML/CFT risks"
+        ]
+      },
+      {
+        "candidate_id": 36966,
+        "name": "both Product-Led Growth",
+        "category": "domain",
+        "subcategory": "Marketing & Growth",
+        "aliases": [
+          "Product-Led Growth",
+          "PLG"
+        ],
+        "company_count": 2,
+        "job_count": 3,
+        "example_contexts": [
+          "both Product-Led Growth",
+          "both product-led growth",
+          "both Product-Led Growth"
+        ]
+      },
+      {
+        "candidate_id": 35096,
+        "name": "systems development life cycle",
+        "category": "domain",
+        "subcategory": "Methodologies",
+        "aliases": [
+          "SDLC"
+        ],
+        "company_count": 2,
+        "job_count": 3,
+        "example_contexts": [
+          "systems development life cycle",
+          "systems development life cycle",
+          "Systems Development Life Cycle"
+        ]
+      },
+      {
+        "candidate_id": 41965,
+        "name": "DFX",
+        "category": "domain",
+        "subcategory": "Methodologies",
+        "aliases": [
+          "Design for Excellence"
+        ],
+        "company_count": 2,
+        "job_count": 3,
+        "example_contexts": [
+          "DFX",
+          "DFX",
+          "DFx"
+        ]
+      },
+      {
+        "candidate_id": 40441,
+        "name": "Utilization Management",
+        "category": "domain",
+        "subcategory": "Industries",
+        "aliases": [],
+        "company_count": 2,
+        "job_count": 2,
+        "example_contexts": [
+          "Utilization Management",
+          "utilization management"
+        ]
+      },
+      {
+        "candidate_id": 42042,
+        "name": "using EMR systems",
+        "category": "domain",
+        "subcategory": "Industries",
+        "aliases": [
+          "EMR",
+          "Electronic Medical Records",
+          "EHR"
+        ],
+        "company_count": 2,
+        "job_count": 2,
+        "example_contexts": [
+          "using EMR systems",
+          "using EMR systems"
+        ]
+      },
+      {
+        "candidate_id": 42269,
+        "name": "RWE",
+        "category": "domain",
+        "subcategory": "Industries",
+        "aliases": [
+          "Real-World Evidence"
+        ],
+        "company_count": 2,
+        "job_count": 2,
+        "example_contexts": [
+          "RWE",
+          "RWE"
+        ]
+      },
+      {
+        "candidate_id": 34493,
+        "name": "ACCA",
+        "category": "domain",
+        "subcategory": "Finance & Accounting",
+        "aliases": [],
+        "company_count": 2,
+        "job_count": 2,
+        "example_contexts": []
+      },
+      {
+        "candidate_id": 44058,
+        "name": "SOX control",
+        "category": "domain",
+        "subcategory": "Finance & Accounting",
+        "aliases": [
+          "SOX",
+          "Sarbanes-Oxley"
+        ],
+        "company_count": 2,
+        "job_count": 2,
+        "example_contexts": [
+          "SOX control",
+          "SOX control"
+        ]
+      },
+      {
+        "candidate_id": 33322,
+        "name": "commercial litigation",
+        "category": "domain",
+        "subcategory": "Legal & Compliance",
+        "aliases": [],
+        "company_count": 2,
+        "job_count": 2,
+        "example_contexts": [
+          "commercial litigation",
+          "commercial litigation"
+        ]
+      },
+      {
+        "candidate_id": 37285,
+        "name": "US export controls",
+        "category": "domain",
+        "subcategory": "Legal & Compliance",
+        "aliases": [
+          "ITAR",
+          "EAR",
+          "export controls"
+        ],
+        "company_count": 2,
+        "job_count": 2,
+        "example_contexts": [
+          "US export controls",
+          "US export controls"
+        ]
+      },
+      {
+        "candidate_id": 33037,
+        "name": "CE marking",
+        "category": "domain",
+        "subcategory": "Legal & Compliance",
+        "aliases": [
+          "CE mark"
+        ],
+        "company_count": 2,
+        "job_count": 2,
+        "example_contexts": [
+          "CE marking",
+          "CE marking"
+        ]
+      },
+      {
+        "candidate_id": 33574,
+        "name": "COPPA",
+        "category": "domain",
+        "subcategory": "Legal & Compliance",
+        "aliases": [],
+        "company_count": 2,
+        "job_count": 2,
+        "example_contexts": [
+          "COPPA",
+          "COPPA"
+        ]
+      },
+      {
+        "candidate_id": 42712,
+        "name": "App Store Optimization",
+        "category": "domain",
+        "subcategory": "Marketing & Growth",
+        "aliases": [
+          "ASO"
+        ],
+        "company_count": 2,
+        "job_count": 2,
+        "example_contexts": [
+          "App Store Optimization",
+          "App Store Optimization"
+        ]
+      },
+      {
+        "candidate_id": 34892,
+        "name": "warehouse management software",
+        "category": "domain",
+        "subcategory": "Business & Operations",
+        "aliases": [
+          "WMS"
+        ],
+        "company_count": 2,
+        "job_count": 2,
+        "example_contexts": [
+          "warehouse management software",
+          "warehouse management software"
+        ]
+      },
+      {
+        "candidate_id": 37982,
+        "name": "MES/ERP software",
+        "category": "domain",
+        "subcategory": "Business & Operations",
+        "aliases": [
+          "MES",
+          "Manufacturing Execution System"
+        ],
+        "company_count": 2,
+        "job_count": 2,
+        "example_contexts": [
+          "MES/ERP software",
+          "MES/ERP software"
+        ]
+      },
+      {
+        "candidate_id": 34874,
+        "name": "three lines of defence model",
+        "category": "domain",
+        "subcategory": "Methodologies",
+        "aliases": [
+          "three lines of defense"
+        ],
+        "company_count": 2,
+        "job_count": 2,
+        "example_contexts": [
+          "three lines of defence model",
+          "three lines of defence model"
+        ]
+      }
+    ],
+    "soft": [
+      {
+        "candidate_id": 34580,
+        "name": "systems thinking",
+        "category": "soft",
+        "subcategory": "Problem Solving & Critical Thinking",
+        "aliases": [],
+        "company_count": 3,
+        "job_count": 4,
+        "example_contexts": [
+          "systems thinking",
+          "systems thinking",
+          "systems thinking"
+        ]
+      }
+    ]
+  }
+}

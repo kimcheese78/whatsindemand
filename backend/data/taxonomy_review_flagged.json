@@ -1,0 +1,1280 @@
+{
+  "recategorize": [],
+  "deactivate": [],
+  "dup_clusters": [
+    {
+      "a_id": 239,
+      "a_name": "Vulnerability Assessment",
+      "b_id": 2623,
+      "b_name": "Vulnerability Assessments",
+      "similarity": 0.98
+    },
+    {
+      "a_id": 3001,
+      "a_name": "C# (Programming Language)",
+      "b_id": 2499,
+      "b_name": "C (Programming Language)",
+      "similarity": 0.98
+    },
+    {
+      "a_id": 354,
+      "a_name": "Pharmaceutical",
+      "b_id": 2299,
+      "b_name": "Pharmaceuticals",
+      "similarity": 0.966
+    },
+    {
+      "a_id": 345,
+      "a_name": "Corporate Law",
+      "b_id": 3440,
+      "b_name": "Corporate Laws",
+      "similarity": 0.963
+    },
+    {
+      "a_id": 231,
+      "a_name": "Cybersecurity",
+      "b_id": 2665,
+      "b_name": "Cyber Security",
+      "similarity": 0.963
+    },
+    {
+      "a_id": 244,
+      "a_name": "System Design",
+      "b_id": 3182,
+      "b_name": "Systems Design",
+      "similarity": 0.963
+    },
+    {
+      "a_id": 177,
+      "a_name": "Data Pipelines",
+      "b_id": 645,
+      "b_name": "Data Pipeline",
+      "similarity": 0.963
+    },
+    {
+      "a_id": 3008,
+      "a_name": "F# (Programming Language)",
+      "b_id": 3001,
+      "b_name": "C# (Programming Language)",
+      "similarity": 0.96
+    },
+    {
+      "a_id": 2501,
+      "a_name": "C++ (Programming Language)",
+      "b_id": 2499,
+      "b_name": "C (Programming Language)",
+      "similarity": 0.96
+    },
+    {
+      "a_id": 3000,
+      "a_name": "R (Programming Language)",
+      "b_id": 2499,
+      "b_name": "C (Programming Language)",
+      "similarity": 0.958
+    },
+    {
+      "a_id": 1317,
+      "a_name": "Interactive Learning",
+      "b_id": 1327,
+      "b_name": "Integrative Learning",
+      "similarity": 0.95
+    },
+    {
+      "a_id": 2463,
+      "a_name": "Unsupervised Learning",
+      "b_id": 2462,
+      "b_name": "Supervised Learning",
+      "similarity": 0.95
+    },
+    {
+      "a_id": 1154,
+      "a_name": "3D Computer Graphics",
+      "b_id": 1149,
+      "b_name": "2D Computer Graphics",
+      "similarity": 0.95
+    },
+    {
+      "a_id": 3931,
+      "a_name": "Organic Chemistry",
+      "b_id": 3930,
+      "b_name": "Inorganic Chemistry",
+      "similarity": 0.944
+    },
+    {
+      "a_id": 566,
+      "a_name": "Animal Reproduction",
+      "b_id": 568,
+      "b_name": "Animal Production",
+      "similarity": 0.944
+    },
+    {
+      "a_id": 3875,
+      "a_name": "Markdown",
+      "b_id": 622,
+      "b_name": "Rmarkdown",
+      "similarity": 0.941
+    },
+    {
+      "a_id": 236,
+      "a_name": "Firewalls",
+      "b_id": 2968,
+      "b_name": "Firewall",
+      "similarity": 0.941
+    },
+    {
+      "a_id": 3037,
+      "a_name": "Rexx (Programming Language)",
+      "b_id": 3000,
+      "b_name": "R (Programming Language)",
+      "similarity": 0.941
+    },
+    {
+      "a_id": 3031,
+      "a_name": "Ruby (Programming Language)",
+      "b_id": 3000,
+      "b_name": "R (Programming Language)",
+      "similarity": 0.941
+    },
+    {
+      "a_id": 3014,
+      "a_name": "Rust (Programming Language)",
+      "b_id": 3000,
+      "b_name": "R (Programming Language)",
+      "similarity": 0.941
+    },
+    {
+      "a_id": 3001,
+      "a_name": "C# (Programming Language)",
+      "b_id": 2501,
+      "b_name": "C++ (Programming Language)",
+      "similarity": 0.941
+    },
+    {
+      "a_id": 3008,
+      "a_name": "F# (Programming Language)",
+      "b_id": 3000,
+      "b_name": "R (Programming Language)",
+      "similarity": 0.939
+    },
+    {
+      "a_id": 3008,
+      "a_name": "F# (Programming Language)",
+      "b_id": 2499,
+      "b_name": "C (Programming Language)",
+      "similarity": 0.939
+    },
+    {
+      "a_id": 3001,
+      "a_name": "C# (Programming Language)",
+      "b_id": 3000,
+      "b_name": "R (Programming Language)",
+      "similarity": 0.939
+    },
+    {
+      "a_id": 3000,
+      "a_name": "R (Programming Language)",
+      "b_id": 2996,
+      "b_name": "Go (Programming Language)",
+      "similarity": 0.939
+    },
+    {
+      "a_id": 2996,
+      "a_name": "Go (Programming Language)",
+      "b_id": 2499,
+      "b_name": "C (Programming Language)",
+      "similarity": 0.939
+    },
+    {
+      "a_id": 1669,
+      "a_name": "Mechanical Engineering",
+      "b_id": 3903,
+      "b_name": "Biomechanical Engineering",
+      "similarity": 0.936
+    },
+    {
+      "a_id": 2245,
+      "a_name": "Case Management",
+      "b_id": 1807,
+      "b_name": "Cash Management",
+      "similarity": 0.933
+    },
+    {
+      "a_id": 1786,
+      "a_name": "Waste Treatment",
+      "b_id": 1454,
+      "b_name": "Water Treatment",
+      "similarity": 0.933
+    },
+    {
+      "a_id": 1755,
+      "a_name": "Land Management",
+      "b_id": 1400,
+      "b_name": "Load Management",
+      "similarity": 0.933
+    },
+    {
+      "a_id": 3034,
+      "a_name": "Visual Basic .NET (Programming Language)",
+      "b_id": 3029,
+      "b_name": "Visual Basic (Programming Language)",
+      "similarity": 0.933
+    },
+    {
+      "a_id": 1200,
+      "a_name": "Macroeconomics",
+      "b_id": 1209,
+      "b_name": "Microeconomics",
+      "similarity": 0.929
+    },
+    {
+      "a_id": 4087,
+      "a_name": "Quantitative Research",
+      "b_id": 4107,
+      "b_name": "Qualitative Research",
+      "similarity": 0.927
+    },
+    {
+      "a_id": 733,
+      "a_name": "Quantitative Analysis",
+      "b_id": 4080,
+      "b_name": "Qualitative Analysis",
+      "similarity": 0.927
+    },
+    {
+      "a_id": 3038,
+      "a_name": "Groovy (Programming Language)",
+      "b_id": 2996,
+      "b_name": "Go (Programming Language)",
+      "similarity": 0.926
+    },
+    {
+      "a_id": 3031,
+      "a_name": "Ruby (Programming Language)",
+      "b_id": 3014,
+      "b_name": "Rust (Programming Language)",
+      "similarity": 0.926
+    },
+    {
+      "a_id": 3019,
+      "a_name": "SQL (Programming Language)",
+      "b_id": 3012,
+      "b_name": "Scala (Programming Language)",
+      "similarity": 0.926
+    },
+    {
+      "a_id": 2895,
+      "a_name": "Ajax (Programming Language)",
+      "b_id": 2889,
+      "b_name": "Java (Programming Language)",
+      "similarity": 0.926
+    },
+    {
+      "a_id": 3578,
+      "a_name": "Stakeholder Communications",
+      "b_id": 889,
+      "b_name": "Shareholder Communications",
+      "similarity": 0.923
+    },
+    {
+      "a_id": 1,
+      "a_name": "Python",
+      "b_id": 3027,
+      "b_name": "IPython",
+      "similarity": 0.923
+    },
+    {
+      "a_id": 761,
+      "a_name": "Linear Programming",
+      "b_id": 743,
+      "b_name": "Nonlinear Programming",
+      "similarity": 0.923
+    },
+    {
+      "a_id": 3012,
+      "a_name": "Scala (Programming Language)",
+      "b_id": 2499,
+      "b_name": "C (Programming Language)",
+      "similarity": 0.923
+    },
+    {
+      "a_id": 3104,
+      "a_name": "Application Development",
+      "b_id": 3288,
+      "b_name": "Web Application Development",
+      "similarity": 0.92
+    },
+    {
+      "a_id": 3019,
+      "a_name": "SQL (Programming Language)",
+      "b_id": 3000,
+      "b_name": "R (Programming Language)",
+      "similarity": 0.92
+    },
+    {
+      "a_id": 3019,
+      "a_name": "SQL (Programming Language)",
+      "b_id": 2499,
+      "b_name": "C (Programming Language)",
+      "similarity": 0.92
+    },
+    {
+      "a_id": 3008,
+      "a_name": "F# (Programming Language)",
+      "b_id": 2996,
+      "b_name": "Go (Programming Language)",
+      "similarity": 0.92
+    },
+    {
+      "a_id": 3001,
+      "a_name": "C# (Programming Language)",
+      "b_id": 2996,
+      "b_name": "Go (Programming Language)",
+      "similarity": 0.92
+    },
+    {
+      "a_id": 3000,
+      "a_name": "R (Programming Language)",
+      "b_id": 2501,
+      "b_name": "C++ (Programming Language)",
+      "similarity": 0.92
+    },
+    {
+      "a_id": 1157,
+      "a_name": "Computer Graphics",
+      "b_id": 1154,
+      "b_name": "3D Computer Graphics",
+      "similarity": 0.919
+    },
+    {
+      "a_id": 1157,
+      "a_name": "Computer Graphics",
+      "b_id": 1149,
+      "b_name": "2D Computer Graphics",
+      "similarity": 0.919
+    },
+    {
+      "a_id": 4160,
+      "a_name": "Production Planning",
+      "b_id": 3553,
+      "b_name": "Product Planning",
+      "similarity": 0.914
+    },
+    {
+      "a_id": 2836,
+      "a_name": "Spatial Analysis",
+      "b_id": 2835,
+      "b_name": "Geospatial Analysis",
+      "similarity": 0.914
+    },
+    {
+      "a_id": 263,
+      "a_name": "Market Research",
+      "b_id": 4166,
+      "b_name": "Marketing Research",
+      "similarity": 0.909
+    },
+    {
+      "a_id": 902,
+      "a_name": "Stakeholder Engagement",
+      "b_id": 9,
+      "b_name": "Stakeholder Management",
+      "similarity": 0.909
+    },
+    {
+      "a_id": 2299,
+      "a_name": "Pharmaceuticals",
+      "b_id": 4050,
+      "b_name": "Biopharmaceuticals",
+      "similarity": 0.909
+    },
+    {
+      "a_id": 1553,
+      "a_name": "Electrical Engineering",
+      "b_id": 1584,
+      "b_name": "Electronic Engineering",
+      "similarity": 0.909
+    },
+    {
+      "a_id": 2692,
+      "a_name": "Data Processing",
+      "b_id": 639,
+      "b_name": "Data Preprocessing",
+      "similarity": 0.909
+    },
+    {
+      "a_id": 2616,
+      "a_name": "Application Security",
+      "b_id": 2646,
+      "b_name": "Web Application Security",
+      "similarity": 0.909
+    },
+    {
+      "a_id": 226,
+      "a_name": "JUnit",
+      "b_id": 3177,
+      "b_name": "Junit4",
+      "similarity": 0.909
+    },
+    {
+      "a_id": 662,
+      "a_name": "Informatics",
+      "b_id": 2699,
+      "b_name": "Informatica",
+      "similarity": 0.909
+    },
+    {
+      "a_id": 3036,
+      "a_name": "Julia (Programming Language)",
+      "b_id": 3035,
+      "b_name": "Lisp (Programming Language)",
+      "similarity": 0.909
+    },
+    {
+      "a_id": 3036,
+      "a_name": "Julia (Programming Language)",
+      "b_id": 2895,
+      "b_name": "Ajax (Programming Language)",
+      "similarity": 0.909
+    },
+    {
+      "a_id": 3036,
+      "a_name": "Julia (Programming Language)",
+      "b_id": 2889,
+      "b_name": "Java (Programming Language)",
+      "similarity": 0.909
+    },
+    {
+      "a_id": 3035,
+      "a_name": "Lisp (Programming Language)",
+      "b_id": 2997,
+      "b_name": "Lasso (Programming Language)",
+      "similarity": 0.909
+    },
+    {
+      "a_id": 3014,
+      "a_name": "Rust (Programming Language)",
+      "b_id": 3003,
+      "b_name": "Swift (Programming Language)",
+      "similarity": 0.909
+    },
+    {
+      "a_id": 3012,
+      "a_name": "Scala (Programming Language)",
+      "b_id": 2895,
+      "b_name": "Ajax (Programming Language)",
+      "similarity": 0.909
+    },
+    {
+      "a_id": 3012,
+      "a_name": "Scala (Programming Language)",
+      "b_id": 2889,
+      "b_name": "Java (Programming Language)",
+      "similarity": 0.909
+    },
+    {
+      "a_id": 3038,
+      "a_name": "Groovy (Programming Language)",
+      "b_id": 3000,
+      "b_name": "R (Programming Language)",
+      "similarity": 0.906
+    },
+    {
+      "a_id": 3035,
+      "a_name": "Lisp (Programming Language)",
+      "b_id": 3019,
+      "b_name": "SQL (Programming Language)",
+      "similarity": 0.906
+    },
+    {
+      "a_id": 3019,
+      "a_name": "SQL (Programming Language)",
+      "b_id": 3014,
+      "b_name": "Rust (Programming Language)",
+      "similarity": 0.906
+    },
+    {
+      "a_id": 3012,
+      "a_name": "Scala (Programming Language)",
+      "b_id": 3001,
+      "b_name": "C# (Programming Language)",
+      "similarity": 0.906
+    },
+    {
+      "a_id": 3008,
+      "a_name": "F# (Programming Language)",
+      "b_id": 3003,
+      "b_name": "Swift (Programming Language)",
+      "similarity": 0.906
+    },
+    {
+      "a_id": 2997,
+      "a_name": "Lasso (Programming Language)",
+      "b_id": 2996,
+      "b_name": "Go (Programming Language)",
+      "similarity": 0.906
+    },
+    {
+      "a_id": 97,
+      "a_name": "Product Development",
+      "b_id": 3548,
+      "b_name": "New Product Development",
+      "similarity": 0.905
+    },
+    {
+      "a_id": 2245,
+      "a_name": "Case Management",
+      "b_id": 1787,
+      "b_name": "Waste Management",
+      "similarity": 0.903
+    },
+    {
+      "a_id": 293,
+      "a_name": "Brand Management",
+      "b_id": 1755,
+      "b_name": "Land Management",
+      "similarity": 0.903
+    },
+    {
+      "a_id": 2242,
+      "a_name": "Medication Administration",
+      "b_id": 1299,
+      "b_name": "Educational Administration",
+      "similarity": 0.902
+    },
+    {
+      "a_id": 3037,
+      "a_name": "Rexx (Programming Language)",
+      "b_id": 2499,
+      "b_name": "C (Programming Language)",
+      "similarity": 0.902
+    },
+    {
+      "a_id": 3035,
+      "a_name": "Lisp (Programming Language)",
+      "b_id": 3000,
+      "b_name": "R (Programming Language)",
+      "similarity": 0.902
+    },
+    {
+      "a_id": 3035,
+      "a_name": "Lisp (Programming Language)",
+      "b_id": 2499,
+      "b_name": "C (Programming Language)",
+      "similarity": 0.902
+    },
+    {
+      "a_id": 3031,
+      "a_name": "Ruby (Programming Language)",
+      "b_id": 2499,
+      "b_name": "C (Programming Language)",
+      "similarity": 0.902
+    },
+    {
+      "a_id": 3019,
+      "a_name": "SQL (Programming Language)",
+      "b_id": 3008,
+      "b_name": "F# (Programming Language)",
+      "similarity": 0.902
+    },
+    {
+      "a_id": 3019,
+      "a_name": "SQL (Programming Language)",
+      "b_id": 3001,
+      "b_name": "C# (Programming Language)",
+      "similarity": 0.902
+    },
+    {
+      "a_id": 3019,
+      "a_name": "SQL (Programming Language)",
+      "b_id": 2996,
+      "b_name": "Go (Programming Language)",
+      "similarity": 0.902
+    },
+    {
+      "a_id": 3014,
+      "a_name": "Rust (Programming Language)",
+      "b_id": 2499,
+      "b_name": "C (Programming Language)",
+      "similarity": 0.902
+    },
+    {
+      "a_id": 3008,
+      "a_name": "F# (Programming Language)",
+      "b_id": 2501,
+      "b_name": "C++ (Programming Language)",
+      "similarity": 0.902
+    },
+    {
+      "a_id": 3000,
+      "a_name": "R (Programming Language)",
+      "b_id": 2895,
+      "b_name": "Ajax (Programming Language)",
+      "similarity": 0.902
+    },
+    {
+      "a_id": 3000,
+      "a_name": "R (Programming Language)",
+      "b_id": 2889,
+      "b_name": "Java (Programming Language)",
+      "similarity": 0.902
+    },
+    {
+      "a_id": 2996,
+      "a_name": "Go (Programming Language)",
+      "b_id": 2501,
+      "b_name": "C++ (Programming Language)",
+      "similarity": 0.902
+    },
+    {
+      "a_id": 2895,
+      "a_name": "Ajax (Programming Language)",
+      "b_id": 2499,
+      "b_name": "C (Programming Language)",
+      "similarity": 0.902
+    },
+    {
+      "a_id": 2889,
+      "a_name": "Java (Programming Language)",
+      "b_id": 2499,
+      "b_name": "C (Programming Language)",
+      "similarity": 0.902
+    },
+    {
+      "a_id": 807,
+      "a_name": "Statistics",
+      "b_id": 773,
+      "b_name": "STATISTICA",
+      "similarity": 0.9
+    },
+    {
+      "a_id": 2411,
+      "a_name": "Apache POI",
+      "b_id": 2416,
+      "b_name": "Apache Pig",
+      "similarity": 0.9
+    },
+    {
+      "a_id": 2897,
+      "a_name": "JavaScript (Programming Language)",
+      "b_id": 2889,
+      "b_name": "Java (Programming Language)",
+      "similarity": 0.9
+    },
+    {
+      "a_id": 323,
+      "a_name": "Performance Management",
+      "b_id": 1025,
+      "b_name": "Team Performance Management",
+      "similarity": 0.898
+    },
+    {
+      "a_id": 3039,
+      "a_name": "Bash (Scripting Language)",
+      "b_id": 3015,
+      "b_name": "PHP (Scripting Language)",
+      "similarity": 0.898
+    },
+    {
+      "a_id": 372,
+      "a_name": "Manufacturing",
+      "b_id": 3901,
+      "b_name": "Biomanufacturing",
+      "similarity": 0.897
+    },
+    {
+      "a_id": 1021,
+      "a_name": "Team Management",
+      "b_id": 2006,
+      "b_name": "Tax Management",
+      "similarity": 0.897
+    },
+    {
+      "a_id": 1089,
+      "a_name": "Task Management",
+      "b_id": 2006,
+      "b_name": "Tax Management",
+      "similarity": 0.897
+    },
+    {
+      "a_id": 2006,
+      "a_name": "Tax Management",
+      "b_id": 2718,
+      "b_name": "Data Management",
+      "similarity": 0.897
+    },
+    {
+      "a_id": 1667,
+      "a_name": "Solid Mechanics",
+      "b_id": 1613,
+      "b_name": "Soil Mechanics",
+      "similarity": 0.897
+    },
+    {
+      "a_id": 609,
+      "a_name": "Cluster Analysis",
+      "b_id": 3064,
+      "b_name": "User Analysis",
+      "similarity": 0.897
+    },
+    {
+      "a_id": 111,
+      "a_name": "Marketing Strategy",
+      "b_id": 3623,
+      "b_name": "Marketing Strategies",
+      "similarity": 0.895
+    },
+    {
+      "a_id": 3554,
+      "a_name": "Product Engineering",
+      "b_id": 1587,
+      "b_name": "Project Engineering",
+      "similarity": 0.895
+    },
+    {
+      "a_id": 2930,
+      "a_name": "Microsoft Windows",
+      "b_id": 2926,
+      "b_name": "Microsoft Windows SDK",
+      "similarity": 0.895
+    },
+    {
+      "a_id": 3041,
+      "a_name": "Microsoft Servers",
+      "b_id": 2773,
+      "b_name": "Microsoft SQL Servers",
+      "similarity": 0.895
+    },
+    {
+      "a_id": 344,
+      "a_name": "Intellectual Property",
+      "b_id": 3408,
+      "b_name": "Intellectual Property Laws",
+      "similarity": 0.894
+    },
+    {
+      "a_id": 733,
+      "a_name": "Quantitative Analysis",
+      "b_id": 607,
+      "b_name": "Quantitative Data Analysis",
+      "similarity": 0.894
+    },
+    {
+      "a_id": 1484,
+      "a_name": "Biomedical Engineering",
+      "b_id": 3903,
+      "b_name": "Biomechanical Engineering",
+      "similarity": 0.894
+    },
+    {
+      "a_id": 4066,
+      "a_name": "Electromagnetic Waves",
+      "b_id": 1551,
+      "b_name": "Electromagnetic Waveguides",
+      "similarity": 0.894
+    },
+    {
+      "a_id": 3038,
+      "a_name": "Groovy (Programming Language)",
+      "b_id": 3031,
+      "b_name": "Ruby (Programming Language)",
+      "similarity": 0.893
+    },
+    {
+      "a_id": 3036,
+      "a_name": "Julia (Programming Language)",
+      "b_id": 3012,
+      "b_name": "Scala (Programming Language)",
+      "similarity": 0.893
+    },
+    {
+      "a_id": 3036,
+      "a_name": "Julia (Programming Language)",
+      "b_id": 2997,
+      "b_name": "Lasso (Programming Language)",
+      "similarity": 0.893
+    },
+    {
+      "a_id": 3019,
+      "a_name": "SQL (Programming Language)",
+      "b_id": 3005,
+      "b_name": "Haskell (Programming Language)",
+      "similarity": 0.893
+    },
+    {
+      "a_id": 3012,
+      "a_name": "Scala (Programming Language)",
+      "b_id": 2997,
+      "b_name": "Lasso (Programming Language)",
+      "similarity": 0.893
+    },
+    {
+      "a_id": 93,
+      "a_name": "UX Design",
+      "b_id": 94,
+      "b_name": "UI Design",
+      "similarity": 0.889
+    },
+    {
+      "a_id": 257,
+      "a_name": "Product Management",
+      "b_id": 49,
+      "b_name": "Project Management",
+      "similarity": 0.889
+    },
+    {
+      "a_id": 524,
+      "a_name": "Microsoft Office",
+      "b_id": 533,
+      "b_name": "Microsoft Office 365",
+      "similarity": 0.889
+    },
+    {
+      "a_id": 276,
+      "a_name": "Business Strategy",
+      "b_id": 961,
+      "b_name": "Business Strategies",
+      "similarity": 0.889
+    },
+    {
+      "a_id": 299,
+      "a_name": "B2B Sales",
+      "b_id": 300,
+      "b_name": "B2C Sales",
+      "similarity": 0.889
+    },
+    {
+      "a_id": 1391,
+      "a_name": "Continuing Medical Education",
+      "b_id": 3435,
+      "b_name": "Continuing Legal Education",
+      "similarity": 0.889
+    },
+    {
+      "a_id": 2011,
+      "a_name": "Tax Compliance",
+      "b_id": 5227,
+      "b_name": "AI Compliance",
+      "similarity": 0.889
+    },
+    {
+      "a_id": 1325,
+      "a_name": "Collaborative Learning",
+      "b_id": 2454,
+      "b_name": "Collaborative Filtering",
+      "similarity": 0.889
+    },
+    {
+      "a_id": 1241,
+      "a_name": "Social Sciences",
+      "b_id": 1772,
+      "b_name": "Soil Science",
+      "similarity": 0.889
+    },
+    {
+      "a_id": 1742,
+      "a_name": "Ecological Systems",
+      "b_id": 3897,
+      "b_name": "Biological Systems",
+      "similarity": 0.889
+    },
+    {
+      "a_id": 33,
+      "a_name": "HTML",
+      "b_id": 3290,
+      "b_name": "HTML5",
+      "similarity": 0.889
+    },
+    {
+      "a_id": 1153,
+      "a_name": "Visualization",
+      "b_id": 3274,
+      "b_name": "Virtualization",
+      "similarity": 0.889
+    },
+    {
+      "a_id": 3104,
+      "a_name": "Application Development",
+      "b_id": 3096,
+      "b_name": "Application Deployment",
+      "similarity": 0.889
+    },
+    {
+      "a_id": 3457,
+      "a_name": "Electrical Systems",
+      "b_id": 1558,
+      "b_name": "Electronic Systems",
+      "similarity": 0.889
+    },
+    {
+      "a_id": 123,
+      "a_name": "Shell Scripting",
+      "b_id": 3024,
+      "b_name": "Shell Script",
+      "similarity": 0.889
+    },
+    {
+      "a_id": 1406,
+      "a_name": "Power Distribution",
+      "b_id": 1457,
+      "b_name": "Water Distribution",
+      "similarity": 0.889
+    },
+    {
+      "a_id": 3037,
+      "a_name": "Rexx (Programming Language)",
+      "b_id": 3031,
+      "b_name": "Ruby (Programming Language)",
+      "similarity": 0.889
+    },
+    {
+      "a_id": 3037,
+      "a_name": "Rexx (Programming Language)",
+      "b_id": 3014,
+      "b_name": "Rust (Programming Language)",
+      "similarity": 0.889
+    },
+    {
+      "a_id": 3037,
+      "a_name": "Rexx (Programming Language)",
+      "b_id": 2895,
+      "b_name": "Ajax (Programming Language)",
+      "similarity": 0.889
+    },
+    {
+      "a_id": 3036,
+      "a_name": "Julia (Programming Language)",
+      "b_id": 3019,
+      "b_name": "SQL (Programming Language)",
+      "similarity": 0.889
+    },
+    {
+      "a_id": 3035,
+      "a_name": "Lisp (Programming Language)",
+      "b_id": 3014,
+      "b_name": "Rust (Programming Language)",
+      "similarity": 0.889
+    },
+    {
+      "a_id": 3032,
+      "a_name": "Python (Programming Language)",
+      "b_id": 2996,
+      "b_name": "Go (Programming Language)",
+      "similarity": 0.889
+    },
+    {
+      "a_id": 3019,
+      "a_name": "SQL (Programming Language)",
+      "b_id": 3003,
+      "b_name": "Swift (Programming Language)",
+      "similarity": 0.889
+    },
+    {
+      "a_id": 3019,
+      "a_name": "SQL (Programming Language)",
+      "b_id": 2997,
+      "b_name": "Lasso (Programming Language)",
+      "similarity": 0.889
+    },
+    {
+      "a_id": 3012,
+      "a_name": "Scala (Programming Language)",
+      "b_id": 2501,
+      "b_name": "C++ (Programming Language)",
+      "similarity": 0.889
+    },
+    {
+      "a_id": 3009,
+      "a_name": "Fortran (Programming Language)",
+      "b_id": 3000,
+      "b_name": "R (Programming Language)",
+      "similarity": 0.889
+    },
+    {
+      "a_id": 2885,
+      "a_name": "Azure Internet Of Things (IoT)",
+      "b_id": 2880,
+      "b_name": "Internet Of Things (IoT)",
+      "similarity": 0.889
+    },
+    {
+      "a_id": 1751,
+      "a_name": "Natural Resource Management",
+      "b_id": 1757,
+      "b_name": "Water Resource Management",
+      "similarity": 0.885
+    },
+    {
+      "a_id": 3037,
+      "a_name": "Rexx (Programming Language)",
+      "b_id": 3008,
+      "b_name": "F# (Programming Language)",
+      "similarity": 0.885
+    },
+    {
+      "a_id": 3037,
+      "a_name": "Rexx (Programming Language)",
+      "b_id": 3001,
+      "b_name": "C# (Programming Language)",
+      "similarity": 0.885
+    },
+    {
+      "a_id": 3037,
+      "a_name": "Rexx (Programming Language)",
+      "b_id": 2996,
+      "b_name": "Go (Programming Language)",
+      "similarity": 0.885
+    },
+    {
+      "a_id": 3036,
+      "a_name": "Julia (Programming Language)",
+      "b_id": 3000,
+      "b_name": "R (Programming Language)",
+      "similarity": 0.885
+    },
+    {
+      "a_id": 3036,
+      "a_name": "Julia (Programming Language)",
+      "b_id": 2499,
+      "b_name": "C (Programming Language)",
+      "similarity": 0.885
+    },
+    {
+      "a_id": 3035,
+      "a_name": "Lisp (Programming Language)",
+      "b_id": 3008,
+      "b_name": "F# (Programming Language)",
+      "similarity": 0.885
+    },
+    {
+      "a_id": 3035,
+      "a_name": "Lisp (Programming Language)",
+      "b_id": 3001,
+      "b_name": "C# (Programming Language)",
+      "similarity": 0.885
+    },
+    {
+      "a_id": 3035,
+      "a_name": "Lisp (Programming Language)",
+      "b_id": 2996,
+      "b_name": "Go (Programming Language)",
+      "similarity": 0.885
+    },
+    {
+      "a_id": 3031,
+      "a_name": "Ruby (Programming Language)",
+      "b_id": 3008,
+      "b_name": "F# (Programming Language)",
+      "similarity": 0.885
+    },
+    {
+      "a_id": 3031,
+      "a_name": "Ruby (Programming Language)",
+      "b_id": 3001,
+      "b_name": "C# (Programming Language)",
+      "similarity": 0.885
+    },
+    {
+      "a_id": 3031,
+      "a_name": "Ruby (Programming Language)",
+      "b_id": 2996,
+      "b_name": "Go (Programming Language)",
+      "similarity": 0.885
+    },
+    {
+      "a_id": 3019,
+      "a_name": "SQL (Programming Language)",
+      "b_id": 2501,
+      "b_name": "C++ (Programming Language)",
+      "similarity": 0.885
+    },
+    {
+      "a_id": 3014,
+      "a_name": "Rust (Programming Language)",
+      "b_id": 3008,
+      "b_name": "F# (Programming Language)",
+      "similarity": 0.885
+    },
+    {
+      "a_id": 3014,
+      "a_name": "Rust (Programming Language)",
+      "b_id": 3001,
+      "b_name": "C# (Programming Language)",
+      "similarity": 0.885
+    },
+    {
+      "a_id": 3014,
+      "a_name": "Rust (Programming Language)",
+      "b_id": 2996,
+      "b_name": "Go (Programming Language)",
+      "similarity": 0.885
+    },
+    {
+      "a_id": 3012,
+      "a_name": "Scala (Programming Language)",
+      "b_id": 3000,
+      "b_name": "R (Programming Language)",
+      "similarity": 0.885
+    },
+    {
+      "a_id": 3008,
+      "a_name": "F# (Programming Language)",
+      "b_id": 2895,
+      "b_name": "Ajax (Programming Language)",
+      "similarity": 0.885
+    },
+    {
+      "a_id": 3008,
+      "a_name": "F# (Programming Language)",
+      "b_id": 2889,
+      "b_name": "Java (Programming Language)",
+      "similarity": 0.885
+    },
+    {
+      "a_id": 3003,
+      "a_name": "Swift (Programming Language)",
+      "b_id": 3000,
+      "b_name": "R (Programming Language)",
+      "similarity": 0.885
+    },
+    {
+      "a_id": 3003,
+      "a_name": "Swift (Programming Language)",
+      "b_id": 2499,
+      "b_name": "C (Programming Language)",
+      "similarity": 0.885
+    },
+    {
+      "a_id": 3001,
+      "a_name": "C# (Programming Language)",
+      "b_id": 2895,
+      "b_name": "Ajax (Programming Language)",
+      "similarity": 0.885
+    },
+    {
+      "a_id": 3001,
+      "a_name": "C# (Programming Language)",
+      "b_id": 2889,
+      "b_name": "Java (Programming Language)",
+      "similarity": 0.885
+    },
+    {
+      "a_id": 3000,
+      "a_name": "R (Programming Language)",
+      "b_id": 2997,
+      "b_name": "Lasso (Programming Language)",
+      "similarity": 0.885
+    },
+    {
+      "a_id": 2997,
+      "a_name": "Lasso (Programming Language)",
+      "b_id": 2499,
+      "b_name": "C (Programming Language)",
+      "similarity": 0.885
+    },
+    {
+      "a_id": 2996,
+      "a_name": "Go (Programming Language)",
+      "b_id": 2895,
+      "b_name": "Ajax (Programming Language)",
+      "similarity": 0.885
+    },
+    {
+      "a_id": 2996,
+      "a_name": "Go (Programming Language)",
+      "b_id": 2889,
+      "b_name": "Java (Programming Language)",
+      "similarity": 0.885
+    },
+    {
+      "a_id": 948,
+      "a_name": "Innovation Management",
+      "b_id": 2682,
+      "b_name": "Information Management",
+      "similarity": 0.884
+    },
+    {
+      "a_id": 245,
+      "a_name": "Distributed Systems",
+      "b_id": 2781,
+      "b_name": "Distributed File Systems",
+      "similarity": 0.884
+    },
+    {
+      "a_id": 1179,
+      "a_name": "User Interface Design",
+      "b_id": 3176,
+      "b_name": "User Interface Testing",
+      "similarity": 0.884
+    },
+    {
+      "a_id": 2952,
+      "a_name": "Internet Small Computer System Interface (ISCSI)",
+      "b_id": 2951,
+      "b_name": "Small Computer System Interface (SCSI)",
+      "similarity": 0.884
+    },
+    {
+      "a_id": 4131,
+      "a_name": "Air Traffic Control",
+      "b_id": 849,
+      "b_name": "Traffic Control",
+      "similarity": 0.882
+    },
+    {
+      "a_id": 1912,
+      "a_name": "Credit Default Swap",
+      "b_id": 1953,
+      "b_name": "Credit Defaults",
+      "similarity": 0.882
+    },
+    {
+      "a_id": 1100,
+      "a_name": "Customer Experience",
+      "b_id": 1174,
+      "b_name": "User Experience",
+      "similarity": 0.882
+    },
+    {
+      "a_id": 2718,
+      "a_name": "Data Management",
+      "b_id": 2740,
+      "b_name": "Database Management",
+      "similarity": 0.882
+    },
+    {
+      "a_id": 2718,
+      "a_name": "Data Management",
+      "b_id": 2686,
+      "b_name": "Metadata Management",
+      "similarity": 0.882
+    },
+    {
+      "a_id": 2508,
+      "a_name": "Cloud Computing",
+      "b_id": 2541,
+      "b_name": "IBM Cloud Computing",
+      "similarity": 0.882
+    },
+    {
+      "a_id": 163,
+      "a_name": "Infrastructure as Code",
+      "b_id": 2856,
+      "b_name": "Infrastructure as Code (IaC)",
+      "similarity": 0.88
+    },
+    {
+      "a_id": 662,
+      "a_name": "Informatics",
+      "b_id": 3880,
+      "b_name": "Bioinformatics",
+      "similarity": 0.88
+    },
+    {
+      "a_id": 3112,
+      "a_name": "Data Binding",
+      "b_id": 641,
+      "b_name": "Data Blending",
+      "similarity": 0.88
+    }
+  ]
+}

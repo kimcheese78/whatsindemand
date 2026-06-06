@@ -1,0 +1,253 @@
+   # active  total  category               role
+--------------------------------------------------------------------------------
+   1   7019   9826  Engineering            Software Engineer
+   2   1961   3245  Operations             Operations Manager
+   3    758   1325  Product                Product Manager
+   4    669   1251  Sales                  Account Executive
+   5    740   1229  Engineering            Engineering Manager
+   6    499    885  Marketing              Marketing Manager
+   7    448    857  Operations             Business Analyst
+   8    524    712  Operations             Operations Associate
+   9    422    696  Operations             Program Manager
+  10    403    688  Sales                  Enterprise Account Executive
+  11    387    676  Operations             Operations Specialist
+  12    351    616  Engineering            Solutions Engineer
+  13    329    614  Sales                  Sales Manager
+  14    328    608  Engineering            Solutions Architect
+  15    366    579  Design                 Product Designer
+  16    297    545  Sales                  Account Manager
+  17    337    493  Engineering            Machine Learning Engineer
+  18    315    473  Data Science           Data Scientist
+  19    219    413  Customer Success       Customer Success Manager
+  20    224    390  Sales                  Sales Development Representative
+  21    315    378  Sales                  Sales Representative
+  22    183    369  Legal                  Legal Counsel
+  23    227    342  Product                Technical Program Manager
+  24    215    324  Engineering            Security Engineer
+  25    241    309  Sales                  Territory Account Executive
+  26    158    299  Engineering            Solutions Consultant
+  27    158    285  People                 Recruiter
+  28    215    280  Engineering            Systems Engineer
+  29    149    269  Marketing              Product Marketing Manager
+  30    171    265  Engineering            Sales Engineer
+  31    140    260  Partnerships           Strategic Partner Manager
+  32    145    235  Engineering            Data Engineer
+  33    176    235  Operations             Manufacturing Technician
+  34    113    222  Sales                  Business Development Representative
+  35    130    215  Sales                  Strategic Account Executive
+  36     95    214  Data Science           Data Analyst
+  37    109    205  Partnerships           Partner Manager
+  38    109    197  Sales                  Commercial Account Executive
+  39    135    191  Engineering            Site Reliability Engineer
+  40    167    190  Engineering            Mechanical Engineer
+  41    131    190  Data Science           Research Scientist
+  42    156    184  Healthcare             Nurse Practitioner
+  43    106    179  Engineering            Technical Writer
+  44    104    178  Finance                Finance Manager
+  45    114    172  Sales                  Mid-Market Account Executive
+  46    171    171  Retail                 Cashier
+  47    144    159  Engineering            Electrical Engineer
+  48    136    157  Engineering            Manufacturing Engineer
+  49     77    157  Sales                  Technical Account Manager
+  50     86    153  Operations             Administrative Assistant
+  51     91    140  Engineering            Platform Engineer
+  52     92    139  Engineering            AI Engineer
+  53     78    139  Finance                Accountant
+  54     84    138  Product                Director of Product
+  55    102    138  Data Science           Research Engineer
+  56     80    135  Engineering            Infrastructure Engineer
+  57     84    131  Operations             Project Manager
+  58     80    129  Data Science           Data Science Manager
+  59     89    128  Sales                  Business Development Manager
+  60    119    122  Healthcare             Mental Health Therapist
+  61     77    122  Engineering            Director of Engineering
+  62     71    121  Customer Success       Support Specialist
+  63     93    119  Engineering            QA Engineer
+  64    109    111  Retail / Hospitality   Store Advisor
+  65     67    110  Finance                Strategic Finance Manager
+  66     62    109  Finance                Accounting Manager
+  67     83    108  Engineering            Design Engineer
+  68     59    107  Engineering            Technical Support Engineer
+  69     80    103  Engineering            Test Engineer
+  70     55     98  Finance                Financial Analyst
+  71     49     95  Operations             Executive Assistant
+  72     63     94  Engineering            Analytics Engineer
+  73     73     94  Engineering            Deployment Strategist
+  74     44     90  Customer Success       Engagement Manager
+  75     38     89  Sales                  Regional Sales Director
+  76     49     89  Sales                  Key Account Director
+  77     62     87  Healthcare             Primary Care Physician
+  78     43     82  Marketing              Social Media Manager
+  79     62     81  Engineering            Integration Engineer
+  80     64     81  Healthcare             Family Medicine Physician
+  81     44     81  Legal                  Commercial Counsel
+  82     80     80  Healthcare             Psychiatrist
+  83     49     77  Healthcare             Medical Assistant
+  84     43     75  Engineering            Product Support Engineer
+  85     40     74  Operations             Executive Business Partner
+  86     36     73  People                 Payroll Specialist
+  87     41     72  Design                 Design Director
+  88     42     72  IT                     Systems Administrator
+  89     53     71  Operations             Senior Buyer
+  90     41     71  People                 Compensation Analyst
+  91     31     68  Customer Success       Customer Experience Manager
+  92     44     68  Marketing              Field Marketing Manager
+  93     59     67  Engineering            Applied AI Engineer
+  94     36     67  Sales                  Sales Enablement Manager
+  95     55     67  Engineering            Resident Solutions Architect
+  96     45     65  People                 People Business Partner
+  97     50     65  Operations             Material Planner
+  98     27     64  Customer Success       Technical Support Specialist
+  99     34     60  IT                     IT Engineer
+ 100     35     59  People                 Talent Acquisition Specialist
+ 101     17     59  Operations             Business Systems Analyst
+ 102     36     57  People                 Talent Sourcer
+ 103     39     56  Operations             Operations Supervisor
+ 104     30     55  People                 HR Business Partner
+ 105     54     54  Healthcare             Neuropsychologist
+ 106     34     53  Sales                  Enterprise Account Manager
+ 107     53     53  Healthcare             Testing Psychologist
+ 108     44     53  Engineering            Product Security Engineer
+ 109     21     52  Marketing              Partner Marketing Manager
+ 110     28     49  People                 People Partner
+ 111     42     49  Operations             Supply Chain Analyst
+ 112     31     48  Customer Success       Enterprise Customer Success Manager
+ 113     29     48  People                 Recruiting Coordinator
+ 114     38     47  Product                Technical Product Manager
+ 115     22     47  Engineering            Partner Solutions Architect
+ 116     32     46  Sales                  Major Account Executive
+ 117     21     46  Engineering            Implementation Manager
+ 118     27     45  Finance                Tax Manager
+ 119     27     45  Product                Group Product Manager
+ 120     32     43  Sales                  Sales Specialist
+ 121     23     43  Engineering            Network Engineer
+ 122     25     43  Product                Product Operations Manager
+ 123     27     41  Engineering            DevOps Engineer
+ 124     18     40  Customer Success       Technical Success Manager
+ 125      7     40  Partnerships           Partner Development Manager
+ 126     24     40  Data Science           Applied Scientist
+ 127     28     40  Design                 Brand Designer
+ 128     18     39  Finance                Controller
+ 129     23     39  Engineering            Implementation Consultant
+ 130     38     39  Retail / Hospitality   Retail Ambassador
+ 131     26     39  Engineering            Application Security Engineer
+ 132     29     39  Design                 Graphic Designer
+ 133     36     38  Operations             Global Supply Manager
+ 134     23     37  Product                Product Analyst
+ 135     22     37  IT                     IT Support Engineer
+ 136     32     36  Engineering            Mission Operations Engineer
+ 137     24     36  Legal                  Associate General Counsel
+ 138     24     34  Customer Success       Product Support Specialist
+ 139     31     33  Retail / Hospitality   Shift Supervisor
+ 140     19     33  Legal                  Contracts Manager
+ 141     28     33  Healthcare             Physician Assistant
+ 142     14     33  Design                 Content Designer
+ 143     20     33  Design                 UX Designer
+ 144     31     33  Engineering            Robotics Engineer
+ 145     24     32  Design                 Creative Director
+ 146     32     32  Retail                 Store Associate
+ 147     17     32  Operations             Procurement Manager
+ 148     27     32  Retail                 Retail Store Manager
+ 149     17     31  Sales                  Sales Operations Manager
+ 150     21     31  Sales                  Partner Sales Manager
+ 151     20     31  Healthcare             Phlebotomist
+ 152     21     31  Engineering            Field Engineer
+ 153     20     30  Design                 UX Researcher
+ 154     12     30  Sales                  Revenue Operations Manager
+ 155     26     30  Engineering            Cloud Security Engineer
+ 156      9     30  Legal                  Paralegal
+ 157     15     29  Finance                Risk Manager
+ 158     29     29  Engineering            Thermal Engineer
+ 159     16     28  Finance                Revenue Accountant
+ 160     15     28  Sales                  Sales Operations Analyst
+ 161     22     27  Operations             Quality Inspector
+ 162     11     27  Marketing              Demand Generation Manager
+ 163     21     27  Operations             Production Supervisor
+ 164     22     27  Operations             Field Service Technician
+ 165     12     27  Data Science           Forward Deployed Data Scientist
+ 166     20     25  Customer Success       AI Success Manager
+ 167     16     25  Marketing              Event Marketing Manager
+ 168     17     25  Design                 Motion Designer
+ 169     21     25  Engineering            Manufacturing Test Engineer
+ 170     17     24  Finance                Revenue Accounting Manager
+ 171     18     24  People                 Director of Talent Acquisition
+ 172     17     24  Operations             Area Manager
+ 173     12     23  Operations             Global Operations Associate
+ 174     12     22  Engineering            GTM Engineer
+ 175      7     21  Sales                  Corporate Account Executive
+ 176      6     21  Sales                  Deal Desk Analyst
+ 177     12     21  Legal                  Corporate Counsel
+ 178     12     21  Customer Success       Customer Success Associate
+ 179      5     21  Sales                  Revenue Operations Analyst
+ 180     17     21  Engineering            Information Security Engineer
+ 181     16     21  Operations             Business Systems Engineer
+ 182     16     20  Marketing              Communications Manager
+ 183      6     19  Operations             Workplace Experience Manager
+ 184     15     19  Engineering            Cloud Engineer
+ 185     13     18  Retail / Hospitality   Restaurant General Manager
+ 186     12     18  Finance                Internal Auditor
+ 187     16     18  Healthcare             Physician
+ 188     10     18  Engineering            Enterprise Security Engineer
+ 189     10     17  Legal                  Compliance Specialist
+ 190     13     17  Engineering            Implementation Engineer
+ 191     11     17  Sales                  Deal Desk Manager
+ 192     16     16  Retail / Hospitality   Restaurant Manager
+ 193      9     16  People                 Payroll Manager
+ 194      6     16  Operations             Customs Specialist
+ 195     12     16  Engineering            Offensive Security Engineer
+ 196     11     16  Legal                  Privacy Counsel
+ 197     11     15  Legal                  Product Paralegal
+ 198     11     15  Healthcare             Clinical Oncology Specialist
+ 199      5     15  Finance                Treasury Analyst
+ 200      7     14  Healthcare             Nurse Care Manager
+ 201     10     14  Finance                Treasury Manager
+ 202      8     14  Operations             Office Manager
+ 203     13     14  Engineering            Security Operations Analyst
+ 204      6     14  IT                     Salesforce Administrator
+ 205      8     13  People                 People Operations Specialist
+ 206      5     13  Marketing              Copywriter
+ 207      9     13  Healthcare             Clinical Lab Scientist
+ 208     11     13  Marketing              Marketing Coordinator
+ 209     10     13  Engineering            Security Operations Engineer
+ 210      5     13  Sales                  Field Enablement Manager
+ 211     10     12  Engineering            AI Infrastructure Engineer
+ 212      9     12  Operations             Global Operations Specialist
+ 213      6     12  Operations             Ocean Operations Associate
+ 214      6     12  Operations             Physical Security Manager
+ 215     10     12  Design                 Director of Design
+ 216     12     12  Engineering            FPGA Engineer
+ 217      6     11  Customer Success       Customer Onboarding Manager
+ 218      5     11  Operations             Trade Advisory Lead
+ 219      7     10  Sales                  Revenue Strategy & Operations Lead
+ 220      6     10  Engineering            Incident Manager
+ 221      7     10  Real Estate            Strategic Growth Manager
+ 222      7     10  People                 People Operations Partner
+ 223      7     10  Marketing              Content Marketing Manager
+ 224      8     10  Customer Success       Mid-Market Customer Success Manager
+ 225      7      9  Operations             Office Administrator
+ 226      6      9  Real Estate            Agent Experience Coordinator
+ 227      7      8  Real Estate            Agent Experience Manager
+ 228      5      8  Engineering            Cloud Infrastructure Engineer
+ 229      5      8  Partnerships           Technology Partner Manager
+ 230      2      8  Finance                Equity Program Manager
+ 231      5      7  Legal                  Contracts Negotiator
+ 232      7      7  Sales                  Deal Operations Analyst
+ 233      3      7  Engineering            Infrastructure Security Engineer
+ 234      7      7  People                 Talent Acquisition Partner
+ 235      4      7  Finance                Stock Plan Administrator
+ 236      4      7  People                 People Operations Coordinator
+ 237      2      7  Engineering            Threat Specialist
+ 238      5      6  Marketing              Paid Media Specialist
+ 239      5      5  Marketing              Influencer Marketing Manager
+ 240      5      5  Real Estate            Strategic Growth Partner
+ 241      5      5  Real Estate            Transaction Coordinator
+ 242      4      4  Marketing              Marketing Advisor
+ 243      4      4  IT                     Workday Administrator
+ 244      4      4  Marketing              Ad Operations Associate
+ 245      2      4  Customer Success       Renewals Manager
+ 246      3      3  People                 Recruiting Manager
+ 247      1      3  People                 Director of People
+ 248      2      3  Finance                Portfolio Manager
+ 249      2      2  Retail / Hospitality   Brand Ambassador
+ 250      1      1  People                 Technical Recruiter
+ 251      1      1  Healthcare             Medical Director

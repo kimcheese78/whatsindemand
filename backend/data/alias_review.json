@@ -1,0 +1,296 @@
+{
+  "meta": {
+    "skills_reviewed": 502,
+    "aliases_reviewed": 1654,
+    "keep": 1616,
+    "remove": 38,
+    "flag_breakdown": {
+      "too_broad": 22,
+      "duplicate_skill": 13,
+      "misleading": 1,
+      "redundant": 3
+    }
+  },
+  "flagged": [
+    {
+      "skill_id": 99,
+      "name": "Collaboration",
+      "job_count": 75378,
+      "alias_verdicts": [
+        {"alias": "working with teams", "keep": false, "flag": "too_broad", "reason": "matches virtually any job that mentions working in a team context"},
+        {"alias": "collaborating with teams", "keep": false, "flag": "too_broad", "reason": "same — too generic to signal this skill specifically"}
+      ]
+    },
+    {
+      "skill_id": 2442,
+      "name": "Artificial Intelligence",
+      "job_count": 62002,
+      "alias_verdicts": [
+        {"alias": "AI/ML", "keep": false, "flag": "duplicate_skill", "reason": "also an alias on Machine Learning (id=13) — every AI/ML mention double-tags both skills; keep on ML only"},
+        {"alias": "ai/ml", "keep": false, "flag": "duplicate_skill", "reason": "same as above, lowercase variant"}
+      ]
+    },
+    {
+      "skill_id": 105,
+      "name": "Initiative",
+      "job_count": 38681,
+      "alias_verdicts": [
+        {"alias": "proactive", "keep": false, "flag": "too_broad", "reason": "single common adjective appearing in nearly every job posting as filler"},
+        {"alias": "self-motivated", "keep": false, "flag": "too_broad", "reason": "boilerplate filler in most JDs, not a signal for this skill specifically"},
+        {"alias": "being proactive", "keep": false, "flag": "too_broad", "reason": "same as proactive — too generic"}
+      ]
+    },
+    {
+      "skill_id": 40,
+      "name": "Time Management",
+      "job_count": 13780,
+      "alias_verdicts": [
+        {"alias": "scheduling", "keep": false, "flag": "too_broad", "reason": "matches logistics scheduling, IT cron jobs, calendar tools — any role mentioning scheduling"},
+        {"alias": "managing schedule", "keep": false, "flag": "too_broad", "reason": "same problem — too generic"}
+      ]
+    },
+    {
+      "skill_id": 47,
+      "name": "Customer Focus",
+      "job_count": 13525,
+      "alias_verdicts": [
+        {"alias": "customer service", "keep": false, "flag": "duplicate_skill", "reason": "Customer Service is its own skill (id=1097) — causes every customer service mention to also tag Customer Focus"},
+        {"alias": "service orientation", "keep": false, "flag": "misleading", "reason": "reads as Service-Oriented Architecture (SOA) in technical job contexts"}
+      ]
+    },
+    {
+      "skill_id": 13,
+      "name": "Machine Learning",
+      "job_count": 14721,
+      "alias_verdicts": [
+        {"alias": "deep learning", "keep": false, "flag": "duplicate_skill", "reason": "Deep Learning is its own active skill (id=178) — causes every deep learning mention to also tag Machine Learning"}
+      ]
+    },
+    {
+      "skill_id": 22,
+      "name": "PowerPoint",
+      "job_count": 11273,
+      "alias_verdicts": [
+        {"alias": "presentations", "keep": false, "flag": "too_broad", "reason": "matches any job mentioning presentations — far too generic, overlaps with Presentation Skills skill"}
+      ]
+    },
+    {
+      "skill_id": 46,
+      "name": "Presentation Skills",
+      "job_count": 9783,
+      "alias_verdicts": [
+        {"alias": "slide presentations", "keep": false, "flag": "too_broad", "reason": "overlaps with PowerPoint aliases; matches any mention of slide-based presentations"}
+      ]
+    },
+    {
+      "skill_id": 93,
+      "name": "UX Design",
+      "job_count": 9416,
+      "alias_verdicts": [
+        {"alias": "user experience", "keep": false, "flag": "too_broad", "reason": "appears in any product or customer-facing role — 'improve user experience of our app' does not mean UX designer required"}
+      ]
+    },
+    {
+      "skill_id": 94,
+      "name": "UI Design",
+      "job_count": 7258,
+      "alias_verdicts": [
+        {"alias": "user interface", "keep": false, "flag": "too_broad", "reason": "'design the user interface' in a dev job spec does not imply UI Design as a specialty skill"}
+      ]
+    },
+    {
+      "skill_id": 10,
+      "name": "A/B Testing",
+      "job_count": 7450,
+      "alias_verdicts": [
+        {"alias": "experimentation", "keep": false, "flag": "too_broad", "reason": "matches scientific research, lab roles, marketing experimentation — too broad for A/B testing specifically"}
+      ]
+    },
+    {
+      "skill_id": 180,
+      "name": "Computer Vision",
+      "job_count": 6082,
+      "alias_verdicts": [
+        {"alias": "cv", "keep": false, "flag": "too_broad", "reason": "CV = curriculum vitae; appears in virtually every job posting ('submit your CV')"}
+      ]
+    },
+    {
+      "skill_id": 5,
+      "name": "Product Strategy",
+      "job_count": 5227,
+      "alias_verdicts": [
+        {"alias": "strategic planning", "keep": false, "flag": "too_broad", "reason": "matches finance, ops, HR, and executive roles broadly — nearly every senior role mentions strategic planning"}
+      ]
+    },
+    {
+      "skill_id": 506,
+      "name": "Platform Engineering",
+      "job_count": 3294,
+      "alias_verdicts": [
+        {"alias": "platform team", "keep": false, "flag": "too_broad", "reason": "many companies have platform teams for data, infrastructure, or product without doing platform engineering specifically"}
+      ]
+    },
+    {
+      "skill_id": 34,
+      "name": "CSS",
+      "job_count": 2957,
+      "alias_verdicts": [
+        {"alias": "styling", "keep": false, "flag": "too_broad", "reason": "appears in design, fashion, and hospitality roles — not specific to CSS"}
+      ]
+    },
+    {
+      "skill_id": 69,
+      "name": "ETL",
+      "job_count": 2574,
+      "alias_verdicts": [
+        {"alias": "data pipeline", "keep": false, "flag": "duplicate_skill", "reason": "Data Pipelines (id=177) has 'data pipeline' as its own alias — causes double-tagging"}
+      ]
+    },
+    {
+      "skill_id": 12,
+      "name": "API Documentation",
+      "job_count": 2153,
+      "alias_verdicts": [
+        {"alias": "technical documentation", "keep": false, "flag": "duplicate_skill", "reason": "Technical Writing (id=378) has this as a primary alias — causes double-tagging on every technical documentation mention"}
+      ]
+    },
+    {
+      "skill_id": 249,
+      "name": "CDN",
+      "job_count": 1784,
+      "alias_verdicts": [
+        {"alias": "content delivery", "keep": false, "flag": "too_broad", "reason": "matches content strategy, content marketing, and media delivery roles unrelated to CDN infrastructure"}
+      ]
+    },
+    {
+      "skill_id": 6,
+      "name": "User Research",
+      "job_count": 1478,
+      "alias_verdicts": [
+        {"alias": "user testing", "keep": false, "flag": "duplicate_skill", "reason": "User Testing (id=96) is its own active skill — causes double-tagging"}
+      ]
+    },
+    {
+      "skill_id": 35,
+      "name": "TensorFlow",
+      "job_count": 1323,
+      "alias_verdicts": [
+        {"alias": "tf", "keep": false, "flag": "too_broad", "reason": "collision: Terraform (id=77) also uses 'tf' as alias — ambiguous; each skill has unambiguous canonical aliases"}
+      ]
+    },
+    {
+      "skill_id": 237,
+      "name": "SIEM",
+      "job_count": 961,
+      "alias_verdicts": [
+        {"alias": "security information", "keep": false, "flag": "too_broad", "reason": "matches any security job description that uses 'security information' in sentence context"}
+      ]
+    },
+    {
+      "skill_id": 77,
+      "name": "Terraform",
+      "job_count": 4951,
+      "alias_verdicts": [
+        {"alias": "tf", "keep": false, "flag": "too_broad", "reason": "collision: TensorFlow (id=35) also uses 'tf' — ambiguous abbreviation; Terraform has 'terraform', 'hashicorp terraform' etc. as unambiguous aliases"}
+      ]
+    },
+    {
+      "skill_id": 464,
+      "name": "FluxCD",
+      "job_count": 512,
+      "alias_verdicts": [
+        {"alias": "flux", "keep": false, "flag": "too_broad", "reason": "matches React Flux architecture pattern and generic 'flux' usage in frontend job descriptions"}
+      ]
+    },
+    {
+      "skill_id": 208,
+      "name": "Adobe Xd",
+      "job_count": 484,
+      "alias_verdicts": [
+        {"alias": "experience design", "keep": false, "flag": "too_broad", "reason": "overlaps with UX Design skill context; Adobe Xd is a tool, not a general design discipline alias"}
+      ]
+    },
+    {
+      "skill_id": 5237,
+      "name": "FEA software",
+      "job_count": 15,
+      "alias_verdicts": [
+        {"alias": "FEA", "keep": false, "flag": "duplicate_skill", "reason": "Finite Element Methods (id=1658) already has FEA as alias — these two skills are the same concept and should be merged"},
+        {"alias": "Finite Element Analysis", "keep": false, "flag": "duplicate_skill", "reason": "Finite Element Methods (id=1658) is the canonical form; this skill should be merged into it"}
+      ]
+    },
+    {
+      "skill_id": 505,
+      "name": "Backstage",
+      "job_count": 128,
+      "alias_verdicts": [
+        {"alias": "developer portal", "keep": false, "flag": "too_broad", "reason": "a job can require building a developer portal without using Backstage specifically"}
+      ]
+    },
+    {
+      "skill_id": 492,
+      "name": "Render",
+      "job_count": 205,
+      "alias_verdicts": [
+        {"alias": "render", "keep": false, "flag": "too_broad", "reason": "common verb — 'render services', 'render decisions', '3D render' in design/hardware roles"}
+      ]
+    },
+    {
+      "skill_id": 5242,
+      "name": "RMF process",
+      "job_count": 5,
+      "alias_verdicts": [
+        {"alias": "Risk Management Framework", "keep": false, "flag": "duplicate_skill", "reason": "Risk Management Framework (id=1000) is the canonical skill — same concept, should be merged"}
+      ]
+    },
+    {
+      "skill_id": 5377,
+      "name": "systems development life cycle",
+      "job_count": 3,
+      "alias_verdicts": [
+        {"alias": "SDLC", "keep": false, "flag": "duplicate_skill", "reason": "Software Development Life Cycle (id=3073) already has SDLC as alias — same concept, should be merged"}
+      ]
+    },
+    {
+      "skill_id": 5388,
+      "name": "warehouse management software",
+      "job_count": 2,
+      "alias_verdicts": [
+        {"alias": "WMS", "keep": false, "flag": "duplicate_skill", "reason": "Warehouse Management Systems (id=4145) already has WMS as alias — same concept"}
+      ]
+    },
+    {
+      "skill_id": 5376,
+      "name": "Product-Led Growth",
+      "job_count": 3,
+      "alias_verdicts": [
+        {"alias": "Product-Led Growth", "keep": false, "flag": "redundant", "reason": "identical to the canonical skill name — adds no matching value"}
+      ]
+    },
+    {
+      "skill_id": 5375,
+      "name": "AML/CFT",
+      "job_count": 3,
+      "alias_verdicts": [
+        {"alias": "CFT", "keep": false, "flag": "too_broad", "reason": "three-letter abbreviation with other meanings; AML, Anti-Money Laundering, AML/BSA, BSA, Bank Secrecy Act are sufficient"}
+      ]
+    },
+    {
+      "skill_id": 5266,
+      "name": "COMSEC",
+      "job_count": 6,
+      "alias_verdicts": [
+        {"alias": "COMSEC", "keep": false, "flag": "redundant", "reason": "identical to the canonical skill name — adds no matching value"}
+      ]
+    },
+    {
+      "skill_id": 5273,
+      "name": "MITRE ATT&CK",
+      "job_count": 4,
+      "alias_verdicts": [
+        {"alias": "MITRE ATT&CK", "keep": false, "flag": "redundant", "reason": "identical to the canonical skill name — adds no matching value"}
+      ]
+    }
+  ],
+  "all_results": []
+}
