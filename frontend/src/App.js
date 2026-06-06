@@ -3299,8 +3299,8 @@ const EmployersTab = () => {
                         )}
                       </div>
 
-                      {/* Row 2: stats — no dividers, just spacing */}
-                      <div className="flex gap-8 px-6 pb-4 border-b border-white/10">
+                      {/* Row 2: stats — fixed positions across the row */}
+                      <div className="grid grid-cols-4 px-6 pb-4 border-b border-white/10">
                         {[
                           { label: 'LOCATION', value: company.location },
                           { label: 'FOUNDED', value: company.founded_year },
