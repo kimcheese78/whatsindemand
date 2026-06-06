@@ -3481,11 +3481,11 @@ const SkillsTab = () => {
             <SortHeader column="name" label="SKILL" />
           </div>
 
-          <div className="col-span-2">
+          <div className="col-span-3">
             <SortHeader column="category" label="SUBCATEGORY" />
           </div>
 
-          <div className="col-span-5 pr-6">
+          <div className="col-span-4 pr-6">
             <SortHeader column="demand" label="DEMAND" />
           </div>
 
@@ -3521,13 +3521,13 @@ const SkillsTab = () => {
                     </div>
                   </div>
 
-                  <div className="col-span-2">
-                    <span className="px-2 py-1 text-xs font-medium bg-white/10 text-gray-200 border border-line rounded">
+                  <div className="col-span-3">
+                    <span className="px-2 py-1 text-xs font-medium bg-white/10 text-gray-200 border border-line rounded whitespace-nowrap">
                       {skill.subcategory || (skill.category || 'other').toUpperCase()}
                     </span>
                   </div>
 
-                  <div className="col-span-5 pr-6">
+                  <div className="col-span-4 pr-6">
                     <div className="flex items-center gap-3">
                       <div className="flex-1 h-2 bg-white/10 rounded-full overflow-hidden">
                         <div className="h-full bg-white" style={{ width: `${skill.demand}%` }} />
