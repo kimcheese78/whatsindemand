@@ -454,6 +454,7 @@ class JobAggregator:
                 break
 
             for job in batch:
+                db.session.execute(db.text("DELETE FROM job_skills WHERE job_id = :jid"), {'jid': job.id})
                 skills_found = extractor.extract_skills(job.description_text)
                 for skill_data in skills_found:
                     db.session.add(JobSkill(

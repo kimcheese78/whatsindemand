@@ -98,8 +98,8 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--resume-after', type=str, default=None,
         help='Skip companies scraped at or after this UTC timestamp (e.g. 2026-05-14T23:17:23)')
-    parser.add_argument('--skip-extraction', action='store_true', default=False,
-        help='Stop after Step 2 (discovery); run extract_skills.py manually after review')
+    parser.add_argument('--with-extraction', action='store_true', default=False,
+        help='Also run extraction (Step 3) immediately after discovery — skip this to wait until after skill review')
     parser.add_argument('--workers', type=int, default=5,
         help='Number of parallel scrape workers (default: 5)')
     args = parser.parse_args()
@@ -108,4 +108,4 @@ if __name__ == '__main__':
     if args.resume_after:
         resume_after = datetime.fromisoformat(args.resume_after)
 
-    run_weekly_scrape(resume_after=resume_after, skip_extraction=args.skip_extraction, max_workers=args.workers)
+    run_weekly_scrape(resume_after=resume_after, skip_extraction=not args.with_extraction, max_workers=args.workers)
