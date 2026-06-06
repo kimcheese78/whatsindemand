@@ -3269,18 +3269,19 @@ const EmployersTab = () => {
                     <div className="border-t border-line/30">
                       {/* Row 1: logo + website */}
                       <div className="flex items-center gap-3 px-6 pt-4 pb-3">
-                        {company.logo_url ? (
-                          <img
-                            src={company.logo_url}
-                            alt={company.name}
-                            className="w-9 h-9 rounded-lg object-contain bg-white/5 p-1 shrink-0"
-                            onError={e => { e.target.style.display = 'none'; }}
-                          />
-                        ) : (
-                          <div className="w-9 h-9 rounded-lg bg-white/10 flex items-center justify-center shrink-0">
+                        <div className="w-9 h-9 relative shrink-0">
+                          <div className="w-9 h-9 rounded-lg bg-white/10 flex items-center justify-center absolute inset-0">
                             <span className="text-sm font-bold text-ink-muted">{company.name?.[0]}</span>
                           </div>
-                        )}
+                          {company.logo_url && (
+                            <img
+                              src={company.logo_url}
+                              alt={company.name}
+                              className="w-9 h-9 rounded-lg object-contain bg-surface p-1 relative"
+                              onError={e => { e.currentTarget.style.display = 'none'; }}
+                            />
+                          )}
+                        </div>
                         {company.website ? (
                           <a
                             href={company.website.startsWith('http') ? company.website : `https://${company.website}`}
