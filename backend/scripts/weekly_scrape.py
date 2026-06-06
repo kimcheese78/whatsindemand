@@ -60,7 +60,7 @@ def run_weekly_scrape(resume_after: datetime = None, skip_extraction: bool = Fal
             print(f"\n── Step 2: Incremental skill discovery ──")
             try:
                 from scripts.discover_new_skills import run as run_discovery
-                run_discovery(since_dt=start_time)
+                run_discovery()
             except Exception as e:
                 print(f"  ⚠ Discovery failed (non-fatal): {e}")
 
