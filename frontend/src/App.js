@@ -3361,6 +3361,7 @@ const SkillsTab = () => {
   const [sortColumn, setSortColumn] = useState('demand');
   const [sortDirection, setSortDirection] = useState('desc');
   const [categoryFilter, setCategoryFilter] = useState('All');
+  const [subcategoryFilter, setSubcategoryFilter] = useState('All');
   const [selectedSkill, setSelectedSkill] = useState(null);
 
   const skills = roleData?.skills || [];
@@ -3369,10 +3370,13 @@ const SkillsTab = () => {
 
   const normalizeCategory = (c) => c ? c.charAt(0).toUpperCase() + c.slice(1).toLowerCase() : null;
   const categories = [...new Set(skills.map(s => normalizeCategory(s.category)).filter(Boolean))];
+  const subcategories = [...new Set(skills.map(s => s.subcategory).filter(Boolean))].sort();
 
-  const filteredSkills = categoryFilter === 'All'
-    ? skills
-    : skills.filter(s => normalizeCategory(s.category) === categoryFilter);
+  const filteredSkills = skills.filter(s => {
+    if (categoryFilter !== 'All' && normalizeCategory(s.category) !== categoryFilter) return false;
+    if (subcategoryFilter !== 'All' && s.subcategory !== subcategoryFilter) return false;
+    return true;
+  });
 
   // Sort skills
   const sortedSkills = [...filteredSkills].sort((a, b) => {
@@ -3386,10 +3390,10 @@ const SkillsTab = () => {
           ? aVal.localeCompare(bVal) 
           : bVal.localeCompare(aVal);
       case 'category':
-        aVal = a.category?.toLowerCase() || '';
-        bVal = b.category?.toLowerCase() || '';
-        return sortDirection === 'asc' 
-          ? aVal.localeCompare(bVal) 
+        aVal = (a.subcategory || a.category || '').toLowerCase();
+        bVal = (b.subcategory || b.category || '').toLowerCase();
+        return sortDirection === 'asc'
+          ? aVal.localeCompare(bVal)
           : bVal.localeCompare(aVal);
       case 'growth':
         // Treat null as -Infinity so they sort to the bottom
@@ -3451,10 +3455,22 @@ const SkillsTab = () => {
             ...categories.map(cat => ({ value: cat, label: cat.charAt(0).toUpperCase() + cat.slice(1) }))
           ]}
           value={categoryFilter}
-          onChange={setCategoryFilter}
+          onChange={(val) => { setCategoryFilter(val); setSubcategoryFilter('All'); }}
           getOptionLabel={(opt) => opt.label}
           getOptionValue={(opt) => opt.value}
         />
+        {subcategories.length > 0 && (
+          <SingleSelectDropdown
+            options={[
+              { value: 'All', label: 'All Subcategories' },
+              ...subcategories.map(sub => ({ value: sub, label: sub }))
+            ]}
+            value={subcategoryFilter}
+            onChange={setSubcategoryFilter}
+            getOptionLabel={(opt) => opt.label}
+            getOptionValue={(opt) => opt.value}
+          />
+        )}
       </div>
 
       {/* Skills Table */}
@@ -3466,7 +3482,7 @@ const SkillsTab = () => {
           </div>
 
           <div className="col-span-2">
-            <SortHeader column="category" label="CATEGORY" />
+            <SortHeader column="category" label="SUBCATEGORY" />
           </div>
 
           <div className="col-span-5 pr-6">
@@ -3507,7 +3523,7 @@ const SkillsTab = () => {
 
                   <div className="col-span-2">
                     <span className="px-2 py-1 text-xs font-medium bg-white/10 text-gray-200 border border-line rounded">
-                      {(skill.category || 'other').toUpperCase()}
+                      {skill.subcategory || (skill.category || 'other').toUpperCase()}
                     </span>
                   </div>
 

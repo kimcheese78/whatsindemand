@@ -393,53 +393,56 @@ def get_all_company_growth_bulk(role_id: int, company_ids: List[int], window_day
     return result
 
 
-def _get_all_role_growth_bulk(role_ids: List[int], window_days: int = 30) -> Dict[int, Optional[float]]:
+def _get_all_role_growth_bulk(role_ids: List[int], **_kwargs) -> Dict[int, Optional[float]]:
     """
-    Calculate posting growth % for multiple roles in bulk.
-    Returns dict mapping role_id -> growth_pct
+    Calculate posting growth % for multiple roles in bulk using the same
+    full calendar-month windows as get_market_trend(), so numbers stay
+    consistent with the overview tab headline.
     """
     if not role_ids:
         return {}
-    
+
     today = datetime.utcnow().date()
-    current_end = today
-    current_start = today - timedelta(days=window_days)
-    previous_end = current_start
-    previous_start = previous_end - timedelta(days=window_days)
-    
+    # Last full calendar month
+    curr_month = today.month - 1 or 12
+    curr_year = today.year if today.month > 1 else today.year - 1
+    curr_start = date(curr_year, curr_month, 1)
+    curr_end = date(today.year, today.month, 1)  # first of current month
+
+    prev_month = curr_month - 1 or 12
+    prev_year = curr_year if curr_month > 1 else curr_year - 1
+    prev_start = date(prev_year, prev_month, 1)
+    prev_end = curr_start
+
     job_date = func.coalesce(Job.posted_at, Job.scraped_at)
-    
-    # Bulk query: count jobs per role in current period
+
     current_counts = db.session.query(
         Job.role_id,
         func.count(Job.id).label('count')
     ).filter(
         Job.role_id.in_(role_ids),
-        job_date < current_end,
-        db.or_(Job.closed_at.is_(None), Job.closed_at >= current_start)
+        job_date < curr_end,
+        db.or_(Job.closed_at.is_(None), Job.closed_at >= curr_start)
     ).group_by(Job.role_id).all()
-    
-    current_map = {role_id: count for role_id, count in current_counts}
-    
-    # Bulk query: count jobs per role in previous period
+
     previous_counts = db.session.query(
         Job.role_id,
         func.count(Job.id).label('count')
     ).filter(
         Job.role_id.in_(role_ids),
-        job_date < previous_end,
-        db.or_(Job.closed_at.is_(None), Job.closed_at >= previous_start)
+        job_date < prev_end,
+        db.or_(Job.closed_at.is_(None), Job.closed_at >= prev_start)
     ).group_by(Job.role_id).all()
-    
+
+    current_map = {role_id: count for role_id, count in current_counts}
     previous_map = {role_id: count for role_id, count in previous_counts}
-    
-    # Calculate growth for each role
+
     result = {}
     for role_id in role_ids:
-        current_count = current_map.get(role_id, 0)
-        previous_count = previous_map.get(role_id, 0)
-        result[role_id] = calculate_growth_pct(current_count, previous_count)
-    
+        result[role_id] = calculate_growth_pct(
+            current_map.get(role_id, 0), previous_map.get(role_id, 0)
+        )
+
     return result
 
 
@@ -694,6 +697,7 @@ def get_role_insights():
         Skill.id,
         Skill.name,
         Skill.category,
+        Skill.subcategory,
         func.count(JobSkill.id).label('job_count'),
         func.sum(func.cast(JobSkill.is_required, db.Integer)).label('required_count'),
         func.sum(func.cast(~JobSkill.is_required, db.Integer)).label('preferred_count')
@@ -732,7 +736,7 @@ def get_role_insights():
             skill_companies_map[s_id].append({'name': c_name, 'job_count': c_count})
 
     skills = []
-    for skill_id, skill_name, category, job_count, required_count, preferred_count in skill_counts:
+    for skill_id, skill_name, category, subcategory, job_count, required_count, preferred_count in skill_counts:
         demand = round(job_count / total_jobs * 100, 1)
         required_count = required_count or 0
         preferred_count = preferred_count or 0
@@ -741,6 +745,7 @@ def get_role_insights():
             'skill_id': skill_id,
             'name': skill_name,
             'category': category or 'technical',
+            'subcategory': subcategory,
             'job_count': job_count,
             'demand': demand,
             'required_pct': round(required_count / job_count * 100) if job_count else 0,
