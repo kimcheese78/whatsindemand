@@ -3667,7 +3667,11 @@ const AlternativesTab = () => {
   } = useApp();
 
   const alternativeRoles = roleData?.alternative_roles || [];
-  const sortedRoles = [...alternativeRoles].sort((a, b) => (b.skill_overlap ?? 0) - (a.skill_overlap ?? 0));
+  const sortedRoles = [...alternativeRoles].sort((a, b) => {
+    const countDiff = (b.shared_count ?? 0) - (a.shared_count ?? 0);
+    if (countDiff !== 0) return countDiff;
+    return (b.skill_overlap ?? 0) - (a.skill_overlap ?? 0);
+  });
 
   const fmtSalary = (v) => v >= 1000 ? `$${Math.round(v / 1000)}K` : `$${v}`;
   const fmtRange = (min, max) => {
