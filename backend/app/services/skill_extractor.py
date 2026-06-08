@@ -499,7 +499,7 @@ SECTION_PATTERNS = {
         r"duties (?:and|&) responsibilities",
     ],
     'about_company': [
-        r"about (?:us|the company|the team|\w+(?:\s+\w+)?)",
+        r"about (?:us|the company|the team|our company|our mission)",
         r"who we are",
         r"our (?:mission|vision|culture|values|story)",
         r"why (?:join|work)",
@@ -969,10 +969,6 @@ class SkillExtractor:
         
         # Reject skills with underscores (test data pattern)
         if '_' in name:
-            return False
-        
-        # Reject skills that look like test data (contain numbers at end)
-        if re.search(r'\d{3,}$', name):
             return False
         
         # Reject pure numbers

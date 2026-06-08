@@ -2,9 +2,8 @@
 """
 Targeted job_skills backfill for newly promoted skills.
 
-Run after promoting new skills on review day to tag historical jobs
-without re-extracting all 132k jobs. Uses the same requirements-section
-filtering as SkillExtractor so results are consistent.
+Single pass over all jobs — all new skills matched per job, bulk inserted per
+batch. Much faster than the old per-skill approach (N scans → 1 scan).
 
 Usage:
     python scripts/backfill_skills.py --skill-ids 4710 4711 4712
@@ -14,6 +13,7 @@ import sys
 import os
 import re
 import argparse
+from datetime import datetime
 
 backend_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, backend_dir)
@@ -24,49 +24,11 @@ load_dotenv(os.path.join(backend_dir, '.env'))
 from app import create_app
 from app.models import db, Skill, JobSkill
 from app.services.skill_extractor import extract_requirements_text
+from sqlalchemy.dialects.postgresql import insert as pg_insert
 
 app = create_app()
 
-
-def _build_patterns(skill: Skill) -> list:
-    terms = [skill.name] + (skill.aliases or [])
-    patterns = []
-    for term in terms:
-        if term and len(term.strip()) >= 2:
-            patterns.append(re.compile(r'\b' + re.escape(term) + r'\b', re.IGNORECASE))
-    return patterns
-
-
-def backfill_skill(skill: Skill) -> int:
-    patterns = _build_patterns(skill)
-    if not patterns:
-        return 0
-
-    # Load all jobs that don't already have this skill tagged
-    rows = db.session.execute(db.text("""
-        SELECT j.id, j.description_text
-        FROM jobs j
-        WHERE j.description_text IS NOT NULL
-          AND j.description_text != ''
-          AND NOT EXISTS (
-              SELECT 1 FROM job_skills js
-              WHERE js.job_id = j.id AND js.skill_id = :skill_id
-          )
-    """), {'skill_id': skill.id}).fetchall()
-
-    inserted = 0
-    for job_id, description_text in rows:
-        # Use same section filtering as SkillExtractor
-        search_text, _ = extract_requirements_text(description_text)
-        if any(p.search(search_text) for p in patterns):
-            db.session.execute(db.text("""
-                INSERT INTO job_skills (job_id, skill_id, is_required, created_at)
-                VALUES (:job_id, :skill_id, TRUE, NOW())
-                ON CONFLICT DO NOTHING
-            """), {'job_id': job_id, 'skill_id': skill.id})
-            inserted += 1
-
-    return inserted
+BATCH_SIZE = 500
 
 
 def run(skill_ids: list) -> None:
@@ -76,15 +38,66 @@ def run(skill_ids: list) -> None:
             print("No skills found for given IDs.")
             return
 
-        print(f"Backfilling {len(skills)} skill(s) against all historical jobs...")
-        total = 0
+        # Build (skill_id, [patterns]) for all new skills
+        skill_patterns = []
         for skill in skills:
-            count = backfill_skill(skill)
-            db.session.commit()
-            print(f"  {skill.name:<50} +{count:,} job_skills")
-            total += count
+            terms = [skill.name] + (skill.aliases or [])
+            patterns = [
+                re.compile(r'\b' + re.escape(t) + r'\b', re.IGNORECASE)
+                for t in terms if t and len(t.strip()) >= 2
+            ]
+            if patterns:
+                skill_patterns.append((skill.id, patterns))
 
-        print(f"\nDone. Inserted {total:,} job_skills rows total.")
+        print(f"Backfilling {len(skill_patterns)} skill(s) in a single pass over all jobs...")
+        start = datetime.utcnow()
+
+        last_id = 0
+        total_inserted = 0
+        jobs_processed = 0
+
+        while True:
+            rows = db.session.execute(db.text("""
+                SELECT id, description_text FROM jobs
+                WHERE id > :last_id
+                  AND description_text IS NOT NULL
+                  AND description_text != ''
+                ORDER BY id
+                LIMIT :limit
+            """), {'last_id': last_id, 'limit': BATCH_SIZE}).fetchall()
+
+            if not rows:
+                break
+
+            new_rows = []
+            for job_id, description_text in rows:
+                search_text, _ = extract_requirements_text(description_text)
+                for skill_id, patterns in skill_patterns:
+                    if any(p.search(search_text) for p in patterns):
+                        new_rows.append({
+                            'job_id': job_id,
+                            'skill_id': skill_id,
+                            'is_required': True,
+                        })
+
+            if new_rows:
+                db.session.execute(
+                    pg_insert(JobSkill.__table__).on_conflict_do_nothing(
+                        index_elements=['job_id', 'skill_id']
+                    ),
+                    new_rows,
+                )
+            db.session.commit()
+
+            last_id = rows[-1][0]
+            jobs_processed += len(rows)
+            elapsed = (datetime.utcnow() - start).total_seconds()
+            rate = jobs_processed / elapsed if elapsed > 0 else 0
+            print(f"  {jobs_processed:,} jobs  ({rate:.0f}/s)  {total_inserted + len(new_rows):,} inserted", flush=True)
+            total_inserted += len(new_rows)
+
+        duration = (datetime.utcnow() - start).total_seconds()
+        print(f"\nDone. {total_inserted:,} job_skills rows inserted for {len(skill_patterns)} skills in {duration:.0f}s.")
 
 
 if __name__ == '__main__':
@@ -96,7 +109,7 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     ids = list(args.skill_ids)
-    if args.min_id:
+    if args.min_id is not None:
         with app.app_context():
             ids += [s.id for s in Skill.query.filter(Skill.id >= args.min_id).all()]
 

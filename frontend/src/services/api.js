@@ -36,6 +36,11 @@ class API {
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
 
+    // Forward external cancellation signal (e.g. AbortController from caller)
+    if (options.signal) {
+      options.signal.addEventListener('abort', () => controller.abort(), { once: true });
+    }
+
     const config = {
       ...options,
       signal: controller.signal,
@@ -259,7 +264,7 @@ class API {
   // ROLE INTELLIGENCE ENDPOINTS
   // ============================================
 
-  async getRoleInsights(role, seniority, location, industry = null, companyId = null, userSkills = null) {
+  async getRoleInsights(role, seniority, location, industry = null, companyId = null, userSkills = null, signal = null) {
     const params = {
       role,
       seniority,
@@ -274,6 +279,7 @@ class API {
       method: 'POST',
       body: JSON.stringify(params),
       auth: false,
+      ...(signal && { signal }),
     });
   }
 

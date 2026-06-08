@@ -2082,12 +2082,17 @@ const SkillsInputScreen = () => {
 
   const handleContinue = async () => {
     setSubmitting(true);
-    const chosen = allSelectable.filter(s => selectedIds.has(s.skill_id))
-      .map(s => ({ skill_id: s.skill_id, name: s.name, category: s.category }));
-    setUserSkills(chosen);
-    await refreshInsights(chosen);
-    setCurrentScreen('dashboard');
-    setSubmitting(false);
+    try {
+      const chosen = allSelectable.filter(s => selectedIds.has(s.skill_id))
+        .map(s => ({ skill_id: s.skill_id, name: s.name, category: s.category }));
+      setUserSkills(chosen);
+      await refreshInsights(chosen);
+      setCurrentScreen('dashboard');
+    } catch (err) {
+      console.error('handleContinue failed:', err);
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   const handleSkip = () => {
@@ -2337,7 +2342,7 @@ const DashboardScreen = () => {
   // Reset company selection when industries change
   const prevIndustriesRef = useRef(selectedIndustries);
   useEffect(() => {
-    const industriesChanged = JSON.stringify(prevIndustriesRef.current.sort()) !== JSON.stringify([...selectedIndustries].sort());
+    const industriesChanged = JSON.stringify([...prevIndustriesRef.current].sort()) !== JSON.stringify([...selectedIndustries].sort());
     if (industriesChanged) {
       setSelectedCompanies(['All']);
       prevIndustriesRef.current = selectedIndustries;
@@ -2352,6 +2357,7 @@ const DashboardScreen = () => {
 
   // Debounced API call - fires when filters change
   const timeoutRef = useRef(null);
+  const abortControllerRef = useRef(null);
   
   const fetchData = useCallback(async (newSeniority, newLocation, newIndustries, newCompanies) => {
     setLoading(true);
@@ -2419,11 +2425,18 @@ const DashboardScreen = () => {
 
     // Debounce by 300ms to batch rapid changes
     timeoutRef.current = setTimeout(async () => {
+      // Cancel any in-flight request from a previous filter change
+      if (abortControllerRef.current) {
+        abortControllerRef.current.abort();
+      }
+      abortControllerRef.current = new AbortController();
+      const signal = abortControllerRef.current.signal;
+
       setLoading(true);
-      
+
       const industriesParam = !selectedIndustries.includes('All') ? selectedIndustries : null;
       const companiesParam = !selectedCompanies.includes('All') ? selectedCompanies.map(id => parseInt(id, 10)) : null;
-      
+
       try {
         const data = await api.getRoleInsights(
           selectedRole,
@@ -2431,7 +2444,8 @@ const DashboardScreen = () => {
           selectedLocation,
           industriesParam,
           companiesParam,
-          userSkills
+          userSkills,
+          signal
         );
 
         if (data.success) {
@@ -2451,6 +2465,7 @@ const DashboardScreen = () => {
         setAppliedSeniority(selectedSeniority);
         setAppliedLocation(selectedLocation);
       } catch (err) {
+        if (err.name === 'AbortError') return;
         console.error('Failed to fetch data:', err);
         setRoleData({
           success: false,
@@ -3656,9 +3671,9 @@ const AlternativesTab = () => {
 
   const fmtSalary = (v) => v >= 1000 ? `$${Math.round(v / 1000)}K` : `$${v}`;
   const fmtRange = (min, max) => {
-    if (!min && !max) return null;
-    if (min && max && min !== max) return `${fmtSalary(min)} – ${fmtSalary(max)}`;
-    return min ? fmtSalary(min) : null;
+    if (min == null && max == null) return null;
+    if (min != null && max != null && min !== max) return `${fmtSalary(min)} – ${fmtSalary(max)}`;
+    return min != null ? fmtSalary(min) : fmtSalary(max);
   };
 
   if (!userSkills || userSkills.length === 0) {

@@ -21,6 +21,7 @@ class User(db.Model):
     oauth_provider_id = db.Column(db.String(255))
     has_pro_access = db.Column(db.Boolean, default=False)
     stripe_customer_id = db.Column(db.String(255))
+    token_version = db.Column(db.Integer, default=0, nullable=False)
     email_verified = db.Column(db.Boolean, default=False, nullable=False)
     email_verified_at = db.Column(db.DateTime)
     pending_email = db.Column(db.String(255))

@@ -334,14 +334,14 @@ def _classify_skill(name: str) -> str:
     }
     for sig in _TECH:
         if sig in n:
-            return 'Technical'
+            return 'technical'
     for sig in _SOFT:
         if sig in n:
-            return 'Soft'
+            return 'soft'
     tech_suffixes = ('js', '.js', 'db', 'ops', 'sql', 'sdk', 'api', 'net', 'lang')
     if any(n.endswith(s) for s in tech_suffixes):
-        return 'Technical'
-    return 'Domain'
+        return 'technical'
+    return 'domain'
 
 
 def _promote_candidate(candidate, taxonomy_set: set) -> bool:
@@ -501,6 +501,8 @@ def run(since_dt: datetime | None = None, force_full: bool = False,
             run_record.status = 'failed'
             run_record.error = str(e)
             run_record.completed_at = datetime.utcnow()
+            db.session.rollback()
+            db.session.add(run_record)
             db.session.commit()
             raise
 

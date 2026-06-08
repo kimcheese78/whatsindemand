@@ -1,6 +1,7 @@
 # app/services/job_aggregator.py
 
 from app.models import db, Company, Job, JobSkill, Skill, Role, RoleTitleVariation, UnmatchedTitle
+from sqlalchemy.dialects.postgresql import insert as pg_insert
 from app.scrapers.greenhouse.scraper import GreenhouseScraper
 from app.scrapers.lever.scraper import LeverScraper
 from app.scrapers.ashby.scraper import AshbyScraper
@@ -67,7 +68,12 @@ class JobAggregator:
         saved_count = 0
         for job_data in raw_jobs:
             scraped_job_ids.add(job_data['source_job_id'])
-            saved = self._save_job(company.id, job_data)
+            try:
+                with db.session.begin_nested():
+                    saved = self._save_job(company.id, job_data)
+            except Exception as e:
+                print(f"Error saving job (skipped): {e}")
+                saved = False
             if saved:
                 saved_count += 1
         # Commit once per company instead of once per job
@@ -404,7 +410,6 @@ class JobAggregator:
 
         except Exception as e:
             print(f"Error saving job: {e}")
-            db.session.rollback()
             return False
     
     def _extract_job_skills(self, job: Job):
@@ -453,23 +458,60 @@ class JobAggregator:
             if not batch:
                 break
 
+            job_ids = [job.id for job in batch]
+            db.session.execute(
+                db.text("DELETE FROM job_skills WHERE job_id = ANY(:ids)"),
+                {'ids': job_ids},
+            )
+
+            new_rows = []
             for job in batch:
-                db.session.execute(db.text("DELETE FROM job_skills WHERE job_id = :jid"), {'jid': job.id})
                 skills_found = extractor.extract_skills(job.description_text)
                 for skill_data in skills_found:
-                    db.session.add(JobSkill(
-                        job_id=job.id,
-                        skill_id=skill_data['skill_id'],
-                        is_required=skill_data['confidence'] >= 80,
-                    ))
+                    new_rows.append({
+                        'job_id': job.id,
+                        'skill_id': skill_data['skill_id'],
+                        'is_required': skill_data['confidence'] >= 80,
+                    })
                 job.skills_dirty = False
 
+            if new_rows:
+                db.session.execute(
+                    pg_insert(JobSkill.__table__).on_conflict_do_nothing(
+                        index_elements=['job_id', 'skill_id']
+                    ),
+                    new_rows,
+                )
             db.session.commit()
             processed += len(batch)
             elapsed = (datetime.utcnow() - start).total_seconds()
             rate = processed / elapsed if elapsed > 0 else 0
             remaining = (total - processed) / rate / 60 if rate > 0 else 0
             print(f"  {processed:,}/{total:,} jobs  ({rate:.1f}/s  ~{remaining:.0f} min left)", flush=True)
+
+        print("  Updating Skill.total_job_count...", flush=True)
+        db.session.execute(db.text("""
+            UPDATE skills s
+            SET total_job_count = sub.cnt
+            FROM (
+                SELECT js.skill_id, COUNT(DISTINCT js.job_id) AS cnt
+                FROM job_skills js
+                JOIN jobs j ON js.job_id = j.id
+                WHERE j.is_active = true
+                GROUP BY js.skill_id
+            ) sub
+            WHERE s.id = sub.skill_id AND s.is_verified = true
+        """))
+        db.session.execute(db.text("""
+            UPDATE skills SET total_job_count = 0
+            WHERE is_verified = true
+              AND id NOT IN (
+                  SELECT DISTINCT js.skill_id FROM job_skills js
+                  JOIN jobs j ON js.job_id = j.id WHERE j.is_active = true
+              )
+              AND (total_job_count IS NULL OR total_job_count > 0)
+        """))
+        db.session.commit()
 
         return processed
 

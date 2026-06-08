@@ -4,21 +4,22 @@ from flask import current_app
 from functools import wraps
 from flask import request, jsonify
 
-def generate_token(user_id, email):
+def generate_token(user_id, email, token_version=0):
     """Generate JWT token for user"""
     payload = {
         'user_id': user_id,
         'email': email,
+        'tv': token_version,
         'exp': datetime.utcnow() + timedelta(days=7),
         'iat': datetime.utcnow()
     }
-    
+
     token = jwt.encode(
         payload,
         current_app.config['JWT_SECRET_KEY'],
         algorithm='HS256'
     )
-    
+
     return token
 
 def decode_token(token):
@@ -58,10 +59,15 @@ def token_required(f):
         if not payload:
             return jsonify({'error': 'Invalid or expired token'}), 401
         
-        # Add user info to request context
+        # Verify token version against DB to catch revoked tokens
+        from app.models import User
+        user = User.query.get(payload['user_id'])
+        if not user or payload.get('tv', 0) != user.token_version:
+            return jsonify({'error': 'Invalid or expired token'}), 401
+
         request.user_id = payload['user_id']
         request.user_email = payload['email']
-        
+
         return f(*args, **kwargs)
     
     return decorated

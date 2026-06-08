@@ -34,21 +34,20 @@ def get_locations():
     Normalizes messy location data to canonical country names.
     """
     
-    # Get all active jobs with their location data
-    jobs = db.session.query(
-        Job.id,
+    # Stream active jobs in chunks — avoids loading 200K+ rows into RAM at once
+    query = db.session.query(
         Job.location_country,
         Job.location_state,
         Job.location_raw
     ).filter(
         Job.is_active == True
-    ).all()
-    
+    ).yield_per(2000)
+
     # Count jobs per normalized country
     country_job_counts = defaultdict(int)
     unmatched_count = 0
-    
-    for job_id, loc_country, loc_state, loc_raw in jobs:
+
+    for loc_country, loc_state, loc_raw in query:
         # Normalize to canonical country
         country = normalize_location_to_country(loc_country, loc_state, loc_raw)
         

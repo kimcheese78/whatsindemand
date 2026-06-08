@@ -2,7 +2,7 @@
 """
 Weekly job scraping script — Steps 1 + 2 only (scrape + skill discovery).
 
-Run via cron: 0 17 * * 6 /Users/henry_c/WhatsInDemand/backend/venv/bin/python /Users/henry_c/WhatsInDemand/backend/scripts/weekly_scrape.py --skip-extraction >> /Users/henry_c/WhatsInDemand/backend/logs/weekly_scrape.log 2>&1
+Run via cron: 0 17 * * 6 /Users/henry_c/WhatsInDemand/backend/venv/bin/python /Users/henry_c/WhatsInDemand/backend/scripts/weekly_scrape.py >> /Users/henry_c/WhatsInDemand/backend/logs/weekly_scrape.log 2>&1
 # 17:00 UTC Saturday = 02:00 KST Sunday
 
 After scrape completes, manually review skill candidates and unmatched role titles,

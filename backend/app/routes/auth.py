@@ -226,7 +226,7 @@ def forgot_password():
 
     user = User.query.filter_by(email=email).first()
     if not user:
-        return jsonify({'error': 'No account exists for that email.'}), 404
+        return jsonify({'message': 'If an account exists for that email, a reset link has been sent.'}), 200
 
     if not user.password_hash:
         return jsonify({
@@ -266,10 +266,11 @@ def reset_password():
         return jsonify({'error': 'Account not found.'}), 404
 
     user.password_hash = bcrypt.hashpw(new_password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
-    db.session.commit()
+    user.token_version = (user.token_version or 0) + 1
     auth_tokens.invalidate_all(user.id, auth_tokens.PURPOSE_PASSWORD_RESET)
+    db.session.commit()
 
-    token = generate_token(user.id, user.email)
+    token = generate_token(user.id, user.email, user.token_version)
     return jsonify({
         'message': 'Password reset successful.',
         'token': token,
@@ -296,6 +297,7 @@ def change_password():
         return jsonify({'error': message}), 400
 
     user.password_hash = bcrypt.hashpw(new_password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
+    user.token_version = (user.token_version or 0) + 1
     db.session.commit()
     return jsonify({'message': 'Password updated.'}), 200
 
