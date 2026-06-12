@@ -1,10 +1,10 @@
 // App.js - WhatsInDemand Career Intelligence App
 
 import React, { useState, useEffect, useLayoutEffect, useRef, createContext, useContext, useCallback, useMemo } from 'react';
-import { BrowserRouter, Routes, Route, useNavigate, useLocation } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, useNavigate, useLocation, useParams, useSearchParams } from 'react-router-dom';
 import {
   ArrowRight, Search, ChevronDown, X, Filter,
-  Zap, Layers, ExternalLink, Clock
+  Zap, Layers, ExternalLink, Clock, Share2, Check
 } from 'lucide-react';
 import api from './services/api';
 import { Panel, Eyebrow, Stat, Pill, HeroNumber } from './components/ui';
@@ -676,7 +676,7 @@ const NavBar = () => {
   const { user, handleLogout, setCurrentScreen, roleData } = useApp();
   
   return (
-    <nav className="px-8 py-6 border-b border-line">
+    <nav className="px-4 sm:px-8 py-6 border-b border-line">
       <div className="max-w-7xl mx-auto flex items-center justify-between">
         <button 
           onClick={() => setCurrentScreen('landing')}
@@ -1485,9 +1485,9 @@ const RoleSelectionScreen = () => {
       <NavBar />
   
       <div className="flex-1">
-        <div className="max-w-3xl mx-auto px-8 pt-16 pb-24">
+        <div className="max-w-3xl mx-auto px-4 sm:px-8 pt-16 pb-24">
           <div className="mb-10">
-            <h1 className="text-5xl md:text-6xl font-semibold mb-6 tracking-tight">
+            <h1 className="text-4xl sm:text-5xl md:text-6xl font-semibold mb-6 tracking-tight">
               WHAT'S YOUR ROLE?
             </h1>
             <p className="text-xl text-ink-muted">
@@ -1822,15 +1822,30 @@ const SignupScreen = () => {
 // ============================================
 
 const MobileHeader = () => {
-  const { 
+  const {
     user,
-    activeTab, 
-    setActiveTab, 
-    setCurrentScreen, 
-    handleLogout 
+    activeTab,
+    setActiveTab,
+    setCurrentScreen,
+    handleLogout,
+    selectedRole,
+    appliedSeniority,
   } = useApp();
-  
+
   const [menuOpen, setMenuOpen] = useState(false);
+  const [copied, setCopied] = useState(false);
+
+  const handleShareCard = () => {
+    const slug = selectedRole.toLowerCase().replace(/\s+/g, '-');
+    const params = new URLSearchParams();
+    if (appliedSeniority && appliedSeniority !== 'All') params.set('seniority', appliedSeniority);
+    const qs = params.toString() ? `?${params}` : '';
+    const url = `${window.location.origin}/card/${slug}${qs}`;
+    navigator.clipboard.writeText(url).then(() => {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    });
+  };
 
   const tabs = [
     { id: 'overview', label: 'Overview' },
@@ -1886,6 +1901,29 @@ const MobileHeader = () => {
           )}
           
           <div className="p-2">
+            {selectedRole && (
+              <button
+                onClick={() => {
+                  handleShareCard();
+                  setMenuOpen(false);
+                }}
+                className="w-full px-4 py-3 text-left text-sm hover:bg-white/10 transition-colors flex items-center gap-2"
+              >
+                {copied ? <Check className="w-3.5 h-3.5" /> : <Share2 className="w-3.5 h-3.5" />}
+                {copied ? 'Link copied!' : 'Share this role'}
+              </button>
+            )}
+            {selectedRole && (
+              <button
+                onClick={() => {
+                  setCurrentScreen('skills-input');
+                  setMenuOpen(false);
+                }}
+                className="w-full px-4 py-3 text-left text-sm hover:bg-white/10 transition-colors"
+              >
+                Edit my skills
+              </button>
+            )}
             <button
               onClick={() => {
                 setCurrentScreen('role-selection');
@@ -1893,7 +1931,7 @@ const MobileHeader = () => {
               }}
               className="w-full px-4 py-3 text-left text-sm hover:bg-white/10 transition-colors"
             >
-              Explore a New Role
+              Explore a new role
             </button>
             <button
               onClick={() => {
@@ -1911,7 +1949,7 @@ const MobileHeader = () => {
               }}
               className="w-full px-4 py-3 text-left text-sm text-ink-muted hover:bg-white/10 transition-colors"
             >
-              Sign Out
+              Sign out
             </button>
           </div>
         </div>
@@ -2107,9 +2145,9 @@ const SkillsInputScreen = () => {
       <NavBar />
 
       <div className="flex-1">
-        <div className="max-w-3xl mx-auto px-8 pt-16 pb-24">
+        <div className="max-w-3xl mx-auto px-4 sm:px-8 pt-16 pb-24">
           <div className="mb-10">
-            <h1 className="text-5xl md:text-6xl font-semibold mb-6 tracking-tight">
+            <h1 className="text-4xl sm:text-5xl md:text-6xl font-semibold mb-6 tracking-tight">
               THE SKILLS YOU HAVE
             </h1>
             <p className="text-xl text-ink-muted">
@@ -2302,6 +2340,20 @@ const DashboardScreen = () => {
     user,
     userSkills,
   } = useApp();
+
+  const [copied, setCopied] = useState(false);
+
+  const handleShareCard = () => {
+    const slug = selectedRole.toLowerCase().replace(/\s+/g, '-');
+    const params = new URLSearchParams();
+    if (appliedSeniority && appliedSeniority !== 'All') params.set('seniority', appliedSeniority);
+    const qs = params.toString() ? `?${params}` : '';
+    const url = `${window.location.origin}/card/${slug}${qs}`;
+    navigator.clipboard.writeText(url).then(() => {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    });
+  };
 
   const [verifyBannerDismissed, setVerifyBannerDismissed] = useState(() => {
     const dismissedAt = parseInt(localStorage.getItem('verifyBannerDismissedAt') || '0', 10);
@@ -2605,7 +2657,14 @@ const DashboardScreen = () => {
                   </>
                 )}
               </div>
-              <div className="flex items-center gap-2 shrink-0 pt-1">
+              <div className="hidden lg:flex items-center gap-2 shrink-0 pt-1">
+                <button
+                  onClick={handleShareCard}
+                  className="px-4 py-2.5 text-sm font-medium bg-white/10 text-white hover:bg-white/20 transition-colors border border-white/20 rounded-lg flex items-center gap-2"
+                >
+                  {copied ? <Check className="w-4 h-4" /> : <Share2 className="w-4 h-4" />}
+                  {copied ? 'COPIED' : 'SHARE'}
+                </button>
                 <button
                   onClick={() => setCurrentScreen('role-selection')}
                   className="px-5 py-2.5 text-sm font-medium bg-white text-black hover:bg-gray-200 transition-colors rounded-lg"
@@ -4128,8 +4187,8 @@ const LegalLayout = ({ title, lastUpdated, children }) => (
   <div className="min-h-screen bg-black text-white flex flex-col">
     <NavBar />
     <div className="flex-1">
-      <div className="max-w-3xl mx-auto px-8 pt-16 pb-24">
-        <h1 className={`text-5xl font-semibold tracking-tight ${lastUpdated ? 'mb-3' : 'mb-12'}`}>{title}</h1>
+      <div className="max-w-3xl mx-auto px-4 sm:px-8 pt-16 pb-24">
+        <h1 className={`text-4xl sm:text-5xl font-semibold tracking-tight ${lastUpdated ? 'mb-3' : 'mb-12'}`}>{title}</h1>
         {lastUpdated && (
           <p className="text-sm text-ink-faint mb-12">Last updated {lastUpdated}</p>
         )}
@@ -4490,8 +4549,8 @@ const AccountScreen = () => {
     <div className="min-h-screen bg-black text-white flex">
       <DashboardSidebar />
 
-      <div className="flex-1 ml-64">
-        <div className="max-w-3xl mx-auto px-8 pt-8 pb-24">
+      <div className="flex-1 lg:ml-64">
+        <div className="max-w-3xl mx-auto px-4 sm:px-8 pt-8 pb-24">
 
           <div className="mb-8">
             <button
@@ -5111,12 +5170,158 @@ const AppRouter = () => {
 // ============================================
 // MAIN APP COMPONENT
 // ============================================
+// ============================================
+// CARD SCREEN — standalone, outside AppProvider
+// ============================================
+const CardScreen = () => {
+  const { role: roleSlug } = useParams();
+  const [searchParams] = useSearchParams();
+  const seniority = searchParams.get('seniority') || '';
+  const location  = searchParams.get('location')  || '';
+
+  const [data,    setData]    = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error,   setError]   = useState(null);
+
+  useEffect(() => {
+    api.getRoleCard(roleSlug, seniority, location)
+      .then(d => {
+        setData(d);
+        document.title = `${d.role} Skill Demand · WhatsInDemand`;
+      })
+      .catch(err => setError(err.message || 'Role not found'))
+      .finally(() => setLoading(false));
+  }, [roleSlug, seniority, location]);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-black flex items-center justify-center">
+        <DotSpinner size={24} tone="white" />
+      </div>
+    );
+  }
+
+  if (error || !data) {
+    return (
+      <div className="min-h-screen bg-black text-white flex flex-col items-center justify-center gap-4">
+        <p className="text-ink-muted text-sm">Role not found.</p>
+        <a href="/start" className="text-sm text-white underline">Explore a role →</a>
+      </div>
+    );
+  }
+
+  const maxPct = data.skills[0]?.percentage || 100;
+  const seniorityLabel = { entry: 'Entry Level', mid: 'Mid Level', senior: 'Senior', lead: 'Lead / Principal' }[seniority] || null;
+  const BAR_OPACITY    = [0.9, 0.65, 0.45, 0.3, 0.25, 0.2, 0.18, 0.15];
+
+  return (
+    <div className="min-h-screen bg-zinc-950 flex flex-col items-center justify-center py-16 px-4">
+      <div className="w-full max-w-sm">
+
+        {/* Card */}
+        <div className="bg-black border border-line rounded-2xl overflow-hidden">
+
+          {/* Header */}
+          <div className="px-6 pt-6 pb-5 border-b border-line">
+            <p className="text-eyebrow text-ink-faint tracking-widest mb-3">
+              WHAT EMPLOYERS ACTUALLY REQUIRE
+            </p>
+            <h1 className="text-3xl font-semibold tracking-tight mb-3">{data.role}</h1>
+            {(seniorityLabel || (location && location !== 'all')) && (
+              <div className="flex flex-wrap gap-2 mb-3">
+                {seniorityLabel && (
+                  <span className="text-xs px-3 py-1 border border-line-strong rounded-full text-ink-muted">
+                    {seniorityLabel}
+                  </span>
+                )}
+                {location && location !== 'all' && (
+                  <span className="text-xs px-3 py-1 border border-line-strong rounded-full text-ink-muted capitalize">
+                    {location}
+                  </span>
+                )}
+              </div>
+            )}
+            <p className="text-xs text-ink-faint">
+              Based on {data.total_jobs.toLocaleString()} real job postings
+            </p>
+          </div>
+
+          {/* Skills */}
+          <div className="px-6 py-5">
+            <p className="text-eyebrow text-ink-faint tracking-widest mb-4">TOP REQUIRED SKILLS</p>
+            <div className="space-y-3">
+              {data.skills.map((skill, i) => (
+                <div key={skill.name} className="flex items-center gap-3">
+                  <span className="text-xs text-ink-faint w-4 text-right flex-shrink-0">{i + 1}</span>
+                  <span className={`text-sm w-28 flex-shrink-0 truncate ${i < 3 ? 'text-white font-medium' : 'text-ink-muted'}`}>
+                    {skill.name}
+                  </span>
+                  <div className="flex-1 h-[3px] bg-white/5 rounded-full overflow-hidden">
+                    <div
+                      className="h-full rounded-full bg-white"
+                      style={{
+                        width: `${(skill.percentage / maxPct) * 100}%`,
+                        opacity: BAR_OPACITY[i] ?? 0.15,
+                      }}
+                    />
+                  </div>
+                  <span className={`text-xs w-9 text-right flex-shrink-0 tabular-nums ${i === 0 ? 'text-ink-muted' : 'text-ink-faint'}`}>
+                    {skill.percentage}%
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Callout */}
+          {data.callout && (
+            <div className="mx-6 mb-5 p-4 bg-surface rounded-lg border-l-2 border-white/40">
+              <p className="text-eyebrow text-ink-faint tracking-widest mb-1.5">SURPRISING</p>
+              <p className="text-sm text-ink-muted leading-relaxed">{data.callout}</p>
+            </div>
+          )}
+
+          {/* Footer */}
+          <div className="px-6 pb-5 pt-4 border-t border-line flex items-center justify-between">
+            <span className="text-xs tracking-widest text-ink-faint">WHATSINDEMAND</span>
+            <a
+              href="/start"
+              className="text-xs text-ink-muted hover:text-white transition-colors flex items-center gap-1"
+            >
+              See your skill gap <ArrowRight className="w-3 h-3" />
+            </a>
+          </div>
+        </div>
+
+        {/* Below-card CTA */}
+        <div className="mt-8 text-center space-y-3">
+          <a
+            href="/start"
+            className="inline-flex items-center gap-2 px-6 py-3 bg-white text-black text-sm font-medium rounded-lg hover:bg-gray-100 transition-colors"
+          >
+            Explore your role <ArrowRight className="w-4 h-4" />
+          </a>
+          <p className="text-xs text-ink-faint">
+            Data from {data.total_jobs.toLocaleString()} real job postings · Updated weekly
+          </p>
+        </div>
+
+      </div>
+    </div>
+  );
+};
+
 const WhatsInDemand = () => {
   return (
     <BrowserRouter>
-      <AppProvider>
-        <AppRouter />
-      </AppProvider>
+      <Routes>
+        <Route path="/card/:role" element={<CardScreen />} />
+        <Route path="*" element={
+          <AppProvider>
+            <AppRouter />
+          </AppProvider>
+        } />
+      </Routes>
     </BrowserRouter>
   );
 };

@@ -408,6 +408,14 @@ class API {
       auth: false,
     });
   }
+
+  async getRoleCard(roleSlug, seniority = '', location = '') {
+    const params = new URLSearchParams();
+    if (seniority && seniority !== 'all') params.set('seniority', seniority);
+    if (location && location !== 'all') params.set('location', location);
+    const qs = params.toString() ? `?${params}` : '';
+    return this.request(`/api/roles/card/${roleSlug}${qs}`, { auth: false });
+  }
 }
 
 const api = new API();

@@ -1246,3 +1246,104 @@ def _get_alternative_roles(
             break
 
     return out
+
+
+# ============================================
+# SHAREABLE CARD ENDPOINT
+# ============================================
+
+# (skill_name_lower, role_category_lower, callout_template)
+# Only fires when the skill is verified in the live top-6; {rank}/{pct} come from real data.
+_SURPRISE_SIGNALS = [
+    ('sql',           'product',     'SQL ranks #{rank} in {role} postings ({pct}%) — ahead of Figma, Jira, and every roadmapping tool.'),
+    ('sql',           'marketing',   'SQL ranks #{rank} in {role} postings ({pct}%) — the role is more quantitative than the title suggests.'),
+    ('sql',           'design',      'SQL ranks #{rank} in {role} postings ({pct}%) — employers want data fluency alongside craft skills.'),
+    ('sql',           'operations',  'SQL ranks #{rank} in {role} postings ({pct}%) — data querying is now a core operations skill.'),
+    ('sql',           'finance',     'SQL ranks #{rank} in {role} postings ({pct}%) — spreadsheet fluency alone is no longer enough.'),
+    ('sql',           'sales',       'SQL ranks #{rank} in {role} postings ({pct}%) — analytics fluency is now expected in sales.'),
+    ('sql',           'people',       'SQL ranks #{rank} in {role} postings ({pct}%) — people analytics has changed what HR needs.'),
+    ('excel',         'data science', 'Excel ranks #{rank} in {role} postings ({pct}%) — spreadsheets still beat modern tools at most companies.'),
+    ('communication', 'engineering',  'Communication ranks #{rank} in {role} postings ({pct}%) — the most underrated line on a tech resume.'),
+    ('communication', 'data science', 'Communication ranks #{rank} in {role} postings ({pct}%) — technical depth alone isn\'t enough.'),
+    ('figma',         'design',      'Figma ranks #{rank} in {role} postings ({pct}%) — it\'s now the industry standard, not a preference.'),
+    ('typescript',    'engineering', 'TypeScript ranks #{rank} in {role} postings ({pct}%) — it now outranks plain JavaScript in most markets.'),
+    ('kubernetes',    'engineering', 'Kubernetes ranks #{rank} in {role} postings ({pct}%) — container orchestration has overtaken traditional CI/CD tools.'),
+    ('python',        'marketing',   'Python ranks #{rank} in {role} postings ({pct}%) — the bar for marketing analytics keeps rising.'),
+    ('python',        'finance',     'Python ranks #{rank} in {role} postings ({pct}%) — financial modeling is moving beyond spreadsheets.'),
+]
+
+
+def _get_callout(role_title: str, role_category: str, skills: list) -> Optional[str]:
+    """Return a surprise callout only when the signal is verified in the live top-6."""
+    category_key = (role_category or '').lower().strip()
+    skill_index = {s['name'].lower(): (i + 1, s['percentage']) for i, s in enumerate(skills)}
+    for skill_lower, cat, template in _SURPRISE_SIGNALS:
+        if cat != category_key:
+            continue
+        entry = skill_index.get(skill_lower)
+        if entry is None:
+            continue
+        rank, pct = entry
+        if rank > 6:
+            continue
+        return template.format(role=role_title, rank=rank, pct=pct)
+    return None
+
+
+@roles_bp.route('/card/<role_slug>', methods=['GET'])
+def get_role_card(role_slug):
+    """Public endpoint for shareable role insight cards. No auth required."""
+    role_name = role_slug.replace('-', ' ')
+    role = _find_role(role_name)
+    if not role:
+        return jsonify({'success': False, 'error': 'Role not found'}), 404
+
+    seniority = request.args.get('seniority', '').lower().strip()
+    location = request.args.get('location', '').strip()
+
+    jobs_query = db.session.query(Job.id).filter(
+        Job.role_id == role.id,
+        Job.is_active == True,
+    )
+    if seniority and seniority != 'all':
+        jobs_query = jobs_query.filter(func.lower(Job.seniority_level) == seniority)
+    if location and location.lower() not in ('', 'all'):
+        if location.lower() == 'remote':
+            jobs_query = jobs_query.filter(Job.location_is_remote == True)
+        else:
+            jobs_query = jobs_query.filter(func.lower(Job.location_country) == location.lower())
+
+    job_ids = [j for (j,) in jobs_query.with_entities(Job.id).all()]
+    total_jobs = len(job_ids)
+    if total_jobs == 0:
+        return jsonify({'success': False, 'error': 'No jobs found for this role and filters'}), 404
+
+    skill_counts = db.session.query(
+        Skill.name,
+        func.count(JobSkill.id).label('job_count'),
+    ).join(JobSkill, Skill.id == JobSkill.skill_id).filter(
+        JobSkill.job_id.in_(job_ids),
+        Skill.is_verified == True,
+    ).group_by(Skill.id, Skill.name).order_by(
+        func.count(JobSkill.id).desc()
+    ).limit(8).all()
+
+    skills = [
+        {
+            'name': name,
+            'job_count': count,
+            'percentage': min(round(count / total_jobs * 100), 100),
+        }
+        for name, count in skill_counts
+    ]
+
+    return jsonify({
+        'success': True,
+        'role': role.normalized_title,
+        'category': role.category,
+        'total_jobs': total_jobs,
+        'seniority': seniority or 'all',
+        'location': location or 'all',
+        'skills': skills,
+        'callout': _get_callout(role.normalized_title, role.category, skills),
+    })
