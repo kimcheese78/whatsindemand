@@ -105,10 +105,11 @@ def get_skill_details(skill_id):
     
     role_name = request.args.get('role')
     
-    # Get total jobs requiring this skill
+    # Get total jobs requiring this skill — only role-mapped jobs count
     jobs_query = db.session.query(Job.id).join(JobSkill).filter(
         JobSkill.skill_id == skill_id,
-        Job.is_active == True
+        Job.is_active == True,
+        Job.role_id.isnot(None)
     )
     
     role_obj = None
@@ -142,7 +143,8 @@ def get_skill_details(skill_id):
         func.count(Job.id).label('job_count')
     ).join(Job).join(JobSkill).filter(
         JobSkill.skill_id == skill_id,
-        Job.is_active == True
+        Job.is_active == True,
+        Job.role_id.isnot(None)
     ).group_by(Company.id).order_by(
         func.count(Job.id).desc()
     ).limit(5).all()
