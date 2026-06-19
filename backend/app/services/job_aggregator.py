@@ -498,6 +498,7 @@ class JobAggregator:
                 FROM job_skills js
                 JOIN jobs j ON js.job_id = j.id
                 WHERE j.is_active = true
+                  AND j.role_id IS NOT NULL
                 GROUP BY js.skill_id
             ) sub
             WHERE s.id = sub.skill_id AND s.is_verified = true
@@ -507,7 +508,8 @@ class JobAggregator:
             WHERE is_verified = true
               AND id NOT IN (
                   SELECT DISTINCT js.skill_id FROM job_skills js
-                  JOIN jobs j ON js.job_id = j.id WHERE j.is_active = true
+                  JOIN jobs j ON js.job_id = j.id
+                  WHERE j.is_active = true AND j.role_id IS NOT NULL
               )
               AND (total_job_count IS NULL OR total_job_count > 0)
         """))
