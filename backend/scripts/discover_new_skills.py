@@ -227,6 +227,70 @@ except Exception:
     _SPACY_AVAILABLE = False
 
 
+# ---------------------------------------------------------------------------
+# Pre-DB noise filter — applied before writing to skill_candidates
+# ---------------------------------------------------------------------------
+_NOISE_PATTERNS = re.compile(
+    r'\bintern(?:ship)?\b|\bvolunteer\b|\bapprentice\b'           # intern/volunteer
+    r'|\bwerkstudent\b|\bpraktikum\b|\bstagiaire\b'               # foreign intern terms
+    r'|\bpreferred\b|\ba plus\b|\brequired\b|\bnot required\b'    # qualifier fragments
+    r'|\blieu of education\b|\bdegree required\b'
+    r'|\bbenefits?\b|\binsurance\b|\bvacations?\b|\bholidays?\b'  # benefits language
+    r'|\bpto\b|\b401k?\b|\bwellness\b|\btuition\b|\breimbursement\b'
+    r'|\bdisability\b|\baccommodation\b|\beeo\b'                   # EEO boilerplate
+    r'|\bbase pay\b|\bsalary range\b|\bcompetitive pay\b|\bbonus\b'
+    r'|\bjoin our\b|\bwe are looking\b|\babout us\b'              # JD marketing copy
+    r'|\bequal opportunity\b|\bdiversity\b|\binclusion\b'
+    r'|\bdisclaimer\b|\bplease note\b|\bimportant note\b'
+    r'|\bhigh school\b|\bged\b|\bdiploma\b|\bbachelor\b'          # education requirements
+    r'|\bmaster\'?s?\b|\bphd\b|\bdegree in\b|\bgraduate\b'
+    r'|\blift\b|\bcarry\b|\bstand\b|\bwalk\b|\bsit\b',           # physical requirements
+    re.IGNORECASE,
+)
+_FRAGMENT_STARTERS = re.compile(
+    r'^(?:and |or |the |a |an |in |of |for |with |to |at |by |as |on |our |your |their |this |that |these |those |is |are |was |were )',
+    re.IGNORECASE,
+)
+_TRAILING_NOISE = re.compile(r'\s+(?:preferred|required|a plus|or similar|or equivalent|etc\.?)$', re.IGNORECASE)
+
+
+def _is_noise_candidate(name: str) -> bool:
+    """Return True if this candidate should be dropped before hitting the DB."""
+    stripped = name.strip()
+
+    # Length bounds: skills are 2–60 chars
+    if len(stripped) < 3 or len(stripped) > 70:
+        return True
+
+    # More than 25% non-ASCII → likely non-English
+    non_ascii = sum(1 for c in stripped if ord(c) >= 128)
+    if non_ascii / max(len(stripped), 1) > 0.25:
+        return True
+
+    # Verb phrase — an activity, not a skill noun
+    if _VERB_STARTERS.match(stripped):
+        return True
+
+    # Fragment starting with a function word
+    if _FRAGMENT_STARTERS.match(stripped):
+        return True
+
+    # Known noise patterns
+    if _NOISE_PATTERNS.search(stripped):
+        return True
+
+    # Contains only noise after stripping trailing qualifiers
+    cleaned = _TRAILING_NOISE.sub('', stripped).strip()
+    if len(cleaned) < 3:
+        return True
+
+    # More than 8 words → almost certainly a sentence fragment, not a skill name
+    if len(stripped.split()) > 8:
+        return True
+
+    return False
+
+
 def _spacy_candidates(text: str):
     if not _SPACY_AVAILABLE or not _NLP:
         return
@@ -623,14 +687,24 @@ def _run_inner(run_record: 'DiscoveryRun', since_dt: datetime):
         json.dump(sorted_candidates, f, indent=2)
     log(f'Wrote {len(sorted_candidates)} candidates to {output_path}')
 
+    # Filter before writing to DB: only cross-company, non-taxonomy, non-noise candidates.
+    # This keeps the review queue small (~50–150/run) and high-signal.
+    reviewable = [
+        c for c in sorted_candidates
+        if c['company_count'] >= 2
+        and not _is_in_taxonomy(c['name'].lower(), taxonomy_set)
+        and not _is_noise_candidate(c['name'])
+    ]
+    log(f'{len(sorted_candidates)} raw candidates → {len(reviewable)} after filtering (company>=2, not in taxonomy, not noise)')
+
     # Upsert to DB so candidates survive Railway's ephemeral filesystem.
     # ON CONFLICT: merge counts upward; never overwrite approved/rejected decisions.
-    if sorted_candidates:
+    if reviewable:
         from sqlalchemy.dialects.postgresql import insert as pg_insert
         from datetime import date as _date
         CHUNK = 500
-        for i in range(0, len(sorted_candidates), CHUNK):
-            chunk = sorted_candidates[i:i + CHUNK]
+        for i in range(0, len(reviewable), CHUNK):
+            chunk = reviewable[i:i + CHUNK]
             rows = [{
                 'name':             c['name'],
                 'job_count':        c['job_count'],
@@ -654,10 +728,10 @@ def _run_inner(run_record: 'DiscoveryRun', since_dt: datetime):
                 where=(tbl.c.status == 'pending'),
             )
             db.session.execute(stmt)
-        log(f'Upserted {len(sorted_candidates)} candidates to skill_candidates table')
+        log(f'Upserted {len(reviewable)} candidates to skill_candidates table')
 
     run_record.jobs_processed = len(jobs)
-    run_record.candidates_upserted = len(sorted_candidates)
+    run_record.candidates_upserted = len(reviewable)
     run_record.candidates_promoted = 0
     run_record.status = 'completed'
     run_record.completed_at = datetime.utcnow()
