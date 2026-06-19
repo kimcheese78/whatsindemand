@@ -454,7 +454,7 @@ from dotenv import load_dotenv
 load_dotenv(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), '.env'))
 
 from app import create_app
-from app.models import db, Job, Skill, DiscoveryRun
+from app.models import db, Job, Skill, DiscoveryRun, SkillCandidate
 from app.services.skill_extractor import extract_requirements_text
 
 app = create_app()
@@ -622,6 +622,39 @@ def _run_inner(run_record: 'DiscoveryRun', since_dt: datetime):
     with open(output_path, 'w') as f:
         json.dump(sorted_candidates, f, indent=2)
     log(f'Wrote {len(sorted_candidates)} candidates to {output_path}')
+
+    # Upsert to DB so candidates survive Railway's ephemeral filesystem.
+    # ON CONFLICT: merge counts upward; never overwrite approved/rejected decisions.
+    if sorted_candidates:
+        from sqlalchemy.dialects.postgresql import insert as pg_insert
+        from datetime import date as _date
+        CHUNK = 500
+        for i in range(0, len(sorted_candidates), CHUNK):
+            chunk = sorted_candidates[i:i + CHUNK]
+            rows = [{
+                'name':             c['name'],
+                'job_count':        c['job_count'],
+                'company_count':    c['company_count'],
+                'first_seen':       _date.fromisoformat(c['first_seen']) if c.get('first_seen') else None,
+                'last_seen':        _date.fromisoformat(c['last_seen']) if c.get('last_seen') else None,
+                'methods':          list(c.get('methods', [])),
+                'example_contexts': (c.get('example_contexts') or [])[:3],
+                'status':           'pending',
+            } for c in chunk]
+            tbl = SkillCandidate.__table__
+            stmt = pg_insert(tbl).values(rows)
+            stmt = stmt.on_conflict_do_update(
+                index_elements=['name'],
+                set_={
+                    'job_count':     db.func.greatest(tbl.c.job_count,     stmt.excluded.job_count),
+                    'company_count': db.func.greatest(tbl.c.company_count, stmt.excluded.company_count),
+                    'last_seen':     db.func.greatest(tbl.c.last_seen,     stmt.excluded.last_seen),
+                    'updated_at':    db.func.now(),
+                },
+                where=(tbl.c.status == 'pending'),
+            )
+            db.session.execute(stmt)
+        log(f'Upserted {len(sorted_candidates)} candidates to skill_candidates table')
 
     run_record.jobs_processed = len(jobs)
     run_record.candidates_upserted = len(sorted_candidates)
