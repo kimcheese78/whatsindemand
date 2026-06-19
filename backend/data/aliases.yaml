@@ -1786,3 +1786,309 @@
 "health coach": null
 "instructor": null
 "sales internship": null
+
+# =============================================================================
+# Auto-added from manual role mapping session (2026-06-18)
+# =============================================================================
+"(senior) manager, business development": business_development_manager
+"4-year university degree required - children's english teacher in japan": teacher
+"account supervisor, health & life science communications": account_manager
+"accounts payable team leader": accounting_manager
+"accounts receivable collector": accountant
+"administrative support fuel operations": administrative_assistant
+"advanced practice provider - florida": physician_assistant
+"advanced practice provider - washington": physician_assistant
+"aesthetic injector": nurse_practitioner
+"anesthesiologist": anesthesiologist
+"animation tools programmer": software_engineer
+"architect & designer, sales": solutions_architect
+"architect - (mission critical)": architect
+"art lead, new game": creative_director
+"assistant client manager- p&c accounts": account_manager
+"audit senior": internal_auditor
+"automated tester": qa_engineer
+"av administrator, events & experiences": it_engineer
+"av technology sales rep.": sales_representative
+"av test operator day": test_engineer
+"brand ambasador": brand_ambassador
+"bursar": accountant
+"business affairs": commercial_counsel
+"business development director, satellites - ts/sci clearance": business_development_manager
+"business development specialist (healthcare, hybrid)": business_development_representative
+"business director, planning": operations_manager
+"campus ambassador": brand_ambassador
+"care navigator": support_specialist
+"category manager, indirect spend": procurement_manager
+"cell therapy account specialist, overlay": sales_specialist
+"certified hand therapist- prn": occupational_therapist
+"channel manager, france [french fluency]": partner_manager
+"chef de cuisine": chef
+"chip architecture leader": electrical_engineer
+"client manager-commercial lines": account_manager
+"clinical care rn": registered_nurse
+"clinical director, metabolic health": medical_director
+"clinical research coordinator i": clinical_research_nurse
+"clinical research coordinator ii": clinical_research_nurse
+"co-manager": retail_store_manager
+"commercial door technician trainee": field_service_technician
+"commercial senior analyst, sportsbook": business_analyst
+"community assistant": administrative_assistant
+"community liaison": communications_manager
+"computer programmer": software_engineer
+"consultative sales - remote | chef & nutrition placements | ote $5k-$7k+": sales_representative
+"content strategist (video)": content_marketing_manager
+"contract support administrator expert level": administrative_assistant
+"copy jr": copywriter
+"crew chief": superintendent
+"crew chief i - construction staking": surveyor
+"crew chief i - surveying": surveyor
+"crew member": store_associate
+"crm associate (lifecycle)": marketing_manager
+"customer care executive": support_specialist
+"customer support": support_specialist
+"customer support associate, bilingual - greek": support_specialist
+"customer support associate, bilingual - korean": support_specialist
+"customer support associate, bilingual - vietnamese": support_specialist
+"customs trade compliance expert": customs_specialist
+"cyber resilience architect, apj": security_engineer
+"dashmart variable schedule team member": warehouse_associate
+"data center subject matter expert": infrastructure_engineer
+"data processing executive": data_analyst
+"data steward": data_analyst
+"datacenter surge supervisor/lead": it_engineer
+"devsecops": devops_engineer
+"director of accounting": accounting_manager
+"director of collections": finance_manager
+"director of compliance": compliance_specialist
+"director of content": content_marketing_manager
+"director of contracts": contracts_manager
+"director of cybersecurity": security_engineer
+"director of data": data_science_manager
+"director of financial planning & analysis": finance_manager
+"director of fp&a": finance_manager
+"director of organic growth": marketing_manager
+"director of procurement": procurement_manager
+"director of professional services": engagement_manager
+"director of revenue accounting": revenue_accounting_manager
+"director of revenue cycle": finance_manager
+"director of revenue operations": revenue_operations_manager
+"director of sec reporting and technical accounting": accounting_manager
+"director of security operations": security_engineer
+"director of survey": surveyor
+"director of tax": tax_manager
+"director of total rewards": compensation_analyst
+"ecommerce manager, amazon & marketplace": marketing_manager
+"electrical journeyman": electrician
+"eligibility & coverage advocate": support_specialist
+"email marketer": marketing_manager
+"enablement lead, customer and partner support": sales_enablement_manager
+"endocrinologist": endocrinologist
+"enterprise ae": enterprise_account_executive
+"entry level mortgage sales training | sage home loans": loan_officer
+"equities research associate, asia solutions": financial_analyst
+"especialista de sucesso do cliente": customer_success_manager
+"evening concierge": receptionist
+"evening concierge": receptionist
+"executive campaign management": marketing_manager
+"executive director, global privacy": privacy_counsel
+"executive, client growth": account_manager
+"field mechanic": field_service_technician
+"field service mechanic": field_service_technician
+"financial solutions guide": loan_officer
+"fleet mechanic": diesel_mechanic
+"front office associate outpatient oncology bilingual": receptionist
+"global consultant, lifesciences": engagement_manager
+"global director of logistics & fulfilment": global_operations_manager
+"global head of creative": creative_director
+"group manager, product": group_product_manager
+"growth executive": business_development_manager
+"gtm enablement lead, smb": sales_enablement_manager
+"home care scheduler": administrative_assistant
+"human resource generalist": hr_generalist
+"inbound sales - italian market": sales_representative
+"industrial hygienist": industrial_hygienist
+"industrial hygienist - personal exposure monitoring": industrial_hygienist
+"industrial maintenance mechanic": maintenance_technician
+"infectious disease specialist for international humanitarian missions": physician
+"inside sales": sales_representative
+"inside sales flanders": sales_representative
+"inspection sales": sales_representative
+"instrument operator - surveying": surveyor
+"integrated systems technician trainee": field_service_technician
+"internal audit senior": internal_auditor
+"ip specialist, legal and brand investigation": legal_counsel
+"isda negotiator": contracts_negotiator
+"journeyman electrical - industrial": electrician
+"kcs (knowledge centered service) enablement expert": sales_enablement_manager
+"kyc systems admin - fenx": systems_administrator
+"l1 support team leader": technical_support_specialist
+"lead math tutor": teacher
+"legal support assistant": legal_assistant
+"licensed practical rehab nurse (lpn) full-time 12-hour night shift": licensed_practical_nurse
+"licensed school-based clinician": mental_health_therapist
+"life sciences audit senior": internal_auditor
+"loan processor": loan_officer
+"localization quality assurance analyst, french": qa_engineer
+"localization quality assurance analyst, german": qa_engineer
+"localization quality assurance analyst, russian": qa_engineer
+"maintenance runner": maintenance_technician
+"market access developer - c++": software_engineer
+"market support manager, dashmart": operations_manager
+"materials associate, warehouse": warehouse_associate
+"mechanic": field_service_technician
+"mechanical assembler": manufacturing_technician
+"mechanical subject matter expert": mechanical_engineer
+"media executive": paid_media_specialist
+"mental health nurse": registered_nurse
+"mental health relief": behavioral_specialist
+"mental health specialist 2": behavioral_specialist
+"mental health worker": behavioral_specialist
+"middle c# developer for ms365": software_engineer
+"msl/sr. msl - southern california": research_scientist
+"national sales assistant": sales_specialist
+"operations project, scheduler": operations_manager
+"outpatient clinician - fee for service": mental_health_therapist
+"outside sales": sales_representative
+"overnight resident concierge": receptionist
+"packaging support": warehouse_associate
+"participant experience liaison": support_specialist
+"participant recruitment partner/sourcer": recruiter
+"pastry cook": line_cook
+"patient access rep - behavioral health": receptionist
+"patient liaison": medical_assistant
+"periodontist": periodontist
+"personal chef - high nutritious food": chef
+"personal chef - meal delivery": chef
+"physics tutor": teacher
+"platform operations implementation": operations_manager
+"principal consultant, netsuite": implementation_consultant
+"principal software programmer, media services": software_engineer
+"principal technologist": solutions_architect
+"privacy fellow": privacy_counsel
+"prn nurse": registered_nurse
+"product finisher": manufacturing_technician
+"production assembler": manufacturing_technician
+"production scheduler": material_planner
+"production support": operations_manager
+"professional services manager, fleet": engagement_manager
+"program assistant": administrative_assistant
+"program director, adobe": program_manager
+"program director, rocket motor systems": program_manager
+"programmatic manager, goc": paid_media_specialist
+"project architect, education market": architect
+"project architect, luxury markets": architect
+"project architect, mission critical": architect
+"project architect, workplace": architect
+"proposal manager, justice + civic": solutions_consultant
+"proposal specialist, justice+civic": solutions_consultant
+"proposal specialist, luxury markets": solutions_consultant
+"qc manager, furniture": quality_inspector
+"qualified autism service practitioner-supervisor": behavioral_specialist
+"quality assurance tester": qa_engineer
+"quality specialist, intelligence systems": quality_inspector
+"radiologist": radiologist
+"recruitment resourcer for chefs": recruiter
+"registered histotechnician": clinical_lab_scientist
+"remote eoir case assistant va": legal_assistant
+"remote response associate, roadside assistance csr": support_specialist
+"remote uscis case assistant va": legal_assistant
+"reporter/msj": journalist
+"residential door installer": field_service_technician
+"residential rehab coordinator, $22.00": social_worker
+"residential relief - developmental disabilities": direct_support_professional
+"retail grocery assistant": store_associate
+"retail sales keyholder": store_associate
+"rfp delivery manager, software development": program_manager
+"royalty analyst, merchandise licensing": financial_analyst
+"sales support": sales_specialist
+"sales team leader": sales_manager
+"sat tutor": teacher
+"scheduler": administrative_assistant
+"scientist, analytical development": research_scientist
+"scrum coach": scrum_master
+"search senior executive, goc": paid_media_specialist
+"secretary": administrative_assistant
+"sector head of software": engineering_manager
+"security design & integration manager nordics": security_engineer
+"senior associate/manager, corporate fp&a & tax": financial_analyst
+"senior atlassian admin": it_engineer
+"senior automation qa": qa_engineer
+"senior business developer gift card": business_development_manager
+"senior c# developer for ms365": software_engineer
+"senior client services manager, growth": customer_success_manager
+"senior consultant, professional services": engagement_manager
+"senior cyber class action attorney": attorney
+"senior executive": recruiter
+"senior executive search": recruiter
+"senior finance associate, product": financial_analyst
+"senior general liability attorney": attorney
+"senior growth marketer": marketing_manager
+"senior hrbp": hr_business_partner
+"senior integration technician, first shift": integration_engineer
+"senior integration technician, second shift": integration_engineer
+"senior mainframe systems programmer - z/os": software_engineer
+"senior network programmer": software_engineer
+"senior principal, ml/ai": machine_learning_engineer
+"senior project designer, higher education": product_designer
+"senior research executive": research_scientist
+"senior sales enablement partner, alliances": sales_enablement_manager
+"senior scheduler": operations_manager
+"senior scientist i, clinical biomarker development": research_scientist
+"senior scientist, computational biology": research_scientist
+"senior security programmer": security_engineer
+"senior solution consultant, oil & gas planning": solutions_consultant
+"senior solutions lead - pre-sales & solution strategy": solutions_consultant
+"senior staff tech lead manager customer & partner integrations": engineering_manager
+"senior staff, applied science": research_scientist
+"senior technical solutions manager, signals": solutions_engineer
+"senior traditional media executive": paid_media_specialist
+"senior welder": manufacturing_technician
+"seo specialist, healthcare": marketing_manager
+"shipping & receiving associate, warehouse": warehouse_associate
+"snr integrated designer with motion skills": motion_designer
+"software development manager, ai builder tools": engineering_manager
+"software tester": qa_engineer
+"solution architect & pre-sales, netsuite": solutions_architect
+"solution architect- arcgis": solutions_architect
+"sourcing director, dress & skirt": procurement_manager
+"special educator ei/seis": special_education_teacher
+"sprinkler sales": sales_representative
+"sr. advertising manager, commerce": marketing_manager
+"sr. advertising manager, commerce": marketing_manager
+"sr. planner, paid search": paid_media_specialist
+"sr. strategist, paid search": paid_media_specialist
+"staff finance associate, corporate": financial_analyst
+"staff sre - observability": site_reliability_engineer
+"strategic deployment manager, life science": project_manager
+"strategic engagement lead, life sciences": business_development_manager
+"strategic projects lead, coding": technical_program_manager
+"strategic projects lead, generative ai": technical_program_manager
+"strategic projects lead, managed services": program_manager
+"strategist, cio office": financial_analyst
+"strategist, cio office": financial_analyst
+"study skills tutor": teacher
+"surgeon for international humanitarian missions": physician
+"sweathouz- studio manager, san diego": retail_store_manager
+"tech audit senior": internal_auditor
+"technical director, advanced packaging": director_of_engineering
+"technical specialist- integration": integration_engineer
+"technical support": technical_support_specialist
+"tig welder": manufacturing_technician
+"transaction principal": transaction_coordinator
+"transportation litigation associate attorney": attorney
+"ui designer ii": product_designer
+"utility steward": housekeeper
+"veterinary ophthalmologist": veterinarian
+"videographer": content_creator
+"vip host": host
+"vip host": host
+"warehouse supervisor i- ambient/cooler or freezer": area_manager
+"wealth advisor, ultra high net worth": portfolio_manager
+"web designer & ux sr.": ux_designer
+"intelligence analyst": intelligence_analyst
+"digital network exploitation analyst": intelligence_analyst
+"developer relations engineer": developer_relations_engineer
+"ai evangelist": developer_relations_engineer
+"director of developer relations": developer_relations_engineer
+"technical instructor": learning_development_manager
+"director of talent development": learning_development_manager

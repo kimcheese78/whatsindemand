@@ -8,6 +8,27 @@ from app.scrapers.ashby.scraper import AshbyScraper
 from app.scrapers.workable.scraper import WorkableScraper
 from app.services.skill_extractor import SkillExtractor, extract_requirements_text
 from app.utils.role_normalizer_v2 import normalize_title, _should_skip as _is_placeholder_title
+import re as _re
+
+# Noise patterns for role titles — mirrors skill discovery filter
+_ROLE_NOISE_RE = _re.compile(
+    r'\bintern(?:ship)?\b|\bvolunteer\b|\bapprentice\b|\bwerkstudent\b'
+    r'|\bpraktikum\b|\bstagiaire\b'
+    r'|\bgeneral application\b|\bopen application\b|\bspontaneous\b'
+    r'|\bdon\'?t see\b|\bexpress interest\b|\btalent pool\b|\bfuture role\b'
+    r'|\bresume submission\b|\bsubmit your\b|\bjoin our\b|\bkeep me in mind\b'
+    r'|\btest job\b|\bbug bash\b|\bunicorn job\b|\bdummy\b',
+    _re.IGNORECASE,
+)
+
+
+def _is_noise_title(title: str) -> bool:
+    if len(title.strip()) < 3 or len(title.strip()) > 120:
+        return True
+    non_ascii = sum(1 for c in title if ord(c) >= 128)
+    if non_ascii / max(len(title), 1) > 0.3:
+        return True
+    return bool(_ROLE_NOISE_RE.search(title))
 from bs4 import BeautifulSoup
 from datetime import datetime
 
@@ -288,6 +309,8 @@ class JobAggregator:
 
     def _queue_role_candidate(self, raw_title: str):
         """Upsert an unmatched raw title into unmatched_titles for manual review."""
+        if _is_noise_title(raw_title):
+            return
         from datetime import date
         today = date.today()
         existing = UnmatchedTitle.query.filter_by(raw_title=raw_title).first()

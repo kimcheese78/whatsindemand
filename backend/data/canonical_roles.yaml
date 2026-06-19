@@ -1592,6 +1592,31 @@ surveyor:
   category: Operations
   job_family: Construction
 
+architect:
+  name: Architect
+  category: Operations
+  job_family: Architecture
+
+developer_relations_engineer:
+  name: Developer Relations Engineer
+  category: Engineering
+  job_family: Developer Relations
+
+learning_development_manager:
+  name: Learning & Development Manager
+  category: People
+  job_family: Learning & Development
+
+intelligence_analyst:
+  name: Intelligence Analyst
+  category: Engineering
+  job_family: Defense & Intelligence
+
+industrial_hygienist:
+  name: Industrial Hygienist
+  category: Operations
+  job_family: EHS
+
 fire_protection_technician:
   name: Fire Protection Technician
   category: Operations
@@ -1614,6 +1639,26 @@ dermatologist:
   name: Dermatologist
   category: Healthcare
   job_family: Specialty Medicine
+
+endocrinologist:
+  name: Endocrinologist
+  category: Healthcare
+  job_family: Specialty Medicine
+
+periodontist:
+  name: Periodontist
+  category: Healthcare
+  job_family: Dental
+
+anesthesiologist:
+  name: Anesthesiologist
+  category: Healthcare
+  job_family: Specialty Medicine
+
+radiologist:
+  name: Radiologist
+  category: Healthcare
+  job_family: Imaging
 
 pediatrician:
   name: Pediatrician

@@ -316,7 +316,48 @@ def apply_decisions(decisions: list, role_map: dict[str, int]):
     db.session.commit()
     print(f'  Refreshed counts for {len(roles)} roles')
 
+    # Write new aliases to aliases.yaml so the normalizer classifies these
+    # titles automatically at scrape time — prevents re-queueing next run.
+    _update_aliases_yaml(decisions)
+
     return stats
+
+
+def _update_aliases_yaml(decisions: list) -> None:
+    """Append newly mapped titles to aliases.yaml as de-leveled aliases."""
+    import yaml as _yaml
+    from app.utils.role_normalizer_v2 import _delevel, _load_taxonomy
+
+    canonical_yaml, existing_aliases = _load_taxonomy()
+    # Reverse map: role name (lowercase) → canonical_id
+    reverse_map = {v['name'].lower(): k for k, v in canonical_yaml.items()}
+
+    aliases_path = os.path.join(DATA_DIR, '..', 'data', 'aliases.yaml')
+    aliases_path = os.path.normpath(aliases_path)
+
+    new_entries = []
+    for dec in decisions:
+        if dec['action'] not in ('map', 'new_role'):
+            continue
+        raw = dec['raw_title']
+        role_name = dec.get('role') or dec.get('suggested_title', '')
+        canonical_id = reverse_map.get(role_name.lower())
+        if not canonical_id:
+            continue
+        deleveled = _delevel(raw)
+        if not deleveled or deleveled in existing_aliases:
+            continue
+        new_entries.append((deleveled, canonical_id))
+
+    if not new_entries:
+        return
+
+    with open(aliases_path, 'a') as f:
+        f.write(f'\n# Auto-added by ai_map_roles --apply\n')
+        for title, cid in sorted(new_entries):
+            f.write(f'"{title}": {cid}\n')
+
+    print(f'  aliases.yaml: added {len(new_entries)} new entries')
 
 
 # ── Main ──────────────────────────────────────────────────────────────────────
