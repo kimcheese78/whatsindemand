@@ -12,6 +12,7 @@ Usage:
 import sys
 import os
 import re
+import time
 import argparse
 from datetime import datetime
 
@@ -25,20 +26,66 @@ from app import create_app
 from app.models import db, Skill, JobSkill
 from app.services.skill_extractor import extract_requirements_text
 from sqlalchemy.dialects.postgresql import insert as pg_insert
+from sqlalchemy.exc import OperationalError
 
 app = create_app()
 
 BATCH_SIZE = 500
+MAX_RETRIES = 5
+RETRY_DELAY = 10  # seconds
+
+
+def fetch_batch(last_id):
+    """Fetch one batch, retrying on connection errors."""
+    for attempt in range(MAX_RETRIES):
+        try:
+            with app.app_context():
+                rows = db.session.execute(db.text("""
+                    SELECT id, description_text FROM jobs
+                    WHERE id > :last_id
+                      AND description_text IS NOT NULL
+                      AND description_text != ''
+                    ORDER BY id
+                    LIMIT :limit
+                """), {'last_id': last_id, 'limit': BATCH_SIZE}).fetchall()
+                return list(rows)
+        except OperationalError as e:
+            if attempt < MAX_RETRIES - 1:
+                print(f"  Connection error on fetch (attempt {attempt+1}), retrying in {RETRY_DELAY}s...", flush=True)
+                time.sleep(RETRY_DELAY)
+            else:
+                raise
+
+
+def insert_batch(new_rows):
+    """Insert one batch, retrying on connection errors."""
+    for attempt in range(MAX_RETRIES):
+        try:
+            with app.app_context():
+                if new_rows:
+                    db.session.execute(
+                        pg_insert(JobSkill.__table__).on_conflict_do_nothing(
+                            index_elements=['job_id', 'skill_id']
+                        ),
+                        new_rows,
+                    )
+                db.session.commit()
+            return
+        except OperationalError as e:
+            if attempt < MAX_RETRIES - 1:
+                print(f"  Connection error on insert (attempt {attempt+1}), retrying in {RETRY_DELAY}s...", flush=True)
+                time.sleep(RETRY_DELAY)
+            else:
+                raise
 
 
 def run(skill_ids: list) -> None:
+    # Load skill patterns in one short-lived connection
     with app.app_context():
         skills = Skill.query.filter(Skill.id.in_(skill_ids)).all()
         if not skills:
             print("No skills found for given IDs.")
             return
-
-        # Build (skill_id, [patterns]) for all new skills
         skill_patterns = []
         for skill in skills:
             terms = [skill.name] + (skill.aliases or [])
@@ -49,55 +96,41 @@ def run(skill_ids: list) -> None:
             if patterns:
                 skill_patterns.append((skill.id, patterns))
 
-        print(f"Backfilling {len(skill_patterns)} skill(s) in a single pass over all jobs...")
-        start = datetime.utcnow()
+    print(f"Backfilling {len(skill_patterns)} skill(s) in a single pass over all jobs...")
+    start = datetime.utcnow()
 
-        last_id = 0
-        total_inserted = 0
-        jobs_processed = 0
+    last_id = 0
+    total_inserted = 0
+    jobs_processed = 0
 
-        while True:
-            rows = db.session.execute(db.text("""
-                SELECT id, description_text FROM jobs
-                WHERE id > :last_id
-                  AND description_text IS NOT NULL
-                  AND description_text != ''
-                ORDER BY id
-                LIMIT :limit
-            """), {'last_id': last_id, 'limit': BATCH_SIZE}).fetchall()
+    while True:
+        # Each batch uses its own short-lived connection — avoids Railway proxy timeouts
+        rows = fetch_batch(last_id)
+        if not rows:
+            break
 
-            if not rows:
-                break
+        new_rows = []
+        for job_id, description_text in rows:
+            search_text, _ = extract_requirements_text(description_text)
+            for skill_id, patterns in skill_patterns:
+                if any(p.search(search_text) for p in patterns):
+                    new_rows.append({
+                        'job_id': job_id,
+                        'skill_id': skill_id,
+                        'is_required': True,
+                    })
 
-            new_rows = []
-            for job_id, description_text in rows:
-                search_text, _ = extract_requirements_text(description_text)
-                for skill_id, patterns in skill_patterns:
-                    if any(p.search(search_text) for p in patterns):
-                        new_rows.append({
-                            'job_id': job_id,
-                            'skill_id': skill_id,
-                            'is_required': True,
-                        })
+        insert_batch(new_rows)
 
-            if new_rows:
-                db.session.execute(
-                    pg_insert(JobSkill.__table__).on_conflict_do_nothing(
-                        index_elements=['job_id', 'skill_id']
-                    ),
-                    new_rows,
-                )
-            db.session.commit()
+        last_id = rows[-1][0]
+        jobs_processed += len(rows)
+        total_inserted += len(new_rows)
+        elapsed = (datetime.utcnow() - start).total_seconds()
+        rate = jobs_processed / elapsed if elapsed > 0 else 0
+        print(f"  {jobs_processed:,} jobs  ({rate:.0f}/s)  {total_inserted:,} inserted", flush=True)
 
-            last_id = rows[-1][0]
-            jobs_processed += len(rows)
-            elapsed = (datetime.utcnow() - start).total_seconds()
-            rate = jobs_processed / elapsed if elapsed > 0 else 0
-            print(f"  {jobs_processed:,} jobs  ({rate:.0f}/s)  {total_inserted + len(new_rows):,} inserted", flush=True)
-            total_inserted += len(new_rows)
-
-        duration = (datetime.utcnow() - start).total_seconds()
-        print(f"\nDone. {total_inserted:,} job_skills rows inserted for {len(skill_patterns)} skills in {duration:.0f}s.")
+    duration = (datetime.utcnow() - start).total_seconds()
+    print(f"\nDone. {total_inserted:,} job_skills rows inserted for {len(skill_patterns)} skills in {duration:.0f}s.")
 
 
 if __name__ == '__main__':
