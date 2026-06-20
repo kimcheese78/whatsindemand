@@ -2788,7 +2788,7 @@ const DashboardSidebar = () => {
   ];
 
   return (
-    <div className="hidden lg:flex w-64 border-r border-line flex-col fixed h-screen bg-slate-950">
+    <div className="hidden lg:flex w-64 border-r border-line flex-col fixed h-screen bg-slate-800">
       {/* Logo & User */}
       <div className="p-6 border-b border-line">
         <button 
