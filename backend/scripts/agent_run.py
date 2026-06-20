@@ -55,7 +55,6 @@ def run_discover_skills():
         discover_run()
         duration = (datetime.utcnow() - start).total_seconds()
         log(f"=== Skill discovery done in {duration/60:.1f} min ===")
-        # Pull stats from the DiscoveryRun record written by discover_run()
         run_rec = DiscoveryRun.query.filter_by(status='completed').order_by(
             DiscoveryRun.started_at.desc()
         ).first()
@@ -89,6 +88,8 @@ Scrape:
   Duration: {scrape_stats['duration_min']} min
 {discover_section}
 Total run time: {total_duration_min:.1f} min
+
+Extraction and backfill will run automatically after skill review completes.
 """
     html = "<pre style='font-family:monospace'>" + text.replace("<", "&lt;").replace(">", "&gt;") + "</pre>"
     return text, html

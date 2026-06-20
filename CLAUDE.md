@@ -58,14 +58,14 @@ DATABASE_URL='postgresql://...' PYTHONPATH=. venv/bin/python scripts/foo.py
 
 `config.py` rewrites `postgresql://` → `postgresql+psycopg://` for psycopg3 compatibility — pass DSNs in plain `postgresql://` form.
 
-## Pipeline (4 steps)
+## Pipeline (4 steps — fully automated)
 
-1. **Scrape** — `weekly_scrape.py` (or `aggregator.scrape_from_db()` in `agent_run.py`). Pulls fresh jobs from all `scrape_enabled=true` companies (column is `ats_type`, not `scraper_type`).
-2. **Discover** — `discover_new_skills.py`. For jobs since last `DiscoveryRun.started_at`, runs `extract_requirements_text()` (which calls `parse_jd_sections()`) and surfaces new skill candidates.
-3. **Review** — `review_skill_candidates.py`. Approve/reject candidates → `Skill` rows with `is_verified=True`.
-4. **Extract** — `extract_skills.py` (incremental) or `reextract_all_skills.py` (full). Populates `job_skills` and `Skill.total_job_count`.
+1. **Scrape** — `agent_run.py` on Railway (weekly cron). Pulls fresh jobs from all `scrape_enabled=true` companies.
+2. **Discover** — runs automatically inside `agent_run.py` after scrape. Surfaces new skill candidates.
+3. **Review** — automated weekly via Claude Code remote routine (`trig_01JAW9jj5w3hQi9asFSAQQaL`, Sunday 00:00 UTC = 09:00 KST). Claude classifies skill candidates and maps unmatched role titles inline — no Anthropic API credits consumed.
+4. **Extract** — runs automatically inside `agent_run.py` after discovery (`extract_dirty_jobs()`).
 
-Railway's `agent_run.py` cron currently runs **only Step 1**. Steps 2 + 3 are manual until we wire them in.
+Backfill of newly promoted skills runs inside the Sunday review routine after promotion (`backfill_skills.py --min-id FIRST_ID`).
 
 ## Skill taxonomy
 
