@@ -34,10 +34,7 @@ frontend/src/
 
 ## Database
 
-**Prod DSN** (Railway proxy, do not commit beyond this file):
-```
-postgresql://postgres:gnhrxOkYHTPaEIYuetmcXptfkTcvnLPp@switchyard.proxy.rlwy.net:48202/railway
-```
+**Prod DSN** — get from Railway dashboard (Variables → DATABASE_URL). Do not commit credentials.
 
 **Local DSN** is in `backend/.env` (loaded by `config.py` at import time).
 
