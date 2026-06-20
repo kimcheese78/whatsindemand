@@ -15,8 +15,8 @@ import os
 import sys
 from collections import defaultdict
 
-PROD_DSN = 'postgresql://postgres:gnhrxOkYHTPaEIYuetmcXptfkTcvnLPp@switchyard.proxy.rlwy.net:48202/railway'
-os.environ.setdefault('DATABASE_URL', PROD_DSN)
+if not os.environ.get('DATABASE_URL'):
+    raise SystemExit('ERROR: DATABASE_URL must be set. Pass it as an env var — see CLAUDE.md.')
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from dotenv import load_dotenv

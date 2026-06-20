@@ -12,9 +12,8 @@ import os
 import sys
 from datetime import datetime
 
-PROD_DSN = 'postgresql://postgres:gnhrxOkYHTPaEIYuetmcXptfkTcvnLPp@switchyard.proxy.rlwy.net:48202/railway'
-# Must be set before create_app() imports config.py which calls load_dotenv()
-os.environ.setdefault('DATABASE_URL', PROD_DSN)
+if not os.environ.get('DATABASE_URL'):
+    raise SystemExit('ERROR: DATABASE_URL must be set. Pass it as an env var — see CLAUDE.md.')
 
 from app import create_app
 from app.models import db, Skill

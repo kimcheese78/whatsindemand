@@ -34,10 +34,10 @@ EXISTING_SLUGS = {c["slug"] for c in COMPANIES if c["ats"] == "greenhouse"}
 
 # Also pull slugs from the prod DB so we don't re-add companies already scraped
 def _load_db_slugs() -> set:
-    db_url = os.getenv(
-        "DATABASE_URL",
-        "postgresql://postgres:gnhrxOkYHTPaEIYuetmcXptfkTcvnLPp@switchyard.proxy.rlwy.net:48202/railway"
-    )
+    db_url = os.environ.get("DATABASE_URL")
+    if not db_url:
+        print("DATABASE_URL not set — skipping DB slug check.")
+        return set()
     try:
         import psycopg2
         conn = psycopg2.connect(db_url)

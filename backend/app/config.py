@@ -9,7 +9,7 @@ class Config:
     """Base configuration"""
     
     # Flask
-    SECRET_KEY = os.getenv('SECRET_KEY', 'dev-secret-key-change-this')
+    SECRET_KEY = os.getenv('SECRET_KEY')
     FLASK_APP = os.getenv('FLASK_APP', 'run.py')
     FLASK_ENV = os.getenv('FLASK_ENV', 'development')
     
@@ -27,7 +27,7 @@ class Config:
     }
     
     # JWT
-    JWT_SECRET_KEY = os.getenv('JWT_SECRET_KEY', 'jwt-secret-change-this')
+    JWT_SECRET_KEY = os.getenv('JWT_SECRET_KEY')
     JWT_ACCESS_TOKEN_EXPIRES = timedelta(days=7)
     
     # File Upload
@@ -64,6 +64,8 @@ class DevelopmentConfig(Config):
     """Development configuration"""
     DEBUG = True
     TESTING = False
+    SECRET_KEY = os.getenv('SECRET_KEY', 'dev-only-secret-not-for-production')
+    JWT_SECRET_KEY = os.getenv('JWT_SECRET_KEY', 'dev-only-jwt-secret-not-for-production')
     # In dev, allow any origin so localhost:3000, 127.0.0.1, etc. all work.
     CORS_ORIGINS = Config.CORS_ORIGINS or ['*']
 
@@ -71,13 +73,13 @@ class ProductionConfig(Config):
     """Production configuration"""
     DEBUG = False
     TESTING = False
-    # In prod, CORS_ORIGINS must be set explicitly via env. Refuse to boot otherwise.
+    # In prod, required secrets must be set explicitly via env. Refuse to boot otherwise.
     @classmethod
     def init_app(cls, app):
-        if not app.config.get('CORS_ORIGINS'):
+        missing = [v for v in ('SECRET_KEY', 'JWT_SECRET_KEY', 'CORS_ORIGINS') if not app.config.get(v)]
+        if missing:
             raise RuntimeError(
-                'CORS_ORIGINS env var must be set in production '
-                '(e.g. "https://whatsindemand.com,https://www.whatsindemand.com")'
+                f'Missing required env vars for production: {", ".join(missing)}'
             )
 
 class TestingConfig(Config):

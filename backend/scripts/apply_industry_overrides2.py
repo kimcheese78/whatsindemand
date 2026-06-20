@@ -2,8 +2,8 @@
 Second batch of manual industry overrides for remaining Other companies.
 """
 import os, sys
-PROD_DSN = 'postgresql://postgres:gnhrxOkYHTPaEIYuetmcXptfkTcvnLPp@switchyard.proxy.rlwy.net:48202/railway'
-os.environ.setdefault('DATABASE_URL', PROD_DSN)
+if not os.environ.get('DATABASE_URL'):
+    raise SystemExit('ERROR: DATABASE_URL must be set. Pass it as an env var — see CLAUDE.md.')
 from app import create_app
 from app.models import Company, db
 from sqlalchemy import text

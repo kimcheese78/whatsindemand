@@ -3,8 +3,8 @@ Manual industry overrides for companies that couldn't be classified by keyword r
 Dry-run by default; --apply to write.
 """
 import os, sys
-PROD_DSN = 'postgresql://postgres:gnhrxOkYHTPaEIYuetmcXptfkTcvnLPp@switchyard.proxy.rlwy.net:48202/railway'
-os.environ.setdefault('DATABASE_URL', PROD_DSN)
+if not os.environ.get('DATABASE_URL'):
+    raise SystemExit('ERROR: DATABASE_URL must be set. Pass it as an env var — see CLAUDE.md.')
 from app import create_app
 from app.models import Company, db
 
