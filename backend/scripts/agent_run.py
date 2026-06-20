@@ -14,6 +14,8 @@ import sys
 import traceback
 from datetime import datetime
 
+import requests
+
 backend_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, backend_dir)
 
@@ -70,6 +72,29 @@ def run_discover_skills():
         return {"duration_min": 0, "jobs_processed": 0, "candidates_upserted": 0, "error": str(e)}
 
 
+CCR_TRIGGER_ID = 'trig_01JAW9jj5w3hQi9asFSAQQaL'
+
+
+def trigger_ccr_review():
+    """Fire the CCR review routine immediately via claude.ai API."""
+    token = os.environ.get('CLAUDE_API_TOKEN')
+    if not token:
+        log("CLAUDE_API_TOKEN not set — CCR review routine not triggered (will fire on weekly fallback)")
+        return
+    try:
+        resp = requests.post(
+            f'https://api.claude.ai/v1/code/triggers/{CCR_TRIGGER_ID}/run',
+            headers={'Authorization': f'Bearer {token}'},
+            timeout=30,
+        )
+        if resp.status_code == 200:
+            log("CCR review routine triggered successfully")
+        else:
+            log(f"CCR trigger failed ({resp.status_code}) — will fire on weekly fallback: {resp.text[:200]}")
+    except Exception as e:
+        log(f"CCR trigger error — will fire on weekly fallback: {e}")
+
+
 def format_email(scrape_stats, discover_stats, total_duration_min):
     discover_section = f"""
 Skill discovery:
@@ -111,6 +136,8 @@ def main():
                             "failed": -1, "jobs_saved": 0, "error": str(e)}
 
         discover_stats = run_discover_skills()
+
+    trigger_ccr_review()
 
     total_duration = (datetime.utcnow() - start).total_seconds() / 60
 
