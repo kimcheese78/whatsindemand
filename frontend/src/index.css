@@ -10,7 +10,7 @@
 
 @layer base {
   html, body, #root {
-    background-color: #0a0a0a;
+    background-color: #0f172a;
     color: rgb(255 255 255 / 0.95);
   }
   /* color-scheme tells the browser this is a dark UI, which makes the

@@ -852,7 +852,7 @@ const MultiSelectDropdown = ({
       </button>
 
       {isOpen && (
-        <div className="absolute top-full left-0 mt-1 w-64 bg-zinc-900 border border-line-strong rounded-xl z-30 shadow-xl max-h-72 overflow-y-auto">
+        <div className="absolute top-full left-0 mt-1 w-64 bg-slate-900 border border-line-strong rounded-xl z-30 shadow-xl max-h-72 overflow-y-auto">
           {/* All option */}
           <label className="flex items-center gap-3 px-4 py-3 hover:bg-surface cursor-pointer border-b border-line">
             <input
@@ -1003,7 +1003,7 @@ const LocationDropdown = ({ value, onChange, className = '' }) => {
       </button>
 
       {isOpen && (
-        <div className="absolute top-full left-0 mt-1 w-72 bg-zinc-900 border border-line-strong rounded-xl z-30 shadow-xl max-h-[320px] overflow-y-auto">
+        <div className="absolute top-full left-0 mt-1 w-72 bg-slate-900 border border-line-strong rounded-xl z-30 shadow-xl max-h-[320px] overflow-y-auto">
           {/* All Locations */}
           <label className="flex items-center gap-3 px-4 py-3 hover:bg-surface cursor-pointer border-b border-line">
             <input
@@ -1018,7 +1018,7 @@ const LocationDropdown = ({ value, onChange, className = '' }) => {
           {/* Regions */}
           {groupedLocations.map((region) => (
             <div key={region.region}>
-              <label className="flex items-center gap-3 px-4 py-2 bg-zinc-950 hover:bg-surface cursor-pointer sticky top-0">
+              <label className="flex items-center gap-3 px-4 py-2 bg-slate-950 hover:bg-surface cursor-pointer sticky top-0">
                 <input
                   type="checkbox"
                   checked={isRegionFullySelected(region.region)}
@@ -1101,7 +1101,7 @@ const SingleSelectDropdown = ({
       </button>
 
       {isOpen && (
-        <div className="absolute top-full left-0 mt-1 w-full min-w-[180px] bg-zinc-900 border border-line-strong rounded-xl z-30 shadow-xl max-h-64 overflow-y-auto">
+        <div className="absolute top-full left-0 mt-1 w-full min-w-[180px] bg-slate-900 border border-line-strong rounded-xl z-30 shadow-xl max-h-64 overflow-y-auto">
           {options.map((option, idx) => {
             const optValue = getOptionValue(option);
             const optLabel = getOptionLabel(option);
@@ -1236,7 +1236,7 @@ const LandingScreen = () => {
   const { setCurrentScreen } = useApp();
   
   return (
-    <div className="min-h-screen bg-black text-white flex flex-col">
+    <div className="min-h-screen bg-slate-900 text-white flex flex-col">
       <NavBar />
 
       <div className="flex-1">
@@ -1311,7 +1311,7 @@ const LoginScreen = () => {
   };
 
   return (
-    <div className="min-h-screen bg-black text-white flex flex-col">
+    <div className="min-h-screen bg-slate-900 text-white flex flex-col">
       <NavBar />
 
       <div className="flex-1">
@@ -1338,7 +1338,7 @@ const LoginScreen = () => {
               <div className="w-full border-t border-line-strong"></div>
             </div>
             <div className="relative flex justify-center text-xs">
-              <span className="px-3 bg-black text-ink-muted uppercase tracking-wider">Or continue with email</span>
+              <span className="px-3 bg-slate-900 text-ink-muted uppercase tracking-wider">Or continue with email</span>
             </div>
           </div>
 
@@ -1481,7 +1481,7 @@ const RoleSelectionScreen = () => {
   };
 
   return (
-    <div className="min-h-screen bg-black text-white flex flex-col">
+    <div className="min-h-screen bg-slate-900 text-white flex flex-col">
       <NavBar />
   
       <div className="flex-1">
@@ -1558,7 +1558,7 @@ const RoleSelectionScreen = () => {
 
               {/* Dropdown - only show when no role selected */}
               {showRoleDropdown && filteredRoles.length > 0 && !selectedRole && (
-                <div className="absolute w-full mt-2 bg-zinc-900 border-2 border-line-strong rounded-xl max-h-72 overflow-y-auto z-20">
+                <div className="absolute w-full mt-2 bg-slate-900 border-2 border-line-strong rounded-xl max-h-72 overflow-y-auto z-20">
                   {filteredRoles.slice(0, 12).map(({ role, matchedAlias }, idx) => {
                     const roleTitle = role.title || role;
                     const jobCount = role.job_count;
@@ -1707,7 +1707,7 @@ const SignupScreen = () => {
   const seniorityLabel = seniorities.find(s => s.id === selectedSeniority)?.label || '';
 
   return (
-    <div className="min-h-screen bg-black text-white flex flex-col">
+    <div className="min-h-screen bg-slate-900 text-white flex flex-col">
       <NavBar />
 
       <div className="flex-1">
@@ -1736,7 +1736,7 @@ const SignupScreen = () => {
               <div className="w-full border-t border-line-strong"></div>
             </div>
             <div className="relative flex justify-center text-xs">
-              <span className="px-3 bg-black text-ink-muted uppercase tracking-wider">Or continue with email</span>
+              <span className="px-3 bg-slate-900 text-ink-muted uppercase tracking-wider">Or continue with email</span>
             </div>
           </div>
 
@@ -1857,7 +1857,7 @@ const MobileHeader = () => {
   return (
     <div className="lg:hidden">
       {/* Top Bar */}
-      <div className="flex items-center justify-between p-4 border-b border-line bg-zinc-950">
+      <div className="flex items-center justify-between p-4 border-b border-line bg-slate-950">
         <button 
           onClick={() => setCurrentScreen('landing')}
           className="text-sm font-medium tracking-widest"
@@ -1874,7 +1874,7 @@ const MobileHeader = () => {
       </div>
 
       {/* Tab Bar */}
-      <div className="flex border-b border-line bg-zinc-950 overflow-x-auto">
+      <div className="flex border-b border-line bg-slate-950 overflow-x-auto">
         {tabs.map((tab) => (
           <button
             key={tab.id}
@@ -1892,7 +1892,7 @@ const MobileHeader = () => {
 
       {/* Dropdown Menu */}
       {menuOpen && (
-        <div className="absolute top-14 right-4 z-50 w-64 bg-zinc-900 border border-line rounded-xl shadow-xl">
+        <div className="absolute top-14 right-4 z-50 w-64 bg-slate-900 border border-line rounded-xl shadow-xl">
           {user && (
             <div className="p-4 border-b border-line">
               <div className="font-medium text-sm">{user.full_name || 'User'}</div>
@@ -2141,7 +2141,7 @@ const SkillsInputScreen = () => {
   const selectedCount = selectedIds.size;
 
   return (
-    <div className="min-h-screen bg-black text-white flex flex-col">
+    <div className="min-h-screen bg-slate-900 text-white flex flex-col">
       <NavBar />
 
       <div className="flex-1">
@@ -2198,10 +2198,10 @@ const SkillsInputScreen = () => {
                 onChange={(e) => { setSkillQuery(e.target.value); setShowSkillDropdown(true); }}
                 onFocus={() => setShowSkillDropdown(true)}
                 placeholder="Search skills…"
-                className="w-full bg-black border border-line rounded-lg p-3 text-small text-ink placeholder-ink-faint focus:border-white focus:outline-none"
+                className="w-full bg-slate-950 border border-line rounded-lg p-3 text-small text-ink placeholder-ink-faint focus:border-white focus:outline-none"
               />
               {showSkillDropdown && skillQuery && (
-                <div className="absolute left-0 right-0 top-full mt-1 bg-zinc-900 border border-line-strong rounded-xl z-10 max-h-60 overflow-y-auto shadow-lg">
+                <div className="absolute left-0 right-0 top-full mt-1 bg-slate-900 border border-line-strong rounded-xl z-10 max-h-60 overflow-y-auto shadow-lg">
                   {skillMatches.length === 0 ? (
                     <div className="px-3 py-2 text-small text-ink-faint">No matching skills.</div>
                   ) : (
@@ -2560,7 +2560,7 @@ const DashboardScreen = () => {
   }
 
   return (
-    <div className="min-h-screen bg-black text-white flex flex-col lg:flex-row">
+    <div className="min-h-screen bg-slate-900 text-white flex flex-col lg:flex-row">
       <DashboardSidebar />
       <MobileHeader />
 
@@ -2788,7 +2788,7 @@ const DashboardSidebar = () => {
   ];
 
   return (
-    <div className="hidden lg:flex w-64 border-r border-line flex-col fixed h-screen bg-zinc-950">
+    <div className="hidden lg:flex w-64 border-r border-line flex-col fixed h-screen bg-slate-950">
       {/* Logo & User */}
       <div className="p-6 border-b border-line">
         <button 
@@ -3891,7 +3891,7 @@ const DotSpinner = ({ size = 48, tone = 'white', className = '' }) => {
 };
 
 const LoadingScreen = () => (
-  <div className="min-h-screen bg-black text-white flex items-center justify-center">
+  <div className="min-h-screen bg-slate-900 text-white flex items-center justify-center">
     <div className="text-center">
       <div className="mb-8 flex justify-center">
         <DotSpinner size={48} tone="white" />
@@ -3906,7 +3906,7 @@ const LoadingScreen = () => (
 // INITIAL LOADING SCREEN (for app startup)
 // ============================================
 const InitialLoadingScreen = () => (
-  <div className="min-h-screen bg-black text-white flex items-center justify-center">
+  <div className="min-h-screen bg-slate-900 text-white flex items-center justify-center">
     <div className="text-center">
       <div className="mb-8 flex justify-center">
         <DotSpinner size={48} tone="white" />
@@ -3941,7 +3941,7 @@ const ForgotPasswordScreen = () => {
   };
 
   return (
-    <div className="min-h-screen bg-black text-white flex flex-col">
+    <div className="min-h-screen bg-slate-900 text-white flex flex-col">
       <NavBar />
       <div className="flex-1">
         <div className="max-w-md mx-auto px-6 pt-16 pb-24">
@@ -4027,7 +4027,7 @@ const ResetPasswordScreen = () => {
   };
 
   return (
-    <div className="min-h-screen bg-black text-white flex flex-col">
+    <div className="min-h-screen bg-slate-900 text-white flex flex-col">
       <NavBar />
       <div className="flex-1">
         <div className="max-w-md mx-auto px-6 pt-16 pb-24">
@@ -4117,7 +4117,7 @@ const VerifyEmailScreen = () => {
   }, [token, setUser, initialLoading]);
 
   return (
-    <div className="min-h-screen bg-black text-white flex flex-col">
+    <div className="min-h-screen bg-slate-900 text-white flex flex-col">
       <NavBar />
       <div className="flex-1">
         <div className="max-w-md mx-auto px-6 pt-16 pb-24 text-center">
@@ -4160,7 +4160,7 @@ const VerifyEmailScreen = () => {
 const NotFoundScreen = () => {
   const { setCurrentScreen, user } = useApp();
   return (
-    <div className="min-h-screen bg-black text-white flex flex-col">
+    <div className="min-h-screen bg-slate-900 text-white flex flex-col">
       <NavBar />
       <div className="flex-1 flex items-center justify-center px-6">
         <div className="text-center max-w-md">
@@ -4184,7 +4184,7 @@ const NotFoundScreen = () => {
 // ============================================
 
 const LegalLayout = ({ title, lastUpdated, children }) => (
-  <div className="min-h-screen bg-black text-white flex flex-col">
+  <div className="min-h-screen bg-slate-900 text-white flex flex-col">
     <NavBar />
     <div className="flex-1">
       <div className="max-w-3xl mx-auto px-4 sm:px-8 pt-16 pb-24">
@@ -4546,7 +4546,7 @@ const AccountScreen = () => {
   };
 
   return (
-    <div className="min-h-screen bg-black text-white flex">
+    <div className="min-h-screen bg-slate-900 text-white flex">
       <DashboardSidebar />
 
       <div className="flex-1 lg:ml-64">
@@ -4593,7 +4593,7 @@ const AccountScreen = () => {
                           onChange={(e) => setNameDraft(e.target.value)}
                           onKeyDown={(e) => { if (e.key === 'Enter') saveName(); if (e.key === 'Escape') setEditingName(false); }}
                           disabled={nameSaving}
-                          className="px-3 py-1 bg-black border border-line-strong text-sm focus:outline-none focus:border-white rounded-lg"
+                          className="px-3 py-1 bg-slate-950 border border-line-strong text-sm focus:outline-none focus:border-white rounded-lg"
                         />
                         <button
                           onClick={saveName}
@@ -4879,21 +4879,21 @@ const ChangePasswordForm = ({ onDone }) => {
         placeholder="Current password"
         value={current}
         onChange={(e) => setCurrent(e.target.value)}
-        className="w-full px-3 py-2 bg-black border border-line-strong rounded-lg text-sm focus:outline-none focus:border-white"
+        className="w-full px-3 py-2 bg-slate-950 border border-line-strong rounded-lg text-sm focus:outline-none focus:border-white"
       />
       <input
         type="password"
         placeholder="New password (min 8 characters)"
         value={next}
         onChange={(e) => setNext(e.target.value)}
-        className="w-full px-3 py-2 bg-black border border-line-strong rounded-lg text-sm focus:outline-none focus:border-white"
+        className="w-full px-3 py-2 bg-slate-950 border border-line-strong rounded-lg text-sm focus:outline-none focus:border-white"
       />
       <input
         type="password"
         placeholder="Confirm new password"
         value={confirm}
         onChange={(e) => setConfirm(e.target.value)}
-        className="w-full px-3 py-2 bg-black border border-line-strong rounded-lg text-sm focus:outline-none focus:border-white"
+        className="w-full px-3 py-2 bg-slate-950 border border-line-strong rounded-lg text-sm focus:outline-none focus:border-white"
       />
       {error && <div className="text-xs text-red-400">{error}</div>}
       {success && <div className="text-xs text-emerald-400">{success}</div>}
@@ -4949,7 +4949,7 @@ const ChangeEmailModal = ({ onClose, onSubmitted }) => {
               required
               value={newEmail}
               onChange={(e) => setNewEmail(e.target.value)}
-              className="w-full px-3 py-2 bg-black border border-line-strong rounded-lg text-sm focus:outline-none focus:border-white"
+              className="w-full px-3 py-2 bg-slate-950 border border-line-strong rounded-lg text-sm focus:outline-none focus:border-white"
             />
             <input
               type="password"
@@ -4957,7 +4957,7 @@ const ChangeEmailModal = ({ onClose, onSubmitted }) => {
               required
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full px-3 py-2 bg-black border border-line-strong rounded-lg text-sm focus:outline-none focus:border-white"
+              className="w-full px-3 py-2 bg-slate-950 border border-line-strong rounded-lg text-sm focus:outline-none focus:border-white"
             />
             {error && <div className="text-xs text-red-400">{error}</div>}
             <div className="flex gap-2 justify-end pt-2">
@@ -5022,7 +5022,7 @@ const DeleteAccountModal = ({ isGoogleAccount, onClose, onDeleted }) => {
                 placeholder="DELETE"
                 value={confirmText}
                 onChange={(e) => setConfirmText(e.target.value)}
-                className="w-full px-3 py-2 bg-black border border-line-strong rounded-lg text-sm focus:outline-none focus:border-red-500"
+                className="w-full px-3 py-2 bg-slate-950 border border-line-strong rounded-lg text-sm focus:outline-none focus:border-red-500"
               />
             </>
           ) : (
@@ -5033,7 +5033,7 @@ const DeleteAccountModal = ({ isGoogleAccount, onClose, onDeleted }) => {
                 placeholder="Current password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full px-3 py-2 bg-black border border-line-strong rounded-lg text-sm focus:outline-none focus:border-red-500"
+                className="w-full px-3 py-2 bg-slate-950 border border-line-strong rounded-lg text-sm focus:outline-none focus:border-red-500"
               />
             </>
           )}
@@ -5195,7 +5195,7 @@ const CardScreen = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-black flex items-center justify-center">
+      <div className="min-h-screen bg-slate-900 flex items-center justify-center">
         <DotSpinner size={24} tone="white" />
       </div>
     );
@@ -5203,7 +5203,7 @@ const CardScreen = () => {
 
   if (error || !data) {
     return (
-      <div className="min-h-screen bg-black text-white flex flex-col items-center justify-center gap-4">
+      <div className="min-h-screen bg-slate-900 text-white flex flex-col items-center justify-center gap-4">
         <p className="text-ink-muted text-sm">Role not found.</p>
         <a href="/start" className="text-sm text-white underline">Explore a role →</a>
       </div>
@@ -5215,11 +5215,11 @@ const CardScreen = () => {
   const BAR_OPACITY    = [0.9, 0.65, 0.45, 0.3, 0.25, 0.2, 0.18, 0.15];
 
   return (
-    <div className="min-h-screen bg-zinc-950 flex flex-col items-center justify-center py-16 px-4">
+    <div className="min-h-screen bg-slate-950 flex flex-col items-center justify-center py-16 px-4">
       <div className="w-full max-w-sm">
 
         {/* Card */}
-        <div className="bg-black border border-line rounded-2xl overflow-hidden">
+        <div className="bg-slate-950 border border-line rounded-2xl overflow-hidden">
 
           {/* Header */}
           <div className="px-6 pt-6 pb-5 border-b border-line">
