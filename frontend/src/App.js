@@ -384,10 +384,9 @@ const AppProvider = ({ children }) => {
         setAppliedLocation(selectedLocation);
         setBaseSeniority(selectedSeniority);
         setBaseLocation(selectedLocation);
-        // Route through skills-input so users can confirm/edit their
-        // gap mapping for the new role. User skills are preserved as-is —
-        // they represent what the user knows, not what any one role demands.
-        setCurrentScreen('skills-input');
+        // Authenticated users go through skills-input to personalize their gap.
+        // Anonymous users skip it and land directly on the dashboard.
+        setCurrentScreen(user ? 'skills-input' : 'dashboard');
 
         // Save session if user is logged in
         if (user) {
@@ -458,7 +457,7 @@ const AppProvider = ({ children }) => {
         setAppliedLocation(selectedLocation);
         setBaseSeniority(selectedSeniority);
         setBaseLocation(selectedLocation);
-        setCurrentScreen('skills-input');
+        setCurrentScreen(user ? 'skills-input' : 'dashboard');
 
         // Save session if user is logged in
         if (user) {
@@ -1472,12 +1471,7 @@ const RoleSelectionScreen = () => {
   const canProceed = selectedRole && selectedSeniority;
 
   const handleExplore = async () => {
-    if (!user) {
-      // Go to signup first
-      setCurrentScreen('signup');
-    } else {
-      await exploreRole();
-    }
+    await exploreRole();
   };
 
   return (
@@ -1916,12 +1910,12 @@ const MobileHeader = () => {
             {selectedRole && (
               <button
                 onClick={() => {
-                  setCurrentScreen('skills-input');
+                  setCurrentScreen(user ? 'skills-input' : 'signup');
                   setMenuOpen(false);
                 }}
                 className="w-full px-4 py-3 text-left text-sm hover:bg-white/10 transition-colors"
               >
-                Edit my skills
+                {user ? 'Edit my skills' : 'Add my skills'}
               </button>
             )}
             <button
@@ -2152,7 +2146,7 @@ const SkillsInputScreen = () => {
             </h1>
             <p className="text-xl text-ink-muted">
               Pick the skills you can claim today as a {seniorityLabel} {selectedRole}.
-              We'll use this to highlight your gaps — not to judge you.
+              We'll use this to highlight your gaps.
             </p>
           </div>
 
@@ -2672,10 +2666,10 @@ const DashboardScreen = () => {
                   EXPLORE A NEW ROLE
                 </button>
                 <button
-                  onClick={() => setCurrentScreen('skills-input')}
+                  onClick={() => setCurrentScreen(user ? 'skills-input' : 'signup')}
                   className="px-5 py-2.5 text-sm font-medium bg-white/10 text-white hover:bg-white/20 transition-colors border border-white/20 rounded-lg"
                 >
-                  EDIT MY SKILLS
+                  {user ? 'EDIT MY SKILLS' : 'ADD MY SKILLS'}
                 </button>
               </div>
             </div>
@@ -2880,7 +2874,7 @@ const isIntrinsicSkill = (skillName, roleTitle) => {
 };
 
 const OverviewTab = () => {
-  const { roleData, selectedRole, setActiveTab, userSkills, setCurrentScreen } = useApp();
+  const { roleData, selectedRole, setActiveTab, userSkills, setCurrentScreen, user } = useApp();
   const userSkillIds = useMemo(() => new Set((userSkills || []).map(s => s.skill_id)), [userSkills]);
   const hasUserSkills = userSkillIds.size > 0;
 
@@ -2974,7 +2968,23 @@ const OverviewTab = () => {
     <div className="space-y-4">
 
       {/* ACTION STRIP — one specific thing to do */}
-      {leverageSkill && (
+      {!user && !hasUserSkills ? (
+        <div className="flex items-start gap-3 p-4 bg-accent-warn/10 border border-accent-warn/20 rounded-xl">
+          <Clock className="w-5 h-5 text-accent-warn flex-shrink-0 mt-0.5" />
+          <div className="flex-1">
+            <Eyebrow className="text-accent-warn mb-1">See your personal skill gap</Eyebrow>
+            <div className="text-body text-ink">
+              You're seeing the market. Sign up to add your skills and find out exactly what you're missing.{' '}
+              <button
+                onClick={() => setCurrentScreen('signup')}
+                className="text-accent-warn font-medium hover:underline"
+              >
+                Create free account →
+              </button>
+            </div>
+          </div>
+        </div>
+      ) : leverageSkill ? (
         <div className="flex items-start gap-3 p-4 bg-accent-warn/10 border border-accent-warn/20 rounded-xl">
           <Clock className="w-5 h-5 text-accent-warn flex-shrink-0 mt-0.5" />
           <div>
@@ -2998,7 +3008,7 @@ const OverviewTab = () => {
             </div>
           </div>
         </div>
-      )}
+      ) : null}
 
       {/* VERDICT CARD — growth % is the single hero number */}
       <Panel>
