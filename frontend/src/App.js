@@ -1938,12 +1938,12 @@ const MobileHeader = () => {
             </button>
             <button
               onClick={() => {
-                handleLogout();
+                user ? handleLogout() : setCurrentScreen('login');
                 setMenuOpen(false);
               }}
               className="w-full px-4 py-3 text-left text-sm text-ink-muted hover:bg-white/10 transition-colors"
             >
-              Sign out
+              {user ? 'Sign out' : 'Sign in'}
             </button>
           </div>
         </div>
@@ -2767,11 +2767,12 @@ const DashboardScreen = () => {
 const DashboardSidebar = () => {
   const { 
     user, 
-    activeTab, 
+    user,
+    activeTab,
     setActiveTab,
     currentScreen,
-    setCurrentScreen, 
-    handleLogout 
+    setCurrentScreen,
+    handleLogout
   } = useApp();
 
   const tabs = [
@@ -2836,10 +2837,10 @@ const DashboardSidebar = () => {
 
       <div className="p-4 border-t border-line">
         <button
-          onClick={handleLogout}
+          onClick={user ? handleLogout : () => setCurrentScreen('login')}
           className="w-full px-4 py-3 text-left text-sm text-ink-muted hover:text-white hover:bg-surface transition-colors rounded-lg"
         >
-          SIGN OUT
+          {user ? 'SIGN OUT' : 'SIGN IN'}
         </button>
       </div>
     </div>
