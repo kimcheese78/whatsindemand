@@ -2767,8 +2767,7 @@ const DashboardScreen = () => {
 // DASHBOARD SIDEBAR
 // ============================================
 const DashboardSidebar = () => {
-  const { 
-    user, 
+  const {
     user,
     activeTab,
     setActiveTab,
