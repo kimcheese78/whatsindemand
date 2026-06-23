@@ -385,7 +385,8 @@ const AppProvider = ({ children }) => {
         setBaseSeniority(selectedSeniority);
         setBaseLocation(selectedLocation);
         // Authenticated users go through skills-input to personalize their gap.
-        // Anonymous users skip it and land directly on the dashboard.
+        // Anonymous users skip it and land directly on the dashboard with a clean slate.
+        if (!user) setUserSkills([]);
         setCurrentScreen(user ? 'skills-input' : 'dashboard');
 
         // Save session if user is logged in
@@ -457,6 +458,7 @@ const AppProvider = ({ children }) => {
         setAppliedLocation(selectedLocation);
         setBaseSeniority(selectedSeniority);
         setBaseLocation(selectedLocation);
+        if (!user) setUserSkills([]);
         setCurrentScreen(user ? 'skills-input' : 'dashboard');
 
         // Save session if user is logged in
