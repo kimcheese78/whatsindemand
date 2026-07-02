@@ -364,7 +364,6 @@ def _update_aliases_yaml(decisions: list) -> None:
 
 def main():
     app = create_app()
-    client = anthropic.Anthropic()
 
     with app.app_context():
         # ── Load roles ──────────────────────────────────────────────────────
@@ -449,6 +448,7 @@ def main():
             t['jd'] = jd_info.get('jd', '')
 
         # ── Batch → Claude ───────────────────────────────────────────────────
+        client = anthropic.Anthropic()
         total_batches = (len(to_classify) + BATCH_SIZE - 1) // BATCH_SIZE
         errors = 0
 
