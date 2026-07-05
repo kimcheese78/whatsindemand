@@ -41,10 +41,24 @@ MIN_COHORT_COMPANIES = 5        # below this, return None / [] (insufficient dat
 
 
 def _get_cohort_company_ids(role_id: int, cohort_cutoff: date) -> List[int]:
-    """Companies tracked for this role since at least `cohort_cutoff`."""
-    rows = db.session.query(Job.company_id).filter(
+    """
+    Companies eligible for the cohort-locked trend: tracked (any role) since
+    `cohort_cutoff`, and having posted this role at least once.
+
+    The tracking test is deliberately company-level, not role-level. A company
+    scraped since December whose first posting of THIS role appeared in May was
+    still fully observed all window — its earlier zero is real signal ("wasn't
+    hiring this role yet"), not scrape-expansion noise. Requiring role-level
+    history here would drop exactly the companies that started hiring the role
+    mid-window and systematically understate growth.
+    """
+    role_company_ids = db.session.query(Job.company_id).filter(
         Job.role_id == role_id,
         Job.company_id.isnot(None),
+    ).distinct().scalar_subquery()
+
+    rows = db.session.query(Job.company_id).filter(
+        Job.company_id.in_(role_company_ids),
     ).group_by(Job.company_id).having(
         func.min(Job.scraped_at) <= cohort_cutoff
     ).all()
