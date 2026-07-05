@@ -83,6 +83,10 @@ def create_app(config_name=None):
     app.register_blueprint(roles_bp)       # /api/roles/*
     app.register_blueprint(companies_bp)   # /api/companies/*
     app.register_blueprint(skills_bp)      # /api/skills/*
+
+    # Public server-rendered pages for SEO (/r/<slug>, /r/, /sitemap.xml)
+    from app.routes.public import public_bp
+    app.register_blueprint(public_bp)
     
     # Health check
     @app.route('/health')

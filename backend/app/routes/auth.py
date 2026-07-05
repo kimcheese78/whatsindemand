@@ -14,6 +14,9 @@ from google.oauth2 import id_token
 from google.auth.transport import requests as google_requests
 from app import limiter
 
+# Reuse across requests so Google's public certs are cached in the session
+_google_request = google_requests.Request()
+
 logger = logging.getLogger(__name__)
 
 bp = Blueprint('auth', __name__)
@@ -53,7 +56,7 @@ def signup():
         return jsonify({'error': 'Email already registered'}), 409
     
     # Hash password
-    password_hash = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
+    password_hash = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt(rounds=10))
     
     # Create user
     new_user = User(
@@ -136,7 +139,7 @@ def google_auth():
         # Verify Google token
         idinfo = id_token.verify_oauth2_token(
             token,
-            google_requests.Request(),
+            _google_request,
             current_app.config['GOOGLE_CLIENT_ID']
         )
         
@@ -265,7 +268,7 @@ def reset_password():
     if not user:
         return jsonify({'error': 'Account not found.'}), 404
 
-    user.password_hash = bcrypt.hashpw(new_password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
+    user.password_hash = bcrypt.hashpw(new_password.encode('utf-8'), bcrypt.gensalt(rounds=10)).decode('utf-8')
     user.token_version = (user.token_version or 0) + 1
     auth_tokens.invalidate_all(user.id, auth_tokens.PURPOSE_PASSWORD_RESET)
     db.session.commit()
@@ -296,7 +299,7 @@ def change_password():
     if not is_valid:
         return jsonify({'error': message}), 400
 
-    user.password_hash = bcrypt.hashpw(new_password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
+    user.password_hash = bcrypt.hashpw(new_password.encode('utf-8'), bcrypt.gensalt(rounds=10)).decode('utf-8')
     user.token_version = (user.token_version or 0) + 1
     db.session.commit()
     return jsonify({'message': 'Password updated.'}), 200
@@ -476,4 +479,45 @@ def export_data():
         body,
         mimetype='application/json',
         headers={'Content-Disposition': f'attachment; filename="{filename}"'},
+    )
+
+
+# ============================================
+# WEEKLY DIGEST UNSUBSCRIBE
+# ============================================
+
+def make_digest_unsubscribe_token(user_id: int) -> str:
+    """Signed, stateless unsubscribe token for email footers. No expiry —
+    an unsubscribe link must keep working however old the email is."""
+    from itsdangerous import URLSafeSerializer
+    s = URLSafeSerializer(current_app.config['SECRET_KEY'], salt='weekly-digest-unsub')
+    return s.dumps({'uid': user_id})
+
+
+@bp.route('/digest-unsubscribe', methods=['GET'])
+def digest_unsubscribe():
+    """One-click unsubscribe from the weekly digest. Linked from email footers,
+    so it must work without a login session and render plain HTML."""
+    from itsdangerous import URLSafeSerializer, BadSignature
+
+    token = request.args.get('token', '')
+    s = URLSafeSerializer(current_app.config['SECRET_KEY'], salt='weekly-digest-unsub')
+    try:
+        payload = s.loads(token)
+        user_id = int(payload['uid'])
+    except (BadSignature, KeyError, ValueError, TypeError):
+        return Response('<h3>Invalid unsubscribe link.</h3>', mimetype='text/html'), 400
+
+    profile = UserProfile.query.filter_by(user_id=user_id).first()
+    if profile:
+        profile.weekly_digest = False
+        db.session.commit()
+
+    return Response(
+        "<div style='font-family:sans-serif;max-width:480px;margin:80px auto;text-align:center;'>"
+        "<h2>You're unsubscribed</h2>"
+        "<p>You won't receive the weekly digest anymore. "
+        "You can turn it back on anytime from your account settings.</p>"
+        "</div>",
+        mimetype='text/html',
     )

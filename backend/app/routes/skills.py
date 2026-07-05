@@ -186,6 +186,83 @@ def get_skill_details(skill_id):
     })
 
 
+@skills_bp.route('/<int:skill_id>/co-occurring', methods=['GET'])
+def get_co_occurring_skills(skill_id):
+    """
+    Skills that appear alongside this one in real postings — the learning
+    context ("people hired for X are also expected to know Y").
+
+    Query params:
+    - role_id: restrict to one role's postings (recommended; without it the
+      signal is diluted across unrelated professions)
+
+    Ubiquitous skills (present in >60% of the role's postings) are excluded:
+    they co-occur with everything, so they say nothing about THIS skill.
+    """
+    role_id = request.args.get('role_id', type=int)
+
+    target_filters = [
+        JobSkill.skill_id == skill_id,
+        Job.is_active == True,
+    ]
+    if role_id:
+        target_filters.append(Job.role_id == role_id)
+
+    target_job_ids = [
+        j for (j,) in db.session.query(Job.id).join(JobSkill).filter(*target_filters).all()
+    ]
+    n_target = len(target_job_ids)
+    if n_target < 5:
+        return jsonify({'success': True, 'skills': [], 'sample_size': n_target}), 200
+
+    co_rows = db.session.query(
+        Skill.id,
+        Skill.name,
+        Skill.subcategory,
+        func.count(JobSkill.job_id).label('co_count')
+    ).join(JobSkill, JobSkill.skill_id == Skill.id).filter(
+        JobSkill.job_id.in_(target_job_ids),
+        JobSkill.skill_id != skill_id,
+        Skill.is_verified == True,
+    ).group_by(Skill.id).order_by(
+        func.count(JobSkill.job_id).desc()
+    ).limit(30).all()
+
+    # Base rates within the role, to drop skills that co-occur with everything
+    base_pct_map = {}
+    if role_id and co_rows:
+        n_role = db.session.query(func.count(Job.id)).filter(
+            Job.role_id == role_id, Job.is_active == True
+        ).scalar() or 0
+        if n_role > 0:
+            base_rows = db.session.query(
+                JobSkill.skill_id,
+                func.count(func.distinct(JobSkill.job_id))
+            ).join(Job, JobSkill.job_id == Job.id).filter(
+                Job.role_id == role_id,
+                Job.is_active == True,
+                JobSkill.skill_id.in_([r[0] for r in co_rows]),
+            ).group_by(JobSkill.skill_id).all()
+            base_pct_map = {sid: round(c / n_role * 100, 1) for sid, c in base_rows}
+
+    out = []
+    for sid, name, subcategory, co_count in co_rows:
+        base_pct = base_pct_map.get(sid)
+        if base_pct is not None and base_pct > 60:
+            continue
+        out.append({
+            'skill_id': sid,
+            'name': name,
+            'subcategory': subcategory,
+            'co_pct': round(co_count / n_target * 100, 1),
+            'base_pct': base_pct,
+        })
+        if len(out) >= 8:
+            break
+
+    return jsonify({'success': True, 'skills': out, 'sample_size': n_target}), 200
+
+
 @skills_bp.route('', methods=['GET'])
 def get_all_skills():
     """Get all skills organized by category."""

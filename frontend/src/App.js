@@ -1248,14 +1248,14 @@ const LandingScreen = () => {
           </h1>
 
           <p className="text-lg sm:text-xl text-ink-muted mb-6 max-w-2xl leading-relaxed">
-            AI is reshaping every profession. <br className="hidden sm:block" /> 
-            Some skills are fading, while others are exploding in demand.
+            AI is rewriting job descriptions in real time. <br className="hidden sm:block" />
+            Some skills are fading. Others are suddenly everywhere.
           </p>
 
           <p className="text-lg sm:text-xl text-ink-muted mb-6 max-w-2xl leading-relaxed" style={{ textWrap: 'balance' }}>
-            We track thousands of job postings in real time to show you what's in demand, what's fading, and where to focus next.
+            We track 100,000+ live postings from 3,300+ fast-growing companies — the employers that adopt first — and show you exactly what's rising and fading in your role.
           </p>
-            
+
           <p className="text-lg sm:text-xl text-ink-muted mb-8 sm:mb-12 max-w-2xl leading-relaxed">
             No hype. Just data.
           </p>
@@ -1267,6 +1267,7 @@ const LandingScreen = () => {
             >
               EXPLORE MY ROLE
             </button>
+            <span className="text-sm text-ink-faint">Free — no signup needed to look around.</span>
           </div>
         </div>
       </div>
@@ -2892,6 +2893,20 @@ const OverviewTab = () => {
   const remoteTotal = remoteCount + onsiteCount;
   const remoteSharePct = remoteTotal > 0 ? Math.round((remoteCount / remoteTotal) * 100) : null;
 
+  // AI exposure: how much of this role's market now expects AI skills.
+  const aiExposure = roleData?.ai_exposure;
+  const aiDelta = aiExposure?.delta_pct_points ?? null;
+  // Most-demanded specific AI skills in this role. The generic "Artificial
+  // Intelligence" umbrella tag is dropped when specific ones exist — "learn
+  // LLMs" is actionable, "learn Artificial Intelligence" is not.
+  const topAiSkills = useMemo(() => {
+    const ai = skills.filter(s => s.subcategory === 'AI & Machine Learning');
+    const specific = ai.filter(s => s.name !== 'Artificial Intelligence' && s.name !== 'Machine Learning');
+    return (specific.length >= 3 ? specific : ai)
+      .sort((a, b) => (b.job_count || 0) - (a.job_count || 0))
+      .slice(0, 4);
+  }, [skills]);
+
   // Verdict: growth direction. Round to integer — decimals on a market-level number look like a bug.
   const rawGrowth = marketTrend?.postings_growth_pct;
   const growthPct = rawGrowth == null ? null : Math.round(rawGrowth);
@@ -3050,6 +3065,53 @@ const OverviewTab = () => {
         </p>
       </Panel>
 
+      {/* AI EXPOSURE — how fast AI expectations are entering this role */}
+      {aiExposure && aiExposure.current_pct != null && (
+        <Panel>
+          <div className="flex items-center gap-2 mb-3">
+            <Eyebrow>AI in this role</Eyebrow>
+            {aiDelta != null && aiDelta >= 1 && <Pill tone="up">Rising</Pill>}
+            {aiDelta != null && aiDelta <= -1 && <Pill tone="neutral">Cooling</Pill>}
+          </div>
+
+          <div className="flex items-baseline gap-3 mb-2">
+            <HeroNumber value={`${Math.round(aiExposure.current_pct)}%`} />
+            <Eyebrow className="text-ink-faint">of postings ask for AI skills</Eyebrow>
+          </div>
+
+          <div className="text-body text-ink mb-1">
+            {aiExposure.current_pct >= 40 ? (
+              <>AI fluency is becoming table stakes for {selectedRole ? <strong>{selectedRole}</strong> : 'this role'} — employers now list it alongside core skills.</>
+            ) : aiExposure.current_pct >= 20 ? (
+              <>AI expectations in {selectedRole ? <strong>{selectedRole}</strong> : 'this role'} postings are moving from nice-to-have toward default.</>
+            ) : aiExposure.current_pct >= 5 ? (
+              <>AI is starting to appear in {selectedRole ? <strong>{selectedRole}</strong> : 'this role'} job descriptions — early, but moving.</>
+            ) : (
+              <>AI requirements are still rare in {selectedRole ? <strong>{selectedRole}</strong> : 'this role'} postings — for now.</>
+            )}
+            {aiDelta != null && Math.abs(aiDelta) >= 1 && (
+              <span className="text-ink-muted">
+                {' '}{aiDelta > 0 ? 'Up' : 'Down'} <span className="num">{Math.abs(aiDelta)}</span> pts over the last 3 months.
+              </span>
+            )}
+          </div>
+
+          {topAiSkills.length > 0 && (
+            <div className="flex flex-wrap gap-2 mt-3">
+              {topAiSkills.map(s => (
+                <button
+                  key={s.skill_id}
+                  onClick={() => setActiveTab('skills')}
+                  className="px-2.5 py-1 text-small bg-line/40 hover:bg-line text-ink rounded-md transition-colors"
+                >
+                  {s.name} <span className="num text-ink-faint">{Math.round(s.demand)}%</span>
+                </button>
+              ))}
+            </div>
+          )}
+        </Panel>
+      )}
+
       {/* TWO-COL: Companies hiring now | Posting trend sparkline */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
 
@@ -3180,16 +3242,18 @@ const OverviewTab = () => {
                   />
                 </div>
                 <div className="text-small text-ink-faint">
-                  Range: <span className="num">{formatSalary(min)}</span> — <span className="num">{formatSalary(max)}</span>
+                  Typical range: <span className="num">{formatSalary(min)}</span> — <span className="num">{formatSalary(max)}</span>
                   {salaryInfo.jobs_with_salary ? (
-                    <span className="text-ink-ghost"> · <span className="num">{salaryInfo.jobs_with_salary.toLocaleString()}</span> jobs (<span className="num">{salaryInfo.salary_coverage_pct}%</span>)</span>
+                    <span className="text-ink-ghost"> · based on <span className="num">{salaryInfo.jobs_with_salary.toLocaleString()}</span> postings that disclose pay</span>
                   ) : null}
                 </div>
               </>
             );
           })()
         ) : (
-          <div className="text-body text-ink-faint">Not enough salary data for this filter</div>
+          <div className="text-body text-ink-faint">
+            Too few postings disclose pay here for a reliable estimate — we don't show salary numbers built on thin data.
+          </div>
         )}
       </Panel>
 
@@ -3449,6 +3513,23 @@ const SkillsTab = () => {
   const [categoryFilter, setCategoryFilter] = useState('All');
   const [subcategoryFilter, setSubcategoryFilter] = useState('All');
   const [selectedSkill, setSelectedSkill] = useState(null);
+  // Co-occurring skills per selected skill, cached per skill_id for the session
+  const [coSkillsCache, setCoSkillsCache] = useState({});
+  const roleId = roleData?.role?.id;
+
+  useEffect(() => {
+    const sid = selectedSkill?.skill_id;
+    if (!sid || coSkillsCache[sid] !== undefined) return;
+    let cancelled = false;
+    api.getCoOccurringSkills(sid, roleId)
+      .then(res => {
+        if (!cancelled) setCoSkillsCache(prev => ({ ...prev, [sid]: res?.skills || [] }));
+      })
+      .catch(() => {
+        if (!cancelled) setCoSkillsCache(prev => ({ ...prev, [sid]: [] }));
+      });
+    return () => { cancelled = true; };
+  }, [selectedSkill, roleId, coSkillsCache]);
 
   const skills = roleData?.skills || [];
   const userSkillIds = useMemo(() => new Set((userSkills || []).map(s => s.skill_id)), [userSkills]);
@@ -3685,6 +3766,40 @@ const SkillsTab = () => {
                                   </div>
                                 ))}
                               </div>
+                            </div>
+                          </div>
+                        );
+                      })()}
+                      {(() => {
+                        const co = coSkillsCache[skill.skill_id];
+                        if (co === undefined) {
+                          return (
+                            <div className="w-56 shrink-0">
+                              <div className="text-xs text-ink-muted tracking-wider mb-3">OFTEN PAIRED WITH</div>
+                              <div className="text-xs text-ink-faint">Loading…</div>
+                            </div>
+                          );
+                        }
+                        if (!co.length) return null;
+                        return (
+                          <div className="w-56 shrink-0">
+                            <div className="text-xs text-ink-muted tracking-wider mb-3">OFTEN PAIRED WITH</div>
+                            <div className="space-y-1.5">
+                              {co.slice(0, 6).map(cs => {
+                                const has = hasUserSkills && userSkillIds.has(cs.skill_id);
+                                return (
+                                  <div key={cs.skill_id} className="flex items-center justify-between text-sm">
+                                    <span className="flex items-center gap-1.5 min-w-0">
+                                      <span className="font-medium truncate">{cs.name}</span>
+                                      {has && <span className="text-accent-up text-xs" title="You have this">✓</span>}
+                                    </span>
+                                    <span className="text-xs text-ink-muted shrink-0 ml-2 num">{Math.round(cs.co_pct)}%</span>
+                                  </div>
+                                );
+                              })}
+                            </div>
+                            <div className="text-[10px] text-ink-faint mt-2 leading-snug">
+                              % of postings asking for {skill.name} that also ask for this
                             </div>
                           </div>
                         );

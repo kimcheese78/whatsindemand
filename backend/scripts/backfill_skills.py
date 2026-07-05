@@ -79,7 +79,7 @@ def insert_batch(new_rows):
                 raise
 
 
-def run(skill_ids: list) -> None:
+def run(skill_ids: list, start_id: int = 0) -> None:
     # Load skill patterns in one short-lived connection
     with app.app_context():
         skills = Skill.query.filter(Skill.id.in_(skill_ids)).all()
@@ -99,7 +99,7 @@ def run(skill_ids: list) -> None:
     print(f"Backfilling {len(skill_patterns)} skill(s) in a single pass over all jobs...")
     start = datetime.utcnow()
 
-    last_id = 0
+    last_id = start_id
     total_inserted = 0
     jobs_processed = 0
 
@@ -127,7 +127,7 @@ def run(skill_ids: list) -> None:
         total_inserted += len(new_rows)
         elapsed = (datetime.utcnow() - start).total_seconds()
         rate = jobs_processed / elapsed if elapsed > 0 else 0
-        print(f"  {jobs_processed:,} jobs  ({rate:.0f}/s)  {total_inserted:,} inserted", flush=True)
+        print(f"  {jobs_processed:,} jobs  ({rate:.0f}/s)  {total_inserted:,} inserted  last_id={last_id}", flush=True)
 
     duration = (datetime.utcnow() - start).total_seconds()
     print(f"\nDone. {total_inserted:,} job_skills rows inserted for {len(skill_patterns)} skills in {duration:.0f}s.")
@@ -139,6 +139,8 @@ if __name__ == '__main__':
         help='Specific skill IDs to backfill')
     parser.add_argument('--min-id', type=int, default=None,
         help='Backfill all skills with id >= this value (e.g. first newly promoted ID)')
+    parser.add_argument('--start-job-id', type=int, default=0,
+        help='Resume scanning jobs with id > this value (checkpoint from a prior interrupted run)')
     args = parser.parse_args()
 
     ids = list(args.skill_ids)
@@ -150,4 +152,4 @@ if __name__ == '__main__':
         print("Provide --skill-ids or --min-id. Exiting.")
         sys.exit(1)
 
-    run(list(set(ids)))
+    run(list(set(ids)), start_id=args.start_job_id)

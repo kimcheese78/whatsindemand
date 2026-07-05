@@ -92,13 +92,18 @@ def get_trend_data(
     months: int = 4,
     seniority: str = None,
     locations: List[str] = None,
-    company_ids: List[int] = None
+    company_ids: List[int] = None,
+    require_ai_skill: bool = False
 ) -> List[Dict]:
     """
     Cohort-locked monthly trend. Each bar counts distinct postings whose
     [posted_at_or_scraped_at, closed_at_or_now] window intersects the month,
     restricted to companies tracked for the entire window so scrape expansion
     can't create phantom growth.
+
+    With `require_ai_skill`, only postings tagged with at least one verified
+    'AI & Machine Learning' skill are counted — same cohort, same windows, so
+    the ratio against the unrestricted series is a like-for-like AI share.
     """
     today = datetime.utcnow().date()
     job_date = func.coalesce(Job.posted_at, Job.scraped_at)
@@ -162,6 +167,19 @@ def get_trend_data(
                 Job.last_seen_at >= stale_floor,
             ),
         )
+
+        if require_ai_skill:
+            query = query.filter(
+                JobSkill.query.filter(
+                    JobSkill.job_id == Job.id,
+                    JobSkill.skill_id.in_(
+                        db.session.query(Skill.id).filter(
+                            Skill.subcategory == 'AI & Machine Learning',
+                            Skill.is_verified == True,
+                        ).scalar_subquery()
+                    ),
+                ).exists()
+            )
 
         # Seniority filter
         if seniority and seniority.lower() != 'all':
@@ -252,6 +270,57 @@ def get_market_trend(
 # ============================================
 # BULK GROWTH CALCULATION FUNCTIONS (OPTIMIZED)
 # ============================================
+
+def get_ai_exposure(
+    job_ids: List[int],
+    trend_data: List[Dict],
+    ai_trend_data: List[Dict],
+) -> Optional[Dict]:
+    """
+    How much AI has entered this role. `current_pct` is the share of the
+    currently-filtered postings tagged with a verified AI & ML skill; the
+    trend is the same share computed month-by-month on the cohort-locked
+    series, so the delta is real adoption, not scrape growth.
+    """
+    if not job_ids:
+        return None
+
+    ai_now = db.session.query(
+        func.count(func.distinct(JobSkill.job_id))
+    ).join(Skill, JobSkill.skill_id == Skill.id).filter(
+        JobSkill.job_id.in_(job_ids),
+        Skill.subcategory == 'AI & Machine Learning',
+        Skill.is_verified == True,
+    ).scalar() or 0
+
+    current_pct = round(ai_now / len(job_ids) * 100, 1)
+
+    # Month-by-month share: pair the AI-restricted series with the full series
+    ai_by_month = {b['date']: b['count'] for b in (ai_trend_data or [])}
+    share_trend = []
+    for bucket in (trend_data or []):
+        total = bucket.get('count') or 0
+        if total <= 0:
+            continue
+        entry = {
+            'date': bucket['date'],
+            'share_pct': round(ai_by_month.get(bucket['date'], 0) / total * 100, 1),
+        }
+        if bucket.get('is_partial'):
+            entry['is_partial'] = True
+        share_trend.append(entry)
+
+    # Delta: last full month vs first full month in the window
+    full = [b for b in share_trend if not b.get('is_partial')]
+    delta = round(full[-1]['share_pct'] - full[0]['share_pct'], 1) if len(full) >= 2 else None
+
+    return {
+        'current_pct': current_pct,
+        'ai_job_count': ai_now,
+        'trend': share_trend,
+        'delta_pct_points': delta,
+    }
+
 
 def get_all_skill_growth_bulk(role_id: int, skill_ids: List[int], window_days: int = 30) -> Dict[int, Optional[float]]:
     """
@@ -665,6 +734,17 @@ def get_role_insights():
         trend_data=trend_data,
     )
 
+    # AI exposure: same cohort-locked months, restricted to AI-tagged postings
+    ai_trend_data = get_trend_data(
+        role.id,
+        months=4,
+        seniority=filters_applied.get('seniority'),
+        locations=filters_applied.get('location'),
+        company_ids=filters_applied.get('company_ids'),
+        require_ai_skill=True,
+    )
+    ai_exposure = get_ai_exposure(job_ids, trend_data, ai_trend_data)
+
     # Return empty result if no jobs match filters
     if total_jobs == 0:
         return jsonify({
@@ -684,6 +764,7 @@ def get_role_insights():
             'filters_applied': filters_applied,
             'trend_data': trend_data,
             'market_trend': market_trend,
+            'ai_exposure': None,
             'remote_count': 0,
             'onsite_count': 0,
             'message': 'No jobs found matching these filters'
@@ -818,18 +899,25 @@ def get_role_insights():
         Job.salary_min_usd > 0
     ).all()
     
+    # Only ~2.5% of postings carry salary data. Below this sample size the
+    # numbers are noise, and publishing noise costs more trust than showing
+    # nothing. Range uses p25 of mins / p75 of maxs so a single outlier
+    # posting can't stretch it.
+    MIN_SALARY_SAMPLE = 30
     salary_info = None
-    if len(salary_rows) >= 3:
+    if len(salary_rows) >= MIN_SALARY_SAMPLE:
         mins = sorted([r.salary_min_usd for r in salary_rows])
         maxs = sorted([r.salary_max_usd for r in salary_rows if r.salary_max_usd])
-        
+
         count = len(mins)
-        median_idx = count // 2
-        
+
+        def pct(sorted_vals, p):
+            return sorted_vals[min(int(len(sorted_vals) * p), len(sorted_vals) - 1)]
+
         salary_info = {
-            'min': mins[0],
-            'max': maxs[-1] if maxs else mins[-1],
-            'median': mins[median_idx],
+            'min': pct(mins, 0.25),
+            'max': pct(maxs, 0.75) if maxs else pct(mins, 0.75),
+            'median': pct(mins, 0.5),
             'jobs_with_salary': count,
             'salary_coverage_pct': round((count / total_jobs) * 100, 1) if total_jobs > 0 else 0
         }
@@ -867,6 +955,7 @@ def get_role_insights():
         'filters_applied': filters_applied,
         'trend_data': trend_data,
         'market_trend': market_trend,
+        'ai_exposure': ai_exposure,
         'remote_count': remote_count,
         'onsite_count': onsite_count,
         'data_as_of': last_scraped.isoformat() if last_scraped else None,

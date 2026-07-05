@@ -3,6 +3,8 @@
     { "source": "/Articles/:slug*", "destination": "https://blog.whatsindemand.com/:slug*", "permanent": true }
   ],
   "rewrites": [
+    { "source": "/r/:path*", "destination": "https://whatsindemand-production.up.railway.app/r/:path*" },
+    { "source": "/sitemap.xml", "destination": "https://whatsindemand-production.up.railway.app/sitemap.xml" },
     { "source": "/(.*)", "destination": "/" }
   ],
   "headers": [

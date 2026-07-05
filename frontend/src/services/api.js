@@ -327,6 +327,13 @@ class API {
     });
   }
 
+  async getCoOccurringSkills(skillId, roleId = null) {
+    const query = roleId ? `?role_id=${roleId}` : '';
+    return this.request(`/api/skills/${skillId}/co-occurring${query}`, {
+      auth: false,
+    });
+  }
+
   async extractSkillsFromText(text) {
     return this.request('/api/skills/extract', {
       method: 'POST',

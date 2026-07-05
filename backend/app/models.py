@@ -75,7 +75,8 @@ class UserProfile(db.Model):
     resume_uploaded_at = db.Column(db.DateTime)
     last_analysis_json = db.Column(db.Text)  # Store as JSON string
     last_analysis_at = db.Column(db.DateTime)
-    
+    weekly_digest = db.Column(db.Boolean, default=True, nullable=False, server_default='true')
+
     def to_dict(self):
         return {
             'id': self.id,
