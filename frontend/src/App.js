@@ -2893,9 +2893,16 @@ const OverviewTab = () => {
   const remoteTotal = remoteCount + onsiteCount;
   const remoteSharePct = remoteTotal > 0 ? Math.round((remoteCount / remoteTotal) * 100) : null;
 
+  // Trend reliability: the cohort-locked series needs enough absolute volume
+  // to mean anything. A large-but-partial cohort (e.g. 2,500 of 17,000 SWE
+  // postings) is valid signal with a disclosure; a 4-posting cohort is noise
+  // and gets an explanation instead of a chart.
+  const trendCoverage = roleData?.trend_coverage;
+  const trendReliable = !trendCoverage || trendCoverage.covered_active_jobs >= 20;
+
   // AI exposure: how much of this role's market now expects AI skills.
   const aiExposure = roleData?.ai_exposure;
-  const aiDelta = aiExposure?.delta_pct_points ?? null;
+  const aiDelta = trendReliable ? (aiExposure?.delta_pct_points ?? null) : null;
   // Most-demanded specific AI skills in this role. The generic "Artificial
   // Intelligence" umbrella tag is dropped when specific ones exist — "learn
   // LLMs" is actionable, "learn Artificial Intelligence" is not.
@@ -2908,10 +2915,14 @@ const OverviewTab = () => {
   }, [skills]);
 
   // Verdict: growth direction. Round to integer — decimals on a market-level number look like a bug.
-  const rawGrowth = marketTrend?.postings_growth_pct;
+  // When the trend cohort covers too little of the current market, the MoM
+  // number is noise — suppress it rather than declare a fake verdict.
+  const rawGrowth = trendReliable ? marketTrend?.postings_growth_pct : null;
   const growthPct = rawGrowth == null ? null : Math.round(rawGrowth);
   const growthDir = growthPct == null ? 'neutral' : growthPct > 0 ? 'up' : growthPct < 0 ? 'down' : 'neutral';
-  const verdictLabel = { up: 'Market growing', down: 'Market cooling', neutral: 'Market steady' }[growthDir];
+  const verdictLabel = !trendReliable
+    ? 'Building history'
+    : { up: 'Market growing', down: 'Market cooling', neutral: 'Market steady' }[growthDir];
   const verdictNumTone = { up: 'up', down: 'down', neutral: 'default' }[growthDir];
   const verdictNumColor = { up: 'text-accent-up', down: 'text-accent-down', neutral: 'text-ink' }[growthDir];
 
@@ -3044,8 +3055,18 @@ const OverviewTab = () => {
           ) : (
             <HeroNumber tone="default" value="—" className="text-ink-faint" />
           )}
-          <Eyebrow className="text-ink-faint">vs previous month</Eyebrow>
+          <Eyebrow className="text-ink-faint">
+            {trendReliable ? 'vs previous month' : 'month-over-month'}
+          </Eyebrow>
         </div>
+
+        {!trendReliable && (
+          <div className="text-body text-ink-muted">
+            Most companies hiring for this role joined our tracking recently, so month-over-month
+            comparisons aren't meaningful yet. The numbers above reflect today's market; trends
+            unlock as history accumulates.
+          </div>
+        )}
 
         {highlightCos.length > 0 && (
           <div className="text-body text-ink">
@@ -3154,7 +3175,13 @@ const OverviewTab = () => {
         {/* POSTING TREND — bar chart with readable labels */}
         <Panel className="flex flex-col h-full">
           <Eyebrow className="mb-4">Active openings — same companies, 4-month view</Eyebrow>
-          {trendData.length > 0 ? (
+          {trendData.length > 0 && !trendReliable ? (
+            <div className="h-32 flex items-center justify-center text-body text-ink-faint text-center px-4">
+              {trendCoverage
+                ? `Only ${trendCoverage.covered_active_jobs} of ${totalJobs.toLocaleString()} current postings come from companies we've tracked all 4 months — not enough for an honest trend. This unlocks as coverage history builds.`
+                : 'Not enough consistent history for a trend yet.'}
+            </div>
+          ) : trendData.length > 0 ? (
             <div className="mt-auto">
               <div className="flex items-end gap-2 h-32 mb-2">
                 {trendData.map((d, i) => {
@@ -3198,6 +3225,9 @@ const OverviewTab = () => {
               <p className="text-meta text-ink-faint mt-2">
                 * This month is in progress — the count will grow as more jobs are posted.
                 Recently added companies are excluded until they have 4+ months of history, so each month compares the same set of companies.
+                {trendCoverage && trendCoverage.coverage_pct < 50 && (
+                  <> These long-tracked companies account for {Math.round(trendCoverage.coverage_pct)}% of today's postings.</>
+                )}
               </p>
             </div>
           ) : (

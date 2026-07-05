@@ -101,6 +101,17 @@ def _find_role(role_name: str):
 # TREND & GROWTH CALCULATION FUNCTIONS
 # ============================================
 
+def _trend_window_start(months: int = 4) -> date:
+    """First day of the month `months - 1` months before the current one."""
+    today = datetime.utcnow().date()
+    first_month = today.month - (months - 1)
+    first_year = today.year
+    while first_month <= 0:
+        first_month += 12
+        first_year -= 1
+    return date(first_year, first_month, 1)
+
+
 def get_trend_data(
     role_id: int,
     months: int = 4,
@@ -122,13 +133,7 @@ def get_trend_data(
     today = datetime.utcnow().date()
     job_date = func.coalesce(Job.posted_at, Job.scraped_at)
 
-    # Window starts at first day of (today − months + 1) month
-    first_month = today.month - (months - 1)
-    first_year = today.year
-    while first_month <= 0:
-        first_month += 12
-        first_year -= 1
-    window_start = date(first_year, first_month, 1)
+    window_start = _trend_window_start(months)
     cohort_cutoff = window_start - timedelta(days=COHORT_BUFFER_DAYS)
 
     cohort_company_ids = _get_cohort_company_ids(role_id, cohort_cutoff)
@@ -759,6 +764,27 @@ def get_role_insights():
     )
     ai_exposure = get_ai_exposure(job_ids, trend_data, ai_trend_data)
 
+    # Trend representativeness: how much of the CURRENT market the trend
+    # cohort actually covers. When most companies hiring this role were
+    # onboarded mid-window (scrape expansion), the cohort series is honest
+    # but describes a sliver of the market — the frontend uses this to show
+    # an explanation instead of a misleading chart.
+    trend_coverage = None
+    if total_jobs > 0:
+        cohort_cutoff = _trend_window_start(4) - timedelta(days=COHORT_BUFFER_DAYS)
+        _cov_cohort_ids = _get_cohort_company_ids(role.id, cohort_cutoff)
+        covered = 0
+        if _cov_cohort_ids:
+            covered = db.session.query(func.count(Job.id)).filter(
+                Job.id.in_(job_ids),
+                Job.company_id.in_(_cov_cohort_ids),
+            ).scalar() or 0
+        trend_coverage = {
+            'cohort_companies': len(_cov_cohort_ids),
+            'covered_active_jobs': covered,
+            'coverage_pct': round(covered / total_jobs * 100, 1),
+        }
+
     # Return empty result if no jobs match filters
     if total_jobs == 0:
         return jsonify({
@@ -969,6 +995,7 @@ def get_role_insights():
         'filters_applied': filters_applied,
         'trend_data': trend_data,
         'market_trend': market_trend,
+        'trend_coverage': trend_coverage,
         'ai_exposure': ai_exposure,
         'remote_count': remote_count,
         'onsite_count': onsite_count,
