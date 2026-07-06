@@ -99,3 +99,4 @@ frontend/.pnp.js
 .pytest_cache/
 .mypy_cache/
 
+backend/content_out/
