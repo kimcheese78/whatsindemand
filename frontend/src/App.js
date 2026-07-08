@@ -2903,13 +2903,14 @@ const OverviewTab = () => {
   // AI exposure: how much of this role's market now expects AI skills.
   const aiExposure = roleData?.ai_exposure;
   const aiDelta = trendReliable ? (aiExposure?.delta_pct_points ?? null) : null;
-  // Most-demanded specific AI skills in this role. The generic "Artificial
-  // Intelligence" umbrella tag is dropped when specific ones exist — "learn
-  // LLMs" is actionable, "learn Artificial Intelligence" is not.
+  // Most-demanded AI skills in this role, sorted by how often each is asked
+  // for. Deliberately NOT filtered to "specific" skills — the generic
+  // "Artificial Intelligence" tag is often the single biggest contributor to
+  // the headline %, and hiding it made the chips undercount the story (e.g.
+  // showing 6% worth of chips under a 19% headline).
   const topAiSkills = useMemo(() => {
-    const ai = skills.filter(s => s.subcategory === 'AI & Machine Learning');
-    const specific = ai.filter(s => s.name !== 'Artificial Intelligence' && s.name !== 'Machine Learning');
-    return (specific.length >= 3 ? specific : ai)
+    return skills
+      .filter(s => s.subcategory === 'AI & Machine Learning')
       .sort((a, b) => (b.job_count || 0) - (a.job_count || 0))
       .slice(0, 4);
   }, [skills]);
@@ -3118,17 +3119,22 @@ const OverviewTab = () => {
           </div>
 
           {topAiSkills.length > 0 && (
-            <div className="flex flex-wrap gap-2 mt-3">
-              {topAiSkills.map(s => (
-                <button
-                  key={s.skill_id}
-                  onClick={() => setActiveTab('skills')}
-                  className="px-2.5 py-1 text-small bg-line/40 hover:bg-line text-ink rounded-md transition-colors"
-                >
-                  {s.name} <span className="num text-ink-faint">{Math.round(s.demand)}%</span>
-                </button>
-              ))}
-            </div>
+            <>
+              <div className="flex flex-wrap gap-2 mt-3">
+                {topAiSkills.map(s => (
+                  <button
+                    key={s.skill_id}
+                    onClick={() => setActiveTab('skills')}
+                    className="px-2.5 py-1 text-small bg-line/40 hover:bg-line text-ink rounded-md transition-colors"
+                  >
+                    {s.name} <span className="num text-ink-faint">{Math.round(s.demand)}%</span>
+                  </button>
+                ))}
+              </div>
+              <p className="text-meta text-ink-faint mt-2">
+                Each % is how often that skill alone is requested — postings often ask for several at once, so these don't add up to the {Math.round(aiExposure.current_pct)}% above.
+              </p>
+            </>
           )}
         </Panel>
       )}
