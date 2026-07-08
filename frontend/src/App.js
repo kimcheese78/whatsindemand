@@ -1253,7 +1253,7 @@ const LandingScreen = () => {
           </p>
 
           <p className="text-lg sm:text-xl text-ink-muted mb-6 max-w-2xl leading-relaxed" style={{ textWrap: 'balance' }}>
-            We track 100,000+ live postings from 3,300+ fast-growing companies — the employers that adopt first — and show you exactly what's rising and fading in your role.
+            We track 100,000+ live postings from 3,300+ fast-growing companies and show you exactly what's rising and fading in your role.
           </p>
 
           <p className="text-lg sm:text-xl text-ink-muted mb-8 sm:mb-12 max-w-2xl leading-relaxed">
