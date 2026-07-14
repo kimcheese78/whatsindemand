@@ -72,13 +72,72 @@ def run_discover_skills():
 
 
 
-def format_email(scrape_stats, discover_stats, total_duration_min):
+def run_extract(aggregator):
+    """Extract skills for all dirty jobs (pure pattern matching, no Claude).
+    Returns stats dict."""
+    log("=== Skill extraction start ===")
+    start = datetime.utcnow()
+    try:
+        from app.models import Job
+        dirty = Job.query.filter_by(skills_dirty=True).filter(
+            Job.description_text.isnot(None),
+            Job.description_text != '',
+        ).count()
+        extracted = aggregator.extract_dirty_jobs() if dirty else 0
+        duration = (datetime.utcnow() - start).total_seconds()
+        log(f"=== Skill extraction done: {extracted:,} jobs in {duration/60:.1f} min ===")
+        return {"duration_min": round(duration / 60, 1), "jobs_extracted": extracted, "error": None}
+    except Exception as e:
+        log(f"ERROR: skill extraction failed: {e}")
+        traceback.print_exc()
+        return {"duration_min": 0, "jobs_extracted": 0, "error": str(e)}
+
+
+def run_backfill_new_skills():
+    """Backfill job_skills across all historical jobs for skills promoted in
+    the past 7 days (by the weekly review routine). Idempotent — inserts use
+    ON CONFLICT DO NOTHING. Returns stats dict."""
+    log("=== New-skill backfill start ===")
+    start = datetime.utcnow()
+    try:
+        from app.models import db
+        ids = [r[0] for r in db.session.execute(db.text(
+            "SELECT id FROM skills WHERE is_verified=true"
+            " AND created_at >= NOW() - INTERVAL '7 days'"
+        )).fetchall()]
+        if ids:
+            from scripts.backfill_skills import run as backfill_run
+            backfill_run(ids)
+        from scripts.reextract_all_skills import update_job_counts
+        update_job_counts()
+        duration = (datetime.utcnow() - start).total_seconds()
+        log(f"=== New-skill backfill done: {len(ids)} skills in {duration/60:.1f} min ===")
+        return {"duration_min": round(duration / 60, 1), "skills_backfilled": len(ids), "error": None}
+    except Exception as e:
+        log(f"ERROR: new-skill backfill failed: {e}")
+        traceback.print_exc()
+        return {"duration_min": 0, "skills_backfilled": 0, "error": str(e)}
+
+
+def format_email(scrape_stats, discover_stats, extract_stats, backfill_stats, total_duration_min):
     discover_section = f"""
 Skill discovery:
   Jobs scanned:       {discover_stats['jobs_processed']:,}
   Candidates found:   {discover_stats['candidates_upserted']:,}
   Duration:           {discover_stats['duration_min']} min
 """ if not discover_stats.get('error') else f"\nSkill discovery: FAILED — {discover_stats['error']}\n"
+
+    extract_section = f"""
+Skill extraction:
+  Jobs extracted:     {extract_stats['jobs_extracted']:,}
+  Duration:           {extract_stats['duration_min']} min
+""" if not extract_stats.get('error') else f"\nSkill extraction: FAILED — {extract_stats['error']}\n"
+
+    backfill_section = f"""
+New-skill backfill:
+  Skills backfilled:  {backfill_stats['skills_backfilled']}
+  Duration:           {backfill_stats['duration_min']} min
+""" if not backfill_stats.get('error') else f"\nNew-skill backfill: FAILED — {backfill_stats['error']}\n"
 
     text = f"""Weekly maintenance scrape complete.
 
@@ -88,10 +147,11 @@ Scrape:
   Failed: {scrape_stats['failed']}
   Jobs saved: {scrape_stats['jobs_saved']:,}
   Duration: {scrape_stats['duration_min']} min
-{discover_section}
+{discover_section}{extract_section}{backfill_section}
 Total run time: {total_duration_min:.1f} min
 
-Extraction and backfill will run automatically after skill review completes.
+Skill candidate review and role mapping run via the claude.ai weekly
+routine (Fri 14:00 UTC) through the admin pipeline API.
 """
     html = "<pre style='font-family:monospace'>" + text.replace("<", "&lt;").replace(">", "&gt;") + "</pre>"
     return text, html
@@ -113,12 +173,16 @@ def main():
                             "failed": -1, "jobs_saved": 0, "error": str(e)}
 
         discover_stats = run_discover_skills()
+        # Extract BEFORE backfill: extract uses plain inserts (no conflict
+        # handling), backfill is ON CONFLICT DO NOTHING — safe in this order.
+        extract_stats = run_extract(aggregator)
+        backfill_stats = run_backfill_new_skills()
 
     total_duration = (datetime.utcnow() - start).total_seconds() / 60
 
     alert_email = os.environ.get("ALERT_EMAIL")
     if alert_email:
-        text, html = format_email(scrape_stats, discover_stats, total_duration)
+        text, html = format_email(scrape_stats, discover_stats, extract_stats, backfill_stats, total_duration)
         candidates = discover_stats.get('candidates_upserted', 0)
         send_email(
             to=alert_email,

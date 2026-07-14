@@ -323,17 +323,14 @@ def apply_decisions(decisions: list, role_map: dict[str, int]):
     return stats
 
 
-def _update_aliases_yaml(decisions: list) -> None:
-    """Append newly mapped titles to aliases.yaml as de-leveled aliases."""
-    import yaml as _yaml
+def compute_alias_entries(decisions: list) -> list[tuple[str, str]]:
+    """Compute (deleveled_title, canonical_id) alias entries for newly mapped
+    titles, so the normalizer classifies them automatically at scrape time."""
     from app.utils.role_normalizer_v2 import _delevel, _load_taxonomy
 
     canonical_yaml, existing_aliases = _load_taxonomy()
     # Reverse map: role name (lowercase) → canonical_id
     reverse_map = {v['name'].lower(): k for k, v in canonical_yaml.items()}
-
-    aliases_path = os.path.join(DATA_DIR, '..', 'data', 'aliases.yaml')
-    aliases_path = os.path.normpath(aliases_path)
 
     new_entries = []
     for dec in decisions:
@@ -348,7 +345,15 @@ def _update_aliases_yaml(decisions: list) -> None:
         if not deleveled or deleveled in existing_aliases:
             continue
         new_entries.append((deleveled, canonical_id))
+    return new_entries
 
+
+def _update_aliases_yaml(decisions: list) -> None:
+    """Append newly mapped titles to aliases.yaml as de-leveled aliases."""
+    aliases_path = os.path.join(DATA_DIR, '..', 'data', 'aliases.yaml')
+    aliases_path = os.path.normpath(aliases_path)
+
+    new_entries = compute_alias_entries(decisions)
     if not new_entries:
         return
 

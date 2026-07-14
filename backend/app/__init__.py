@@ -87,6 +87,10 @@ def create_app(config_name=None):
     # Public server-rendered pages for SEO (/r/<slug>, /r/, /sitemap.xml)
     from app.routes.public import public_bp
     app.register_blueprint(public_bp)
+
+    # Admin pipeline API (used by the weekly claude.ai review routine)
+    from app.routes import pipeline_admin
+    app.register_blueprint(pipeline_admin.bp, url_prefix='/api/admin/pipeline')
     
     # Health check
     @app.route('/health')
