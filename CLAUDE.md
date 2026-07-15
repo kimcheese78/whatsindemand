@@ -55,14 +55,20 @@ DATABASE_URL='postgresql://...' PYTHONPATH=. venv/bin/python scripts/foo.py
 
 `config.py` rewrites `postgresql://` → `postgresql+psycopg://` for psycopg3 compatibility — pass DSNs in plain `postgresql://` form.
 
-## Pipeline (4 steps — fully automated)
+## Pipeline (fully automated)
 
-1. **Scrape** — `agent_run.py` on Railway (weekly cron). Pulls fresh jobs from all `scrape_enabled=true` companies.
-2. **Discover** — runs automatically inside `agent_run.py` after scrape. Surfaces new skill candidates.
-3. **Review** — automated weekly via Claude Code remote routine (`trig_01JAW9jj5w3hQi9asFSAQQaL`, Sunday 00:00 UTC = 09:00 KST). Claude classifies skill candidates and maps unmatched role titles inline — no Anthropic API credits consumed.
-4. **Extract** — runs automatically inside `agent_run.py` after discovery (`extract_dirty_jobs()`).
+One weekly Railway cron (`agent_run.py`, weekly-scrape service, Fridays) runs the entire pipeline end to end:
 
-Backfill of newly promoted skills runs inside the Sunday review routine after promotion (`backfill_skills.py --min-id FIRST_ID`).
+1. **Scrape** all `scrape_enabled=true` companies
+2. **Discover** new skill candidates from JD requirements sections
+3. **Triage skill candidates** via Anthropic API (`ai_triage_skills.py`, claude-sonnet-5) — promotes keeps, rejects drops
+4. **Map unmatched titles** via Anthropic API (`ai_map_roles.py::run_pipeline`) — writes `role_title_variations`; the scraper consults that table before queueing unmatched titles, so mappings persist without repo write-back
+5. **Extract** skills for all dirty jobs, then **backfill** skills promoted in the past 7 days across historical jobs, then rebuild `total_job_count`
+6. **Email report** via Resend to ALERT_EMAIL (full stats for every step)
+
+Needs on the weekly-scrape service: `DATABASE_URL`, `ANTHROPIC_API_KEY`, `RESEND_API_KEY`, `ALERT_EMAIL`. API cost ~$2-3/month.
+
+History: review used to run in a claude.ai cloud routine (`trig_01JAW9jj5w3hQi9asFSAQQaL`, now disabled) to avoid API credits, but the cloud environment's egress policy blocks both the DB (raw TCP) and any non-allowlisted HTTPS domain, and it broke silently twice — consolidated 2026-07-16.
 
 ## Skill taxonomy
 

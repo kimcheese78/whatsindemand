@@ -285,9 +285,18 @@ class JobAggregator:
         normalized_title = job_data.get('role_normalized_title', '')
 
         if not normalized_title or normalized_title == 'Unknown':
+            raw_title = job_data.get('title', '').strip()
+            # The weekly review maps titles into role_title_variations —
+            # honor those before queueing, so mappings persist without
+            # having to write aliases.yaml back to the repo from Railway.
+            if raw_title:
+                variation = RoleTitleVariation.query.filter_by(
+                    original_title=raw_title
+                ).first()
+                if variation and variation.role_id:
+                    return Role.query.get(variation.role_id)
             # Queue raw title for manual review, but not junk/placeholder titles
             role_category = job_data.get('role_category', '')
-            raw_title = job_data.get('title', '').strip()
             if raw_title and role_category != 'Skip':
                 self._queue_role_candidate(raw_title)
             return None

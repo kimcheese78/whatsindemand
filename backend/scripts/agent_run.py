@@ -72,6 +72,44 @@ def run_discover_skills():
 
 
 
+def run_triage_skills():
+    """Classify pending skill candidates via the Anthropic API and promote
+    keeps / reject drops. Returns stats dict."""
+    log("=== Skill candidate triage start ===")
+    start = datetime.utcnow()
+    try:
+        from scripts.ai_triage_skills import run as triage_run
+        stats = triage_run(apply=True)
+        duration = (datetime.utcnow() - start).total_seconds()
+        log(f"=== Skill triage done: kept {stats['kept']}, dropped {stats['dropped']} "
+            f"in {duration/60:.1f} min ===")
+        return {**stats, "duration_min": round(duration / 60, 1), "error": None}
+    except Exception as e:
+        log(f"ERROR: skill triage failed: {e}")
+        traceback.print_exc()
+        return {"reviewed": 0, "kept": 0, "dropped": 0, "skipped_duplicates": 0,
+                "new_skill_ids": [], "duration_min": 0, "error": str(e)}
+
+
+def run_map_roles():
+    """Classify pending unmatched titles via the Anthropic API and apply
+    the mappings. Returns stats dict."""
+    log("=== Role mapping start ===")
+    start = datetime.utcnow()
+    try:
+        from scripts.ai_map_roles import run_pipeline
+        stats = run_pipeline()
+        duration = (datetime.utcnow() - start).total_seconds()
+        log(f"=== Role mapping done: mapped {stats['mapped']}, "
+            f"rejected {stats['rejected']} in {duration/60:.1f} min ===")
+        return {**stats, "duration_min": round(duration / 60, 1), "error": None}
+    except Exception as e:
+        log(f"ERROR: role mapping failed: {e}")
+        traceback.print_exc()
+        return {"reviewed": 0, "mapped": 0, "new_roles": 0, "rejected": 0,
+                "jobs_updated": 0, "api_errors": 0, "duration_min": 0, "error": str(e)}
+
+
 def run_extract(aggregator):
     """Extract skills for all dirty jobs (pure pattern matching, no Claude).
     Returns stats dict."""
@@ -119,13 +157,32 @@ def run_backfill_new_skills():
         return {"duration_min": 0, "skills_backfilled": 0, "error": str(e)}
 
 
-def format_email(scrape_stats, discover_stats, extract_stats, backfill_stats, total_duration_min):
+def format_email(scrape_stats, discover_stats, triage_stats, roles_stats,
+                 extract_stats, backfill_stats, total_duration_min):
     discover_section = f"""
 Skill discovery:
   Jobs scanned:       {discover_stats['jobs_processed']:,}
   Candidates found:   {discover_stats['candidates_upserted']:,}
   Duration:           {discover_stats['duration_min']} min
 """ if not discover_stats.get('error') else f"\nSkill discovery: FAILED — {discover_stats['error']}\n"
+
+    new_ids = triage_stats.get('new_skill_ids') or []
+    triage_section = f"""
+Skill candidate review:
+  Reviewed:           {triage_stats['reviewed']}
+  Kept (new skills):  {triage_stats['kept']}{f"  (IDs {new_ids[0]}-{new_ids[-1]})" if new_ids else ""}
+  Dropped:            {triage_stats['dropped']}
+  Duplicates skipped: {triage_stats['skipped_duplicates']}
+""" if not triage_stats.get('error') else f"\nSkill candidate review: FAILED — {triage_stats['error']}\n"
+
+    roles_section = f"""
+Role mapping:
+  Reviewed:           {roles_stats['reviewed']}
+  Mapped:             {roles_stats['mapped']}
+  New roles:          {roles_stats['new_roles']}
+  Rejected:           {roles_stats['rejected']}
+  Jobs updated:       {roles_stats['jobs_updated']}
+""" if not roles_stats.get('error') else f"\nRole mapping: FAILED — {roles_stats['error']}\n"
 
     extract_section = f"""
 Skill extraction:
@@ -147,11 +204,8 @@ Scrape:
   Failed: {scrape_stats['failed']}
   Jobs saved: {scrape_stats['jobs_saved']:,}
   Duration: {scrape_stats['duration_min']} min
-{discover_section}{extract_section}{backfill_section}
+{discover_section}{triage_section}{roles_section}{extract_section}{backfill_section}
 Total run time: {total_duration_min:.1f} min
-
-Skill candidate review and role mapping run via the claude.ai weekly
-routine (Fri 14:00 UTC) through the admin pipeline API.
 """
     html = "<pre style='font-family:monospace'>" + text.replace("<", "&lt;").replace(">", "&gt;") + "</pre>"
     return text, html
@@ -173,8 +227,13 @@ def main():
                             "failed": -1, "jobs_saved": 0, "error": str(e)}
 
         discover_stats = run_discover_skills()
+        triage_stats = run_triage_skills()
+        roles_stats = run_map_roles()
         # Extract BEFORE backfill: extract uses plain inserts (no conflict
         # handling), backfill is ON CONFLICT DO NOTHING — safe in this order.
+        # Triage runs before extract so this week's new skills are included
+        # in the extraction of this week's new jobs; the backfill 7-day
+        # window covers them on historical jobs.
         extract_stats = run_extract(aggregator)
         backfill_stats = run_backfill_new_skills()
 
@@ -182,11 +241,13 @@ def main():
 
     alert_email = os.environ.get("ALERT_EMAIL")
     if alert_email:
-        text, html = format_email(scrape_stats, discover_stats, extract_stats, backfill_stats, total_duration)
-        candidates = discover_stats.get('candidates_upserted', 0)
+        text, html = format_email(scrape_stats, discover_stats, triage_stats,
+                                  roles_stats, extract_stats, backfill_stats, total_duration)
         send_email(
             to=alert_email,
-            subject=f"WhatsInDemand weekly scrape: {scrape_stats['jobs_saved']:,} jobs · {candidates:,} new candidates",
+            subject=(f"WhatsInDemand weekly report: {scrape_stats['jobs_saved']:,} jobs · "
+                     f"{triage_stats.get('kept', 0)} new skills · "
+                     f"{roles_stats.get('mapped', 0)} roles mapped"),
             html=html,
             text=text,
         )

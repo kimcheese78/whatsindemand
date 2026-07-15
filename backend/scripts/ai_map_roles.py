@@ -41,7 +41,7 @@ COMMIT_EVERY = 100  # DB commit cadence when applying
 DATA_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'data')
 CHECKPOINT_FILE = os.path.join(DATA_DIR, 'ai_role_decisions.json')
 
-MODEL = 'claude-sonnet-4-6'
+MODEL = 'claude-sonnet-5'
 
 # ── Reject filters (skip these before sending to Claude) ──────────────────────
 _INTERN_PATTERNS = re.compile(
@@ -363,6 +363,95 @@ def _update_aliases_yaml(decisions: list) -> None:
             f.write(f'"{title}": {cid}\n')
 
     print(f'  aliases.yaml: added {len(new_entries)} new entries')
+
+
+# ── Pipeline entry point (used by agent_run.py) ──────────────────────────────
+
+def run_pipeline(min_jobs: int = 1, limit: int = 500) -> dict:
+    """Generate decisions via the Anthropic API and apply them in one pass,
+    then bulk-reject any remaining pending titles. No checkpoint file, no
+    argv. Must be called inside an app context. Returns stats dict."""
+    canonical = load_canonical_roles()
+    role_map = {r['title'].lower(): r['id'] for r in canonical}
+    roles_block = build_roles_block(canonical)
+
+    pending = load_pending_titles(min_jobs)[:limit]
+    print(f'Role mapping: {len(pending)} pending titles (min_jobs={min_jobs}, limit={limit})')
+
+    decisions = []
+    to_classify = []
+    for t in pending:
+        reason = _quick_reject(t['title'])
+        if reason:
+            decisions.append({'raw_title': t['title'], 'jobs': t['jobs'],
+                              'action': 'reject', 'reason': reason})
+        else:
+            to_classify.append(t)
+    print(f'  Quick-rejected: {len(decisions)}  To Claude: {len(to_classify)}')
+
+    jd_map = fetch_jd_snippets([t['title'] for t in to_classify])
+    for t in to_classify:
+        info = jd_map.get(t['title'], {})
+        t['department'] = info.get('department', '')
+        t['jd'] = info.get('jd', '')
+
+    client = anthropic.Anthropic() if to_classify else None
+    errors = 0
+    for batch_start in range(0, len(to_classify), BATCH_SIZE):
+        batch = to_classify[batch_start:batch_start + BATCH_SIZE]
+        try:
+            results = call_claude(client, build_user_prompt(batch, roles_block))
+        except Exception as e:
+            print(f'  ❌ Claude error: {e}')
+            errors += 1
+            if errors >= 3:
+                print('  Too many errors — remaining titles left pending.')
+                break
+            time.sleep(5)
+            continue
+
+        idx_to_item = {i + 1: b for i, b in enumerate(batch)}
+        for r in results:
+            item = idx_to_item.get(r.get('idx'))
+            if not item:
+                continue
+            dec = {'raw_title': item['title'], 'jobs': item['jobs'],
+                   'action': r.get('action', 'skip')}
+            if dec['action'] == 'map':
+                dec['role'] = r.get('role', '')
+                if not title_to_role_id(dec['role'], role_map):
+                    dec['action'] = 'skip'
+            elif dec['action'] == 'new_role':
+                dec['suggested_title'] = r.get('suggested_title', '')
+                dec['category'] = r.get('category', '')
+                dec['job_family'] = r.get('job_family', '')
+            else:
+                dec['reason'] = r.get('reason', '')
+            decisions.append(dec)
+        if batch_start + BATCH_SIZE < len(to_classify):
+            time.sleep(1)
+
+    stats = apply_decisions(decisions, role_map)
+
+    # Everything not decided this run (skips, over-limit, error leftovers)
+    # gets rejected so the queue is clean for next week.
+    result = db.session.execute(db.text(
+        "UPDATE unmatched_titles SET status='rejected',"
+        " rejected_reason='ai_triage_dropped' WHERE status='pending'"
+    ))
+    db.session.commit()
+
+    by_action = defaultdict(int)
+    for d in decisions:
+        by_action[d['action']] += 1
+    return {
+        'reviewed': len(decisions),
+        'mapped': by_action['map'],
+        'new_roles': int(stats.get('roles_created', 0)),
+        'rejected': by_action['reject'] + result.rowcount,
+        'jobs_updated': int(stats.get('jobs_updated', 0)),
+        'api_errors': errors,
+    }
 
 
 # ── Main ──────────────────────────────────────────────────────────────────────
