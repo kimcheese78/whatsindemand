@@ -97,24 +97,38 @@ def load_taxonomy_names():
     return [s[0] for s in skills] + [a for s in skills for a in (s[1] or [])]
 
 
-def build_user_prompt(batch, taxonomy_names):
+def build_system_blocks(taxonomy_names):
+    """Static prompt prefix, cached across batches within a run.
+    Cache reads cost ~0.1x, so only the first batch pays for the ~25k-token
+    taxonomy; sorted() keeps the bytes deterministic for prefix matching."""
     subcats = json.dumps(SUBCATEGORIES, indent=1)
+    return [
+        {'type': 'text', 'text': SYSTEM_PROMPT},
+        {
+            'type': 'text',
+            'text': (
+                f'# Valid subcategories per category\n{subcats}\n\n'
+                f'# Existing taxonomy (names + aliases) — drop near-duplicates of these\n'
+                f'{", ".join(sorted(taxonomy_names))}'
+            ),
+            'cache_control': {'type': 'ephemeral'},
+        },
+    ]
+
+
+def build_user_prompt(batch):
     cands = '\n'.join(
         f'- id={c["id"]} name={c["name"]!r} companies={c["company_count"]} '
         f'jobs={c["job_count"]} contexts={c["contexts"]!r}'
         for c in batch
     )
-    return (
-        f'# Valid subcategories per category\n{subcats}\n\n'
-        f'# Existing taxonomy (names + aliases) — drop near-duplicates of these\n'
-        f'{", ".join(sorted(taxonomy_names))}\n\n'
-        f'# Candidates to classify ({len(batch)})\n{cands}'
-    )
+    return f'# Candidates to classify ({len(batch)})\n{cands}'
 
 
 def classify(candidates, taxonomy_names):
     """Batch candidates to Claude; returns list of decision dicts."""
     client = anthropic.Anthropic()
+    system_blocks = build_system_blocks(taxonomy_names)
     decisions = []
     for start in range(0, len(candidates), BATCH_SIZE):
         batch = candidates[start:start + BATCH_SIZE]
@@ -122,9 +136,12 @@ def classify(candidates, taxonomy_names):
         resp = client.messages.create(
             model=MODEL,
             max_tokens=8192,
-            system=SYSTEM_PROMPT,
-            messages=[{'role': 'user', 'content': build_user_prompt(batch, taxonomy_names)}],
+            system=system_blocks,
+            messages=[{'role': 'user', 'content': build_user_prompt(batch)}],
         )
+        u = resp.usage
+        print(f'    tokens: in={u.input_tokens} cache_write={u.cache_creation_input_tokens} '
+              f'cache_read={u.cache_read_input_tokens} out={u.output_tokens}', flush=True)
         raw = resp.content[0].text.strip()
         raw = re.sub(r'^```(?:json)?\s*', '', raw, flags=re.MULTILINE)
         raw = re.sub(r'\s*```$', '', raw, flags=re.MULTILINE)

@@ -34,7 +34,7 @@ import anthropic
 APPLY = '--apply' in sys.argv
 MIN_JOBS = int(next((sys.argv[i+1] for i, a in enumerate(sys.argv) if a == '--min-jobs'), 5))
 LIMIT = int(next((sys.argv[i+1] for i, a in enumerate(sys.argv) if a == '--limit'), 9999))
-BATCH_SIZE = 25   # titles per Claude API call
+BATCH_SIZE = 50   # titles per Claude API call
 JD_CHARS = 800    # chars of JD text to include per title
 COMMIT_EVERY = 100  # DB commit cadence when applying
 
@@ -167,7 +167,21 @@ Respond ONLY with a JSON array — no prose, no markdown fences.\
 """
 
 
-def build_user_prompt(batch: list[dict], roles_block: str) -> str:
+def build_system_blocks(roles_block: str) -> list[dict]:
+    """Static prompt prefix (instructions + canonical roles), cached across
+    batches within a run — batches 2..N read it at ~0.1x cost instead of
+    resending ~4k tokens per call."""
+    return [
+        {'type': 'text', 'text': SYSTEM_PROMPT},
+        {
+            'type': 'text',
+            'text': f'# Canonical Roles\n{roles_block}',
+            'cache_control': {'type': 'ephemeral'},
+        },
+    ]
+
+
+def build_user_prompt(batch: list[dict]) -> str:
     items = []
     for i, item in enumerate(batch):
         jd = item['jd'][:JD_CHARS] if item['jd'] else ''
@@ -179,7 +193,6 @@ def build_user_prompt(batch: list[dict], roles_block: str) -> str:
         )
 
     return (
-        f'# Canonical Roles\n{roles_block}\n\n'
         f'# Job Titles to Classify\n' + '\n\n'.join(items) +
         '\n\n# Response format (JSON array, one entry per title above)\n'
         '[\n'
@@ -194,13 +207,16 @@ def build_user_prompt(batch: list[dict], roles_block: str) -> str:
 
 # ── Claude API call ───────────────────────────────────────────────────────────
 
-def call_claude(client: anthropic.Anthropic, user_prompt: str) -> list[dict]:
+def call_claude(client: anthropic.Anthropic, system_blocks: list[dict], user_prompt: str) -> list[dict]:
     resp = client.messages.create(
         model=MODEL,
-        max_tokens=2048,
-        system=SYSTEM_PROMPT,
+        max_tokens=4096,
+        system=system_blocks,
         messages=[{'role': 'user', 'content': user_prompt}],
     )
+    u = resp.usage
+    print(f'    tokens: in={u.input_tokens} cache_write={u.cache_creation_input_tokens} '
+          f'cache_read={u.cache_read_input_tokens} out={u.output_tokens}', flush=True)
     raw = resp.content[0].text.strip()
     # Strip markdown fences if model adds them despite instructions
     raw = re.sub(r'^```(?:json)?\s*', '', raw, flags=re.MULTILINE)
@@ -396,11 +412,12 @@ def run_pipeline(min_jobs: int = 1, limit: int = 500) -> dict:
         t['jd'] = info.get('jd', '')
 
     client = anthropic.Anthropic() if to_classify else None
+    system_blocks = build_system_blocks(roles_block)
     errors = 0
     for batch_start in range(0, len(to_classify), BATCH_SIZE):
         batch = to_classify[batch_start:batch_start + BATCH_SIZE]
         try:
-            results = call_claude(client, build_user_prompt(batch, roles_block))
+            results = call_claude(client, system_blocks, build_user_prompt(batch))
         except Exception as e:
             print(f'  ❌ Claude error: {e}')
             errors += 1
@@ -543,6 +560,7 @@ def main():
 
         # ── Batch → Claude ───────────────────────────────────────────────────
         client = anthropic.Anthropic()
+        system_blocks = build_system_blocks(roles_block)
         total_batches = (len(to_classify) + BATCH_SIZE - 1) // BATCH_SIZE
         errors = 0
 
@@ -553,10 +571,10 @@ def main():
             for b in batch:
                 print(f'  {b["jobs"]:4d} jobs  {b["title"]}')
 
-            user_prompt = build_user_prompt(batch, roles_block)
+            user_prompt = build_user_prompt(batch)
 
             try:
-                results = call_claude(client, user_prompt)
+                results = call_claude(client, system_blocks, user_prompt)
             except Exception as e:
                 print(f'  ❌ Claude error: {e}')
                 errors += 1
