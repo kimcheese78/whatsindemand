@@ -1243,8 +1243,8 @@ const LandingScreen = () => {
       <div className="flex-1">
         <div className="max-w-4xl mx-auto px-6 sm:px-8 pt-20 sm:pt-32 pb-32">
           <h1 className="text-5xl sm:text-7xl md:text-8xl font-semibold mb-8 sm:mb-12 leading-none tracking-tight">
-            YOUR ROLE <br />
-            IS CHANGING
+            SEE INTO <br />
+            THE JOB MARKET
           </h1>
 
           <p className="text-lg sm:text-xl text-ink-muted mb-6 max-w-2xl leading-relaxed">
