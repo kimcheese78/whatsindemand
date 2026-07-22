@@ -1243,7 +1243,7 @@ const LandingScreen = () => {
       <div className="flex-1">
         <div className="max-w-4xl mx-auto px-6 sm:px-8 pt-20 sm:pt-32 pb-32">
           <h1 className="text-5xl sm:text-7xl md:text-8xl font-semibold mb-8 sm:mb-12 leading-none tracking-tight">
-            TRACK THE SKILLS <br />
+            THE SKILLS <br />
             IN DEMAND
           </h1>
 
