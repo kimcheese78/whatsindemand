@@ -210,7 +210,7 @@ def build_user_prompt(batch: list[dict]) -> str:
 def call_claude(client: anthropic.Anthropic, system_blocks: list[dict], user_prompt: str) -> list[dict]:
     resp = client.messages.create(
         model=MODEL,
-        max_tokens=4096,
+        max_tokens=8192,
         system=system_blocks,
         messages=[{'role': 'user', 'content': user_prompt}],
     )
