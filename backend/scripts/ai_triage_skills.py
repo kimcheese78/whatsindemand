@@ -142,7 +142,10 @@ def classify(candidates, taxonomy_names):
         u = resp.usage
         print(f'    tokens: in={u.input_tokens} cache_write={u.cache_creation_input_tokens} '
               f'cache_read={u.cache_read_input_tokens} out={u.output_tokens}', flush=True)
-        raw = resp.content[0].text.strip()
+        text_block = next((b for b in resp.content if getattr(b, 'type', None) == 'text'), None)
+        if text_block is None:
+            raise ValueError(f'no text block in response (got: {[getattr(b, "type", None) for b in resp.content]})')
+        raw = text_block.text.strip()
         raw = re.sub(r'^```(?:json)?\s*', '', raw, flags=re.MULTILINE)
         raw = re.sub(r'\s*```$', '', raw, flags=re.MULTILINE)
         decisions.extend(json.loads(raw))

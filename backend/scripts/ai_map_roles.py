@@ -217,7 +217,10 @@ def call_claude(client: anthropic.Anthropic, system_blocks: list[dict], user_pro
     u = resp.usage
     print(f'    tokens: in={u.input_tokens} cache_write={u.cache_creation_input_tokens} '
           f'cache_read={u.cache_read_input_tokens} out={u.output_tokens}', flush=True)
-    raw = resp.content[0].text.strip()
+    text_block = next((b for b in resp.content if getattr(b, 'type', None) == 'text'), None)
+    if text_block is None:
+        raise ValueError(f'no text block in response (got: {[getattr(b, "type", None) for b in resp.content]})')
+    raw = text_block.text.strip()
     # Strip markdown fences if model adds them despite instructions
     raw = re.sub(r'^```(?:json)?\s*', '', raw, flags=re.MULTILINE)
     raw = re.sub(r'\s*```$', '', raw, flags=re.MULTILINE)
@@ -450,13 +453,21 @@ def run_pipeline(min_jobs: int = 1, limit: int = 500) -> dict:
 
     stats = apply_decisions(decisions, role_map)
 
-    # Everything not decided this run (skips, over-limit, error leftovers)
-    # gets rejected so the queue is clean for next week.
-    result = db.session.execute(db.text(
-        "UPDATE unmatched_titles SET status='rejected',"
-        " rejected_reason='ai_triage_dropped' WHERE status='pending'"
-    ))
-    db.session.commit()
+    # Everything not decided this run (skips, over-limit leftovers) gets
+    # rejected so the queue is clean for next week — but only when the API
+    # actually got through every batch. If any batch errored, leave pending
+    # titles alone so they're retried next run instead of being dropped
+    # without ever being reviewed.
+    bulk_rejected = 0
+    if errors == 0:
+        result = db.session.execute(db.text(
+            "UPDATE unmatched_titles SET status='rejected',"
+            " rejected_reason='ai_triage_dropped' WHERE status='pending'"
+        ))
+        db.session.commit()
+        bulk_rejected = result.rowcount
+    else:
+        print(f'  ⚠ {errors} batch error(s) — skipping bulk-reject of remaining pending titles')
 
     by_action = defaultdict(int)
     for d in decisions:
@@ -465,7 +476,7 @@ def run_pipeline(min_jobs: int = 1, limit: int = 500) -> dict:
         'reviewed': len(decisions),
         'mapped': by_action['map'],
         'new_roles': int(stats.get('roles_created', 0)),
-        'rejected': by_action['reject'] + result.rowcount,
+        'rejected': by_action['reject'] + bulk_rejected,
         'jobs_updated': int(stats.get('jobs_updated', 0)),
         'api_errors': errors,
     }
