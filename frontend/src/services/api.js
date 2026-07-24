@@ -353,6 +353,18 @@ class API {
   }
 
   // ============================================
+  // MATCHED JOBS ENDPOINTS (auth required)
+  // ============================================
+
+  async getMatchedJobs() {
+    return this.request('/api/matched-jobs');
+  }
+
+  async getMatchedJobsSummary() {
+    return this.request('/api/matched-jobs/summary');
+  }
+
+  // ============================================
   // COMPANIES ENDPOINTS
   // ============================================
 

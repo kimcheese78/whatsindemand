@@ -75,6 +75,10 @@ def create_app(config_name=None):
     from app.routes.locations import locations_bp
     app.register_blueprint(locations_bp)
 
+    # Matched jobs (personalized live postings by skill coverage)
+    from app.routes.matched_jobs import matched_jobs_bp
+    app.register_blueprint(matched_jobs_bp)
+
     # NEW: Career intelligence endpoints
     from app.routes.roles import roles_bp
     from app.routes.companies import companies_bp

@@ -8,6 +8,7 @@ import {
 } from 'lucide-react';
 import api from './services/api';
 import { Panel, Eyebrow, Stat, Pill, HeroNumber } from './components/ui';
+import MatchedJobs, { MatchedJobsSummaryCard } from './components/MatchedJobs';
 
 const SCREEN_TO_PATH = {
   landing: '/',
@@ -1852,6 +1853,7 @@ const MobileHeader = () => {
     { id: 'overview', label: 'Overview' },
     { id: 'employers', label: 'Companies' },
     { id: 'skills', label: 'Skills' },
+    ...(user ? [{ id: 'jobs', label: 'Jobs for You' }] : []),
     { id: 'paths', label: 'Paths' },
   ];
 
@@ -2751,6 +2753,8 @@ const DashboardScreen = () => {
           {/* Tab Content */}
           {activeTab === 'paths' ? (
             <AlternativesTab />
+          ) : activeTab === 'jobs' ? (
+            <MatchedJobs onUpgrade={() => setCurrentScreen('account')} />
           ) : roleData?.total_jobs_analyzed === 0 ? (
             <NoResultsMessage onClearFilters={handleClearFilters} loading={loading} />
           ) : (
@@ -2785,6 +2789,7 @@ const DashboardSidebar = () => {
     { id: 'overview', label: 'OVERVIEW', description: 'Read the market' },
     { id: 'employers', label: 'COMPANIES', description: 'See who\'s hiring' },
     { id: 'skills', label: 'SKILLS IN DEMAND', description: 'Know what\'s valued' },
+    ...(user ? [{ id: 'jobs', label: 'JOBS FOR YOU', description: 'Matched to your skills' }] : []),
     { id: 'paths', label: 'ALTERNATIVE ROLES', description: 'Explore your options' },
   ];
 
@@ -2999,6 +3004,11 @@ const OverviewTab = () => {
 
   return (
     <div className="space-y-4">
+
+      {/* Personalized matched-jobs teaser — only for logged-in users with skills */}
+      {user && hasUserSkills && (
+        <MatchedJobsSummaryCard onView={() => setActiveTab('jobs')} />
+      )}
 
       {/* ACTION STRIP — one specific thing to do */}
       {!user && !hasUserSkills ? (
