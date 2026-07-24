@@ -9,6 +9,7 @@ import {
 import api from './services/api';
 import { Panel, Eyebrow, Stat, Pill, HeroNumber } from './components/ui';
 import MatchedJobs, { MatchedJobsSummaryCard } from './components/MatchedJobs';
+import PositionScore from './components/PositionScore';
 
 const SCREEN_TO_PATH = {
   landing: '/',
@@ -3005,7 +3006,8 @@ const OverviewTab = () => {
   return (
     <div className="space-y-4">
 
-      {/* Personalized matched-jobs teaser — only for logged-in users with skills */}
+      {/* Position Score hero + matched-jobs teaser — logged-in users with skills */}
+      {user && hasUserSkills && <PositionScore />}
       {user && hasUserSkills && (
         <MatchedJobsSummaryCard onView={() => setActiveTab('jobs')} />
       )}

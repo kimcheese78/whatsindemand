@@ -157,8 +157,28 @@ def run_backfill_new_skills():
         return {"duration_min": 0, "skills_backfilled": 0, "error": str(e)}
 
 
+def run_snapshots():
+    """Compute each user's weekly Position Score snapshot (after extraction/
+    backfill so the score reflects the freshest data). Self-manages its own
+    app context. Returns stats dict."""
+    log("=== Position Score snapshots start ===")
+    start = datetime.utcnow()
+    try:
+        from scripts.compute_week_snapshots import run as snapshots_run
+        stats = snapshots_run(apply=True)
+        duration = (datetime.utcnow() - start).total_seconds()
+        log(f"=== Position Score snapshots done: {stats['computed']} computed "
+            f"({stats['inserted']} new, {stats['updated']} updated) in {duration/60:.1f} min ===")
+        return {**stats, "duration_min": round(duration / 60, 1), "error": None}
+    except Exception as e:
+        log(f"ERROR: position score snapshots failed: {e}")
+        traceback.print_exc()
+        return {"users": 0, "computed": 0, "inserted": 0, "updated": 0,
+                "skipped": 0, "errors": 0, "duration_min": 0, "error": str(e)}
+
+
 def format_email(scrape_stats, discover_stats, triage_stats, roles_stats,
-                 extract_stats, backfill_stats, total_duration_min):
+                 extract_stats, backfill_stats, snapshot_stats, total_duration_min):
     discover_section = f"""
 Skill discovery:
   Jobs scanned:       {discover_stats['jobs_processed']:,}
@@ -196,6 +216,15 @@ New-skill backfill:
   Duration:           {backfill_stats['duration_min']} min
 """ if not backfill_stats.get('error') else f"\nNew-skill backfill: FAILED — {backfill_stats['error']}\n"
 
+    snapshot_section = f"""
+Position Score snapshots:
+  Users computed:     {snapshot_stats['computed']}
+  New / updated:      {snapshot_stats['inserted']} / {snapshot_stats['updated']}
+  Skipped (no skills):{snapshot_stats['skipped']}
+  Errors:             {snapshot_stats['errors']}
+  Duration:           {snapshot_stats['duration_min']} min
+""" if not snapshot_stats.get('error') else f"\nPosition Score snapshots: FAILED — {snapshot_stats['error']}\n"
+
     text = f"""Weekly maintenance scrape complete.
 
 Scrape:
@@ -204,7 +233,7 @@ Scrape:
   Failed: {scrape_stats['failed']}
   Jobs saved: {scrape_stats['jobs_saved']:,}
   Duration: {scrape_stats['duration_min']} min
-{discover_section}{triage_section}{roles_section}{extract_section}{backfill_section}
+{discover_section}{triage_section}{roles_section}{extract_section}{backfill_section}{snapshot_section}
 Total run time: {total_duration_min:.1f} min
 """
     html = "<pre style='font-family:monospace'>" + text.replace("<", "&lt;").replace(">", "&gt;") + "</pre>"
@@ -237,12 +266,16 @@ def main():
         extract_stats = run_extract(aggregator)
         backfill_stats = run_backfill_new_skills()
 
+    # Position Score snapshots run after the data steps; self-manages context.
+    snapshot_stats = run_snapshots()
+
     total_duration = (datetime.utcnow() - start).total_seconds() / 60
 
     alert_email = os.environ.get("ALERT_EMAIL")
     if alert_email:
         text, html = format_email(scrape_stats, discover_stats, triage_stats,
-                                  roles_stats, extract_stats, backfill_stats, total_duration)
+                                  roles_stats, extract_stats, backfill_stats,
+                                  snapshot_stats, total_duration)
         send_email(
             to=alert_email,
             subject=(f"WhatsInDemand weekly report: {scrape_stats['jobs_saved']:,} jobs · "

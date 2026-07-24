@@ -79,6 +79,10 @@ def create_app(config_name=None):
     from app.routes.matched_jobs import matched_jobs_bp
     app.register_blueprint(matched_jobs_bp)
 
+    # Position score (weekly-tracked standing vs. target role)
+    from app.routes.position_score import position_score_bp
+    app.register_blueprint(position_score_bp)
+
     # NEW: Career intelligence endpoints
     from app.routes.roles import roles_bp
     from app.routes.companies import companies_bp

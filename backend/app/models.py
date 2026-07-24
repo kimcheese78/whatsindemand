@@ -87,6 +87,27 @@ class UserProfile(db.Model):
         }
 
 
+class UserWeekSnapshot(db.Model):
+    """Per-user weekly snapshot of Position Score + its drivers. Written by
+    scripts/compute_week_snapshots.py each Friday; read by the dashboard hero
+    module and the weekly digest. One row per user per ISO week."""
+    __tablename__ = 'user_week_snapshots'
+
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False, index=True)
+    week_start = db.Column(db.Date, nullable=False)  # Monday of the ISO week
+    position_score = db.Column(db.Integer)           # 0-100
+    match_pct = db.Column(db.Float)                  # skill coverage vs target role (0-1)
+    market_momentum = db.Column(db.Float)            # postings_growth_pct for the role
+    ai_exposure = db.Column(db.Float)                # role's AI-skill share, current_pct
+    matched_jobs_count = db.Column(db.Integer)
+    new_matched_jobs = db.Column(db.Integer)
+    details_json = db.Column(db.Text)                # components + drivers for the score
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+    __table_args__ = (db.UniqueConstraint('user_id', 'week_start', name='uq_user_week_snapshot'),)
+
+
 # ============================================
 # SKILLS MODELS
 # ============================================

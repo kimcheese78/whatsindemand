@@ -364,6 +364,10 @@ class API {
     return this.request('/api/matched-jobs/summary');
   }
 
+  async getPositionScore() {
+    return this.request('/api/position-score');
+  }
+
   // ============================================
   // COMPANIES ENDPOINTS
   // ============================================
