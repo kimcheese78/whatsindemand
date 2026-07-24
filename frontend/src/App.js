@@ -1652,6 +1652,12 @@ const RoleSelectionScreen = () => {
               )}
             </button>
           </div>
+
+          {loading && (
+            <p className="mt-4 text-sm text-ink-muted text-center">
+              Scanning live job postings for this role — usually takes about 10 seconds.
+            </p>
+          )}
         </div>
       </div>
 
