@@ -4104,17 +4104,18 @@ const RoleLoadingScreen = () => {
 
   return (
     <div className="min-h-screen bg-zinc-900 text-white flex items-center justify-center px-6">
-      <div className="w-full max-w-sm text-center">
-        <div className="num text-6xl sm:text-7xl font-light text-ink mb-10 tabular-nums">
-          {Math.round(progress)}%
+      <div className="w-full max-w-xs">
+        <div className="flex items-baseline justify-between mb-3">
+          <span className="text-eyebrow text-ink-faint tracking-widest">LOADING</span>
+          <span className="num text-sm text-ink-muted tabular-nums">{Math.round(progress)}%</span>
         </div>
-        <div className="h-1.5 w-full bg-white/10 rounded-full overflow-hidden mb-6">
+        <div className="h-1 w-full bg-white/10 rounded-full overflow-hidden mb-5">
           <div
             className="h-full bg-accent-up rounded-full transition-[width] duration-200 ease-out"
             style={{ width: `${progress}%` }}
           />
         </div>
-        <div className="text-sm text-ink-muted">
+        <div className="text-sm text-ink-muted text-center">
           {ROLE_LOADING_MESSAGES[messageIdx]}
         </div>
       </div>
