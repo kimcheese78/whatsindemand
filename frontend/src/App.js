@@ -4077,7 +4077,7 @@ const LoadingScreen = () => (
 // instant the real fetch resolves and currentScreen changes.
 // ============================================
 const ROLE_LOADING_MESSAGES = [
-  'Scanning 100,000+ live job postings…',
+  'Scanning live job postings…',
   'Extracting required skills…',
   'Comparing against market trends…',
   'Compiling your role snapshot…',
