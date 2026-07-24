@@ -4430,7 +4430,7 @@ const LegalSection = ({ heading, children }) => (
 );
 
 const TermsScreen = () => (
-  <LegalLayout title="TERMS OF SERVICE" lastUpdated="April 29, 2026">
+  <LegalLayout title="TERMS OF SERVICE" lastUpdated="July 24, 2026">
     <p>
       These terms govern your use of WhatsInDemand ("the Service"). By creating
       an account or using the Service, you agree to them.
@@ -4465,8 +4465,10 @@ const TermsScreen = () => (
     <LegalSection heading="THE DATA WE SHOW">
       <p>
         Job market insights are aggregated from publicly available sources.
-        We strive for accuracy but make no guarantees of completeness, timeliness,
-        or correctness. Don't rely on the Service as the sole basis for major
+        Skills, roles, and trends are extracted using automated processing,
+        including AI-assisted classification, and may contain errors. We strive
+        for accuracy but make no guarantees of completeness, timeliness, or
+        correctness. Don't rely on the Service as the sole basis for major
         career or hiring decisions.
       </p>
     </LegalSection>
@@ -4506,7 +4508,7 @@ const TermsScreen = () => (
 );
 
 const PrivacyScreen = () => (
-  <LegalLayout title="PRIVACY POLICY" lastUpdated="April 29, 2026">
+  <LegalLayout title="PRIVACY POLICY" lastUpdated="July 24, 2026">
     <p>
       This policy explains what data WhatsInDemand collects, why, and what you
       can do about it. Plain language, no surprises.
@@ -4524,9 +4526,15 @@ const PrivacyScreen = () => (
       </p>
       <p>
         <strong className="text-white">Resume text</strong> — only when you
-        paste or upload it to extract skills. We process it to identify skills
-        and discard the raw text after the request completes; we don't store
-        your resume.
+        paste it or upload a file (PDF, DOCX, or TXT) to extract skills. We
+        process it to identify skills and discard the raw text and file after
+        the request completes; we don't store your resume.
+      </p>
+      <p>
+        <strong className="text-white">Usage analytics</strong> — anonymous,
+        aggregated page-view statistics (via Vercel Analytics) that tell us
+        which pages are used. No cookies, no cross-site tracking, no
+        advertising profiles.
       </p>
       <p>
         <strong className="text-white">Operational logs</strong> — standard
@@ -4554,15 +4562,24 @@ const PrivacyScreen = () => (
         <strong className="text-white">Resend</strong> — to deliver transactional email.
       </p>
       <p>
-        These providers process the minimum data needed for their function
-        (your email address, in both cases).
+        <strong className="text-white">Vercel</strong> — hosts the website and
+        provides the anonymous usage analytics described above.
+      </p>
+      <p>
+        <strong className="text-white">Railway</strong> — hosts our servers and
+        database, where account data is stored.
+      </p>
+      <p>
+        Each provider processes only the data needed for its function. None of
+        them receive your data for advertising.
       </p>
     </LegalSection>
 
     <LegalSection heading="COOKIES & STORAGE">
       <p>
         We store a session token in your browser's localStorage to keep you
-        signed in. We don't use tracking cookies or third-party analytics.
+        signed in. We don't use tracking cookies or advertising trackers; the
+        only analytics is the cookieless, aggregated kind described above.
       </p>
     </LegalSection>
 
