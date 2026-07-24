@@ -10,6 +10,7 @@ import api from './services/api';
 import { Panel, Eyebrow, Stat, Pill, HeroNumber } from './components/ui';
 import MatchedJobs, { MatchedJobsSummaryCard } from './components/MatchedJobs';
 import PositionScore from './components/PositionScore';
+import { LearningModule, LearningToggle } from './components/Learning';
 
 const SCREEN_TO_PATH = {
   landing: '/',
@@ -127,7 +128,22 @@ const AppProvider = ({ children }) => {
     setUserSkillsState(next);
     writeSession({ userSkills: next });
   }, []);
-  
+
+  // Persist a logged-in user's skills to the DB so the retention features
+  // (matched jobs, position score) can read them. localStorage stays the
+  // client-side source of truth; this is a fire-and-forget mirror, deduped so
+  // an unchanged set doesn't re-POST.
+  const syncedSkillsRef = useRef('');
+  useEffect(() => {
+    if (!user) return;
+    const ids = (userSkills || []).map(s => s.skill_id).filter(Boolean);
+    const key = ids.slice().sort((a, b) => a - b).join(',');
+    if (key === syncedSkillsRef.current) return;
+    syncedSkillsRef.current = key;
+    api.syncUserSkills(ids).catch(() => {});
+  }, [user, userSkills]);
+
+
   // UI State
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -2887,7 +2903,12 @@ const isIntrinsicSkill = (skillName, roleTitle) => {
 };
 
 const OverviewTab = () => {
-  const { roleData, selectedRole, setActiveTab, userSkills, setCurrentScreen, user } = useApp();
+  const { roleData, selectedRole, setActiveTab, userSkills, setUserSkills, setCurrentScreen, user } = useApp();
+
+  const addAcquiredSkill = (sk) => {
+    if ((userSkills || []).some((s) => s.skill_id === sk.skill_id)) return;
+    setUserSkills([...(userSkills || []), { skill_id: sk.skill_id, name: sk.name, category: sk.category, confidence: 100 }]);
+  };
   const userSkillIds = useMemo(() => new Set((userSkills || []).map(s => s.skill_id)), [userSkills]);
   const hasUserSkills = userSkillIds.size > 0;
 
@@ -3006,11 +3027,12 @@ const OverviewTab = () => {
   return (
     <div className="space-y-4">
 
-      {/* Position Score hero + matched-jobs teaser — logged-in users with skills */}
+      {/* Position Score hero + matched-jobs teaser + learning — logged-in users with skills */}
       {user && hasUserSkills && <PositionScore />}
       {user && hasUserSkills && (
         <MatchedJobsSummaryCard onView={() => setActiveTab('jobs')} />
       )}
+      {user && <LearningModule onAcquired={addAcquiredSkill} />}
 
       {/* ACTION STRIP — one specific thing to do */}
       {!user && !hasUserSkills ? (
@@ -3559,7 +3581,12 @@ const EmployersTab = () => {
 // SKILLS TAB (Explore Skills)
 // ============================================
 const SkillsTab = () => {
-  const { roleData, userSkills } = useApp();
+  const { roleData, userSkills, setUserSkills, user } = useApp();
+
+  const addAcquiredSkill = (sk) => {
+    if ((userSkills || []).some((s) => s.skill_id === sk.skill_id)) return;
+    setUserSkills([...(userSkills || []), { skill_id: sk.skill_id, name: sk.name, category: sk.category, confidence: 100 }]);
+  };
   const [sortColumn, setSortColumn] = useState('demand');
   const [sortDirection, setSortDirection] = useState('desc');
   const [categoryFilter, setCategoryFilter] = useState('All');
@@ -3787,6 +3814,16 @@ const SkillsTab = () => {
                 </div>
                 {isSelected && (
                   <div className="px-6 py-5 bg-surface border-t border-line">
+                    {user && !userHas && (
+                      <div className="mb-4 pb-4 border-b border-line">
+                        <LearningToggle
+                          skillId={skill.skill_id}
+                          skillName={skill.name}
+                          category={skill.category}
+                          onAcquired={addAcquiredSkill}
+                        />
+                      </div>
+                    )}
                     <div className="flex gap-8">
                       {skill.top_companies?.length > 0 && (() => {
                         const half = Math.ceil(skill.top_companies.length / 2);

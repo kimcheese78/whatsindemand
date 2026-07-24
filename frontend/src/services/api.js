@@ -368,6 +368,24 @@ class API {
     return this.request('/api/position-score');
   }
 
+  async syncUserSkills(skillIds) {
+    return this.request('/api/skills/sync', {
+      method: 'POST',
+      body: JSON.stringify({ skill_ids: skillIds }),
+    });
+  }
+
+  async setSkillStatus(skillId, status) {
+    return this.request(`/api/learning/skills/${skillId}/status`, {
+      method: 'POST',
+      body: JSON.stringify({ status }),
+    });
+  }
+
+  async getLearning() {
+    return this.request('/api/learning');
+  }
+
   // ============================================
   // COMPANIES ENDPOINTS
   // ============================================

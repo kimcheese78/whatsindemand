@@ -2,10 +2,12 @@
 
 import os
 import tempfile
+from datetime import datetime
 from flask import Blueprint, request, jsonify
-from app.models import db, Skill, JobSkill, Job, Role
+from app.models import db, Skill, JobSkill, Job, Role, UserSkill
 from app.services.skill_extractor import SkillExtractor
 from app.services.resume_parser import ResumeParser
+from app.utils.jwt_handler import token_required
 from app import limiter
 from sqlalchemy import func
 
@@ -296,3 +298,48 @@ def get_all_skills():
         'skills': categorized,
         'total': len(skills)
     })
+
+# Persist a logged-in user's current skill set to the database. The app keeps
+# skills client-side; this upserts them into user_skills (status='have') so the
+# retention features (matched jobs, position score, learning tracker) have data
+# to read. 'learning' rows are preserved — a skill promoted into the have-set is
+# flipped to 'have', not duplicated.
+@skills_bp.route('/sync', methods=['POST'])
+@token_required
+def sync_user_skills():
+    data = request.get_json() or {}
+    raw = data.get('skill_ids') or []
+    try:
+        incoming = {int(s) for s in raw}
+    except (TypeError, ValueError):
+        return jsonify({'error': 'skill_ids must be integers'}), 400
+
+    # Ignore ids that don't exist so a bad client payload can't fail the commit.
+    if incoming:
+        incoming &= {s.id for s in Skill.query.filter(Skill.id.in_(incoming)).all()}
+
+    existing = {us.skill_id: us for us in
+                UserSkill.query.filter_by(user_id=request.user_id).all()}
+    now = datetime.utcnow()
+    added = removed = promoted = 0
+
+    for sid in incoming:
+        us = existing.get(sid)
+        if us is None:
+            db.session.add(UserSkill(user_id=request.user_id, skill_id=sid,
+                                     status='have', confidence_score=100, is_custom=False))
+            added += 1
+        elif us.status != 'have':
+            us.status = 'have'
+            us.status_changed_at = now
+            promoted += 1
+
+    for sid, us in existing.items():
+        if us.status == 'have' and sid not in incoming:
+            db.session.delete(us)
+            removed += 1
+
+    db.session.commit()
+    total_have = UserSkill.query.filter_by(user_id=request.user_id, status='have').count()
+    return jsonify({'synced': True, 'added': added, 'removed': removed,
+                    'promoted': promoted, 'total_have': total_have})

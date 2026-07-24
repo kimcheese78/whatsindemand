@@ -153,18 +153,23 @@ class UserSkill(db.Model):
     skill_id = db.Column(db.Integer, db.ForeignKey('skills.id'), nullable=False)
     confidence_score = db.Column(db.Integer)  # 0-100
     is_custom = db.Column(db.Boolean, default=False)
+    status = db.Column(db.String(20), nullable=False, default='have', server_default='have')  # 'have' | 'learning'
+    status_changed_at = db.Column(db.DateTime, nullable=True)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
-    
+
     # Relationship to get skill details
     skill = db.relationship('Skill', backref='user_skills')
-    
+
     def to_dict(self):
         return {
             'id': self.id,
+            'skill_id': self.skill_id,
             'skill_name': self.skill.name,
             'skill_category': self.skill.category,
             'confidence_score': self.confidence_score,
-            'is_custom': self.is_custom
+            'is_custom': self.is_custom,
+            'status': self.status,
+            'status_changed_at': self.status_changed_at.isoformat() if self.status_changed_at else None
         }
 
 # ============================================

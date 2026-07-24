@@ -92,6 +92,8 @@ def weekly_digest(user, role_title: str, d: dict, unsubscribe_url: str):
     """
     name = user.full_name or 'there'
     subject_bits = []
+    if d.get('position_score') is not None and d.get('score_delta'):
+        subject_bits.append(f"score {'+' if d['score_delta'] > 0 else ''}{d['score_delta']}")
     if d.get('growth_pct') is not None:
         subject_bits.append(f"postings {'+' if d['growth_pct'] >= 0 else ''}{d['growth_pct']}%")
     if d.get('rising_skills'):
@@ -101,6 +103,45 @@ def weekly_digest(user, role_title: str, d: dict, unsubscribe_url: str):
 
     lines_txt = [f"Hi {name},", "", f"Your weekly {role_title} market check:"]
     rows_html = []
+
+    # Position Score — leads the digest
+    if d.get('position_score') is not None:
+        ps = d['position_score']
+        delta = d.get('score_delta')
+        dtxt = '' if delta is None else (' (no change)' if delta == 0
+                                        else f" ({'+' if delta > 0 else ''}{delta} this week)")
+        lines_txt.append(f"- Position Score: {ps}/100{dtxt}")
+        if d.get('score_driver'):
+            lines_txt.append(f"    {d['score_driver']}")
+        rows_html.append(
+            f"<p style='margin:8px 0;'><strong>Position Score: {ps}/100</strong>{dtxt}."
+            + (f"<br><span style='color:#888;font-size:13px;'>{d['score_driver']}</span>"
+               if d.get('score_driver') else '')
+            + "</p>"
+        )
+
+    # New matched jobs
+    if d.get('matched_new'):
+        tm = d.get('top_match')
+        tm_txt = f" Top: {tm['title']} ({round(tm['match_pct'] * 100)}% match)." if tm else ''
+        lines_txt.append(f"- {d['matched_new']} new jobs match your skills this week.{tm_txt}")
+        rows_html.append(
+            f"<p style='margin:8px 0;'><strong>{d['matched_new']} new matching jobs</strong> "
+            f"this week.{tm_txt}</p>"
+        )
+
+    # Learning progress
+    if d.get('learning'):
+        for item in d['learning'][:3]:
+            g = item.get('growth_pct')
+            gtxt = f", {'+' if g >= 0 else ''}{g}% since you started" if g is not None else ''
+            dp = item.get('demand_pct')
+            lines_txt.append(f"- Learning {item['name']}: in {dp if dp is not None else '?'}% of postings{gtxt}")
+        rows_html.append(
+            "<p style='margin:8px 0;'><strong>Your learning:</strong> "
+            + '; '.join(f"{i['name']} ({i.get('demand_pct', '?')}% of postings)"
+                        for i in d['learning'][:3]) + "</p>"
+        )
 
     if d.get('growth_pct') is not None:
         arrow = '↑' if d['growth_pct'] > 0 else ('↓' if d['growth_pct'] < 0 else '→')

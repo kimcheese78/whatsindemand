@@ -120,8 +120,9 @@ def run(apply=False):
 
         for user, profile in recipients:
             role_title = profile.target_role
+            # 'have' skills only — 'learning' rows don't count toward coverage.
             skill_ids = {us.skill_id for us in
-                         UserSkill.query.filter_by(user_id=user.id).all()}
+                         UserSkill.query.filter_by(user_id=user.id, status='have').all()}
             if not skill_ids:
                 stats['skipped'] += 1
                 continue

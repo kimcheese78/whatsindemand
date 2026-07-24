@@ -83,6 +83,10 @@ def create_app(config_name=None):
     from app.routes.position_score import position_score_bp
     app.register_blueprint(position_score_bp)
 
+    # Learning tracker (mark gap skills as learning; market validation)
+    from app.routes.learning import learning_bp
+    app.register_blueprint(learning_bp)
+
     # NEW: Career intelligence endpoints
     from app.routes.roles import roles_bp
     from app.routes.companies import companies_bp

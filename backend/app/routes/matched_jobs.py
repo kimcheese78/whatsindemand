@@ -68,7 +68,10 @@ def _resolve_context(user_id):
     has no target role / no skills / the role can't be resolved."""
     user = User.query.get(user_id)
     profile = UserProfile.query.filter_by(user_id=user_id).first()
-    skill_ids = {us.skill_id for us in UserSkill.query.filter_by(user_id=user_id).all()}
+    # Only skills the user actually has count toward coverage — 'learning' rows
+    # (Learning Tracker) are aspirational and must not inflate the match.
+    skill_ids = {us.skill_id for us in
+                 UserSkill.query.filter_by(user_id=user_id, status='have').all()}
 
     role = None
     if profile and profile.target_role and skill_ids:

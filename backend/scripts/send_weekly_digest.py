@@ -22,8 +22,11 @@ sys.path.insert(0, backend_dir)
 from dotenv import load_dotenv
 load_dotenv(os.path.join(backend_dir, '.env'))
 
+import json
+
 from app import create_app
-from app.models import db, User, UserProfile, UserSkill
+from app.models import db, User, UserProfile, UserSkill, UserWeekSnapshot, Skill
+from app.routes.matched_jobs import _query_matches
 from app.services.email import send_email
 from app.services import email_templates
 
@@ -84,6 +87,47 @@ def build_digest_data(insights: dict, user_skill_ids: set) -> dict:
     return d
 
 
+def enrich_personal(user, insights, skill_ids, data):
+    """Add this week's Position Score, matched-jobs, and learning info to the
+    digest payload — read from the stored snapshot (don't recompute the score)
+    and from the already-fetched insights (skill demand/growth)."""
+    snaps = (UserWeekSnapshot.query.filter_by(user_id=user.id)
+             .order_by(UserWeekSnapshot.week_start.desc()).limit(2).all())
+    if snaps:
+        cur = snaps[0]
+        data['position_score'] = cur.position_score
+        data['matched_new'] = cur.new_matched_jobs
+        data['matched_total'] = cur.matched_jobs_count
+        if len(snaps) > 1 and cur.position_score is not None \
+                and snaps[1].position_score is not None:
+            data['score_delta'] = cur.position_score - snaps[1].position_score
+        if cur.details_json:
+            try:
+                drivers = (json.loads(cur.details_json) or {}).get('drivers') or []
+                if drivers:
+                    data['score_driver'] = drivers[0]['text']
+            except (ValueError, TypeError):
+                pass
+        role = insights.get('role') or {}
+        if role.get('id') and skill_ids and cur.new_matched_jobs:
+            rows, _, _ = _query_matches(role['id'], skill_ids, 1)
+            if rows:
+                data['top_match'] = {'title': rows[0]['title'],
+                                     'match_pct': rows[0]['match_pct']}
+
+    # Learning skills — demand from the insights payload (no recompute). Growth
+    # left out here: insights growth is role-level, not "since you started".
+    by_id = {s['skill_id']: s for s in (insights.get('skills') or [])}
+    learn = []
+    for us in UserSkill.query.filter_by(user_id=user.id, status='learning').all():
+        sk = Skill.query.get(us.skill_id)
+        learn.append({'name': sk.name if sk else '?',
+                      'demand_pct': (by_id.get(us.skill_id) or {}).get('demand'),
+                      'growth_pct': None})
+    if learn:
+        data['learning'] = learn
+
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--apply', action='store_true', help='Actually send emails')
@@ -128,11 +172,19 @@ def main():
                 continue
 
             skill_ids = {
-                us.skill_id for us in UserSkill.query.filter_by(user_id=user.id).all()
+                us.skill_id for us in
+                UserSkill.query.filter_by(user_id=user.id, status='have').all()
             }
             data = build_digest_data(insights, skill_ids)
-            if data.get('growth_pct') is None and not data.get('rising_skills'):
-                # Nothing meaningful to say — don't send a hollow email
+            enrich_personal(user, insights, skill_ids, data)
+
+            # Don't send a hollow email. Personal movement (score delta, new
+            # matches, active learning) sends; otherwise fall back to the
+            # market-movement guard (growth or rising skills).
+            has_personal = (data.get('score_delta') not in (None, 0)
+                            or data.get('matched_new') or data.get('learning'))
+            if not has_personal and data.get('growth_pct') is None \
+                    and not data.get('rising_skills'):
                 skipped += 1
                 continue
 
