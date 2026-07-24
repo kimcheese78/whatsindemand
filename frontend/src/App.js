@@ -2771,7 +2771,7 @@ const DashboardScreen = () => {
           {activeTab === 'paths' ? (
             <AlternativesTab />
           ) : activeTab === 'jobs' ? (
-            <MatchedJobs onUpgrade={() => setCurrentScreen('account')} />
+            <MatchedJobs />
           ) : roleData?.total_jobs_analyzed === 0 ? (
             <NoResultsMessage onClearFilters={handleClearFilters} loading={loading} />
           ) : (

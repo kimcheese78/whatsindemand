@@ -18,7 +18,6 @@ matched_jobs_bp = Blueprint('matched_jobs', __name__, url_prefix='/api/matched-j
 MATCH_THRESHOLD = 0.6   # minimum skill coverage to count as a match
 MIN_SKILLS = 3          # jobs with fewer verified skills are excluded
 LIST_LIMIT = 50         # max rows the detailed list returns
-FREE_VISIBLE = 3        # matches a free user sees in full; rest are count-only
 
 # One aggregation query. `agg` counts the job's verified skills and how many the
 # user has; the outer WHERE applies the >=3 and >=60% thresholds; the window
@@ -136,27 +135,22 @@ def _serialize(row, names):
 @matched_jobs_bp.route('', methods=['GET'])
 @token_required
 def get_matched_jobs():
-    """Ranked matches. Free users see the top 3 in full plus a locked count;
-    Pro users see up to 50."""
+    """Ranked matches — all of them (up to LIST_LIMIT), available to every user."""
     user, skill_ids, role = _resolve_context(request.user_id)
     if role is None:
         return jsonify({'matches': [], 'total_matches': 0, 'new_this_week': 0,
                         'locked_count': 0, 'is_pro': bool(user and user.has_pro_access)})
 
     rows, total, new_count = _query_matches(role.id, skill_ids, LIST_LIMIT)
-    is_pro = bool(user and user.has_pro_access)
-
-    visible = rows if is_pro else rows[:FREE_VISIBLE]
-    names = _skill_split([r['id'] for r in visible], skill_ids)
-    matches = [_serialize(r, names.get(r['id'], ([], []))) for r in visible]
-    locked = 0 if is_pro else max(0, total - len(visible))
+    names = _skill_split([r['id'] for r in rows], skill_ids)
+    matches = [_serialize(r, names.get(r['id'], ([], []))) for r in rows]
 
     return jsonify({
         'matches': matches,
         'total_matches': total,
         'new_this_week': new_count,
-        'locked_count': locked,
-        'is_pro': is_pro,
+        'locked_count': 0,
+        'is_pro': bool(user and user.has_pro_access),
     })
 
 

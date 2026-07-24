@@ -2,7 +2,7 @@
 // user already has. Self-contained: talks to the API directly and takes nav
 // callbacks as props so it can live outside App.js without a circular import.
 import React, { useState, useEffect } from 'react';
-import { MapPin, ChevronDown, Lock, Sparkles } from 'lucide-react';
+import { MapPin, ChevronDown, Sparkles } from 'lucide-react';
 import { Panel, Pill } from './ui';
 import api from '../services/api';
 
@@ -174,7 +174,7 @@ export function MatchedJobsSummaryCard({ onView }) {
   );
 }
 
-export default function MatchedJobs({ onUpgrade }) {
+export default function MatchedJobs() {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -224,28 +224,6 @@ export default function MatchedJobs({ onUpgrade }) {
       <div className="space-y-3">
         {matches.map((job) => <MatchRow key={job.id} job={job} />)}
       </div>
-
-      {data.locked_count > 0 && (
-        <Panel pad="lg" tone="raised" className="text-center">
-          <div className="flex justify-center mb-3">
-            <div className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center">
-              <Lock className="w-5 h-5 text-ink-muted" />
-            </div>
-          </div>
-          <div className="text-ink font-medium mb-1">
-            {data.locked_count} more {data.locked_count === 1 ? 'match' : 'matches'}
-          </div>
-          <div className="text-small text-ink-muted mb-4 max-w-sm mx-auto">
-            See every job that matches your skills, ranked, with Pro.
-          </div>
-          <button
-            onClick={onUpgrade}
-            className="inline-flex items-center gap-1.5 px-6 py-2.5 bg-white text-black text-sm font-medium rounded-lg hover:bg-gray-200 transition-colors"
-          >
-            <Sparkles className="w-4 h-4" /> Unlock with Pro
-          </button>
-        </Panel>
-      )}
     </div>
   );
 }
