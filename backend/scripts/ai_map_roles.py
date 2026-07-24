@@ -379,7 +379,9 @@ def _update_aliases_yaml(decisions: list) -> None:
     with open(aliases_path, 'a') as f:
         f.write(f'\n# Auto-added by ai_map_roles --apply\n')
         for title, cid in sorted(new_entries):
-            f.write(f'"{title}": {cid}\n')
+            # json.dumps escapes embedded quotes/backslashes; its output is
+            # valid as a YAML double-quoted scalar too.
+            f.write(f'{json.dumps(title)}: {cid}\n')
 
     print(f'  aliases.yaml: added {len(new_entries)} new entries')
 
