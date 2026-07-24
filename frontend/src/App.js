@@ -1477,10 +1477,14 @@ const RoleSelectionScreen = () => {
     await exploreRole();
   };
 
+  if (loading) {
+    return <RoleLoadingScreen />;
+  }
+
   return (
     <div className="min-h-screen bg-zinc-900 text-white flex flex-col">
       <NavBar />
-  
+
       <div className="flex-1">
         <div className="max-w-3xl mx-auto px-4 sm:px-8 pt-16 pb-24">
           <div className="mb-10">
@@ -1652,12 +1656,6 @@ const RoleSelectionScreen = () => {
               )}
             </button>
           </div>
-
-          {loading && (
-            <p className="mt-4 text-sm text-ink-muted text-center">
-              Scanning live job postings for this role — usually takes about 10 seconds.
-            </p>
-          )}
         </div>
       </div>
 
@@ -4070,6 +4068,59 @@ const LoadingScreen = () => (
     </div>
   </div>
 );
+
+// ============================================
+// ROLE LOADING SCREEN — full-page progress shown while exploreRole()'s
+// fetch is in flight. Progress is simulated (the API is a single request,
+// no real progress events) and eases toward 92% so it never falsely claims
+// completion before the data actually arrives; the screen unmounts the
+// instant the real fetch resolves and currentScreen changes.
+// ============================================
+const ROLE_LOADING_MESSAGES = [
+  'Scanning 100,000+ live job postings…',
+  'Extracting required skills…',
+  'Comparing against market trends…',
+  'Compiling your role snapshot…',
+];
+
+const RoleLoadingScreen = () => {
+  const [progress, setProgress] = useState(0);
+  const [messageIdx, setMessageIdx] = useState(0);
+
+  useEffect(() => {
+    const start = Date.now();
+    const progressTimer = setInterval(() => {
+      const elapsed = (Date.now() - start) / 1000;
+      setProgress(92 * (1 - Math.exp(-elapsed / 4)));
+    }, 100);
+    const messageTimer = setInterval(() => {
+      setMessageIdx((i) => Math.min(i + 1, ROLE_LOADING_MESSAGES.length - 1));
+    }, 2200);
+    return () => {
+      clearInterval(progressTimer);
+      clearInterval(messageTimer);
+    };
+  }, []);
+
+  return (
+    <div className="min-h-screen bg-zinc-900 text-white flex items-center justify-center px-6">
+      <div className="w-full max-w-sm text-center">
+        <div className="num text-6xl sm:text-7xl font-light text-ink mb-10 tabular-nums">
+          {Math.round(progress)}%
+        </div>
+        <div className="h-1.5 w-full bg-white/10 rounded-full overflow-hidden mb-6">
+          <div
+            className="h-full bg-accent-up rounded-full transition-[width] duration-200 ease-out"
+            style={{ width: `${progress}%` }}
+          />
+        </div>
+        <div className="text-sm text-ink-muted">
+          {ROLE_LOADING_MESSAGES[messageIdx]}
+        </div>
+      </div>
+    </div>
+  );
+};
 
 // ============================================
 // INITIAL LOADING SCREEN (for app startup)
