@@ -34,7 +34,7 @@ from dotenv import load_dotenv
 load_dotenv(os.path.join(backend_dir, '.env'))
 
 from app import create_app
-from app.models import db, User, UserProfile, UserSkill, UserWeekSnapshot
+from app.models import db, Client, User, UserProfile, UserSkill, UserWeekSnapshot
 from app.routes.matched_jobs import _query_matches
 
 
@@ -105,7 +105,7 @@ def run(apply=False):
     week_start = iso_week_start()
 
     with app.app_context():
-        client = app.test_client()
+        client_http = app.test_client()
         insights_cache = {}
 
         recipients = db.session.query(User, UserProfile).join(
@@ -128,7 +128,7 @@ def run(apply=False):
                 continue
 
             if role_title not in insights_cache:
-                resp = client.post('/api/roles/insights', json={'role': role_title})
+                resp = client_http.post('/api/roles/insights', json={'role': role_title})
                 ok = resp.status_code == 200 and (resp.get_json() or {}).get('success')
                 insights_cache[role_title] = resp.get_json() if ok else None
                 if not ok:
@@ -179,6 +179,62 @@ def run(apply=False):
             except Exception as e:
                 stats['errors'] += 1
                 print(f"  ✗ {user.email}: {e}", flush=True)
+
+        # ── Managed clients (B2B coach console) — same computation, same
+        # per-role insights cache, keyed by client_id instead of user_id.
+        stats['clients_computed'] = 0
+        stats['clients_skipped'] = 0
+        clients = Client.query.filter(Client.target_role.isnot(None),
+                                      Client.target_role != '').all()
+        if clients:
+            print(f"Managed clients: {len(clients)} candidates", flush=True)
+        for client in clients:
+            skill_ids = {us.skill_id for us in
+                         UserSkill.query.filter_by(client_id=client.id, status='have').all()}
+            if not skill_ids:
+                stats['clients_skipped'] += 1
+                continue
+            role_title = client.target_role
+            if role_title not in insights_cache:
+                resp = client_http.post('/api/roles/insights', json={'role': role_title})
+                ok = resp.status_code == 200 and (resp.get_json() or {}).get('success')
+                insights_cache[role_title] = resp.get_json() if ok else None
+            insights = insights_cache[role_title]
+            if not insights or not insights.get('total_jobs_analyzed'):
+                stats['clients_skipped'] += 1
+                continue
+            try:
+                comp = compute_components(insights, skill_ids)
+                drivers = compute_drivers(comp['top30'], skill_ids)
+                role_id = (insights.get('role') or {}).get('id')
+                _, matched_total, matched_new = (
+                    _query_matches(role_id, skill_ids, 1) if role_id else ([], 0, 0))
+                snap = UserWeekSnapshot.query.filter_by(
+                    client_id=client.id, week_start=week_start).first()
+                if snap is None:
+                    snap = UserWeekSnapshot(client_id=client.id, week_start=week_start)
+                    db.session.add(snap)
+                snap.position_score = comp['score']
+                snap.match_pct = round(comp['coverage'], 4)
+                snap.market_momentum = comp['raw_growth']
+                snap.ai_exposure = comp['ai_pct']
+                snap.matched_jobs_count = matched_total
+                snap.new_matched_jobs = matched_new
+                snap.details_json = json.dumps({
+                    'components': {
+                        'skill_coverage': round(comp['coverage'], 4),
+                        'momentum': round(comp['momentum'], 4),
+                        'ai_exposure_norm': round(comp['ai_norm'], 4),
+                    },
+                    'weights': {'skill_coverage': 55, 'momentum': 25, 'ai_low_exposure': 20},
+                    'drivers': drivers,
+                })
+                stats['clients_computed'] += 1
+                print(f"  client {client.id} ({client.display_name}): "
+                      f"score={comp['score']}", flush=True)
+            except Exception as e:
+                stats['errors'] += 1
+                print(f"  ✗ client {client.id}: {e}", flush=True)
 
         if apply:
             db.session.commit()

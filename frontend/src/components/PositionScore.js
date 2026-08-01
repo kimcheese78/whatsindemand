@@ -11,7 +11,7 @@ import api from '../services/api';
 
 const cx = (...xs) => xs.filter(Boolean).join(' ');
 
-function Sparkline({ points }) {
+export function Sparkline({ points }) {
   if (!points || points.length < 2) return null;
   const w = 128, h = 48, pad = 5;
   const vals = points.map((p) => p.position_score ?? 0);

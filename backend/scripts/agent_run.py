@@ -219,6 +219,7 @@ New-skill backfill:
     snapshot_section = f"""
 Position Score snapshots:
   Users computed:     {snapshot_stats['computed']}
+  Org clients:        {snapshot_stats.get('clients_computed', 0)} computed, {snapshot_stats.get('clients_skipped', 0)} skipped
   New / updated:      {snapshot_stats['inserted']} / {snapshot_stats['updated']}
   Skipped (no skills):{snapshot_stats['skipped']}
   Errors:             {snapshot_stats['errors']}

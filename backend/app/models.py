@@ -94,7 +94,8 @@ class UserWeekSnapshot(db.Model):
     __tablename__ = 'user_week_snapshots'
 
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False, index=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=True, index=True)
+    client_id = db.Column(db.Integer, db.ForeignKey('org_clients.id', ondelete='CASCADE'), nullable=True, index=True)
     week_start = db.Column(db.Date, nullable=False)  # Monday of the ISO week
     position_score = db.Column(db.Integer)           # 0-100
     match_pct = db.Column(db.Float)                  # skill coverage vs target role (0-1)
@@ -106,6 +107,90 @@ class UserWeekSnapshot(db.Model):
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
     __table_args__ = (db.UniqueConstraint('user_id', 'week_start', name='uq_user_week_snapshot'),)
+
+
+# ============================================
+# B2B ORG MODELS (coach console tier)
+# ============================================
+
+class Organization(db.Model):
+    """A B2B account: bootcamp career-services team or recruiting agency.
+    Tier gating is the `plan` flag — design partners are enabled manually."""
+    __tablename__ = 'organizations'
+
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(255), nullable=False)
+    org_type = db.Column(db.String(30), default='bootcamp')  # 'bootcamp' | 'agency'
+    plan = db.Column(db.String(30), nullable=False, default='trial', server_default='trial')
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+    memberships = db.relationship('OrgMembership', backref='organization', cascade='all, delete-orphan')
+    cohorts = db.relationship('Cohort', backref='organization', cascade='all, delete-orphan')
+    clients = db.relationship('Client', backref='organization', cascade='all, delete-orphan')
+
+    def to_dict(self):
+        return {'id': self.id, 'name': self.name, 'org_type': self.org_type,
+                'plan': self.plan}
+
+
+class OrgMembership(db.Model):
+    """Links a login (User) to an Organization with a role."""
+    __tablename__ = 'org_memberships'
+
+    id = db.Column(db.Integer, primary_key=True)
+    org_id = db.Column(db.Integer, db.ForeignKey('organizations.id', ondelete='CASCADE'), nullable=False, index=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id', ondelete='CASCADE'), nullable=False, index=True)
+    role = db.Column(db.String(20), nullable=False, default='coach')  # 'admin' | 'coach'
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+    __table_args__ = (db.UniqueConstraint('org_id', 'user_id', name='uq_org_membership'),)
+
+
+class Cohort(db.Model):
+    """A group of clients trained together toward a target role, with the
+    program's curriculum captured as skill ids (drives curriculum-vs-market)."""
+    __tablename__ = 'cohorts'
+
+    id = db.Column(db.Integer, primary_key=True)
+    org_id = db.Column(db.Integer, db.ForeignKey('organizations.id', ondelete='CASCADE'), nullable=False, index=True)
+    name = db.Column(db.String(255), nullable=False)
+    target_role = db.Column(db.String(255))
+    curriculum_skill_ids = db.Column(db.ARRAY(db.Integer), default=list)
+    start_date = db.Column(db.Date)
+    end_date = db.Column(db.Date)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+    clients = db.relationship('Client', backref='cohort')
+
+    def to_dict(self):
+        return {'id': self.id, 'org_id': self.org_id, 'name': self.name,
+                'target_role': self.target_role,
+                'curriculum_skill_ids': self.curriculum_skill_ids or [],
+                'start_date': self.start_date.isoformat() if self.start_date else None,
+                'end_date': self.end_date.isoformat() if self.end_date else None}
+
+
+class Client(db.Model):
+    """A person managed by an org (bootcamp student / coachee). Shaped like a
+    consumer user's profile so the shipped per-user analytics (skills, weekly
+    snapshots, matched jobs, gap) run against client_id rows unchanged."""
+    __tablename__ = 'org_clients'
+
+    id = db.Column(db.Integer, primary_key=True)
+    org_id = db.Column(db.Integer, db.ForeignKey('organizations.id', ondelete='CASCADE'), nullable=False, index=True)
+    cohort_id = db.Column(db.Integer, db.ForeignKey('cohorts.id', ondelete='SET NULL'), nullable=True, index=True)
+    coach_user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=True)
+    display_name = db.Column(db.String(255), nullable=False)
+    email = db.Column(db.String(255))
+    target_role = db.Column(db.String(255))
+    seniority = db.Column(db.String(50))
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+    def to_dict(self):
+        return {'id': self.id, 'org_id': self.org_id, 'cohort_id': self.cohort_id,
+                'display_name': self.display_name, 'email': self.email,
+                'target_role': self.target_role, 'seniority': self.seniority}
 
 
 # ============================================
@@ -145,11 +230,13 @@ class Skill(db.Model):
 
 
 class UserSkill(db.Model):
-    """Skills extracted from user's resume"""
+    """Skills for a person — either a consumer user (user_id) or an org-managed
+    client (client_id). Exactly one of the two is set."""
     __tablename__ = 'user_skills'
-    
+
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=True)
+    client_id = db.Column(db.Integer, db.ForeignKey('org_clients.id', ondelete='CASCADE'), nullable=True, index=True)
     skill_id = db.Column(db.Integer, db.ForeignKey('skills.id'), nullable=False)
     confidence_score = db.Column(db.Integer)  # 0-100
     is_custom = db.Column(db.Boolean, default=False)

@@ -387,6 +387,75 @@ class API {
   }
 
   // ============================================
+  // B2B ORG / COACH CONSOLE ENDPOINTS (auth required)
+  // ============================================
+
+  async getOrg() {
+    return this.request('/api/org');
+  }
+
+  async createOrg(name, orgType = 'bootcamp') {
+    return this.request('/api/org', {
+      method: 'POST',
+      body: JSON.stringify({ name, org_type: orgType }),
+    });
+  }
+
+  async getCohorts() {
+    return this.request('/api/org/cohorts');
+  }
+
+  async createCohort(payload) {
+    return this.request('/api/org/cohorts', {
+      method: 'POST',
+      body: JSON.stringify(payload),
+    });
+  }
+
+  async updateCohort(cohortId, payload) {
+    return this.request(`/api/org/cohorts/${cohortId}`, {
+      method: 'PATCH',
+      body: JSON.stringify(payload),
+    });
+  }
+
+  async getCohortRollup(cohortId) {
+    return this.request(`/api/org/cohorts/${cohortId}/rollup`);
+  }
+
+  async refreshCohort(cohortId) {
+    return this.request(`/api/org/cohorts/${cohortId}/refresh`, { method: 'POST', timeout: 120000 });
+  }
+
+  async getCurriculumFit(cohortId) {
+    return this.request(`/api/org/cohorts/${cohortId}/curriculum-fit`, { timeout: 30000 });
+  }
+
+  async createOrgClient(payload) {
+    return this.request('/api/org/clients', {
+      method: 'POST',
+      body: JSON.stringify(payload),
+      timeout: 30000,
+    });
+  }
+
+  async updateOrgClient(clientId, payload) {
+    return this.request(`/api/org/clients/${clientId}`, {
+      method: 'PATCH',
+      body: JSON.stringify(payload),
+      timeout: 30000,
+    });
+  }
+
+  async deleteOrgClient(clientId) {
+    return this.request(`/api/org/clients/${clientId}`, { method: 'DELETE' });
+  }
+
+  async getOrgClientDetail(clientId) {
+    return this.request(`/api/org/clients/${clientId}`, { timeout: 30000 });
+  }
+
+  // ============================================
   // COMPANIES ENDPOINTS
   // ============================================
 

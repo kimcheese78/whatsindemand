@@ -87,6 +87,10 @@ def create_app(config_name=None):
     from app.routes.learning import learning_bp
     app.register_blueprint(learning_bp)
 
+    # B2B coach console (orgs, cohorts, managed clients)
+    from app.routes.org import org_bp
+    app.register_blueprint(org_bp)
+
     # NEW: Career intelligence endpoints
     from app.routes.roles import roles_bp
     from app.routes.companies import companies_bp

@@ -11,6 +11,7 @@ import { Panel, Eyebrow, Stat, Pill, HeroNumber } from './components/ui';
 import MatchedJobs, { MatchedJobsSummaryCard } from './components/MatchedJobs';
 import PositionScore from './components/PositionScore';
 import { LearningModule, LearningToggle } from './components/Learning';
+import OrgConsole from './components/org/OrgConsole';
 
 const SCREEN_TO_PATH = {
   landing: '/',
@@ -5603,6 +5604,7 @@ const WhatsInDemand = () => {
     <BrowserRouter>
       <Routes>
         <Route path="/card/:role" element={<CardScreen />} />
+        <Route path="/org" element={<OrgConsole />} />
         <Route path="*" element={
           <AppProvider>
             <AppRouter />
