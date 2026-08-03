@@ -2018,7 +2018,6 @@
 "senior client services manager, growth": customer_success_manager
 "senior consultant, professional services": engagement_manager
 "senior cyber class action attorney": attorney
-"senior executive": recruiter
 "senior executive search": recruiter
 "senior finance associate, product": financial_analyst
 "senior general liability attorney": attorney
@@ -2199,7 +2198,6 @@
 "information systems security officer (isso), network security, ts/sci": information_security_engineer
 "inventory procurement associate, doordash air": supply_chain_analyst
 "it technician, classified programs": it_support_engineer
-"junior creative": content_creator
 "junior field sales partner - roma": sales_representative
 "lead advanced analytics, marketplace": data_science_manager
 "lead hrbp": hr_business_partner
@@ -2251,7 +2249,12 @@
 "senior aerodynamicist, omen": mechanical_engineer
 "senior analyst- payment risk": risk_manager
 "senior client manager- construction commercial insurance": account_manager
-"senior creative": copywriter
+"senior creative strategist": creative_director
+"creative strategist": creative_director
+"senior creative lead": creative_director
+"creative lead": creative_director
+"senior creative producer": creative_director
+"creative producer": creative_director
 "senior cyber investigator": threat_specialist
 "senior director of enterprise systems test": director_of_engineering
 "senior director of global tax": tax_manager
