@@ -6,6 +6,8 @@ tools: Bash, Read
 
 # review-skill-candidates
 
+> **DB credentials:** replace `<YOUR_DB_PASSWORD>` in the snippets below with the current password from Railway → your Postgres service → Variables → `DATABASE_URL`. Never commit the real value.
+
 Classifies pending skill candidates directly — no manual JSON editing. Claude reasons through each candidate, self-verifies, shows you only the uncertain ones, then promotes on your confirm.
 
 ## Taxonomy
@@ -37,7 +39,7 @@ soft:
 ```bash
 cd backend && python3 - <<'EOF'
 import os, json, sys
-os.environ.setdefault('DATABASE_URL', 'postgresql://postgres:gnhrxOkYHTPaEIYuetmcXptfkTcvnLPp@switchyard.proxy.rlwy.net:48202/railway')
+os.environ.setdefault('DATABASE_URL', 'postgresql://postgres:<YOUR_DB_PASSWORD>@switchyard.proxy.rlwy.net:48202/railway')
 sys.path.insert(0, '.')
 from app import create_app
 from app.models import db
@@ -61,7 +63,7 @@ Also pull the verified taxonomy to spot near-duplicates:
 ```bash
 cd backend && python3 - <<'EOF'
 import os, json, sys
-os.environ.setdefault('DATABASE_URL', 'postgresql://postgres:gnhrxOkYHTPaEIYuetmcXptfkTcvnLPp@switchyard.proxy.rlwy.net:48202/railway')
+os.environ.setdefault('DATABASE_URL', 'postgresql://postgres:<YOUR_DB_PASSWORD>@switchyard.proxy.rlwy.net:48202/railway')
 sys.path.insert(0, '.')
 from app import create_app
 from app.models import db, Skill
@@ -171,7 +173,7 @@ Once confirmed:
 2. Promote to taxonomy and capture the first new skill ID:
 
 ```bash
-cd backend && DATABASE_URL='postgresql://postgres:gnhrxOkYHTPaEIYuetmcXptfkTcvnLPp@switchyard.proxy.rlwy.net:48202/railway' \
+cd backend && DATABASE_URL='postgresql://postgres:<YOUR_DB_PASSWORD>@switchyard.proxy.rlwy.net:48202/railway' \
   PYTHONPATH=. venv/bin/python scripts/promote_shortlist.py --apply 2>&1 | tee /tmp/promote_output.txt
 grep "First new ID" /tmp/promote_output.txt
 ```
@@ -183,14 +185,14 @@ If no "First new ID" line appears (0 skills were promoted), skip step 4 (backfil
 3. Extract skills for new dirty jobs — covers all skills including newly promoted ones. Run extract BEFORE backfill because extract uses plain inserts with no conflict handling:
 
 ```bash
-cd backend && DATABASE_URL='postgresql://postgres:gnhrxOkYHTPaEIYuetmcXptfkTcvnLPp@switchyard.proxy.rlwy.net:48202/railway' \
+cd backend && DATABASE_URL='postgresql://postgres:<YOUR_DB_PASSWORD>@switchyard.proxy.rlwy.net:48202/railway' \
   PYTHONPATH=. venv/bin/python scripts/extract_skills.py 2>&1
 ```
 
 4. Backfill newly promoted skills onto all historical jobs (uses ON CONFLICT DO NOTHING, safe to run after extract):
 
 ```bash
-cd backend && DATABASE_URL='postgresql://postgres:gnhrxOkYHTPaEIYuetmcXptfkTcvnLPp@switchyard.proxy.rlwy.net:48202/railway' \
+cd backend && DATABASE_URL='postgresql://postgres:<YOUR_DB_PASSWORD>@switchyard.proxy.rlwy.net:48202/railway' \
   PYTHONPATH=. venv/bin/python scripts/backfill_skills.py --min-id FIRST_ID 2>&1
 ```
 
@@ -201,7 +203,7 @@ Replace `FIRST_ID` with the actual ID parsed in step 2.
 ```bash
 cd backend && python3 - <<'EOF'
 import os, sys, json
-os.environ.setdefault('DATABASE_URL', 'postgresql://postgres:gnhrxOkYHTPaEIYuetmcXptfkTcvnLPp@switchyard.proxy.rlwy.net:48202/railway')
+os.environ.setdefault('DATABASE_URL', 'postgresql://postgres:<YOUR_DB_PASSWORD>@switchyard.proxy.rlwy.net:48202/railway')
 sys.path.insert(0, '.')
 from app import create_app
 from app.models import db

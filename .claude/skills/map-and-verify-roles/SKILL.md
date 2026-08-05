@@ -6,6 +6,8 @@ tools: Bash, Read
 
 # map-and-verify-roles
 
+> **DB credentials:** replace `<YOUR_DB_PASSWORD>` in the snippets below with the current password from Railway → your Postgres service → Variables → `DATABASE_URL`. Never commit the real value.
+
 Claude classifies unmatched titles directly — no Anthropic API call. The
 output is written to the checkpoint file, then applied with `--apply`.
 
@@ -16,7 +18,7 @@ Pull the full canonical role list before classifying:
 ```bash
 python3 - <<'EOF'
 import os, json, sys
-os.environ.setdefault('DATABASE_URL', 'postgresql://postgres:gnhrxOkYHTPaEIYuetmcXptfkTcvnLPp@switchyard.proxy.rlwy.net:48202/railway')
+os.environ.setdefault('DATABASE_URL', 'postgresql://postgres:<YOUR_DB_PASSWORD>@switchyard.proxy.rlwy.net:48202/railway')
 sys.path.insert(0, '.')
 from app import create_app
 from app.models import db
@@ -36,7 +38,7 @@ EOF
 ```bash
 python3 - <<'EOF'
 import os, sys
-os.environ.setdefault('DATABASE_URL', 'postgresql://postgres:gnhrxOkYHTPaEIYuetmcXptfkTcvnLPp@switchyard.proxy.rlwy.net:48202/railway')
+os.environ.setdefault('DATABASE_URL', 'postgresql://postgres:<YOUR_DB_PASSWORD>@switchyard.proxy.rlwy.net:48202/railway')
 sys.path.insert(0, '.')
 from app import create_app
 from app.models import db
@@ -64,7 +66,7 @@ Fetch in job_count order with JD snippets:
 ```bash
 python3 - <<'EOF'
 import os, json, sys
-os.environ.setdefault('DATABASE_URL', 'postgresql://postgres:gnhrxOkYHTPaEIYuetmcXptfkTcvnLPp@switchyard.proxy.rlwy.net:48202/railway')
+os.environ.setdefault('DATABASE_URL', 'postgresql://postgres:<YOUR_DB_PASSWORD>@switchyard.proxy.rlwy.net:48202/railway')
 sys.path.insert(0, '.')
 from app import create_app
 from app.models import db
@@ -168,7 +170,7 @@ Ask: any corrections to the flagged ones before applying?
 ### Step 5 — Apply
 
 ```bash
-DATABASE_URL='postgresql://postgres:gnhrxOkYHTPaEIYuetmcXptfkTcvnLPp@switchyard.proxy.rlwy.net:48202/railway' \
+DATABASE_URL='postgresql://postgres:<YOUR_DB_PASSWORD>@switchyard.proxy.rlwy.net:48202/railway' \
   PYTHONPATH=. venv/bin/python scripts/ai_map_roles.py --apply 2>&1
 ```
 
@@ -178,7 +180,7 @@ weren't in the decisions (titles with very low job_count not worth mapping):
 ```bash
 python3 - <<'EOF'
 import os, sys
-os.environ.setdefault('DATABASE_URL', 'postgresql://postgres:gnhrxOkYHTPaEIYuetmcXptfkTcvnLPp@switchyard.proxy.rlwy.net:48202/railway')
+os.environ.setdefault('DATABASE_URL', 'postgresql://postgres:<YOUR_DB_PASSWORD>@switchyard.proxy.rlwy.net:48202/railway')
 sys.path.insert(0, '.')
 from app import create_app
 from app.models import db
