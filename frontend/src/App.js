@@ -1264,22 +1264,22 @@ const LandingScreen = () => {
 
       <div className="flex-1">
         <div className="max-w-4xl mx-auto px-6 sm:px-8 pt-20 sm:pt-32 pb-32">
-          <h1 className="text-5xl sm:text-7xl md:text-8xl font-semibold mb-8 sm:mb-12 leading-none tracking-tight">
-            THE SKILLS <br />
-            IN DEMAND
+          <h1 className="text-4xl sm:text-5xl md:text-6xl font-semibold mb-8 sm:mb-12 leading-[1.08] tracking-tight max-w-3xl" style={{ textWrap: 'balance' }}>
+            So, what are companies <br className="hidden md:block" />
+            actually hiring for right now?
           </h1>
 
           <p className="text-lg sm:text-xl text-ink-muted mb-6 max-w-2xl leading-relaxed">
-            AI is rewriting job descriptions in real time. <br className="hidden sm:block" />
-            Some skills are fading. Others are suddenly everywhere.
+            Every week, thousands of fast-growing companies quietly rewrite what they want. <br className="hidden sm:block" />
+            Some skills are dying. Others just blew up out of nowhere.
           </p>
 
           <p className="text-lg sm:text-xl text-ink-muted mb-6 max-w-2xl leading-relaxed" style={{ textWrap: 'balance' }}>
-            We track 100,000+ live postings from 3,300+ fast-growing companies and show you exactly what's rising and fading in your role.
+            We read 100,000+ live job postings from 3,300+ of those companies — so you don't have to — and show you exactly what's heating up, and cooling off, for the role you care about.
           </p>
 
           <p className="text-lg sm:text-xl text-ink-muted mb-8 sm:mb-12 max-w-2xl leading-relaxed">
-            No hype. Just data.
+            No hype. No filler. Just what the hiring data actually says.
           </p>
 
           <div className="inline-flex flex-col items-start gap-3">
@@ -4552,8 +4552,8 @@ const TermsScreen = () => (
     <LegalSection heading="CONTACT">
       <p>
         Questions about these terms?{' '}
-        <a href="mailto:thefutureofjobs725@gmail.com" className="text-white underline">
-          thefutureofjobs725@gmail.com
+        <a href="mailto:henry@whatsindemand.com" className="text-white underline">
+          henry@whatsindemand.com
         </a>
       </p>
     </LegalSection>
@@ -4661,8 +4661,8 @@ const PrivacyScreen = () => (
     <LegalSection heading="CONTACT">
       <p>
         Privacy questions or requests?{' '}
-        <a href="mailto:thefutureofjobs725@gmail.com" className="text-white underline">
-          thefutureofjobs725@gmail.com
+        <a href="mailto:henry@whatsindemand.com" className="text-white underline">
+          henry@whatsindemand.com
         </a>
       </p>
     </LegalSection>
@@ -4697,8 +4697,8 @@ const ContactScreen = () => (
   <LegalLayout title="CONTACT">
     <p>
       Found a bug? Have an idea? Just want to talk? Drop me an email at{' '}
-      <a href="mailto:thefutureofjobs725@gmail.com" className="text-white underline">
-        thefutureofjobs725@gmail.com
+      <a href="mailto:henry@whatsindemand.com" className="text-white underline">
+        henry@whatsindemand.com
       </a>
       .
     </p>
