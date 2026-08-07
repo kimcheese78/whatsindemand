@@ -28,8 +28,8 @@ class Post:
     title: str
     description: str
     date: datetime.date
-    tags: list
-    related_roles: list
+    tags: list[str]
+    related_roles: list[str]
     source: str
     body_html: str
     read_minutes: int
@@ -48,8 +48,23 @@ def _coerce_date(value) -> datetime.date:
     return datetime.date.fromisoformat(str(value))
 
 
+def _as_list(value):
+    if value is None:
+        return []
+    if isinstance(value, (list, tuple)):
+        return [str(v) for v in value]
+    return [str(value)]
+
+
 def _parse(path: Path) -> "Post | None":
-    fm = frontmatter.load(str(path))
+    try:
+        fm = frontmatter.load(str(path))
+    except ValueError as e:
+        # A malformed date literal (e.g. `2026-13-45`) is rejected by
+        # PyYAML's own timestamp construction at parse time, before we ever
+        # see `meta['date']` — catch it here too, not just in _coerce_date.
+        logger.warning('blog: %s has invalid front-matter — skipped (%s)', path.name, e)
+        return None
     meta = fm.metadata
     missing = [k for k in REQUIRED if not meta.get(k)]
     if missing:
@@ -57,7 +72,11 @@ def _parse(path: Path) -> "Post | None":
         return None
     if meta.get('draft'):
         return None
-    date = _coerce_date(meta['date'])
+    try:
+        date = _coerce_date(meta['date'])
+    except (ValueError, TypeError) as e:
+        logger.warning('blog: %s has invalid date %r — skipped (%s)', path.name, meta.get('date'), e)
+        return None
     if date > datetime.date.today():
         return None
     slug = meta.get('slug') or _DATE_PREFIX.sub('', path.stem)
@@ -66,8 +85,8 @@ def _parse(path: Path) -> "Post | None":
         title=str(meta['title']),
         description=str(meta['description']),
         date=date,
-        tags=list(meta.get('tags') or []),
-        related_roles=list(meta.get('related_roles') or []),
+        tags=_as_list(meta.get('tags')),
+        related_roles=_as_list(meta.get('related_roles')),
         source=str(meta.get('source', 'human')),
         body_html=_render_md(fm.content),
         read_minutes=_read_minutes(fm.content),

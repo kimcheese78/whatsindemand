@@ -29,9 +29,32 @@ def test_slug_defaults_to_filename_without_date():
 
 
 def test_posts_by_tag_filters():
-    assert [p.slug for p in posts_by_tag('salaries', FIX)] == ['sample']
+    # 'scalar-tags' fixture also carries the 'salaries' tag (bare scalar) —
+    # see test_scalar_tags_not_shredded. Compare as a set: order isn't the
+    # point here, membership is.
+    assert {p.slug for p in posts_by_tag('salaries', FIX)} == {'sample', 'scalar-tags'}
     assert posts_by_tag('nonexistent', FIX) == []
 
 
 def test_missing_slug_returns_none():
     assert get_post('nope', FIX) is None
+
+
+def test_bad_date_excluded():
+    # date: 2026-13-45 is malformed; the post must be skipped, not crash
+    # the whole listing.
+    slugs = [p.slug for p in load_posts(FIX)]
+    assert 'bad-date' not in slugs
+
+
+def test_missing_title_excluded():
+    # front-matter has description + date but no title — required-field
+    # skip path.
+    slugs = [p.slug for p in load_posts(FIX)]
+    assert 'missing-title' not in slugs
+
+
+def test_scalar_tags_not_shredded():
+    p = get_post('scalar-tags', FIX)
+    assert p is not None
+    assert p.tags == ['salaries']
