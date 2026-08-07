@@ -103,7 +103,11 @@ def create_app(config_name=None):
     # Public server-rendered pages for SEO (/r/<slug>, /r/, /sitemap.xml)
     from app.routes.public import public_bp
     app.register_blueprint(public_bp)
-    
+
+    # Server-rendered blog (/blog, /blog/<slug>, /blog/tag/<tag>, /blog/rss.xml)
+    from app.routes.blog import blog_bp
+    app.register_blueprint(blog_bp)
+
     # Health check
     @app.route('/health')
     def health_check():
