@@ -1,10 +1,16 @@
 # backend/app/routes/blog.py
 """Server-rendered blog at /blog (markdown files → HTML), edge-cached."""
 
-from flask import Blueprint, Response
+import re
+import secrets
+from datetime import datetime
+
+from flask import Blueprint, Response, request
 
 from app.routes._web import WEB_URL, CACHE_HEADER, _esc
 from app.blog import loader, theme, feed
+from app.models import db, NewsletterSubscriber
+from app.services.email import send_email
 
 blog_bp = Blueprint('blog', __name__)
 
@@ -79,3 +85,52 @@ def _subscribe_form() -> str:
 def _footer() -> str:
     return (f'<footer>© WhatsInDemand · <a href="{WEB_URL}">Dashboard</a> · '
             f'<a href="{WEB_URL}/blog/rss.xml">RSS</a></footer>')
+
+
+_EMAIL_RE = re.compile(r'^[^@\s]+@[^@\s]+\.[^@\s]+$')
+
+
+def _valid_email(s: str) -> bool:
+    return bool(_EMAIL_RE.match((s or '').strip()))
+
+
+def _welcome_email(sub) -> tuple:
+    url = f'{WEB_URL}/blog/unsubscribe/{sub.token}'
+    html = (f'<p>You are subscribed to the WhatsInDemand hiring-trends digest.</p>'
+            f'<p><a href="{url}">Unsubscribe</a></p>')
+    text = f'You are subscribed to the WhatsInDemand digest.\nUnsubscribe: {url}'
+    return html, text
+
+
+def _notice(msg: str, status: int = 200) -> Response:
+    body = f'<h1>{_esc(msg)}</h1><p class="meta"><a href="{WEB_URL}/blog">← Back to the blog</a></p>'
+    return Response(theme.render_page(title=msg, description=msg,
+                    canonical=f'{WEB_URL}/blog', body_html=body, noindex=True),
+                    mimetype='text/html', status=status)
+
+
+@blog_bp.route('/blog/subscribe', methods=['POST'])
+def subscribe():
+    email = (request.form.get('email') or '').strip().lower()
+    if not _valid_email(email):
+        return _notice('Please enter a valid email address.', 400)
+    sub = NewsletterSubscriber.query.filter_by(email=email).first()
+    if sub is None:
+        sub = NewsletterSubscriber(email=email, token=secrets.token_urlsafe(32))
+        db.session.add(sub)
+        db.session.commit()
+        html, text = _welcome_email(sub)
+        send_email(email, 'Welcome to the WhatsInDemand digest', html, text)
+    elif sub.unsubscribed_at is not None:
+        sub.unsubscribed_at = None
+        db.session.commit()
+    return _notice('You are subscribed. Check your inbox.')
+
+
+@blog_bp.route('/blog/unsubscribe/<token>', methods=['GET'])
+def unsubscribe(token):
+    sub = NewsletterSubscriber.query.filter_by(token=token).first()
+    if sub and sub.unsubscribed_at is None:
+        sub.unsubscribed_at = datetime.utcnow()
+        db.session.commit()
+    return _notice('You have been unsubscribed.')
