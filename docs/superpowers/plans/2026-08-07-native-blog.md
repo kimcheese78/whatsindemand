@@ -754,10 +754,10 @@ def client():
     return app.test_client()
 
 
-def test_index_lists_posts(client):
+def test_index_renders(client):
     r = client.get('/blog')
     assert r.status_code == 200
-    assert b'WhatsInDemand Blog' in r.data or b'Blog' in r.data
+    assert b'<h1>The WhatsInDemand Blog</h1>' in r.data
 
 
 def test_missing_post_404(client):
