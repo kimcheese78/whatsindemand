@@ -633,3 +633,18 @@ class Payment(db.Model):
             'status': self.status,
             'created_at': self.created_at.isoformat() if self.created_at else None
         }
+
+
+# ============================================
+# BLOG NEWSLETTER MODEL
+# ============================================
+
+class NewsletterSubscriber(db.Model):
+    """Blog newsletter subscribers (single opt-in, token-based unsubscribe)."""
+    __tablename__ = 'newsletter_subscribers'
+
+    id = db.Column(db.Integer, primary_key=True)
+    email = db.Column(db.String(255), unique=True, nullable=False)
+    token = db.Column(db.String(64), unique=True, nullable=False)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    unsubscribed_at = db.Column(db.DateTime)
