@@ -18,16 +18,11 @@ from flask import Blueprint, Response, request
 from sqlalchemy import func
 
 from app.models import db, Job, JobSkill, Skill, Role, Company
+from app.routes._web import WEB_URL, CACHE_HEADER, _esc, _slugify
 
 public_bp = Blueprint('public', __name__)
 
-WEB_URL = 'https://www.whatsindemand.com'
 MIN_JOBS_FOR_PAGE = 30          # below this the page is thin content — noindex
-CACHE_HEADER = 'public, max-age=86400, stale-while-revalidate=604800'
-
-
-def _slugify(title: str) -> str:
-    return title.lower().replace('/', ' ').replace('&', ' ').replace('  ', ' ').strip().replace(' ', '-')
 
 
 def _find_role_by_slug(slug: str):
@@ -35,11 +30,6 @@ def _find_role_by_slug(slug: str):
     return Role.query.filter(
         func.lower(Role.normalized_title) == func.lower(name)
     ).first()
-
-
-def _esc(s):
-    return (str(s).replace('&', '&amp;').replace('<', '&lt;').replace('>', '&gt;')
-            .replace('"', '&quot;'))
 
 
 _PAGE_CSS = """

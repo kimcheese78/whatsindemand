@@ -80,3 +80,6 @@ gunicorn==21.2.0
 resend>=0.7.0
 anthropic>=0.40.0
 pyahocorasick>=2.0.0
+mistune==3.0.2
+python-frontmatter==1.1.0
+pytest==8.3.3
