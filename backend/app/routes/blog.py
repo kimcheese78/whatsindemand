@@ -7,16 +7,21 @@ from datetime import datetime
 
 from flask import Blueprint, Response, request
 
-from app.routes._web import WEB_URL, CACHE_HEADER, _esc
+from app.routes._web import WEB_URL, _esc
 from app.blog import loader, theme, feed
 from app.models import db, NewsletterSubscriber
 from app.services.email import send_email
 
 blog_bp = Blueprint('blog', __name__)
 
+# Blog HTML changes on redeploy and on new/edited posts, so browsers must
+# revalidate (max-age=0) rather than hold a day-old copy; the CDN edge caches
+# briefly (s-maxage) and serves stale while it revalidates in the background.
+BLOG_CACHE = 'public, max-age=0, s-maxage=300, stale-while-revalidate=604800'
+
 
 def _html(body: str) -> Response:
-    return Response(body, mimetype='text/html', headers={'Cache-Control': CACHE_HEADER})
+    return Response(body, mimetype='text/html', headers={'Cache-Control': BLOG_CACHE})
 
 
 @blog_bp.route('/blog', methods=['GET'])
@@ -72,7 +77,7 @@ def tag(tag):
 def rss():
     return Response(feed.render_rss(loader.load_posts()),
                     mimetype='application/rss+xml',
-                    headers={'Cache-Control': CACHE_HEADER})
+                    headers={'Cache-Control': BLOG_CACHE})
 
 
 def _subscribe_form() -> str:
