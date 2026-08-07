@@ -1269,8 +1269,8 @@ const LandingScreen = () => {
             actually hiring for right now?
           </h1>
 
-          <p className="text-lg sm:text-xl text-ink-muted mb-6 max-w-2xl leading-relaxed" style={{ textWrap: 'balance' }}>
-            When AI's messing with the job market, it's hard to tell what companies are actually looking for...
+          <p className="text-lg sm:text-xl text-ink-muted mb-6 max-w-2xl leading-relaxed">
+            When AI's messing with the job market,<br className="hidden sm:block" /> it's hard to tell what companies are actually looking for...
           </p>
 
           <p className="text-lg sm:text-xl text-ink-muted mb-6 max-w-2xl leading-relaxed" style={{ textWrap: 'balance' }}>
