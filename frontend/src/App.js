@@ -754,6 +754,9 @@ const Footer = () => {
           >
             About
           </button>
+          <a href="/blog" className="hover:text-white transition-colors">
+            Blog
+          </a>
           <button
             onClick={() => setCurrentScreen('terms')}
             className="hover:text-white transition-colors"
