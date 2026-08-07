@@ -1,0 +1,2 @@
+# Fill in after AdSense approval, then redeploy:
+# google.com, pub-XXXXXXXXXXXXXXXX, DIRECT, f08c47fec0942fa0
