@@ -19,6 +19,8 @@ from sqlalchemy import func
 
 from app.models import db, Job, JobSkill, Skill, Role, Company
 from app.routes._web import WEB_URL, CACHE_HEADER, _esc, _slugify
+from app.blog import loader as blog_loader
+from app.blog.feed import blog_sitemap_urls
 
 public_bp = Blueprint('public', __name__)
 
@@ -234,6 +236,7 @@ def sitemap():
         f"<lastmod>{today}</lastmod><changefreq>weekly</changefreq></url>"
         for r in roles
     ]
+    urls += blog_sitemap_urls(blog_loader.load_posts())
     xml = ('<?xml version="1.0" encoding="UTF-8"?>'
            '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'
            + ''.join(urls) + '</urlset>')
