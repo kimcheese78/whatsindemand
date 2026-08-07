@@ -1269,17 +1269,16 @@ const LandingScreen = () => {
             actually hiring for right now?
           </h1>
 
-          <p className="text-lg sm:text-xl text-ink-muted mb-6 max-w-2xl leading-relaxed">
-            Every week, thousands of fast-growing companies quietly rewrite what they want. <br className="hidden sm:block" />
-            Some skills are dying. Others just blew up out of nowhere.
+          <p className="text-lg sm:text-xl text-ink-muted mb-6 max-w-2xl leading-relaxed" style={{ textWrap: 'balance' }}>
+            When AI's messing with the job market, it's hard to tell what companies are actually looking for...
           </p>
 
           <p className="text-lg sm:text-xl text-ink-muted mb-6 max-w-2xl leading-relaxed" style={{ textWrap: 'balance' }}>
-            We read 100,000+ live job postings from 3,300+ of those companies — so you don't have to — and show you exactly what's heating up, and cooling off, for the role you care about.
+            We go through 100,000+ live job postings from 3,300+ companies and figure out exactly what's in demand and what's dead for your role.
           </p>
 
           <p className="text-lg sm:text-xl text-ink-muted mb-8 sm:mb-12 max-w-2xl leading-relaxed">
-            No hype. No filler. Just what the hiring data actually says.
+            No hype, just data.
           </p>
 
           <div className="inline-flex flex-col items-start gap-3">
