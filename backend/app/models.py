@@ -109,6 +109,29 @@ class UserWeekSnapshot(db.Model):
     __table_args__ = (db.UniqueConstraint('user_id', 'week_start', name='uq_user_week_snapshot'),)
 
 
+class MarketInsightSnapshot(db.Model):
+    """Weekly precomputed, validity-gated market insights that power the
+    insight-first landing: rising/declining roles, rising/falling & emerging
+    skills, and a market summary. Written by scripts/compute_market_insights.py;
+    read (cheaply) by GET /api/market/insights. One row per (week, kind, scope,
+    rank)."""
+    __tablename__ = 'market_insight_snapshots'
+
+    id = db.Column(db.Integer, primary_key=True)
+    week_start = db.Column(db.Date, nullable=False, index=True)  # Monday of the ISO week
+    # rising_role | declining_role | rising_skill | falling_skill | emerging_skill | market_summary
+    kind = db.Column(db.String(32), nullable=False)
+    # overall | sector:<job_family> | industry:<name>
+    scope = db.Column(db.String(96), nullable=False, default='overall')
+    rank = db.Column(db.Integer, nullable=False, default=0)
+    payload = db.Column(db.Text)  # JSON: label, from, to, growth, cohort_size, flags, trend series
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+    __table_args__ = (
+        db.Index('ix_market_insight_week_kind_scope', 'week_start', 'kind', 'scope'),
+    )
+
+
 # ============================================
 # B2B ORG MODELS (coach console tier)
 # ============================================

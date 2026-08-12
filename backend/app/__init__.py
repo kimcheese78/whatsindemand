@@ -108,6 +108,10 @@ def create_app(config_name=None):
     from app.routes.blog import blog_bp
     app.register_blueprint(blog_bp)
 
+    # Market-wide insights (reads precomputed market_insight_snapshots)
+    from app.routes.market import market_bp
+    app.register_blueprint(market_bp)
+
     # Health check
     @app.route('/health')
     def health_check():
