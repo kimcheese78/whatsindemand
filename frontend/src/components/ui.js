@@ -72,3 +72,27 @@ export const HeroNumber = ({ value, tone = 'default', className }) => {
 export const Num = ({ children, className }) => (
   <span className={cx('num', className)}>{children}</span>
 );
+
+/** Minimal single-series SVG sparkline for trend cards. tone: up | down | default.
+ *  Uses the accent-up/down palette; endpoint dot emphasizes the latest value. */
+export const Sparkline = ({ data = [], tone = 'default', width = 96, height = 28, className }) => {
+  if (!Array.isArray(data) || data.length < 2) return null;
+  const max = Math.max(...data);
+  const min = Math.min(...data);
+  const span = max - min || 1;
+  const stepX = width / (data.length - 1);
+  const y = (v) => (height - 2) - ((v - min) / span) * (height - 4);
+  const points = data.map((v, i) => `${(i * stepX).toFixed(1)},${y(v).toFixed(1)}`).join(' ');
+  const stroke =
+    tone === 'up'   ? '#4ade80' :
+    tone === 'down' ? '#f87171' :
+    'rgba(255,255,255,0.45)';
+  const lastX = (data.length - 1) * stepX;
+  return (
+    <svg width={width} height={height} viewBox={`0 0 ${width} ${height}`} className={className} aria-hidden="true">
+      <polyline points={points} fill="none" stroke={stroke} strokeWidth="1.5"
+                strokeLinejoin="round" strokeLinecap="round" />
+      <circle cx={lastX.toFixed(1)} cy={y(data[data.length - 1]).toFixed(1)} r="2" fill={stroke} />
+    </svg>
+  );
+};
