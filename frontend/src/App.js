@@ -7,7 +7,7 @@ import {
   Zap, Layers, ExternalLink, Clock, Share2, Check
 } from 'lucide-react';
 import api from './services/api';
-import { Panel, Eyebrow, Stat, Pill, HeroNumber } from './components/ui';
+import { Panel, Eyebrow, Stat, Pill, HeroNumber, Num, Sparkline } from './components/ui';
 import MatchedJobs, { MatchedJobsSummaryCard } from './components/MatchedJobs';
 import PositionScore from './components/PositionScore';
 import { LearningModule, LearningToggle } from './components/Learning';
@@ -352,7 +352,7 @@ const AppProvider = ({ children }) => {
         }
 
         // Fallback: go to role selection with pre-filled values
-        setCurrentScreen('role-selection');
+        setCurrentScreen('landing');
         return true;
       }
     } catch (err) {
@@ -369,7 +369,7 @@ const AppProvider = ({ children }) => {
       const restored = await restoreLastSession();
       if (!restored) {
         // Logged-in member with no saved preferences — go pick a role.
-        setCurrentScreen('role-selection');
+        setCurrentScreen('landing');
       }
     } catch (err) {
       console.error('Failed to fetch user:', err);
@@ -516,7 +516,7 @@ const AppProvider = ({ children }) => {
       
       if (!hasSession) {
         // No saved session, go to role selection
-        setCurrentScreen('role-selection');
+        setCurrentScreen('landing');
       }
     } catch (err) {
       setError(err.message);
@@ -543,7 +543,7 @@ const AppProvider = ({ children }) => {
       if (selectedRole && selectedSeniority) {
         await exploreRole();
       } else {
-        setCurrentScreen('role-selection');
+        setCurrentScreen('landing');
       }
     } catch (err) {
       setError(err.message);
@@ -708,7 +708,7 @@ const NavBar = () => {
         {user ? (
           <div className="flex items-center gap-6">
             <button
-              onClick={() => setCurrentScreen(roleData ? 'dashboard' : 'role-selection')}
+              onClick={() => setCurrentScreen(roleData ? 'dashboard' : 'landing')}
               aria-label={roleData ? 'Go to dashboard' : 'Pick your role'}
               className="flex items-center gap-2 px-2 py-1 -mx-2 -my-1 hover:bg-white/5 transition-colors"
             >
@@ -1255,41 +1255,142 @@ const NoResultsMessage = ({ onClearFilters, loading }) => (
 // ============================================
 // LANDING SCREEN
 // ============================================
+const _fmtPct = (n) => (n == null ? '' : `${n > 0 ? '+' : ''}${Math.round(n)}%`);
+
+// One clickable row inside a market insight panel.
+const InsightRow = ({ item, tone, onPick }) => {
+  const clickable = onPick && !item.is_family;
+  const g = item.growth;
+  return (
+    <div
+      onClick={clickable ? () => onPick(item.label) : undefined}
+      className={`flex items-center justify-between gap-3 py-2.5 border-b border-line-faint last:border-0 ${clickable ? 'cursor-pointer hover:bg-white/5 -mx-2 px-2 rounded-lg' : ''}`}
+    >
+      <div className="min-w-0">
+        <div className="text-body truncate">{item.label}</div>
+        {item.sector && <div className="text-small text-ink-faint truncate">{item.sector}</div>}
+      </div>
+      <div className="flex items-center gap-3 shrink-0">
+        {Array.isArray(item.trend) && item.trend.length > 1 && <Sparkline data={item.trend} tone={tone} />}
+        {g != null && <Pill tone={tone}>{_fmtPct(g)}</Pill>}
+        {g == null && item.active != null && <Num className="text-ink-muted">{item.active.toLocaleString()}</Num>}
+        {g == null && item.company_count != null && (
+          <Num className="text-ink-muted">{item.company_count} cos</Num>
+        )}
+      </div>
+    </div>
+  );
+};
+
+const MarketPanel = ({ title, hint, tone = 'default', items = [], onPick, empty }) => (
+  <Panel className="flex flex-col">
+    <div className="flex items-baseline justify-between mb-2">
+      <Eyebrow>{title}</Eyebrow>
+      {hint && <span className="text-small text-ink-faint">{hint}</span>}
+    </div>
+    {(!items || items.length === 0)
+      ? <p className="text-small text-ink-faint py-4">{empty || 'Not enough data yet.'}</p>
+      : items.map((it, i) => <InsightRow key={i} item={it} tone={tone} onPick={onPick} />)}
+  </Panel>
+);
+
 const LandingScreen = () => {
-  const { setCurrentScreen } = useApp();
-  
+  const { switchToRole, allRoles } = useApp();
+  const [data, setData] = useState(null);
+  const [loadingInsights, setLoadingInsights] = useState(true);
+  const [query, setQuery] = useState('');
+
+  useEffect(() => {
+    let alive = true;
+    api.getMarketInsights()
+      .then((d) => { if (alive) { setData(d); setLoadingInsights(false); } })
+      .catch(() => { if (alive) setLoadingInsights(false); });
+    return () => { alive = false; };
+  }, []);
+
+  const roleName = (r) => r.title || r.normalized_title || '';
+  const results = query.trim().length >= 2
+    ? (allRoles || []).filter((r) => roleName(r).toLowerCase().includes(query.trim().toLowerCase())).slice(0, 8)
+    : [];
+
+  const ins = (data && data.insights) || {};
+  const summary = (ins.market_summary || [])[0];
+
   return (
     <div className="min-h-screen bg-zinc-900 text-white flex flex-col">
       <NavBar />
 
       <div className="flex-1">
-        <div className="max-w-4xl mx-auto px-6 sm:px-8 pt-20 sm:pt-32 pb-32">
-          <h1 className="text-4xl sm:text-5xl md:text-6xl font-semibold mb-8 sm:mb-12 leading-[1.08] tracking-tight max-w-3xl" style={{ textWrap: 'balance' }}>
+        <div className="max-w-5xl mx-auto px-6 sm:px-8 pt-16 sm:pt-24 pb-28">
+          <h1 className="text-4xl sm:text-5xl md:text-6xl font-semibold mb-6 leading-[1.08] tracking-tight max-w-3xl" style={{ textWrap: 'balance' }}>
             So, what are companies <br className="hidden md:block" />
             actually hiring for right now?
           </h1>
-
-          <p className="text-lg sm:text-xl text-ink-muted mb-6 max-w-2xl leading-relaxed">
-            When AI's messing with the job market,<br className="hidden sm:block" /> it's hard to tell what companies are actually looking for...
+          <p className="text-lg sm:text-xl text-ink-muted mb-8 max-w-2xl leading-relaxed" style={{ textWrap: 'balance' }}>
+            We read 100,000+ live job postings from 3,300+ high-growth companies and show you what's rising, what's dead, and what's suddenly in demand. No hype, just data.
           </p>
 
-          <p className="text-lg sm:text-xl text-ink-muted mb-6 max-w-2xl leading-relaxed" style={{ textWrap: 'balance' }}>
-            We go through 100,000+ live job postings from 3,300+ companies and figure out exactly what's in demand and what's dead for your role.
-          </p>
-
-          <p className="text-lg sm:text-xl text-ink-muted mb-8 sm:mb-12 max-w-2xl leading-relaxed">
-            No hype, just data.
-          </p>
-
-          <div className="inline-flex flex-col items-start gap-3">
-            <button
-              onClick={() => setCurrentScreen('role-selection')}
-              className="px-8 sm:px-12 py-4 bg-white text-black font-medium text-lg sm:text-xl hover:bg-gray-200 transition-colors rounded-lg"
-            >
-              EXPLORE MY ROLE
-            </button>
-            <span className="text-sm text-ink-faint">Free — no signup needed to look around.</span>
+          {/* Role search — jump straight into any role's dashboard */}
+          <div className="relative max-w-xl mb-14">
+            <input
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              onKeyDown={(e) => { if (e.key === 'Enter' && results[0]) switchToRole(roleName(results[0])); }}
+              placeholder="Search any role — e.g. Data Engineer"
+              className="w-full px-5 py-4 bg-surface border border-line-strong rounded-xl text-body placeholder-ink-faint focus:outline-none focus:border-white/40"
+            />
+            {results.length > 0 && (
+              <div className="absolute z-20 mt-2 w-full bg-zinc-800 border border-line-strong rounded-xl overflow-hidden shadow-xl">
+                {results.map((r) => (
+                  <button
+                    key={r.id || roleName(r)}
+                    onClick={() => switchToRole(roleName(r))}
+                    className="block w-full text-left px-5 py-3 hover:bg-white/5 border-b border-line-faint last:border-0"
+                  >
+                    {roleName(r)}
+                  </button>
+                ))}
+              </div>
+            )}
+            <span className="block text-small text-ink-faint mt-2">Free — no signup needed to look around.</span>
           </div>
+
+          {/* Market summary strip */}
+          {summary && (
+            <div className="mb-8 flex flex-wrap items-center gap-x-6 gap-y-2 text-meta text-ink-muted">
+              <span>
+                Overall hiring{' '}
+                <Pill tone={summary.growth >= 0 ? 'up' : 'down'}>{_fmtPct(summary.growth)}</Pill>{' '}
+                over 3 months
+              </span>
+              {summary.cohort_companies != null && (
+                <span className="text-ink-faint">across {summary.cohort_companies} consistently-tracked companies</span>
+              )}
+            </div>
+          )}
+
+          {/* Insight boards */}
+          {loadingInsights ? (
+            <p className="text-ink-muted">Reading the market…</p>
+          ) : (
+            <div className="grid md:grid-cols-2 gap-6">
+              <MarketPanel title="Rising roles" hint="last 3 months" tone="up"
+                items={ins.rising_role} onPick={switchToRole}
+                empty="No role is clearly rising against a soft market right now." />
+              <MarketPanel title="Declining roles" hint="last 3 months" tone="down"
+                items={ins.declining_role} onPick={switchToRole} />
+              <MarketPanel title="In demand now" hint="by active postings"
+                items={ins.in_demand_role} onPick={switchToRole} />
+              <MarketPanel title="Emerging skills" hint="newly appearing in JDs"
+                items={ins.emerging_skill} />
+            </div>
+          )}
+
+          <p className="text-small text-ink-faint mt-10 max-w-2xl">
+            Trends are cohort-locked to companies we've tracked the whole window, family-aggregated to
+            filter out title relabeling, and reflect high-growth / tech-forward employers — not the
+            whole economy.
+          </p>
         </div>
       </div>
 
@@ -1325,7 +1426,7 @@ const LoginScreen = () => {
     setUser(data.user);
     const hasSession = await restoreLastSession();
     if (!hasSession) {
-      setCurrentScreen('role-selection');
+      setCurrentScreen('landing');
     }
   };
 
@@ -1718,7 +1819,7 @@ const SignupScreen = () => {
     if (selectedRole && selectedSeniority) {
       await exploreRole();
     } else {
-      setCurrentScreen('role-selection');
+      setCurrentScreen('landing');
     }
   };
 
@@ -1802,7 +1903,7 @@ const SignupScreen = () => {
             <div className="flex gap-3">
               <button
                 type="button"
-                onClick={() => setCurrentScreen('role-selection')}
+                onClick={() => setCurrentScreen('landing')}
                 className="px-5 py-3 border border-line-strong text-sm font-medium hover:bg-surface transition-colors rounded-lg"
               >
                 BACK
@@ -1949,7 +2050,7 @@ const MobileHeader = () => {
             )}
             <button
               onClick={() => {
-                setCurrentScreen('role-selection');
+                setCurrentScreen('landing');
                 setMenuOpen(false);
               }}
               className="w-full px-4 py-3 text-left text-sm hover:bg-white/10 transition-colors"
@@ -2050,7 +2151,7 @@ const SkillsInputScreen = () => {
   // Redirect if we lost role context (e.g., direct deep-link without state).
   useEffect(() => {
     if (!selectedRole || !roleData) {
-      setCurrentScreen('role-selection');
+      setCurrentScreen('landing');
     }
   }, [selectedRole, roleData, setCurrentScreen]);
 
@@ -2293,7 +2394,7 @@ const SkillsInputScreen = () => {
         <div className="flex items-center gap-3 pt-4">
           <button
             type="button"
-            onClick={() => setCurrentScreen('role-selection')}
+            onClick={() => setCurrentScreen('landing')}
             className="px-5 py-3 border border-line-strong text-sm font-medium hover:bg-surface transition-colors rounded-lg"
           >
             BACK
@@ -2574,7 +2675,7 @@ const DashboardScreen = () => {
   // Guard - redirect if no role data
   useEffect(() => {
     if (!roleData && !loading) {
-      setCurrentScreen('role-selection');
+      setCurrentScreen('landing');
     }
   }, [roleData, loading, setCurrentScreen]);
 
@@ -2689,7 +2790,7 @@ const DashboardScreen = () => {
                   {copied ? 'COPIED' : 'SHARE'}
                 </button>
                 <button
-                  onClick={() => setCurrentScreen('role-selection')}
+                  onClick={() => setCurrentScreen('landing')}
                   className="px-5 py-2.5 text-sm font-medium bg-white text-black hover:bg-gray-200 transition-colors rounded-lg"
                 >
                   EXPLORE A NEW ROLE
@@ -4844,7 +4945,7 @@ const AccountScreen = () => {
 
           <div className="mb-8">
             <button
-              onClick={() => roleData ? setCurrentScreen('dashboard') : setCurrentScreen('role-selection')}
+              onClick={() => roleData ? setCurrentScreen('dashboard') : setCurrentScreen('landing')}
               className="text-sm text-ink-muted hover:text-white transition-colors mb-4 flex items-center gap-2"
             >
               ← {roleData ? 'Back to dashboard' : 'Back to start'}
@@ -4948,7 +5049,7 @@ const AccountScreen = () => {
               <div className="flex items-center justify-between mb-4">
                 <div className="text-eyebrow text-ink-faint">CAREER PREFERENCES</div>
                 <button
-                  onClick={() => setCurrentScreen('role-selection')}
+                  onClick={() => setCurrentScreen('landing')}
                   className="text-sm text-ink-muted hover:text-white transition-colors"
                 >
                   Change role →
@@ -5389,9 +5490,9 @@ const ScreenSync = () => {
   useEffect(() => {
     if (initialLoading) return;
     if (currentScreen === 'dashboard' && !roleData) {
-      setCurrentScreen(user ? 'role-selection' : 'landing');
+      setCurrentScreen('landing');
     } else if (currentScreen === 'skills-input' && (!selectedRole || !roleData)) {
-      setCurrentScreen(user ? 'role-selection' : 'landing');
+      setCurrentScreen('landing');
     } else if (currentScreen === 'account' && !user) {
       setCurrentScreen('login');
     }

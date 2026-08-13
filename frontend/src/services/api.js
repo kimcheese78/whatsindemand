@@ -283,6 +283,11 @@ class API {
     });
   }
 
+  async getMarketInsights(scope = 'overall') {
+    const q = scope && scope !== 'overall' ? `?scope=${encodeURIComponent(scope)}` : '';
+    return this.request(`/api/market/insights${q}`, { auth: false });
+  }
+
   async getAlternativeRoles(role, seniority = null) {
     return this.request('/api/roles/alternatives', {
       method: 'POST',
