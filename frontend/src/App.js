@@ -1322,12 +1322,11 @@ const LandingScreen = () => {
 
       <div className="flex-1">
         <div className="max-w-5xl mx-auto px-6 sm:px-8 pt-16 sm:pt-24 pb-28">
-          <h1 className="text-4xl sm:text-5xl md:text-6xl font-semibold mb-6 leading-[1.08] tracking-tight max-w-3xl" style={{ textWrap: 'balance' }}>
-            So, what are companies <br className="hidden md:block" />
-            actually hiring for right now?
+          <h1 className="text-5xl sm:text-6xl md:text-7xl font-semibold mb-6 leading-[1.02] tracking-tight">
+            Real hiring data.<br />No hype.
           </h1>
           <p className="text-lg sm:text-xl text-ink-muted mb-8 max-w-2xl leading-relaxed" style={{ textWrap: 'balance' }}>
-            We read 100,000+ live job postings from 3,300+ high-growth companies and show you what's rising, what's dead, and what's suddenly in demand. No hype, just data.
+            We read 100,000+ live job postings from 3,300+ high-growth companies and show you what's rising, what's dead, and what's suddenly in demand.
           </p>
 
           {/* Role search — jump straight into any role's dashboard */}
