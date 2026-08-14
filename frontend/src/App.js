@@ -1295,7 +1295,7 @@ const MarketPanel = ({ title, hint, tone = 'default', items = [], onPick, empty 
 );
 
 const LandingScreen = () => {
-  const { switchToRole, allRoles } = useApp();
+  const { switchToRole, allRoles, loading } = useApp();
   const [data, setData] = useState(null);
   const [loadingInsights, setLoadingInsights] = useState(true);
   const [query, setQuery] = useState('');
@@ -1315,6 +1315,9 @@ const LandingScreen = () => {
 
   const ins = (data && data.insights) || {};
   const summary = (ins.market_summary || [])[0];
+
+  // A role fetch (from search / a leaderboard click) is in flight — show the loading bar.
+  if (loading) return <RoleLoadingScreen />;
 
   return (
     <div className="min-h-screen bg-zinc-900 text-white flex flex-col">
