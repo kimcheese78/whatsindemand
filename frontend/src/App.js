@@ -1326,7 +1326,7 @@ const LandingScreen = () => {
             Real hiring data.<br />No hype.
           </h1>
           <p className="text-lg sm:text-xl text-ink-muted mb-8 max-w-2xl leading-relaxed" style={{ textWrap: 'balance' }}>
-            We read 100,000+ live job postings from 3,300+ high-growth companies and show you what's rising, what's dead, and what's suddenly in demand.
+            We read 100,000+ live job postings from 3,300+ high-growth companies and show you what's rising, what's declining, and what's suddenly in demand.
           </p>
 
           {/* Role search — jump straight into any role's dashboard */}
