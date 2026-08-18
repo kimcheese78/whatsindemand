@@ -1281,7 +1281,6 @@ const InsightRow = ({ item, tone, onPick }) => {
       </div>
       <div className="flex items-center gap-3 shrink-0">
         {Array.isArray(item.trend) && item.trend.length > 1 && <Sparkline data={item.trend} tone={rowTone} />}
-        {item.active != null && <Num className="text-ink-muted">{item.active.toLocaleString()}</Num>}
         {rowGrowth != null && <Pill tone={rowTone}>{_fmtPct(rowGrowth)}</Pill>}
         {rowGrowth == null && item.company_count != null && (
           <Num className="text-ink-muted">{item.company_count} cos</Num>
