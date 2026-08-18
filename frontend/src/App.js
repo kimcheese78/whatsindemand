@@ -1398,7 +1398,7 @@ const LandingScreen = () => {
               </div>
 
               {/* Roles: raw hiring volume (full width, two columns) */}
-              <MarketPanel title="Roles with most postings" hint="by active postings" cols={2}
+              <MarketPanel title="Roles with most postings" hint="last 3 months" cols={2}
                 items={ins.in_demand_role} onPick={switchToRole} />
 
               {/* Skills: rising / declining trends */}
