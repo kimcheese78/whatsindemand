@@ -1260,7 +1260,16 @@ const _fmtPct = (n) => (n == null ? '' : `${n > 0 ? '+' : ''}${Math.round(n)}%`)
 // One clickable row inside a market insight panel.
 const InsightRow = ({ item, tone, onPick }) => {
   const clickable = onPick && !item.is_family;
-  const g = item.growth;
+  const t = item.trend;
+  // Volume boards (tone 'default') carry no server growth %; derive it from the row's
+  // own trend series so the "most postings" card shows a color-coded change % and a
+  // direction-colored sparkline, just like the rising/declining boards.
+  const rowGrowth = item.growth != null
+    ? item.growth
+    : (Array.isArray(t) && t.length > 1 && t[0] > 0 ? ((t[t.length - 1] - t[0]) / t[0]) * 100 : null);
+  const rowTone = tone !== 'default'
+    ? tone
+    : (rowGrowth != null ? (rowGrowth >= 0 ? 'up' : 'down') : 'default');
   return (
     <div
       onClick={clickable ? () => onPick(item.label) : undefined}
@@ -1271,10 +1280,10 @@ const InsightRow = ({ item, tone, onPick }) => {
         {item.sector && <div className="text-small text-ink-faint truncate">{item.sector}</div>}
       </div>
       <div className="flex items-center gap-3 shrink-0">
-        {Array.isArray(item.trend) && item.trend.length > 1 && <Sparkline data={item.trend} tone={tone} />}
-        {g != null && <Pill tone={tone}>{_fmtPct(g)}</Pill>}
-        {g == null && item.active != null && <Num className="text-ink-muted">{item.active.toLocaleString()}</Num>}
-        {g == null && item.company_count != null && (
+        {Array.isArray(item.trend) && item.trend.length > 1 && <Sparkline data={item.trend} tone={rowTone} />}
+        {item.active != null && <Num className="text-ink-muted">{item.active.toLocaleString()}</Num>}
+        {rowGrowth != null && <Pill tone={rowTone}>{_fmtPct(rowGrowth)}</Pill>}
+        {rowGrowth == null && item.company_count != null && (
           <Num className="text-ink-muted">{item.company_count} cos</Num>
         )}
       </div>
