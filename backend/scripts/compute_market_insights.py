@@ -4,9 +4,11 @@ Boards produced (cohort-locked throughout):
   - Rising / declining ROLES, overall + per sector (job_family). Every row must pass:
     data-substance qualification (data_quality) + flow/stock agreement + family churn
     guard + a minimum absolute delta.
+  - Rising / falling established SKILLS, overall. Growth is measured on PREVALENCE
+    (share of cohort postings mentioning the skill) so it nets out market drift;
+    cohort-locked to companies tracked the whole window; domain/industry skills excluded.
   - Emerging SKILLS (from SkillCandidate: recent first_seen, broad company_count).
   - Market summary (global-cohort postings trend).
-  (Rising/falling established-skill board is a planned follow-up — see TODO.)
 
 Idempotent per ISO week: with --apply it deletes this week's rows and rewrites them.
 
@@ -21,20 +23,31 @@ from datetime import date, datetime, timedelta
 from sqlalchemy import func
 
 from app import create_app
-from app.models import db, Role, SkillCandidate, MarketInsightSnapshot
+from app.models import db, Job, Role, Skill, JobSkill, SkillCandidate, MarketInsightSnapshot
 from app.routes.roles import calculate_growth_pct
 from app.services.data_quality import role_qualifies, qualified_roles
 from scripts.leaderboard_diagnostics import (
     month_bounds, stock_count, flow_count, full_series, direction, role_series,
-    _get_cohort_company_ids, FAMILIES,
+    _get_cohort_company_ids, _period_end, JOB_DATE, FAMILIES,
 )
-from app.routes.roles import _trend_window_start, COHORT_BUFFER_DAYS
+from app.routes.roles import _trend_window_start, COHORT_BUFFER_DAYS, STALE_LISTING_DAYS
 
 TOP_N = 10
 MIN_ABS_DELTA = 30          # ignore moves smaller than this many postings
 MIN_SECTOR_SURVIVORS = 3    # a sector board needs at least this many qualified movers
 EMERGING_MIN_COMPANIES = 3
 EMERGING_MAX_AGE_DAYS = 75
+
+# Rising/declining established-SKILL board. Growth is measured on prevalence (share
+# of cohort postings mentioning the skill), which nets out overall market drift.
+SKILL_MIN_TOTAL_JOBS = 50      # only trend skills with a real market footprint
+SKILL_MIN_PREV_JOBS = 20       # baseline volume floor inside the cohort (share stability)
+SKILL_MIN_SHARE_DELTA = 0.3    # ignore share moves smaller than this many points
+# Breadth guards: a market trend must span many employers, not one company flooding
+# postings (or a single-company mis-extraction). Checked in BOTH the base and latest
+# full month, so a skill can't rise/fall just because one big employer entered/left.
+SKILL_MIN_COMPANIES = 8        # distinct cohort employers posting the skill
+SKILL_MAX_CONCENTRATION = 0.5  # drop if any single employer is >50% of the skill's postings
 
 
 def iso_week_start(d=None):
@@ -205,12 +218,148 @@ def compute_emerging_skills(week):
     return rows
 
 
-def compute_market_summary(week):
+def global_cohort_ids():
+    """Companies we've tracked the whole trend window — the market-wide cohort shared
+    by the market-summary and skill-trend boards."""
     cutoff = _trend_window_start(4) - timedelta(days=COHORT_BUFFER_DAYS)
-    from app.models import Job
-    global_cohort = [cid for (cid,) in db.session.query(Job.company_id)
-                     .filter(Job.company_id.isnot(None)).group_by(Job.company_id)
-                     .having(func.min(Job.scraped_at) <= cutoff).all()]
+    return [cid for (cid,) in db.session.query(Job.company_id)
+            .filter(Job.company_id.isnot(None)).group_by(Job.company_id)
+            .having(func.min(Job.scraped_at) <= cutoff).all()]
+
+
+def _skill_stock_counts(company_ids, start, end, is_partial, skill_ids):
+    """{skill_id: # active cohort postings mentioning that skill} for one month —
+    same active-during-month window as stock_count, in a single grouped query."""
+    pend = _period_end(end, is_partial)
+    stale_floor = pend - timedelta(days=STALE_LISTING_DAYS)
+    rows = (db.session.query(JobSkill.skill_id, func.count(func.distinct(Job.id)))
+            .join(Job, JobSkill.job_id == Job.id)
+            .filter(
+                Job.company_id.in_(company_ids),
+                JobSkill.skill_id.in_(skill_ids),
+                JOB_DATE < pend,
+                db.or_(Job.closed_at.is_(None), Job.closed_at >= start),
+                db.or_(Job.closed_at.isnot(None), Job.last_seen_at >= stale_floor),
+            ).group_by(JobSkill.skill_id).all())
+    return dict(rows)
+
+
+def _skill_concentration(company_ids, start, end, is_partial, skill_ids):
+    """{skill_id: (n_companies, top_employer_share)} for one month — how broadly a
+    skill's postings are spread across the cohort. One grouped query."""
+    if not skill_ids:
+        return {}
+    pend = _period_end(end, is_partial)
+    stale_floor = pend - timedelta(days=STALE_LISTING_DAYS)
+    rows = (db.session.query(JobSkill.skill_id, Job.company_id, func.count(func.distinct(Job.id)))
+            .join(Job, JobSkill.job_id == Job.id)
+            .filter(
+                Job.company_id.in_(company_ids),
+                JobSkill.skill_id.in_(skill_ids),
+                JOB_DATE < pend,
+                db.or_(Job.closed_at.is_(None), Job.closed_at >= start),
+                db.or_(Job.closed_at.isnot(None), Job.last_seen_at >= stale_floor),
+            ).group_by(JobSkill.skill_id, Job.company_id).all())
+    by_skill = {}
+    for sid, _cid, n in rows:
+        by_skill.setdefault(sid, []).append(n)
+    return {sid: (len(cs), (max(cs) / sum(cs)) if sum(cs) else 1.0) for sid, cs in by_skill.items()}
+
+
+def compute_skill_movers(global_cohort):
+    """Market-scope rising/declining SKILLS, cohort-locked to companies tracked the
+    whole window. Growth is measured on PREVALENCE (share of cohort postings mentioning
+    the skill), so it nets out overall market drift — a skill going 8%->11% of postings
+    is a real +37% move regardless of how the market moved. Domain skills (industries)
+    are excluded; they're context, not learnable skills."""
+    cand = (Skill.query
+            .filter(Skill.is_verified.is_(True),
+                    Skill.category.in_(['technical', 'soft']),
+                    Skill.total_job_count >= SKILL_MIN_TOTAL_JOBS)
+            .all())
+    id_to_name = {s.id: s.name for s in cand}
+    skill_ids = list(id_to_name)
+    if not skill_ids:
+        return []
+
+    bounds = month_bounds()
+    month_totals = [(s.isoformat()[:7], stock_count(global_cohort, s, e, p), p) for (s, e, p) in bounds]
+    per_skill = {sid: [] for sid in skill_ids}
+    for (s, e, p) in bounds:
+        counts = _skill_stock_counts(global_cohort, s, e, p, skill_ids)
+        month = s.isoformat()[:7]
+        for sid in skill_ids:
+            per_skill[sid].append((month, counts.get(sid, 0), p))
+
+    full_totals = full_series(month_totals)
+    if len(full_totals) < 2 or full_totals[0][1] == 0 or full_totals[-1][1] == 0:
+        return []
+    base_total, latest_total = full_totals[0][1], full_totals[-1][1]
+
+    survivors = []
+    for sid in skill_ids:
+        full_counts = full_series(per_skill[sid])
+        base_count, latest_count = full_counts[0][1], full_counts[-1][1]
+        if base_count < SKILL_MIN_PREV_JOBS:
+            continue
+        base_share = base_count / base_total * 100
+        latest_share = latest_count / latest_total * 100
+        if abs(latest_share - base_share) < SKILL_MIN_SHARE_DELTA:
+            continue
+        growth = calculate_growth_pct(latest_share, base_share)
+        if growth is None:
+            continue
+        trend = [round(c / t * 100, 2) for (_, c), (_, t) in zip(full_counts, full_totals)]
+        survivors.append({
+            'sid': sid, 'label': id_to_name[sid], 'growth': growth,
+            'from_share': round(base_share, 2), 'to_share': round(latest_share, 2),
+            'from': base_count, 'to': latest_count,
+            'cohort': len(global_cohort), 'trend': trend,
+        })
+
+    # Breadth gate: keep only moves spread across many employers in BOTH the base and
+    # latest full month — drops one-company floods / mis-extractions (e.g. a single firm
+    # tagged on 500 postings) that would otherwise headline the board.
+    base_bound, latest_bound = bounds[0], bounds[-2]
+    surviving_ids = [s['sid'] for s in survivors]
+    conc_base = _skill_concentration(global_cohort, *base_bound, surviving_ids)
+    conc_latest = _skill_concentration(global_cohort, *latest_bound, surviving_ids)
+
+    def _broad(s):
+        cb, cl = conc_base.get(s['sid']), conc_latest.get(s['sid'])
+        if not cb or not cl:
+            return False
+        return (cb[0] >= SKILL_MIN_COMPANIES and cl[0] >= SKILL_MIN_COMPANIES
+                and cb[1] <= SKILL_MAX_CONCENTRATION and cl[1] <= SKILL_MAX_CONCENTRATION)
+
+    kept = []
+    for s in survivors:
+        if _broad(s):
+            s['companies'] = conc_latest[s['sid']][0]
+            s.pop('sid')
+            kept.append(s)
+    return kept
+
+
+def _skill_rows(survivors, week):
+    """Rank survivors into rising/declining skill snapshot rows."""
+    rows = []
+    rising = [x for x in sorted(survivors, key=lambda x: x['growth'], reverse=True) if x['growth'] > 0][:TOP_N]
+    declining = [x for x in sorted(survivors, key=lambda x: x['growth']) if x['growth'] < 0][:TOP_N]
+    for kind, items in (('rising_skill', rising), ('falling_skill', declining)):
+        for i, x in enumerate(items):
+            rows.append(MarketInsightSnapshot(
+                week_start=week, kind=kind, scope='overall', rank=i,
+                payload=json.dumps({
+                    'label': x['label'], 'growth': x['growth'],
+                    'from': x['from'], 'to': x['to'],
+                    'from_share': x['from_share'], 'to_share': x['to_share'],
+                    'cohort': x['cohort'], 'companies': x.get('companies'), 'trend': x['trend'],
+                })))
+    return rows
+
+
+def compute_market_summary(week, global_cohort):
     series = [(s.isoformat()[:7], stock_count(global_cohort, s, e, p), p) for (s, e, p) in month_bounds()]
     full = full_series(series)
     growth = calculate_growth_pct(full[-1][1], full[0][1]) if len(full) >= 2 else None
@@ -228,9 +377,12 @@ def main(apply=False):
     app = create_app()
     with app.app_context():
         week = iso_week_start()
-        summary_rows, market_growth = compute_market_summary(week)
+        global_cohort = global_cohort_ids()
+        summary_rows, market_growth = compute_market_summary(week, global_cohort)
         survivors = compute_role_movers(market_growth=market_growth)
+        skill_survivors = compute_skill_movers(global_cohort)
         print(f"Role movers surviving all gates: {len(survivors)}  (market drift {market_growth}%)")
+        print(f"Skill movers surviving all gates: {len(skill_survivors)}")
 
         rows = []
         rows += _rows_from_survivors(survivors, 'overall', week)
@@ -242,18 +394,24 @@ def main(apply=False):
             if len(items) >= MIN_SECTOR_SURVIVORS:
                 rows += _rows_from_survivors(items, f'sector:{sector}', week)
         rows += compute_in_demand_roles(week)
+        rows += _skill_rows(skill_survivors, week)
         rows += compute_emerging_skills(week)
         rows += summary_rows
 
         # summary print
         print(f"\nWeek {week}  |  {len(rows)} snapshot rows")
-        for kind in ('rising_role', 'declining_role', 'emerging_skill', 'market_summary'):
+        for kind in ('rising_role', 'declining_role', 'rising_skill', 'falling_skill',
+                     'emerging_skill', 'market_summary'):
             overall = [r for r in rows if r.kind == kind and r.scope == 'overall']
             if overall:
                 print(f"\n[{kind} · overall]")
                 for r in overall:
                     p = json.loads(r.payload)
-                    if 'growth' in p and p['growth'] is not None:
+                    if 'from_share' in p:      # skill row: prevalence + breadth
+                        print(f"  {p['growth']:+7.1f}%  {p['from_share']:.2f}%→{p['to_share']:.2f}% "
+                              f"share ({p.get('from','?')}→{p.get('to','?')} jobs, "
+                              f"{p.get('companies','?')} cos)  {p['label']}")
+                    elif 'growth' in p and p['growth'] is not None:
                         vm = p.get('vs_market')
                         vm_s = f"  (vs mkt {vm:+.1f})" if vm is not None else ""
                         print(f"  {p['growth']:+7.1f}%  {p.get('from','?')}→{p.get('to','?')}  {p['label']}{vm_s}")

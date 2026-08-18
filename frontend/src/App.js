@@ -1282,7 +1282,7 @@ const InsightRow = ({ item, tone, onPick }) => {
   );
 };
 
-const MarketPanel = ({ title, hint, tone = 'default', items = [], onPick, empty }) => (
+const MarketPanel = ({ title, hint, tone = 'default', items = [], onPick, empty, cols = 1 }) => (
   <Panel className="flex flex-col">
     <div className="flex items-baseline justify-between mb-2">
       <Eyebrow>{title}</Eyebrow>
@@ -1290,7 +1290,11 @@ const MarketPanel = ({ title, hint, tone = 'default', items = [], onPick, empty 
     </div>
     {(!items || items.length === 0)
       ? <p className="text-small text-ink-faint py-4">{empty || 'Not enough data yet.'}</p>
-      : items.map((it, i) => <InsightRow key={i} item={it} tone={tone} onPick={onPick} />)}
+      : (
+        <div className={cols === 2 ? 'grid sm:grid-cols-2 sm:gap-x-8' : ''}>
+          {items.map((it, i) => <InsightRow key={i} item={it} tone={tone} onPick={onPick} />)}
+        </div>
+      )}
   </Panel>
 );
 
@@ -1375,23 +1379,37 @@ const LandingScreen = () => {
           {loadingInsights ? (
             <p className="text-ink-muted">Reading the market…</p>
           ) : (
-            <div className="grid md:grid-cols-2 gap-6">
-              <MarketPanel title="Rising roles" hint="last 3 months" tone="up"
-                items={ins.rising_role} onPick={switchToRole}
-                empty="No role is clearly rising against a soft market right now." />
-              <MarketPanel title="Declining roles" hint="last 3 months" tone="down"
-                items={ins.declining_role} onPick={switchToRole} />
-              <MarketPanel title="In demand now" hint="by active postings"
+            <div className="space-y-6">
+              {/* Roles: rising / declining trends */}
+              <div className="grid md:grid-cols-2 gap-6">
+                <MarketPanel title="Rising roles" hint="last 3 months" tone="up"
+                  items={ins.rising_role} onPick={switchToRole}
+                  empty="No role is clearly rising against a soft market right now." />
+                <MarketPanel title="Declining roles" hint="last 3 months" tone="down"
+                  items={ins.declining_role} onPick={switchToRole} />
+              </div>
+
+              {/* Roles: raw hiring volume (full width, two columns) */}
+              <MarketPanel title="Roles with most postings" hint="by active postings" cols={2}
                 items={ins.in_demand_role} onPick={switchToRole} />
-              <MarketPanel title="Emerging skills" hint="newly appearing in JDs"
-                items={ins.emerging_skill} />
+
+              {/* Skills: rising / declining trends */}
+              <div className="grid md:grid-cols-2 gap-6">
+                <MarketPanel title="Rising skills" hint="last 3 months" tone="up"
+                  items={ins.rising_skill}
+                  empty="No skill is clearly rising against the market right now." />
+                <MarketPanel title="Declining skills" hint="last 3 months" tone="down"
+                  items={ins.falling_skill}
+                  empty="No skill is clearly declining right now." />
+              </div>
             </div>
           )}
 
           <p className="text-small text-ink-faint mt-10 max-w-2xl">
-            Trends are cohort-locked to companies we've tracked the whole window, family-aggregated to
-            filter out title relabeling, and reflect high-growth / tech-forward employers — not the
-            whole economy.
+            Trends are cohort-locked to companies we've tracked the whole window and reflect
+            high-growth / tech-forward employers — not the whole economy. Role moves are
+            family-aggregated to filter out title relabeling; skill moves are measured as share
+            of postings, so overall hiring swings don't masquerade as demand.
           </p>
         </div>
       </div>
