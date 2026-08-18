@@ -186,12 +186,14 @@ def compute_in_demand_roles(week, top=TOP_N):
         ok, info = role_qualifies(r.id, r)
         if not ok:
             continue
+        stock = role_series(r.id, stock_count)   # cohort-locked full-month series (None if cohort<5)
+        trend = [c for (_m, c) in full_series(stock)] if stock else None
         rows.append(MarketInsightSnapshot(
             week_start=week, kind='in_demand_role', scope='overall', rank=rank,
             payload=json.dumps({
                 'label': r.normalized_title, 'sector': r.job_family or 'Other',
                 'active': info['active'], 'cohort': info['cohort'],
-                'confidence': info['confidence'],
+                'confidence': info['confidence'], 'trend': trend,
             })))
         rank += 1
         if rank >= top:
