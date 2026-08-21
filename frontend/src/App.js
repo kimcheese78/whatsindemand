@@ -1400,24 +1400,14 @@ const LandingScreen = () => {
               {/* Roles: raw hiring volume (full width, two columns) */}
               <MarketPanel title="Roles with most postings" hint="last 3 months" cols={2}
                 items={ins.in_demand_role} onPick={switchToRole} />
-
-              {/* Skills: rising / declining trends */}
-              <div className="grid md:grid-cols-2 gap-6">
-                <MarketPanel title="Rising skills" hint="last 3 months" tone="up"
-                  items={ins.rising_skill}
-                  empty="No skill is clearly rising against the market right now." />
-                <MarketPanel title="Declining skills" hint="last 3 months" tone="down"
-                  items={ins.falling_skill}
-                  empty="No skill is clearly declining right now." />
-              </div>
             </div>
           )}
 
           <p className="text-small text-ink-faint mt-10 max-w-2xl">
             Trends are cohort-locked to companies we've tracked the whole window and reflect
             high-growth / tech-forward employers — not the whole economy. Role moves are
-            family-aggregated to filter out title relabeling; skill moves are measured as share
-            of postings, so overall hiring swings don't masquerade as demand.
+            family-aggregated to filter out title relabeling, so overall hiring swings don't
+            masquerade as demand.
           </p>
         </div>
       </div>
