@@ -511,7 +511,7 @@
 "account executive, emerging ai products": account_executive
 "account executive, emerging enterprise": account_executive
 "account executive, emerging enterprise, financial services": account_executive
-"account executive, majors - central": major_account_executive
+"account executive, majors - central": enterprise_account_executive
 "enterprise account executive": enterprise_account_executive
 "enterprise account executive - dach": enterprise_account_executive
 "enterprise account executive - financial services": enterprise_account_executive
@@ -525,7 +525,7 @@
 "strategic core account executive - discrete manufacturing": strategic_account_executive
 "commercial account executive": mid_market_account_executive
 "commercial account executive - benelux / nordics region": mid_market_account_executive
-"corporate account executive": corporate_account_executive
+"corporate account executive": mid_market_account_executive
 "mid-market account executive": mid_market_account_executive
 "mid market account executive": mid_market_account_executive
 "market account executive": mid_market_account_executive
@@ -538,11 +538,11 @@
 "territory account executive, retail - denver north": territory_account_executive
 "territory account executive, retail - south texas": territory_account_executive
 "territory account executive, retail - northeast houston": territory_account_executive
-"major account executive": major_account_executive
-"major enterprise account executive": major_account_executive
-"select major account executive": major_account_executive
-"key account executive, auth0": major_account_executive
-"key accounts executive": major_account_executive
+"major account executive": enterprise_account_executive
+"major enterprise account executive": enterprise_account_executive
+"select major account executive": enterprise_account_executive
+"key account executive, auth0": enterprise_account_executive
+"key accounts executive": enterprise_account_executive
 "local advertising account executive": account_executive
 "sales account executive": account_executive
 "enterprise sales executive": enterprise_account_executive
@@ -1193,7 +1193,7 @@
 # =============================================================================
 "don't see what you're looking for?": null
 "s manager": null  # truncated artifact
-"select major account executive (cst)": major_account_executive
+"select major account executive (cst)": enterprise_account_executive
 
 # =============================================================================
 # Bulk fallback aliases — common "[domain] [role-noun]" forms that should map

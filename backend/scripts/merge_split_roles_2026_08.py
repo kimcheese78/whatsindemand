@@ -36,6 +36,9 @@ from app.models import Role
 # The predicate uses {col} so it works for both jobs.title and role_title_variations.original_title.
 OPS = [
     ("Commercial Account Executive", [(None, "Mid-Market Account Executive")]),
+    # 2026-08-27 follow-up: trim the two tiny company-specific AE labels
+    ("Major Account Executive",       [(None, "Enterprise Account Executive")]),
+    ("Corporate Account Executive",   [(None, "Mid-Market Account Executive")]),
     ("People Business Partner",       [(None, "HR Business Partner")]),
     ("People Partner", [
         ("{col} ILIKE '%compensation%'", "Compensation Analyst"),
