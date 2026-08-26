@@ -471,6 +471,7 @@
 "content designer": content_designer
 "creative director": creative_director
 "design director": design_director
+"director of design": design_director
 "design director, battle pass": design_director
 "product design director": design_director
 "director, product design": design_director
@@ -501,7 +502,7 @@
 "account executive, mid market": mid_market_account_executive
 "account executive, midmarket": mid_market_account_executive
 "account executive, senior midmarket": mid_market_account_executive
-"account executive, commercial": commercial_account_executive
+"account executive, commercial": mid_market_account_executive
 "account executive, strategic": strategic_account_executive
 "account executive, scale": account_executive
 "account executive, territory": territory_account_executive
@@ -522,8 +523,8 @@
 "strategic account executive, auth0": strategic_account_executive
 "strategic ai/bi account executive": strategic_account_executive
 "strategic core account executive - discrete manufacturing": strategic_account_executive
-"commercial account executive": commercial_account_executive
-"commercial account executive - benelux / nordics region": commercial_account_executive
+"commercial account executive": mid_market_account_executive
+"commercial account executive - benelux / nordics region": mid_market_account_executive
 "corporate account executive": corporate_account_executive
 "mid-market account executive": mid_market_account_executive
 "mid market account executive": mid_market_account_executive
@@ -545,7 +546,7 @@
 "local advertising account executive": account_executive
 "sales account executive": account_executive
 "enterprise sales executive": enterprise_account_executive
-"commercial saas client sales executive": commercial_account_executive
+"commercial saas client sales executive": mid_market_account_executive
 "client account manager": account_manager
 "client partner, large customer sales": account_manager
 "regional client partner, ads solutions": account_manager
@@ -713,10 +714,10 @@
 "manager, talent acquisition": director_of_talent_acquisition
 "manager, talent acquisition operations": director_of_talent_acquisition
 "hr business partner": hr_business_partner
-"people business partner": people_business_partner
-"director, people business partner": people_business_partner
-"people partner": people_partner
-"compensation partner": people_partner
+"people business partner": hr_business_partner
+"director, people business partner": hr_business_partner
+"people partner": hr_business_partner
+"compensation partner": compensation_analyst
 "people operations partner": people_operations_specialist
 "people operations coordinator": people_operations_specialist
 "people operations specialist": people_operations_specialist
@@ -1205,7 +1206,6 @@
 "marketing director": marketing_manager
 "engineering director": director_of_engineering
 "product director": director_of_product
-"design director": director_of_design
 "people director": director_of_people
 "hr director": hr_manager
 "talent director": talent_manager
@@ -1324,7 +1324,6 @@
 "sales development": sales_development_representative
 "rvp": sales_manager
 "avp": operations_manager
-"producer": program_manager
 "demand & supply planner": material_planner
 "demand and supply planner": material_planner
 "supply planner": material_planner
@@ -1428,6 +1427,12 @@
 "behavioral specialist": behavioral_specialist
 "behavior specialist": behavioral_specialist
 "behavior technician": behavioral_specialist
+"behavior analyst": behavioral_specialist
+"board certified behavior analyst": behavioral_specialist
+"board certified behavior analyst (bcba)": behavioral_specialist
+"bcba": behavioral_specialist
+"assistant behavior analyst": behavioral_specialist
+"registered behavior technician": behavioral_specialist
 "direct support professional": direct_support_professional
 "dsp": direct_support_professional
 

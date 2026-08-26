@@ -379,8 +379,12 @@ _SUFFIX_DEFAULTS = [
     ("engineer", "software_engineer"),
     ("developer", "software_engineer"),
     ("designer", "product_designer"),
-    ("analyst", "business_analyst"),
     ("scientist", "data_scientist"),
+    # NOTE: generic ("analyst", "business_analyst") removed — it was a catch-all
+    # that dumped every unmatched "X Analyst" (Behavior Analyst/BCBA, Compliance,
+    # Fraud, Cybersecurity, FP&A...) into Business Analyst. Specific analyst
+    # families are handled by explicit suffixes above + aliases.yaml; anything
+    # else now falls through to Unknown → review queue.
     ("manager", "operations_manager"),
     ("director", "operations_manager"),
     ("specialist", "operations_manager"),
@@ -399,7 +403,6 @@ _SUFFIX_DEFAULTS = [
     ("head", "operations_manager"),
     ("officer", "operations_manager"),
     ("partner", "partner_manager"),
-    ("strategist", "business_analyst"),
     ("advisor", "solutions_consultant"),
     ("agent", "sales_representative"),
     ("clerk", "administrative_assistant"),
@@ -409,7 +412,9 @@ _SUFFIX_DEFAULTS = [
     ("operator", "manufacturing_technician"),
     ("editor", "technical_writer"),
     ("writer", "technical_writer"),
-    ("producer", "program_manager"),
+    # ("producer", "program_manager") removed — media/broadcast Producers
+    # (Executive/Event/Lead Producer) are not program managers; let them fall
+    # through to Unknown → review rather than polluting Program Manager.
 ]
 
 
