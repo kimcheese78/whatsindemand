@@ -39,8 +39,8 @@ def _load_db_slugs() -> set:
         print("DATABASE_URL not set — skipping DB slug check.")
         return set()
     try:
-        import psycopg2
-        conn = psycopg2.connect(db_url)
+        import psycopg
+        conn = psycopg.connect(db_url)
         cur = conn.cursor()
         cur.execute("SELECT greenhouse_slug FROM companies WHERE greenhouse_slug IS NOT NULL")
         slugs = {row[0] for row in cur.fetchall()}
