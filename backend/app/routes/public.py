@@ -169,6 +169,25 @@ def public_role_page(role_slug):
         ],
     })
 
+    dataset_ld = json.dumps({
+        "@context": "https://schema.org",
+        "@type": "Dataset",
+        "name": f"{title} — skill demand data, {month}",
+        "description": description,
+        "url": canonical,
+        "isAccessibleForFree": True,
+        "creator": {"@type": "Organization", "name": "WhatsInDemand",
+                    "url": f"{WEB_URL}/"},
+        "dateModified": datetime.utcnow().strftime('%Y-%m-%d'),
+        "keywords": [title, "job postings", "skills in demand", "hiring data"]
+                    + [s['name'] for s in d['skills'][:5]],
+        "variableMeasured": [
+            {"@type": "PropertyValue", "name": s['name'],
+             "value": f"{s['pct']}% of {title} postings"}
+            for s in d['skills'][:8]
+        ],
+    })
+
     skills_rows_html = ''.join(
         f"<tr><td>{_esc(s['name'])}</td>"
         f"<td class='num'>{s['pct']}%</td>"
@@ -225,6 +244,7 @@ def public_role_page(role_slug):
 <meta property="og:url" content="{canonical}">
 <meta name="twitter:card" content="summary">
 <script type="application/ld+json">{breadcrumb_ld}</script>
+<script type="application/ld+json">{dataset_ld}</script>
 <style>{_PAGE_CSS}</style>
 </head>
 <body>
