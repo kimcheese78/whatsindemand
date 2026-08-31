@@ -13,6 +13,10 @@
     <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
     <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
 
+    <!-- Canonical host is www (matches the server-rendered /r/ pages + sitemap).
+         Ensure Vercel 301-redirects the non-www apex to www. -->
+    <link rel="canonical" href="https://www.whatsindemand.com/" />
+
     <title>WhatsInDemand — See which skills are in demand</title>
 
     <!-- Open Graph (Facebook, LinkedIn, Slack, iMessage) -->
@@ -20,8 +24,8 @@
     <meta property="og:site_name" content="WhatsInDemand" />
     <meta property="og:title" content="WhatsInDemand — See which skills are in demand" />
     <meta property="og:description" content="WhatsInDemand analyzes 28,000+ live job postings to show which skills employers actually ask for in your target role — and where your skill gaps are." />
-    <meta property="og:url" content="https://whatsindemand.com" />
-    <meta property="og:image" content="https://whatsindemand.com/og-image.png" />
+    <meta property="og:url" content="https://www.whatsindemand.com/" />
+    <meta property="og:image" content="https://www.whatsindemand.com/og-image.png" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
 
@@ -29,7 +33,7 @@
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="WhatsInDemand — See which skills are in demand" />
     <meta name="twitter:description" content="WhatsInDemand analyzes 28,000+ live job postings to show which skills employers actually ask for in your target role — and where your skill gaps are." />
-    <meta name="twitter:image" content="https://whatsindemand.com/og-image.png" />
+    <meta name="twitter:image" content="https://www.whatsindemand.com/og-image.png" />
 
     <!-- Roboto (used by Google sign-in button to match brand guidelines) -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -38,6 +42,29 @@
 
     <!-- Tailwind CSS via CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Structured data: Organization + WebSite (helps brand knowledge panel) -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "Organization",
+          "@id": "https://www.whatsindemand.com/#org",
+          "name": "WhatsInDemand",
+          "url": "https://www.whatsindemand.com/",
+          "logo": "https://www.whatsindemand.com/logo512.png"
+        },
+        {
+          "@type": "WebSite",
+          "@id": "https://www.whatsindemand.com/#site",
+          "name": "WhatsInDemand",
+          "url": "https://www.whatsindemand.com/",
+          "publisher": { "@id": "https://www.whatsindemand.com/#org" }
+        }
+      ]
+    }
+    </script>
   </head>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>

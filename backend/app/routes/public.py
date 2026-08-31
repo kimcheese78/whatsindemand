@@ -12,6 +12,7 @@ Design constraints:
 - No JS, inline CSS only, one canonical URL per role.
 - Cache-Control: public — Vercel's edge caches these for a day.
 """
+import json
 from datetime import datetime
 
 from flask import Blueprint, Response, request
@@ -132,6 +133,18 @@ def public_role_page(role_slug):
     canonical = f"{WEB_URL}/r/{canonical_slug}"
     noindex = d['total'] < MIN_JOBS_FOR_PAGE
 
+    breadcrumb_ld = json.dumps({
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+            {"@type": "ListItem", "position": 1, "name": "WhatsInDemand",
+             "item": f"{WEB_URL}/"},
+            {"@type": "ListItem", "position": 2, "name": "Roles",
+             "item": f"{WEB_URL}/r/"},
+            {"@type": "ListItem", "position": 3, "name": title, "item": canonical},
+        ],
+    })
+
     skills_rows_html = ''.join(
         f"<tr><td>{_esc(s['name'])}</td>"
         f"<td class='num'>{s['pct']}%</td>"
@@ -157,6 +170,7 @@ def public_role_page(role_slug):
 <meta property="og:type" content="website">
 <meta property="og:url" content="{canonical}">
 <meta name="twitter:card" content="summary">
+<script type="application/ld+json">{breadcrumb_ld}</script>
 <style>{_PAGE_CSS}</style>
 </head>
 <body>
