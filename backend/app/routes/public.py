@@ -55,6 +55,9 @@ th{color:#888;font-weight:500;font-size:0.8rem;text-transform:uppercase;letter-s
 .cta:hover{text-decoration:none;opacity:.9}
 footer{color:#666;font-size:0.8rem;margin-top:48px;border-top:1px solid #222;padding-top:16px}
 .num{font-variant-numeric:tabular-nums}
+.intro{color:#ccc;font-size:1.05rem;margin:28px 0 8px;max-width:640px}
+.related{list-style:none;padding:0;margin:12px 0 0;columns:2;column-gap:32px}
+.related li{margin:5px 0;break-inside:avoid}
 """
 
 
@@ -107,6 +110,27 @@ def _role_page_data(role):
     }
 
 
+def _related_roles(role, limit=6):
+    """Other indexable roles to interlink to. Same category first (topically
+    relevant); backfill with the highest-demand roles overall so every page
+    gets a full set of links even when its category is sparse or NULL."""
+    base = Role.query.filter(
+        Role.id != role.id,
+        Role.total_active_jobs >= MIN_JOBS_FOR_PAGE,
+    )
+    same_cat = []
+    if role.category:
+        same_cat = base.filter(Role.category == role.category)\
+            .order_by(Role.total_active_jobs.desc()).limit(limit).all()
+    if len(same_cat) >= limit:
+        return same_cat
+    exclude = [r.id for r in same_cat] + [role.id]
+    fill = base.filter(~Role.id.in_(exclude))\
+        .order_by(Role.total_active_jobs.desc())\
+        .limit(limit - len(same_cat)).all()
+    return same_cat + fill
+
+
 @public_bp.route('/r/<role_slug>', methods=['GET'])
 def public_role_page(role_slug):
     role = _find_role_by_slug(role_slug)
@@ -156,6 +180,36 @@ def public_role_page(role_slug):
         for c in d['companies']
     )
 
+    # Data-driven intro — unique per role because it names the actual top
+    # skill(s) and employer, not just percentages.
+    skills, companies = d['skills'], d['companies']
+    intro = f"Across {d['total']:,} active {_esc(title)} postings"
+    if skills:
+        intro += (f", {_esc(skills[0]['name'])} is the most-requested skill"
+                  f" — in {skills[0]['pct']}% of listings")
+        nxt = ' and '.join(s['name'] for s in skills[1:3])
+        if nxt:
+            intro += f", ahead of {_esc(nxt)}"
+    intro += "."
+    if companies:
+        intro += (f" {d['company_count']:,} companies are hiring right now, "
+                  f"led by {_esc(companies[0]['name'])}.")
+    intro += (f" {d['ai_pct']}% of {_esc(title)} roles now call for AI skills, "
+              f"and {d['remote_pct']}% are remote.")
+    intro_html = f'<p class="intro">{intro}</p>'
+
+    # Internal links to related roles (crawl depth + PageRank flow).
+    related = _related_roles(role)
+    related_items = ''.join(
+        f"<li><a href='/r/{_slugify(r.normalized_title)}'>{_esc(r.normalized_title)}</a> "
+        f"<span class='num' style='color:#666'>({r.total_active_jobs:,})</span></li>"
+        for r in related
+    )
+    related_section = (
+        f'<h2>Related roles</h2>\n<ul class="related">{related_items}</ul>'
+        if related_items else ''
+    )
+
     html = f"""<!doctype html>
 <html lang="en">
 <head>
@@ -179,6 +233,8 @@ def public_role_page(role_slug):
   <h1>{_esc(title)}</h1>
   <p class="sub">What {d['company_count']:,} fast-growing companies ask for — updated {month}</p>
 
+  {intro_html}
+
   <div class="stat-row">
     <div class="stat"><b class="num">{d['total']:,}</b><span>active postings</span></div>
     <div class="stat"><b class="num">{d['ai_pct']}%</b><span>ask for AI skills</span></div>
@@ -197,6 +253,8 @@ def public_role_page(role_slug):
     <tr><th>Company</th><th>Open roles</th></tr>
     {companies_html}
   </table>
+
+  {related_section}
 
   <a class="cta" href="{WEB_URL}">See the live dashboard — free →</a>
 
