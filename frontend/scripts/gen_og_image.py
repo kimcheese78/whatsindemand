@@ -34,13 +34,13 @@ d.rectangle([80, 96, 80 + 64, 96 + 6], fill=ACCENT)
 # wordmark
 d.text((80, 130), "WhatsInDemand", font=font(58, index=1), fill=FG)
 
-# headline
-d.text((80, 250), "See which skills are", font=font(76, index=1), fill=FG)
-d.text((80, 336), "actually in demand", font=font(76, index=1), fill=ACCENT)
+# headline — matches the landing hero
+d.text((80, 250), "Real hiring data.", font=font(76, index=1), fill=FG)
+d.text((80, 336), "No hype.", font=font(76, index=1), fill=ACCENT)
 
-# supporting line
+# supporting line — matches the landing subhead (keep the number in sync)
 d.text((80, 470),
-       "28,000+ live job postings, analyzed weekly across 3,300+ companies",
+       "100,000+ live job postings from 3,300+ high-growth companies",
        font=font(30, index=0), fill=MUTED)
 
 out = os.path.join(os.path.dirname(__file__), "..", "public", "og-image.png")
