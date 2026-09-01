@@ -1352,9 +1352,6 @@ const LandingScreen = () => {
 
       <div className="flex-1">
         <div className="max-w-5xl mx-auto px-6 sm:px-8 pt-16 sm:pt-24 pb-28">
-          <p className="text-base sm:text-lg text-ink-faint mb-4 max-w-2xl">
-            Everyone tells you to "upskill." Nobody shows you the receipts.
-          </p>
           <h1 className="text-5xl sm:text-6xl md:text-7xl font-semibold mb-6 leading-[1.02] tracking-tight">
             Real hiring data.<br />No hype.
           </h1>
