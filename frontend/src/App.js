@@ -1311,6 +1311,21 @@ const LandingScreen = () => {
   const [data, setData] = useState(null);
   const [loadingInsights, setLoadingInsights] = useState(true);
   const [query, setQuery] = useState('');
+  const [shared, setShared] = useState(false);
+
+  const shareSite = async () => {
+    const url = 'https://www.whatsindemand.com/';
+    const text = 'Real hiring data, no hype — what 3,300+ companies are actually hiring for.';
+    try {
+      if (navigator.share) {
+        await navigator.share({ title: 'WhatsInDemand', text, url });
+        return;
+      }
+      await navigator.clipboard.writeText(url);
+      setShared(true);
+      setTimeout(() => setShared(false), 2000);
+    } catch (_) { /* user dismissed the share sheet — ignore */ }
+  };
 
   useEffect(() => {
     let alive = true;
@@ -1337,6 +1352,9 @@ const LandingScreen = () => {
 
       <div className="flex-1">
         <div className="max-w-5xl mx-auto px-6 sm:px-8 pt-16 sm:pt-24 pb-28">
+          <p className="text-base sm:text-lg text-ink-faint mb-4 max-w-2xl">
+            Everyone tells you to "upskill." Nobody shows you the receipts.
+          </p>
           <h1 className="text-5xl sm:text-6xl md:text-7xl font-semibold mb-6 leading-[1.02] tracking-tight">
             Real hiring data.<br />No hype.
           </h1>
@@ -1411,6 +1429,34 @@ const LandingScreen = () => {
           </p>
         </div>
       </div>
+
+      {/* Closing band — reinforce the one idea + give a clear next step + make it shareable (#4) */}
+      <section className="border-t border-line">
+        <div className="max-w-5xl mx-auto px-6 sm:px-8 py-20 text-center">
+          <p className="text-eyebrow text-accent-up uppercase tracking-widest mb-4">Updated every week</p>
+          <h2 className="text-3xl sm:text-4xl font-semibold mb-4 tracking-tight">
+            Stop guessing. Look it up.
+          </h2>
+          <p className="text-ink-muted mb-8 max-w-xl mx-auto leading-relaxed">
+            100,000+ live job postings from 3,300+ high-growth companies, re-read every week —
+            so you bet your time on what's actually being hired.
+          </p>
+          <div className="flex items-center justify-center gap-4">
+            <button
+              onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+              className="px-6 py-3 bg-white text-black rounded-xl font-medium hover:bg-gray-200 transition-colors"
+            >
+              Search your role
+            </button>
+            <button
+              onClick={shareSite}
+              className="px-6 py-3 border border-line-strong rounded-xl font-medium text-ink-muted hover:text-white hover:border-white/40 transition-colors"
+            >
+              {shared ? 'Link copied' : 'Share this'}
+            </button>
+          </div>
+        </div>
+      </section>
 
       <Footer />
     </div>

@@ -2,48 +2,53 @@
 """
 Generate the 1200x630 Open Graph / Twitter card image.
 
+The card design lives in `og-image.html` (edit that to change the look).
+This script renders it with headless Chrome at 2x and downscales to 1200x630
+for a crisp result.
+
 Output: frontend/public/og-image.png  (referenced by index.html og:image).
 Re-run whenever the tagline/brand changes:  python3 scripts/gen_og_image.py
 """
 import os
-from PIL import Image, ImageDraw, ImageFont
+import subprocess
+import tempfile
+from PIL import Image
 
 W, H = 1200, 630
-BG = (10, 10, 10)          # #0a0a0a — matches theme-color
-FG = (240, 240, 240)       # #f0f0f0
-MUTED = (150, 150, 150)
-ACCENT = (125, 211, 252)   # #7dd3fc — the sky-blue used on role pages
+HERE = os.path.dirname(os.path.abspath(__file__))
+HTML = os.path.join(HERE, "og-image.html")
+OUT = os.path.abspath(os.path.join(HERE, "..", "public", "og-image.png"))
 
-HELV = "/System/Library/Fonts/Helvetica.ttc"
-
-
-def font(size, index=1):
-    # Helvetica.ttc index 1 is bold-ish; fall back to default on other systems.
-    try:
-        return ImageFont.truetype(HELV, size, index=index)
-    except Exception:
-        return ImageFont.load_default()
+CHROME_CANDIDATES = [
+    "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",
+    "/Applications/Google Chrome Beta.app/Contents/MacOS/Google Chrome Beta",
+    "/usr/bin/google-chrome",
+    "/usr/bin/chromium",
+]
 
 
-img = Image.new("RGB", (W, H), BG)
-d = ImageDraw.Draw(img)
+def find_chrome():
+    for c in CHROME_CANDIDATES:
+        if os.path.exists(c):
+            return c
+    raise SystemExit("Chrome not found — install Chrome or edit CHROME_CANDIDATES.")
 
-# thin accent rule near the top
-d.rectangle([80, 96, 80 + 64, 96 + 6], fill=ACCENT)
 
-# wordmark
-d.text((80, 130), "WhatsInDemand", font=font(58, index=1), fill=FG)
+def main():
+    chrome = find_chrome()
+    with tempfile.TemporaryDirectory() as tmp:
+        raw = os.path.join(tmp, "raw.png")
+        subprocess.run(
+            [chrome, "--headless=new", "--disable-gpu", "--hide-scrollbars",
+             "--force-device-scale-factor=2", f"--window-size={W},{H}",
+             f"--screenshot={raw}", f"file://{HTML}"],
+            check=True, capture_output=True,
+        )
+        # rendered at 2x — downscale for crisp text
+        Image.open(raw).resize((W, H), Image.LANCZOS).save(OUT, "PNG")
 
-# headline — matches the landing hero
-d.text((80, 250), "Real hiring data.", font=font(76, index=1), fill=FG)
-d.text((80, 336), "No hype.", font=font(76, index=1), fill=ACCENT)
+    print(f"wrote {OUT}  ({os.path.getsize(OUT)} bytes, {W}x{H})")
 
-# supporting line — matches the landing subhead (keep the number in sync)
-d.text((80, 470),
-       "100,000+ live job postings from 3,300+ high-growth companies",
-       font=font(30, index=0), fill=MUTED)
 
-out = os.path.join(os.path.dirname(__file__), "..", "public", "og-image.png")
-out = os.path.abspath(out)
-img.save(out, "PNG")
-print(f"wrote {out}  ({os.path.getsize(out)} bytes, {W}x{H})")
+if __name__ == "__main__":
+    main()
