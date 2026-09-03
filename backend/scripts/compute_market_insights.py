@@ -430,6 +430,14 @@ def main(apply=False):
         else:
             print("\nDRY RUN (pass --apply to persist).")
 
+        return {
+            'week': week.isoformat(),
+            'rows': len(rows),
+            'rising_roles': len([r for r in rows if r.kind == 'rising_role' and r.scope == 'overall']),
+            'declining_roles': len([r for r in rows if r.kind == 'declining_role' and r.scope == 'overall']),
+            'applied': apply,
+        }
+
 
 if __name__ == '__main__':
     main(apply='--apply' in sys.argv)

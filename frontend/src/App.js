@@ -1450,9 +1450,15 @@ const LandingScreen = () => {
             </div>
           )}
 
-          {/* Insight boards */}
+          {/* Insight boards. When the precomputed snapshot is stale (the weekly
+              recompute silently stopped), the direction boards would contradict
+              the live role dashboards — so hide them rather than show stale trends. */}
           {loadingInsights ? (
             <p className="text-ink-muted">Reading the market…</p>
+          ) : data?.stale ? (
+            <p className="text-ink-muted">
+              Market trends are being refreshed — check back shortly.
+            </p>
           ) : (
             <div className="space-y-6">
               {/* Roles: rising / declining trends */}

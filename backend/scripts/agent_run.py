@@ -177,8 +177,34 @@ def run_snapshots():
                 "skipped": 0, "errors": 0, "duration_min": 0, "error": str(e)}
 
 
+def run_market_insights():
+    """Recompute the cohort-locked market-insight snapshots that power the
+    landing page (rising/declining/most-posted roles + skill boards). Runs
+    after scrape/role-mapping/extraction so it sees the freshest data.
+    Self-manages its own app context. Returns stats dict.
+
+    Without this step the landing page freezes on the last snapshot while the
+    live role dashboards move on — the two then contradict each other.
+    """
+    log("=== Market insights start ===")
+    start = datetime.utcnow()
+    try:
+        from scripts.compute_market_insights import main as insights_main
+        stats = insights_main(apply=True)
+        duration = (datetime.utcnow() - start).total_seconds()
+        log(f"=== Market insights done: {stats['rows']} rows for week {stats['week']} "
+            f"in {duration/60:.1f} min ===")
+        return {**stats, "duration_min": round(duration / 60, 1), "error": None}
+    except Exception as e:
+        log(f"ERROR: market insights failed: {e}")
+        traceback.print_exc()
+        return {"week": None, "rows": 0, "rising_roles": 0, "declining_roles": 0,
+                "duration_min": 0, "error": str(e)}
+
+
 def format_email(scrape_stats, discover_stats, triage_stats, roles_stats,
-                 extract_stats, backfill_stats, snapshot_stats, total_duration_min):
+                 extract_stats, backfill_stats, snapshot_stats, insights_stats,
+                 total_duration_min):
     discover_section = f"""
 Skill discovery:
   Jobs scanned:       {discover_stats['jobs_processed']:,}
@@ -226,6 +252,14 @@ Position Score snapshots:
   Duration:           {snapshot_stats['duration_min']} min
 """ if not snapshot_stats.get('error') else f"\nPosition Score snapshots: FAILED — {snapshot_stats['error']}\n"
 
+    insights_section = f"""
+Market insights (landing page):
+  Snapshot week:      {insights_stats['week']}
+  Rows written:       {insights_stats['rows']}
+  Rising / declining: {insights_stats['rising_roles']} / {insights_stats['declining_roles']} roles
+  Duration:           {insights_stats['duration_min']} min
+""" if not insights_stats.get('error') else f"\nMarket insights: FAILED — {insights_stats['error']}\n"
+
     text = f"""Weekly maintenance scrape complete.
 
 Scrape:
@@ -234,7 +268,7 @@ Scrape:
   Failed: {scrape_stats['failed']}
   Jobs saved: {scrape_stats['jobs_saved']:,}
   Duration: {scrape_stats['duration_min']} min
-{discover_section}{triage_section}{roles_section}{extract_section}{backfill_section}{snapshot_section}
+{discover_section}{triage_section}{roles_section}{extract_section}{backfill_section}{snapshot_section}{insights_section}
 Total run time: {total_duration_min:.1f} min
 """
     html = "<pre style='font-family:monospace'>" + text.replace("<", "&lt;").replace(">", "&gt;") + "</pre>"
@@ -269,6 +303,9 @@ def main():
 
     # Position Score snapshots run after the data steps; self-manages context.
     snapshot_stats = run_snapshots()
+    # Market insights power the landing page and must be recomputed every run,
+    # or the landing goes stale and contradicts the live role dashboards.
+    insights_stats = run_market_insights()
 
     total_duration = (datetime.utcnow() - start).total_seconds() / 60
 
@@ -276,7 +313,7 @@ def main():
     if alert_email:
         text, html = format_email(scrape_stats, discover_stats, triage_stats,
                                   roles_stats, extract_stats, backfill_stats,
-                                  snapshot_stats, total_duration)
+                                  snapshot_stats, insights_stats, total_duration)
         send_email(
             to=alert_email,
             subject=(f"WhatsInDemand weekly report: {scrape_stats['jobs_saved']:,} jobs · "
