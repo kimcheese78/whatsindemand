@@ -1306,6 +1306,33 @@ const MarketPanel = ({ title, hint, tone = 'default', items = [], onPick, empty,
   </Panel>
 );
 
+// Cycles through in-demand roles in the hero headline, one at a time, with a
+// fade-slide swap. Roles are curated (not data-driven) so the headline stays
+// punchy and never surfaces a low-signal title.
+const ROTATING_ROLES = [
+  'Data Engineers',
+  'Product Managers',
+  'AI Engineers',
+  'Software Engineers',
+  'Data Scientists',
+  'UX Designers',
+  'DevOps Engineers',
+  'Security Engineers',
+];
+
+const RotatingRole = () => {
+  const [i, setI] = useState(0);
+  useEffect(() => {
+    const t = setInterval(() => setI((n) => (n + 1) % ROTATING_ROLES.length), 2200);
+    return () => clearInterval(t);
+  }, []);
+  return (
+    <span key={i} className="role-swap text-accent-up">
+      {ROTATING_ROLES[i]}
+    </span>
+  );
+};
+
 const LandingScreen = () => {
   const { switchToRole, allRoles, loading } = useApp();
   const [data, setData] = useState(null);
@@ -1353,7 +1380,7 @@ const LandingScreen = () => {
       <div className="flex-1">
         <div className="max-w-5xl mx-auto px-6 sm:px-8 pt-16 sm:pt-24 pb-28">
           <h1 className="text-5xl sm:text-6xl md:text-7xl font-semibold mb-6 leading-[1.02] tracking-tight">
-            Real hiring data.<br />No hype.
+            See the latest hiring trends for<br /><RotatingRole />
           </h1>
           <p className="text-lg sm:text-xl text-ink-muted mb-8 max-w-2xl leading-relaxed" style={{ textWrap: 'balance' }}>
             We read 100,000+ live job postings from 3,300+ high-growth companies and show you what's rising, what's declining, and what's suddenly in demand.
