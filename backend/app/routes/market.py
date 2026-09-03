@@ -10,7 +10,6 @@ from flask import Blueprint, jsonify, request
 from sqlalchemy import func
 
 from app.models import db, MarketInsightSnapshot
-from app.routes._web import CACHE_HEADER
 
 market_bp = Blueprint('market', __name__, url_prefix='/api/market')
 
@@ -18,6 +17,11 @@ market_bp = Blueprint('market', __name__, url_prefix='/api/market')
 # is older than this, the recompute step has silently stopped and the landing is
 # drifting from the live role dashboards — surface it so the UI can hide trends.
 STALE_AFTER_DAYS = 10
+
+# Short client cache so an out-of-band recompute (e.g. a correction) reaches
+# recent visitors within the hour, not a day. Data only changes weekly, so the
+# 7-day stale-while-revalidate keeps this effectively free on the origin.
+INSIGHTS_CACHE_HEADER = 'public, max-age=3600, stale-while-revalidate=604800'
 
 
 @market_bp.route('/insights', methods=['GET'])
@@ -45,5 +49,5 @@ def market_insights():
     resp = jsonify({'week': latest_week.isoformat(), 'scope': scope,
                     'insights': dict(insights), 'scopes': scopes,
                     'stale': stale, 'age_days': age_days})
-    resp.headers['Cache-Control'] = CACHE_HEADER
+    resp.headers['Cache-Control'] = INSIGHTS_CACHE_HEADER
     return resp
