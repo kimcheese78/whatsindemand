@@ -1,7 +1,7 @@
 ---
 title: The Single Fastest-Growing Job Skill Right Now Is "Claude"
 description: Across 2,306 companies' live postings, the fastest-growing skill isn't a language or a degree — it's Claude. What the hiring data reveals about AI skills right now.
-date: 2026-09-04
+date: 2026-09-03
 tags: [hiring-trends, skills]
 related_roles: [ai-engineer, applied-ai-engineer, machine-learning-engineer, software-engineer]
 source: agent
