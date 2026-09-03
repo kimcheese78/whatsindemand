@@ -41,9 +41,10 @@ code, pre, .mono {
 /* Rotating headline word — outgoing word fades out drifting up, incoming word
    fades in rising from below. Both move the same direction (a conveyor), so
    the phases are sequential, not a bounce. */
-/* Clip the moving word to its own line so the rise/exit never bleeds into
-   the line above. */
-.role-slot { display: inline-block; overflow: hidden; vertical-align: bottom; }
+/* Clip only the TOP edge so the exiting word doesn't bleed into the line
+   above, while extending the region past the bottom and sides so descenders
+   (the "g" in Engineers) and wide glyphs are never cut. */
+.role-slot { display: inline-block; vertical-align: bottom; clip-path: inset(0 -0.25em -0.4em -0.25em); }
 .role-swap { display: inline-block; }
 .role-in    { opacity: 1; transform: translateY(0);      transition: opacity 0.4s ease, transform 0.4s ease; }
 .role-out   { opacity: 0; transform: translateY(-0.5em); transition: opacity 0.4s ease, transform 0.4s ease; }
