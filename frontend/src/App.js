@@ -1346,8 +1346,10 @@ const RotatingRole = () => {
     }
   }, [phase]);
   return (
-    <span className={`role-swap role-${phase} text-accent-up`}>
-      {ROTATING_ROLES[i]}
+    <span className="role-slot">
+      <span className={`role-swap role-${phase} text-accent-up`}>
+        {ROTATING_ROLES[i]}
+      </span>
     </span>
   );
 };

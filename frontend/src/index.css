@@ -41,10 +41,13 @@ code, pre, .mono {
 /* Rotating headline word — outgoing word fades out drifting up, incoming word
    fades in rising from below. Both move the same direction (a conveyor), so
    the phases are sequential, not a bounce. */
+/* Clip the moving word to its own line so the rise/exit never bleeds into
+   the line above. */
+.role-slot { display: inline-block; overflow: hidden; vertical-align: bottom; }
 .role-swap { display: inline-block; }
 .role-in    { opacity: 1; transform: translateY(0);      transition: opacity 0.4s ease, transform 0.4s ease; }
-.role-out   { opacity: 0; transform: translateY(-0.6em); transition: opacity 0.4s ease, transform 0.4s ease; }
-.role-reset { opacity: 0; transform: translateY(0.6em);  transition: none; }
+.role-out   { opacity: 0; transform: translateY(-0.5em); transition: opacity 0.4s ease, transform 0.4s ease; }
+.role-reset { opacity: 0; transform: translateY(0.5em);  transition: none; }
 @media (prefers-reduced-motion: reduce) {
   .role-swap { transition: none; transform: none; opacity: 1; }
 }
