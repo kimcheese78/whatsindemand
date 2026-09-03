@@ -1322,12 +1322,31 @@ const ROTATING_ROLES = [
 
 const RotatingRole = () => {
   const [i, setI] = useState(0);
+  const [phase, setPhase] = useState('in'); // 'in' → 'out' → 'reset' → 'in'
+  // Kick off the exit every cycle.
   useEffect(() => {
-    const t = setInterval(() => setI((n) => (n + 1) % ROTATING_ROLES.length), 2200);
+    const t = setInterval(() => setPhase('out'), 2600);
     return () => clearInterval(t);
   }, []);
+  // Drive the phase machine: fade out, swap the word below the line, rise in.
+  useEffect(() => {
+    if (phase === 'out') {
+      const t = setTimeout(() => {
+        setI((n) => (n + 1) % ROTATING_ROLES.length);
+        setPhase('reset');
+      }, 400); // matches the fade-out transition
+      return () => clearTimeout(t);
+    }
+    if (phase === 'reset') {
+      // Two frames so the browser commits the below-the-line start position
+      // before we transition it up (otherwise the rise is skipped).
+      let r2;
+      const r1 = requestAnimationFrame(() => { r2 = requestAnimationFrame(() => setPhase('in')); });
+      return () => { cancelAnimationFrame(r1); cancelAnimationFrame(r2); };
+    }
+  }, [phase]);
   return (
-    <span key={i} className="role-swap text-accent-up">
+    <span className={`role-swap role-${phase} text-accent-up`}>
       {ROTATING_ROLES[i]}
     </span>
   );
