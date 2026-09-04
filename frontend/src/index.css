@@ -46,8 +46,8 @@ code, pre, .mono {
    (the "g" in Engineers) and wide glyphs are never cut. */
 .role-slot { display: inline-block; vertical-align: bottom; clip-path: inset(0 -0.25em -0.4em -0.25em); }
 .role-swap { display: inline-block; }
-.role-in    { opacity: 1; transform: translateY(0);      transition: opacity 0.4s ease, transform 0.4s ease; }
-.role-out   { opacity: 0; transform: translateY(-0.5em); transition: opacity 0.4s ease, transform 0.4s ease; }
+.role-in    { opacity: 1; transform: translateY(0);      transition: opacity 0.4s ease, transform 0.22s ease; }
+.role-out   { opacity: 0; transform: translateY(-0.5em); transition: opacity 0.4s ease, transform 0.22s ease; }
 .role-reset { opacity: 0; transform: translateY(0.5em);  transition: none; }
 @media (prefers-reduced-motion: reduce) {
   .role-swap { transition: none; transform: none; opacity: 1; }
