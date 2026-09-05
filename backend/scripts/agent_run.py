@@ -42,8 +42,12 @@ def run_maintenance_scrape(aggregator):
         "duration_min": round(duration / 60, 1),
         "companies_processed": results.get("total_companies", 0),
         "successful": results.get("successful", 0),
+        "empty": results.get("empty", 0),
+        "dead": results.get("dead", 0),
+        "errors": results.get("errors", 0),
         "failed": results.get("failed", 0),
         "jobs_saved": results.get("total_jobs", 0),
+        "dead_boards": results.get("dead_boards", []),
     }
 
 
@@ -260,15 +264,27 @@ Market insights (landing page):
   Duration:           {insights_stats['duration_min']} min
 """ if not insights_stats.get('error') else f"\nMarket insights: FAILED — {insights_stats['error']}\n"
 
+    dead = scrape_stats.get('dead_boards', [])
+    if dead:
+        lines = [f"    {d['company']} [{d.get('ats')}/{d.get('slug')}] {d.get('status')}"
+                 for d in sorted(dead, key=lambda d: d['company'])[:40]]
+        more = f"\n    …and {len(dead) - 40} more" if len(dead) > 40 else ""
+        dead_boards_section = ("\n  Dead boards (fix slug or disable):\n"
+                               + "\n".join(lines) + more + "\n")
+    else:
+        dead_boards_section = ""
+
     text = f"""Weekly maintenance scrape complete.
 
 Scrape:
   Companies processed: {scrape_stats['companies_processed']}
-  Successful: {scrape_stats['successful']}
-  Failed: {scrape_stats['failed']}
+  Successful (>=1 job): {scrape_stats['successful']}
+  Empty (0 openings):   {scrape_stats.get('empty', 0)}
+  Dead boards (404/etc):{scrape_stats.get('dead', 0)}
+  Errors:               {scrape_stats.get('errors', 0)}
   Jobs saved: {scrape_stats['jobs_saved']:,}
   Duration: {scrape_stats['duration_min']} min
-{discover_section}{triage_section}{roles_section}{extract_section}{backfill_section}{snapshot_section}{insights_section}
+{dead_boards_section}{discover_section}{triage_section}{roles_section}{extract_section}{backfill_section}{snapshot_section}{insights_section}
 Total run time: {total_duration_min:.1f} min
 """
     html = "<pre style='font-family:monospace'>" + text.replace("<", "&lt;").replace(">", "&gt;") + "</pre>"

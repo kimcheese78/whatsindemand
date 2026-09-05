@@ -1,4 +1,4 @@
-from app.scrapers.base_scraper import BaseScraper
+from app.scrapers.base_scraper import BaseScraper, BoardUnavailableError
 from app.scrapers.workable.parser import WorkableParser
 from app.utils.role_normalizer_v2 import normalize_title
 from typing import List, Dict
@@ -66,17 +66,17 @@ class WorkableScraper(BaseScraper):
             return normalized_jobs
 
         except requests.exceptions.HTTPError as e:
-            code = e.response.status_code
+            code = e.response.status_code if e.response is not None else None
             if code == 404:
                 print(f'❌ Company not found: {company_slug}')
             elif code == 429:
                 print(f'⏳ Rate limited for {company_slug} — try again later')
             else:
                 print(f'❌ HTTP {code} for {company_slug}: {e}')
-            return []
+            raise BoardUnavailableError(company_slug, code, str(e))
         except requests.RequestException as e:
             print(f'❌ Request failed for {company_slug}: {e}')
-            return []
+            raise BoardUnavailableError(company_slug, None, str(e))
 
     def _get_job_details(self, company_slug: str, shortcode: str, raw_job: Dict) -> Dict:
         """Fetch full description from detail endpoint"""

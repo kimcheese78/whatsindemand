@@ -8,6 +8,21 @@ from requests.adapters import HTTPAdapter
 from urllib3.util.retry import Retry
 import time
 
+class BoardUnavailableError(Exception):
+    """Raised when a company's job board can't be reached at all — a hard HTTP
+    failure (404/401/403/5xx after retries) or a network error.
+
+    This distinguishes a genuinely dead/broken board from a valid board that
+    simply has zero openings. Scrapers must NOT raise this for a 200 response
+    that contains an empty job list; that is a legitimately empty board.
+    """
+
+    def __init__(self, slug: str, status: Optional[int] = None, message: Optional[str] = None):
+        self.slug = slug
+        self.status = status
+        super().__init__(message or f"{slug}: board unavailable (status={status})")
+
+
 class BaseScraper(ABC):
     """Abstract base class for all ATS/job board scrapers"""
     

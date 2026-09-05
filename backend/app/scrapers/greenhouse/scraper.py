@@ -1,6 +1,6 @@
 # app/scrapers/greenhouse/scraper.py
 
-from app.scrapers.base_scraper import BaseScraper
+from app.scrapers.base_scraper import BaseScraper, BoardUnavailableError
 from app.scrapers.greenhouse.parser import GreenhouseParser
 from app.utils.role_normalizer_v2 import normalize_title
 from typing import List, Dict, Optional
@@ -68,14 +68,15 @@ class GreenhouseScraper(BaseScraper):
             return normalized_jobs
             
         except requests.exceptions.HTTPError as e:
-            if e.response.status_code == 404:
+            status = e.response.status_code if e.response is not None else None
+            if status == 404:
                 print(f"❌ Company not found: {company_slug} (invalid slug?)")
             else:
                 print(f"❌ HTTP error for {company_slug}: {e}")
-            return []
+            raise BoardUnavailableError(company_slug, status, str(e))
         except requests.RequestException as e:
             print(f"❌ Failed to fetch jobs for {company_slug}: {e}")
-            return []
+            raise BoardUnavailableError(company_slug, None, str(e))
     
     def _get_job_details(self, company_slug: str, raw_job: Dict) -> Dict:
         """Fetch full job details from Greenhouse detail API endpoint"""

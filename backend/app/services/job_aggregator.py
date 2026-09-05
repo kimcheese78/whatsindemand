@@ -2,6 +2,7 @@
 
 from app.models import db, Company, Job, JobSkill, Skill, Role, RoleTitleVariation, UnmatchedTitle
 from sqlalchemy.dialects.postgresql import insert as pg_insert
+from app.scrapers.base_scraper import BoardUnavailableError
 from app.scrapers.greenhouse.scraper import GreenhouseScraper
 from app.scrapers.lever.scraper import LeverScraper
 from app.scrapers.ashby.scraper import AshbyScraper
@@ -169,10 +170,14 @@ class JobAggregator:
 
         results = {
             'total_companies': len(companies),
-            'successful': 0,
-            'failed': 0,
+            'successful': 0,   # board returned >= 1 real job
+            'empty': 0,        # board reachable but 0 real openings (incl. placeholder-only)
+            'dead': 0,         # board unreachable: 404/401/5xx/network after retries
+            'errors': 0,       # unexpected exception while scraping/saving
+            'failed': 0,       # back-compat: dead + errors (genuine failures only)
             'total_jobs': 0,
-            'errors': [],
+            'dead_boards': [],     # [{company, ats, slug, status}]
+            'error_details': [],   # [{company, error}]
         }
 
         print(f"\n{'=' * 60}")
@@ -190,27 +195,38 @@ class JobAggregator:
                         ats_type=company.ats_type,
                         industry=company.industry,
                     )
-                    return company.name, count, None
+                    return company.name, count, None, None
+                except BoardUnavailableError as e:
+                    return company.name, 0, 'dead', {
+                        'ats': company.ats_type, 'slug': company.greenhouse_slug,
+                        'status': e.status, 'error': str(e),
+                    }
                 except Exception as e:
-                    return company.name, 0, str(e)
+                    return company.name, 0, 'error', {'error': str(e)}
                 finally:
                     db.session.remove()
 
         with ThreadPoolExecutor(max_workers=max_workers) as executor:
             futures = {executor.submit(_scrape_one, c): c for c in companies}
             for i, future in enumerate(as_completed(futures), 1):
-                name, count, error = future.result()
-                if error:
+                name, count, outcome, detail = future.result()
+                if outcome == 'dead':
+                    results['dead'] += 1
                     results['failed'] += 1
-                    results['errors'].append({'company': name, 'error': error})
-                    print(f"[{i}/{len(companies)}] {name}: ❌ {error}")
+                    results['dead_boards'].append({'company': name, **detail})
+                    print(f"[{i}/{len(companies)}] {name}: 💀 dead board ({detail.get('status')})")
+                elif outcome == 'error':
+                    results['errors'] += 1
+                    results['failed'] += 1
+                    results['error_details'].append({'company': name, 'error': detail['error']})
+                    print(f"[{i}/{len(companies)}] {name}: ❌ {detail['error']}")
                 elif count > 0:
                     results['successful'] += 1
                     results['total_jobs'] += count
                     print(f"[{i}/{len(companies)}] {name}: ✅ {count} jobs")
                 else:
-                    results['failed'] += 1
-                    print(f"[{i}/{len(companies)}] {name}: 0 jobs")
+                    results['empty'] += 1
+                    print(f"[{i}/{len(companies)}] {name}: — 0 openings")
 
         print("\n── Updating role counts ──")
         self._update_role_counts()
