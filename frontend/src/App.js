@@ -1322,32 +1322,32 @@ const ROTATING_ROLES = [
 
 const RotatingRole = () => {
   const [i, setI] = useState(0);
-  const [phase, setPhase] = useState('in'); // 'in' → 'out' → 'reset' → 'in'
-  // Kick off the exit every cycle.
+  const [prev, setPrev] = useState(null); // index of the outgoing word during a swap
+  // Advance every cycle, remembering the word we're leaving so it can fade out
+  // while the next one rises in — the slot is never empty mid-transition.
   useEffect(() => {
-    const t = setInterval(() => setPhase('out'), 2600);
+    const t = setInterval(() => {
+      setI((n) => {
+        setPrev(n);
+        return (n + 1) % ROTATING_ROLES.length;
+      });
+    }, 2800);
     return () => clearInterval(t);
   }, []);
-  // Drive the phase machine: fade out, swap the word below the line, rise in.
+  // Drop the outgoing word once its exit animation has finished.
   useEffect(() => {
-    if (phase === 'out') {
-      const t = setTimeout(() => {
-        setI((n) => (n + 1) % ROTATING_ROLES.length);
-        setPhase('reset');
-      }, 400); // matches the fade-out transition
-      return () => clearTimeout(t);
-    }
-    if (phase === 'reset') {
-      // Two frames so the browser commits the below-the-line start position
-      // before we transition it up (otherwise the rise is skipped).
-      let r2;
-      const r1 = requestAnimationFrame(() => { r2 = requestAnimationFrame(() => setPhase('in')); });
-      return () => { cancelAnimationFrame(r1); cancelAnimationFrame(r2); };
-    }
-  }, [phase]);
+    if (prev === null) return;
+    const t = setTimeout(() => setPrev(null), 600);
+    return () => clearTimeout(t);
+  }, [prev, i]);
   return (
     <span className="role-slot">
-      <span className={`role-swap role-${phase} text-accent-up`}>
+      {prev !== null && (
+        <span key={`out-${prev}`} className="role-word role-leaving text-accent-up">
+          {ROTATING_ROLES[prev]}
+        </span>
+      )}
+      <span key={`in-${i}`} className="role-word role-entering text-accent-up">
         {ROTATING_ROLES[i]}
       </span>
     </span>
