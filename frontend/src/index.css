@@ -41,25 +41,23 @@ code, pre, .mono {
 /* Rotating headline word — outgoing word fades out drifting up, incoming word
    fades in rising from below. Both move the same direction (a conveyor), so
    the phases are sequential, not a bounce. */
-/* Clip only the TOP edge so the exiting word doesn't bleed into the line
-   above, while extending the region past the bottom and sides so descenders
-   (the "g" in Engineers) and wide glyphs are never cut. */
-/* Stack the outgoing and incoming words in one grid cell so the slot sizes to
-   whichever is wider and the two overlap during the swap — never an empty gap. */
-.role-slot { display: inline-grid; vertical-align: bottom; clip-path: inset(0 -0.25em -0.4em -0.25em); }
+/* Vertical roll: both words are stacked in one grid cell and move up in
+   lockstep by exactly one line (100% of their own height). The outgoing word
+   is pushed up and out the top; the incoming word rises from below into its
+   place — no fading. The slot sizes to the wider word and clips top and bottom
+   to a single line (sides/descenders get a small allowance) so only the current
+   word is ever visible. */
+.role-slot { display: inline-grid; vertical-align: bottom; clip-path: inset(0 -0.25em -0.12em -0.25em); }
 .role-word { grid-area: 1 / 1; display: inline-block; }
-/* The incoming word just fades in — it never moves, so it can't drift or jiggle
-   after it becomes readable. All the motion lives in the outgoing word, which
-   slides up and fades out over it, so the slot is never empty mid-swap. */
-.role-entering { animation: role-fade 0.3s ease both; }
-.role-leaving  { animation: role-leave 0.4s ease both; }
-@keyframes role-fade {
-  from { opacity: 0; }
-  to   { opacity: 1; }
+.role-entering { animation: role-roll-in  0.42s cubic-bezier(0.22, 0.61, 0.36, 1) both; }
+.role-leaving  { animation: role-roll-out 0.42s cubic-bezier(0.22, 0.61, 0.36, 1) both; }
+@keyframes role-roll-in {
+  from { transform: translateY(100%); }
+  to   { transform: translateY(0); }
 }
-@keyframes role-leave {
-  from { opacity: 1; transform: translateY(0); }
-  to   { opacity: 0; transform: translateY(-0.45em); }
+@keyframes role-roll-out {
+  from { transform: translateY(0); }
+  to   { transform: translateY(-100%); }
 }
 @media (prefers-reduced-motion: reduce) {
   .role-entering, .role-leaving { animation: none; }
