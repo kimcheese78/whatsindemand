@@ -42,22 +42,26 @@ code, pre, .mono {
    fades in rising from below. Both move the same direction (a conveyor), so
    the phases are sequential, not a bounce. */
 /* Vertical roll: both words are stacked in one grid cell and move up in
-   lockstep by exactly one line (100% of their own height). The outgoing word
-   is pushed up and out the top; the incoming word rises from below into its
-   place — no fading. The slot sizes to the wider word and clips top and bottom
-   to a single line (sides/descenders get a small allowance) so only the current
-   word is ever visible. */
-.role-slot { display: inline-grid; vertical-align: bottom; clip-path: inset(0 -0.25em -0.12em -0.25em); }
+   lockstep. The outgoing word is pushed up and out the top; the incoming word
+   rises into its place from below — no fading.
+
+   The role word's line-height is 1.0, so its descenders (the "g" in Engineers)
+   overflow the box bottom by ~0.09em. Three numbers must agree for a clean
+   roll: the clip window, where the next word is staged, and the roll distance
+   all equal one box PLUS that descender overflow. So we clip 0.09em below the
+   box (to show descenders) and stage/roll by calc(100% + 0.09em) — which puts
+   the staged word flush against the bottom of the clip window, never peeking. */
+.role-slot { display: inline-grid; vertical-align: bottom; clip-path: inset(0 -0.25em -0.09em -0.25em); }
 .role-word { grid-area: 1 / 1; display: inline-block; }
 .role-entering { animation: role-roll-in  0.42s cubic-bezier(0.22, 0.61, 0.36, 1) both; }
 .role-leaving  { animation: role-roll-out 0.42s cubic-bezier(0.22, 0.61, 0.36, 1) both; }
 @keyframes role-roll-in {
-  from { transform: translateY(100%); }
+  from { transform: translateY(calc(100% + 0.09em)); }
   to   { transform: translateY(0); }
 }
 @keyframes role-roll-out {
   from { transform: translateY(0); }
-  to   { transform: translateY(-100%); }
+  to   { transform: translateY(calc(-100% - 0.09em)); }
 }
 @media (prefers-reduced-motion: reduce) {
   .role-entering, .role-leaving { animation: none; }
