@@ -48,18 +48,18 @@ code, pre, .mono {
    whichever is wider and the two overlap during the swap — never an empty gap. */
 .role-slot { display: inline-grid; vertical-align: bottom; clip-path: inset(0 -0.25em -0.4em -0.25em); }
 .role-word { grid-area: 1 / 1; display: inline-block; }
-/* Incoming word reaches full opacity by the midpoint (stays legible), while it
-   finishes rising into place; the outgoing word fades up and out over it. */
-.role-entering { animation: role-enter 0.5s ease both; }
-.role-leaving  { animation: role-leave 0.45s ease both; }
-@keyframes role-enter {
-  0%   { opacity: 0; transform: translateY(0.5em); }
-  55%  { opacity: 1; transform: translateY(0.12em); }
-  100% { opacity: 1; transform: translateY(0); }
+/* The incoming word just fades in — it never moves, so it can't drift or jiggle
+   after it becomes readable. All the motion lives in the outgoing word, which
+   slides up and fades out over it, so the slot is never empty mid-swap. */
+.role-entering { animation: role-fade 0.3s ease both; }
+.role-leaving  { animation: role-leave 0.4s ease both; }
+@keyframes role-fade {
+  from { opacity: 0; }
+  to   { opacity: 1; }
 }
 @keyframes role-leave {
-  0%   { opacity: 1; transform: translateY(0); }
-  100% { opacity: 0; transform: translateY(-0.5em); }
+  from { opacity: 1; transform: translateY(0); }
+  to   { opacity: 0; transform: translateY(-0.45em); }
 }
 @media (prefers-reduced-motion: reduce) {
   .role-entering, .role-leaving { animation: none; }
