@@ -3441,7 +3441,7 @@ const OverviewTab = () => {
 
         {/* POSTING TREND — bar chart with readable labels */}
         <Panel className="flex flex-col h-full">
-          <Eyebrow className="mb-4">Active openings — same companies, 4-month view</Eyebrow>
+          <Eyebrow className="mb-4">Postings open each month — same companies</Eyebrow>
           {trendData.length > 0 && !trendReliable ? (
             <div className="h-32 flex items-center justify-center text-body text-ink-faint text-center px-4">
               {trendCoverage
@@ -3491,6 +3491,7 @@ const OverviewTab = () => {
               </div>
               <p className="text-meta text-ink-faint mt-2">
                 * This month is in progress — the count will grow as more jobs are posted.
+                Each bar counts every posting open at some point that month, including roles since filled, so bars can sit above the {totalJobs.toLocaleString()} active right now.
                 Recently added companies are excluded until they have 4+ months of history, so each month compares the same set of companies.
                 {trendCoverage && trendCoverage.coverage_pct < 50 && (
                   <> These long-tracked companies account for {Math.round(trendCoverage.coverage_pct)}% of today's postings.</>
