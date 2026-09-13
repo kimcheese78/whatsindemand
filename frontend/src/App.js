@@ -1293,7 +1293,7 @@ const InsightRow = ({ item, tone, onPick }) => {
 const MarketPanel = ({ title, hint, tone = 'default', items = [], onPick, empty, cols = 1 }) => (
   <Panel className="flex flex-col">
     <div className="flex items-baseline justify-between mb-2">
-      <Eyebrow>{title}</Eyebrow>
+      {title ? <Eyebrow>{title}</Eyebrow> : <span />}
       {hint && <span className="text-small text-ink-faint">{hint}</span>}
     </div>
     {(!items || items.length === 0)
@@ -1332,7 +1332,7 @@ const AISkillRow = ({ item }) => {
 const AISkillPanel = ({ title, hint, items = [], empty }) => (
   <Panel className="flex flex-col">
     <div className="flex items-baseline justify-between mb-2">
-      <Eyebrow>{title}</Eyebrow>
+      {title ? <Eyebrow>{title}</Eyebrow> : <span />}
       {hint && <span className="text-small text-ink-faint">{hint}</span>}
     </div>
     {(!items || items.length === 0)
@@ -1508,10 +1508,8 @@ const LandingScreen = () => {
                     The AI skills employers now expect
                   </h2>
                   <p className="text-ink-muted max-w-2xl leading-relaxed mb-5" style={{ textWrap: 'balance' }}>
-                    Worried AI will replace your job? The clearer signal in the hiring data:
-                    employers increasingly want people who can{' '}
-                    <strong className="text-white">work with and direct AI</strong> — and, more
-                    quietly, govern it. Here's what's showing up in live postings.
+                    Worried AI will replace your job? Here's the AI fluency employers are
+                    actually hiring for.
                   </p>
                   <div className="grid md:grid-cols-2 gap-6">
                     <AISkillPanel title="Using & directing AI" hint="share of live postings" items={aiUse} />
@@ -1522,17 +1520,25 @@ const LandingScreen = () => {
               )}
 
               {/* Roles: rising / declining trends */}
-              <div className="grid md:grid-cols-2 gap-6">
-                <MarketPanel title="Rising roles" hint="last 3 months" tone="up"
-                  items={ins.rising_role} onPick={switchToRole}
-                  empty="No role is clearly rising against a soft market right now." />
-                <MarketPanel title="Declining roles" hint="last 3 months" tone="down"
-                  items={ins.declining_role} onPick={switchToRole} />
+              <div>
+                <h3 className="text-lg sm:text-xl font-semibold tracking-tight mb-1">Roles on the move</h3>
+                <p className="text-small text-ink-faint mb-4">Which roles are gaining and losing ground.</p>
+                <div className="grid md:grid-cols-2 gap-6">
+                  <MarketPanel title="Rising roles" hint="last 3 months" tone="up"
+                    items={ins.rising_role} onPick={switchToRole}
+                    empty="No role is clearly rising against a soft market right now." />
+                  <MarketPanel title="Declining roles" hint="last 3 months" tone="down"
+                    items={ins.declining_role} onPick={switchToRole} />
+                </div>
               </div>
 
               {/* Roles: raw hiring volume (full width, two columns) */}
-              <MarketPanel title="Roles with most postings" hint="last 3 months" cols={2}
-                items={ins.in_demand_role} onPick={switchToRole} />
+              <div>
+                <h3 className="text-lg sm:text-xl font-semibold tracking-tight mb-1">Where the hiring is</h3>
+                <p className="text-small text-ink-faint mb-4">The roles with the most open postings right now.</p>
+                <MarketPanel hint="last 3 months" cols={2}
+                  items={ins.in_demand_role} onPick={switchToRole} />
+              </div>
             </div>
           )}
 
