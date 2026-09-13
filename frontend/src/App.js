@@ -1306,6 +1306,41 @@ const MarketPanel = ({ title, hint, tone = 'default', items = [], onPick, empty,
   </Panel>
 );
 
+// One AI-skill row — non-clickable (there's no standalone skill page yet). Leads
+// with how common the skill is across live postings; a growth Pill appears only
+// when the server had a baseline to measure change against.
+const AISkillRow = ({ item }) => {
+  const g = item.growth;
+  const gTone = g == null ? 'default' : (g >= 0 ? 'up' : 'down');
+  return (
+    <div className="flex items-center justify-between gap-3 py-2.5 border-b border-line-faint last:border-0">
+      <div className="min-w-0">
+        <div className="text-body truncate">{item.label}</div>
+        {item.companies != null && (
+          <div className="text-small text-ink-faint truncate">{item.companies} companies</div>
+        )}
+      </div>
+      <div className="flex items-center gap-3 shrink-0">
+        {Array.isArray(item.trend) && item.trend.length > 1 && <Sparkline data={item.trend} tone={gTone} />}
+        {g != null && <Pill tone={gTone}>{_fmtPct(g)}</Pill>}
+        {item.to_share != null && <Num className="text-ink-muted">{item.to_share}%</Num>}
+      </div>
+    </div>
+  );
+};
+
+const AISkillPanel = ({ title, hint, items = [], empty }) => (
+  <Panel className="flex flex-col">
+    <div className="flex items-baseline justify-between mb-2">
+      <Eyebrow>{title}</Eyebrow>
+      {hint && <span className="text-small text-ink-faint">{hint}</span>}
+    </div>
+    {(!items || items.length === 0)
+      ? <p className="text-small text-ink-faint py-4">{empty || 'Not enough data yet.'}</p>
+      : items.map((it, i) => <AISkillRow key={i} item={it} />)}
+  </Panel>
+);
+
 // Cycles through in-demand roles in the hero headline, one at a time, with a
 // fade-slide swap. Roles are curated (not data-driven) so the headline stays
 // punchy and never surfaces a low-signal title.
@@ -1390,6 +1425,9 @@ const LandingScreen = () => {
 
   const ins = (data && data.insights) || {};
   const summary = (ins.market_summary || [])[0];
+  const aiSkills = ins.ai_skill || [];
+  const aiUse = aiSkills.filter((s) => s.lens === 'use');
+  const aiGovern = aiSkills.filter((s) => s.lens === 'govern');
 
   // A role fetch (from search / a leaderboard click) is in flight — show the loading bar.
   if (loading) return <RoleLoadingScreen />;
@@ -1461,6 +1499,28 @@ const LandingScreen = () => {
             </p>
           ) : (
             <div className="space-y-6">
+              {/* AI skills — the reframe, surfaced as a featured section (the hero
+                  headline stays role-centric). Answers the "will AI replace me?"
+                  worry with what employers are actually asking for. */}
+              {aiSkills.length > 0 && (
+                <div className="pt-2">
+                  <h2 className="text-2xl sm:text-3xl font-semibold tracking-tight mb-2">
+                    The AI skills employers now expect
+                  </h2>
+                  <p className="text-ink-muted max-w-2xl leading-relaxed mb-5" style={{ textWrap: 'balance' }}>
+                    Worried AI will replace your job? The clearer signal in the hiring data:
+                    employers increasingly want people who can{' '}
+                    <strong className="text-white">work with and direct AI</strong> — and, more
+                    quietly, govern it. Here's what's showing up in live postings.
+                  </p>
+                  <div className="grid md:grid-cols-2 gap-6">
+                    <AISkillPanel title="Using & directing AI" hint="share of live postings" items={aiUse} />
+                    <AISkillPanel title="Governing AI" hint="share of live postings" items={aiGovern}
+                      empty="Still a thin, specialist signal." />
+                  </div>
+                </div>
+              )}
+
               {/* Roles: rising / declining trends */}
               <div className="grid md:grid-cols-2 gap-6">
                 <MarketPanel title="Rising roles" hint="last 3 months" tone="up"
@@ -2416,7 +2476,7 @@ const SkillsInputScreen = () => {
                     key={skill.skill_id}
                     onClick={() => toggle(skill)}
                     className={
-                      'px-3 py-1.5 text-small border rounded transition-colors ' +
+                      'px-3 py-1.5 text-small border rounded-lg transition-colors ' +
                       (on
                         ? 'bg-white text-black border-white'
                         : 'bg-surface text-ink border-line hover:border-line-strong') +
@@ -3386,7 +3446,7 @@ const OverviewTab = () => {
                   <button
                     key={s.skill_id}
                     onClick={() => setActiveTab('skills')}
-                    className="px-2.5 py-1 text-small bg-line/40 hover:bg-line text-ink rounded-md transition-colors"
+                    className="px-2.5 py-1 text-small bg-line/40 hover:bg-line text-ink rounded-lg transition-colors"
                   >
                     {s.name} <span className="num text-ink-faint">{Math.round(s.demand)}%</span>
                   </button>
@@ -3414,7 +3474,7 @@ const OverviewTab = () => {
                     <span className="num text-small text-ink-faint w-4 flex-shrink-0">{idx + 1}</span>
                     <span className="text-body text-ink flex-1 px-2 truncate">{company.name}</span>
                     {company.id === surgingId && (
-                      <span className="text-[9px] px-1.5 py-0.5 bg-accent-up/15 text-accent-up font-medium mr-2 flex-shrink-0 uppercase tracking-wider rounded">
+                      <span className="text-[9px] px-1.5 py-0.5 bg-accent-up/15 text-accent-up font-medium mr-2 flex-shrink-0 uppercase tracking-wider rounded-lg">
                         new
                       </span>
                     )}
@@ -3685,7 +3745,7 @@ const EmployersTab = () => {
                     {/* Industry */}
                     <div className="col-span-3">
                       {company.industry ? (
-                        <span className="px-2 py-1 text-xs bg-white/10 border border-line text-ink rounded">
+                        <span className="px-2 py-1 text-xs bg-white/10 border border-line text-ink rounded-lg">
                           {company.industry}
                         </span>
                       ) : (
@@ -3776,7 +3836,7 @@ const EmployersTab = () => {
                             <div className="text-xs text-ink-muted tracking-wider mb-2">TOP SKILLS THEY HIRE FOR</div>
                             <div className="flex flex-wrap gap-1.5">
                               {company.top_skills.slice(0, 8).map((skill, i) => (
-                                <span key={i} className="px-2 py-0.5 text-xs border border-line bg-white/5 text-ink rounded">{skill}</span>
+                                <span key={i} className="px-2 py-0.5 text-xs border border-line bg-white/5 text-ink rounded-lg">{skill}</span>
                               ))}
                             </div>
                           </div>
@@ -3992,7 +4052,7 @@ const SkillsTab = () => {
                   </div>
 
                   <div className="col-span-3">
-                    <span className="px-2 py-1 text-xs font-medium bg-white/10 text-gray-200 border border-line rounded whitespace-nowrap">
+                    <span className="px-2 py-1 text-xs font-medium bg-white/10 text-gray-200 border border-line rounded-lg whitespace-nowrap">
                       {skill.subcategory || (skill.category || 'other').toUpperCase()}
                     </span>
                   </div>
@@ -4257,7 +4317,7 @@ const AlternativesTab = () => {
                     <div className="flex flex-wrap items-center gap-1.5">
                       <span className="text-xs text-ink-muted w-16 shrink-0">YOU KNOW</span>
                       {role.shared_skills.map((s, i) => (
-                        <span key={i} className="px-2 py-0.5 text-xs border border-green-500/40 text-accent-up bg-accent-up/10 rounded">{s}</span>
+                        <span key={i} className="px-2 py-0.5 text-xs border border-green-500/40 text-accent-up bg-accent-up/10 rounded-lg">{s}</span>
                       ))}
                       {(role.shared_count ?? role.shared_skills.length) > role.shared_skills.length && (
                         <span className="text-xs text-ink-muted">+{(role.shared_count ?? role.shared_skills.length) - role.shared_skills.length}</span>
@@ -4268,7 +4328,7 @@ const AlternativesTab = () => {
                     <div className="flex flex-wrap items-center gap-1.5">
                       <span className="text-xs text-ink-muted w-16 shrink-0">TO LEARN</span>
                       {role.new_skills.slice(0, 4).map((s, i) => (
-                        <span key={i} className="px-2 py-0.5 text-xs border border-white/20 text-ink-muted rounded">{s}</span>
+                        <span key={i} className="px-2 py-0.5 text-xs border border-white/20 text-ink-muted rounded-lg">{s}</span>
                       ))}
                       {role.new_skills.length > 4 && (
                         <span className="text-xs text-ink-muted">+{role.new_skills.length - 4}</span>
@@ -5238,12 +5298,12 @@ const AccountScreen = () => {
                     <span className="text-ink-muted">Email verification</span>
                     <div className="flex items-center gap-3">
                       {user.email_verified ? (
-                        <span className="text-xs px-2 py-1 bg-emerald-500/15 text-emerald-300 border border-emerald-500/30 rounded">
+                        <span className="text-xs px-2 py-1 bg-emerald-500/15 text-emerald-300 border border-emerald-500/30 rounded-lg">
                           Verified
                         </span>
                       ) : (
                         <>
-                          <span className="text-xs px-2 py-1 bg-yellow-500/15 text-yellow-300 border border-yellow-500/30 rounded">
+                          <span className="text-xs px-2 py-1 bg-yellow-500/15 text-yellow-300 border border-yellow-500/30 rounded-lg">
                             Unverified
                           </span>
                           <button
@@ -5443,7 +5503,7 @@ const ChangeEmailModal = ({ onClose, onSubmitted }) => {
 
   return (
     <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4" onClick={onClose}>
-      <div className="bg-surface border border-line rounded-2xl p-6 max-w-md w-full" onClick={(e) => e.stopPropagation()}>
+      <div className="bg-surface border border-line rounded-xl p-6 max-w-md w-full" onClick={(e) => e.stopPropagation()}>
         <h3 className="text-xl font-medium mb-2">Change email</h3>
         <p className="text-sm text-ink-muted mb-4">
           We'll send a confirmation link to your new address. Your email won't change until you click it.
@@ -5519,7 +5579,7 @@ const DeleteAccountModal = ({ isGoogleAccount, onClose, onDeleted }) => {
 
   return (
     <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4" onClick={onClose}>
-      <div className="bg-surface border border-red-500/50 rounded-2xl p-6 max-w-md w-full" onClick={(e) => e.stopPropagation()}>
+      <div className="bg-surface border border-red-500/50 rounded-xl p-6 max-w-md w-full" onClick={(e) => e.stopPropagation()}>
         <h3 className="text-xl font-medium mb-2 text-red-400">Delete account</h3>
         <p className="text-sm text-ink-muted mb-4">
           This permanently deletes your account, saved preferences, and skills. This action cannot be undone.
@@ -5730,7 +5790,7 @@ const CardScreen = () => {
       <div className="w-full max-w-sm">
 
         {/* Card */}
-        <div className="bg-zinc-950 border border-line rounded-2xl overflow-hidden">
+        <div className="bg-zinc-950 border border-line rounded-xl overflow-hidden">
 
           {/* Header */}
           <div className="px-6 pt-6 pb-5 border-b border-line">

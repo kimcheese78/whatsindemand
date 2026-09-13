@@ -361,6 +361,91 @@ def _skill_rows(survivors, week):
     return rows
 
 
+def compute_ai_skills(global_cohort, week):
+    """Market-scope board of the curated 'control-AI' skills (Skill.ai_lens set),
+    ranked by CURRENT cohort prevalence — not growth: the striking risers
+    (Cursor, Claude Code, MCP) have ~0 baseline, so a growth board would silently
+    drop them. Growth is carried as a secondary badge where a baseline exists.
+    Breadth-gated on the latest full month so single-company boilerplate can't
+    headline. Rows tagged with lens ('use' | 'govern') for the frontend to group."""
+    cand = (Skill.query
+            .filter(Skill.is_verified.is_(True),
+                    Skill.ai_lens.isnot(None),
+                    Skill.total_job_count >= SKILL_MIN_TOTAL_JOBS)
+            .all())
+    id_to = {s.id: (s.name, s.ai_lens) for s in cand}
+    skill_ids = list(id_to)
+    if not skill_ids:
+        return []
+
+    bounds = month_bounds()
+    month_totals = [(s.isoformat()[:7], stock_count(global_cohort, s, e, p), p) for (s, e, p) in bounds]
+    per_skill = {sid: [] for sid in skill_ids}
+    for (s, e, p) in bounds:
+        counts = _skill_stock_counts(global_cohort, s, e, p, skill_ids)
+        month = s.isoformat()[:7]
+        for sid in skill_ids:
+            per_skill[sid].append((month, counts.get(sid, 0), p))
+
+    full_totals = full_series(month_totals)
+    if not full_totals or full_totals[-1][1] == 0:
+        return []
+    latest_total = full_totals[-1][1]
+    base_total = full_totals[0][1] if len(full_totals) >= 2 else None
+
+    rows_data = []
+    for sid in skill_ids:
+        full_counts = full_series(per_skill[sid])
+        latest_count = full_counts[-1][1]
+        if latest_count <= 0:
+            continue
+        latest_share = latest_count / latest_total * 100
+        # This is a LEVEL board with an upward-momentum badge, not a trend board.
+        # We surface growth only when positive: a negative here is dominated by
+        # alias-churn noise (e.g. a skill mid-split via split_ai_alias.py), which
+        # would misread as a real market decline. The genuine decline tracker is
+        # falling_skill.
+        growth = None
+        if base_total and len(full_counts) >= 2 and full_counts[0][1] >= SKILL_MIN_PREV_JOBS:
+            g = calculate_growth_pct(latest_share, full_counts[0][1] / base_total * 100)
+            growth = g if (g is not None and g > 0) else None
+        trend = [round(c / t * 100, 2) for (_, c), (_, t) in zip(full_counts, full_totals)]
+        rows_data.append({
+            'sid': sid, 'label': id_to[sid][0], 'lens': id_to[sid][1],
+            'to': latest_count, 'to_share': round(latest_share, 2),
+            'growth': growth, 'trend': trend,
+        })
+
+    # Breadth gate on the latest full month — drops single-company floods /
+    # boilerplate (e.g. one firm's careers-page blurb).
+    latest_bound = bounds[-2] if len(bounds) >= 2 else bounds[-1]
+    conc = _skill_concentration(global_cohort, *latest_bound, [r['sid'] for r in rows_data])
+    kept = []
+    for r in rows_data:
+        c = conc.get(r['sid'])
+        if not c or c[0] < SKILL_MIN_COMPANIES or c[1] > SKILL_MAX_CONCENTRATION:
+            continue
+        r['companies'] = c[0]
+        kept.append(r)
+
+    # Rank by current prevalence within each lens; 'use' rows first, then 'govern'.
+    rows, rank = [], 0
+    for lens in ('use', 'govern'):
+        ranked = sorted([r for r in kept if r['lens'] == lens],
+                        key=lambda x: x['to_share'], reverse=True)[:TOP_N]
+        for r in ranked:
+            rows.append(MarketInsightSnapshot(
+                week_start=week, kind='ai_skill', scope='overall', rank=rank,
+                payload=json.dumps({
+                    'label': r['label'], 'lens': r['lens'],
+                    'to': r['to'], 'to_share': r['to_share'],
+                    'growth': r['growth'], 'companies': r['companies'],
+                    'trend': r['trend'],
+                })))
+            rank += 1
+    return rows
+
+
 def compute_market_summary(week, global_cohort):
     series = [(s.isoformat()[:7], stock_count(global_cohort, s, e, p), p) for (s, e, p) in month_bounds()]
     full = full_series(series)
@@ -398,18 +483,23 @@ def main(apply=False):
         rows += compute_in_demand_roles(week)
         rows += _skill_rows(skill_survivors, week)
         rows += compute_emerging_skills(week)
+        rows += compute_ai_skills(global_cohort, week)
         rows += summary_rows
 
         # summary print
         print(f"\nWeek {week}  |  {len(rows)} snapshot rows")
         for kind in ('rising_role', 'declining_role', 'rising_skill', 'falling_skill',
-                     'emerging_skill', 'market_summary'):
+                     'emerging_skill', 'ai_skill', 'market_summary'):
             overall = [r for r in rows if r.kind == kind and r.scope == 'overall']
             if overall:
                 print(f"\n[{kind} · overall]")
                 for r in overall:
                     p = json.loads(r.payload)
-                    if 'from_share' in p:      # skill row: prevalence + breadth
+                    if 'lens' in p:            # ai_skill row: level + lens
+                        g = f"  {p['growth']:+.0f}%" if p.get('growth') is not None else ""
+                        print(f"  {p['to_share']:5.2f}%  ({p.get('to','?')} jobs, "
+                              f"{p.get('companies','?')} cos) [{p['lens']:6}]  {p['label']}{g}")
+                    elif 'from_share' in p:    # skill row: prevalence + breadth
                         print(f"  {p['growth']:+7.1f}%  {p['from_share']:.2f}%→{p['to_share']:.2f}% "
                               f"share ({p.get('from','?')}→{p.get('to','?')} jobs, "
                               f"{p.get('companies','?')} cos)  {p['label']}")

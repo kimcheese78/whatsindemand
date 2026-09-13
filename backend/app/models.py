@@ -231,6 +231,10 @@ class Skill(db.Model):
     industry = db.Column(db.String(100))       # sector tag, e.g. 'Healthcare' (NULL = universal)
     aliases = db.Column(db.ARRAY(db.String))
     is_verified = db.Column(db.Boolean, default=False)
+    # 'use' (working with / directing AI) | 'govern' (overseeing AI) | NULL.
+    # Orthogonal to category/subcategory — groups the scattered "control-AI"
+    # skills for the market-wide AI-skills board. See seed_ai_lens.py.
+    ai_lens = db.Column(db.String(20))
 
     # Aggregated stats for performance
     total_job_count = db.Column(db.Integer, default=0)
