@@ -158,10 +158,12 @@ Rules:
 - Seniority (Senior, Lead, Principal, Jr, Associate…) is irrelevant when picking the role — always pick the base role.
 - Salary info, location, or schedule modifiers in the title do not affect the role classification.
 - Use the provided JD snippet to disambiguate ambiguous titles (e.g. "Executive" alone is unclear; the JD will show the function).
-- action=map    → best match exists in the canonical list. Provide the exact canonical role title.
+- action=map    → a canonical role is the title's clear PRIMARY FUNCTION. Provide the exact canonical role title. Map only on a genuine functional match, never on loose thematic similarity.
 - action=reject → non-job (posting is noise, test, event, non-English, or an intern/volunteer with no real function).
 - action=new_role → the job function is GENUINELY absent from the canonical list (not a variant, not a seniority variation). Provide a clean normalized title and category.
 - action=skip   → cannot determine from title + JD. Use sparingly.
+
+CRITICAL — NO CATCH-ALL: never map a title to a broad, generic role (e.g. "Operations Manager", "Business Analyst", "Program Manager") merely because nothing closer exists. A title like "Scientific Director", "Security Officer", "Art Director", or "Warehouse Associate" must map to its ACTUAL function, or become new_role if that function is real but absent — never default into a loosely-related generic role. If you cannot make a genuine, specific match: use new_role (real distinct function) or reject/skip. A weak approximate map is an error, not a map.
 
 Respond ONLY with a JSON array — no prose, no markdown fences.\
 """
