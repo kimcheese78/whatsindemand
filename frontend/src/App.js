@@ -1505,7 +1505,7 @@ const LandingScreen = () => {
               {aiSkills.length > 0 && (
                 <div className="pt-2">
                   <h2 className="text-2xl sm:text-3xl font-semibold tracking-tight mb-2">
-                    The AI skills employers now expect
+                    The AI skills in demand
                   </h2>
                   <p className="text-ink-muted max-w-2xl leading-relaxed mb-5" style={{ textWrap: 'balance' }}>
                     Worried AI will replace your job? Here's the AI fluency employers are
