@@ -1,158 +1,927 @@
 {
   "decisions": [
-    {"raw_title": "Director of Video Production", "action": "map", "role": "Creative Director", "job_count": 4, "jobs": 4},
-    {"raw_title": "Teamlead (gn) - People Operations", "action": "map", "role": "People Operations Specialist", "job_count": 3, "jobs": 3},
-    {"raw_title": "Clinician - Jail Diversion", "action": "map", "role": "Mental Health Therapist", "job_count": 3, "jobs": 3},
-    {"raw_title": "Credit Risk Strategy and Analytics", "action": "map", "role": "Risk Manager", "job_count": 2, "jobs": 2},
-    {"raw_title": "Lead Design Technologist", "action": "map", "role": "Design Engineer", "job_count": 2, "jobs": 2},
-    {"raw_title": "Enterprise Risk Officer, ECRM", "action": "map", "role": "Risk Manager", "job_count": 2, "jobs": 2},
-    {"raw_title": "In-House CRA II (Mexico)", "action": "map", "role": "Clinical Research Associate", "job_count": 2, "jobs": 2},
-    {"raw_title": "Group Product Management Manager, Agent Enablement", "action": "map", "role": "Group Product Manager", "job_count": 2, "jobs": 2},
-    {"raw_title": "Sr. Principal Scientist / Director, DMPK & Bioanalytical Sciences", "action": "map", "role": "Research Scientist", "job_count": 2, "jobs": 2},
-    {"raw_title": "Flex Security Positions (Part-Time) Start Immediately!", "action": "map", "role": "Security Officer", "job_count": 2, "jobs": 2},
-    {"raw_title": "Vendor Manager, Publishing Operations", "action": "map", "role": "Procurement Manager", "job_count": 2, "jobs": 2},
-    {"raw_title": "Security Gate and Dock Officers", "action": "map", "role": "Security Officer", "job_count": 2, "jobs": 2},
-    {"raw_title": "Sales Leader - System Integrators", "action": "map", "role": "Sales Manager", "job_count": 2, "jobs": 2},
-    {"raw_title": "(Senior) Product Development Manager (gn) - Protein Powder Category More", "action": "map", "role": "Product Manager", "job_count": 2, "jobs": 2},
-    {"raw_title": "Client Lead, Media", "action": "map", "role": "Account Manager", "job_count": 2, "jobs": 2},
-    {"raw_title": "HR Manager (gn) - für den Produktionsstandort Elmshorn", "action": "map", "role": "HR Manager", "job_count": 2, "jobs": 2},
-    {"raw_title": "(Senior) Product Line Manager ESN", "action": "map", "role": "Product Manager", "job_count": 2, "jobs": 2},
-    {"raw_title": "Lead Architect, Finance Technology", "action": "map", "role": "Solutions Architect", "job_count": 2, "jobs": 2},
-    {"raw_title": "Group Head of Sanctions and Exports Controls", "action": "map", "role": "Compliance Specialist", "job_count": 2, "jobs": 2},
-    {"raw_title": "Senior Human Resource Business Partner, Corporate", "action": "map", "role": "HR Business Partner", "job_count": 1, "jobs": 1},
-    {"raw_title": "Human Resource Business Partner - DACH", "action": "map", "role": "HR Business Partner", "job_count": 1, "jobs": 1},
-    {"raw_title": "Admissions/Team Nurse", "action": "map", "role": "Registered Nurse", "job_count": 1, "jobs": 1},
-    {"raw_title": "Hospice Triage Nurse - HYBRID", "action": "map", "role": "Registered Nurse", "job_count": 1, "jobs": 1},
-    {"raw_title": "CRNA - Bailey Medical Center - Owasso, OK | OR Position Only - No OB and No Call!", "action": "map", "role": "Certified Registered Nurse Anesthetist", "job_count": 1, "jobs": 1},
-    {"raw_title": "CRNA - Hillcrest Hospital Claremore - Claremore, OK | $325k + 12 Weeks Off!", "action": "map", "role": "Certified Registered Nurse Anesthetist", "job_count": 1, "jobs": 1},
-    {"raw_title": "CRNA- St. Luke's Sugar Land Hospital-$270(k) with 7 Weeks Off - NO CALL!", "action": "map", "role": "Certified Registered Nurse Anesthetist", "job_count": 1, "jobs": 1},
-    {"raw_title": "CRNA- UT Health Henderson-$320(k) with 17 Weeks Off", "action": "map", "role": "Certified Registered Nurse Anesthetist", "job_count": 1, "jobs": 1},
-    {"raw_title": "Registered Dietitian (Contract, IL-based)", "action": "map", "role": "Registered Dietitian", "job_count": 1, "jobs": 1},
-    {"raw_title": "Registered Dietitian (Contract, MD-based)", "action": "map", "role": "Registered Dietitian", "job_count": 1, "jobs": 1},
-    {"raw_title": "Registered Dietitian (Contract, NM-based)", "action": "map", "role": "Registered Dietitian", "job_count": 1, "jobs": 1},
-    {"raw_title": "Registered Dietitian (Contract, NV-based)", "action": "map", "role": "Registered Dietitian", "job_count": 1, "jobs": 1},
-    {"raw_title": "Registered Dietitian (Contract, TX-based)", "action": "map", "role": "Registered Dietitian", "job_count": 1, "jobs": 1},
-    {"raw_title": "Registered Dietitian (Part Time, CA-based)", "action": "map", "role": "Registered Dietitian", "job_count": 1, "jobs": 1},
-    {"raw_title": "Mental Health/Behavioral Health Clinician (Part Time, CA-based)", "action": "map", "role": "Mental Health Therapist", "job_count": 1, "jobs": 1},
-    {"raw_title": "Mental Health/Behavior Health Clinician (Contract, MD-based)", "action": "map", "role": "Mental Health Therapist", "job_count": 1, "jobs": 1},
-    {"raw_title": "Mental Health/Behavior Health Clinician (Contract, NV-based)", "action": "map", "role": "Mental Health Therapist", "job_count": 1, "jobs": 1},
-    {"raw_title": "Mental Health/Behavior Health Clinician (Contract, TX-based)", "action": "map", "role": "Mental Health Therapist", "job_count": 1, "jobs": 1},
-    {"raw_title": "Bilingual Therapist Team Lead, Arizona, Remote", "action": "map", "role": "Mental Health Therapist", "job_count": 1, "jobs": 1},
-    {"raw_title": "Paralegal, Compliance", "action": "map", "role": "Paralegal", "job_count": 1, "jobs": 1},
-    {"raw_title": "Paralegal, Contracts", "action": "map", "role": "Paralegal", "job_count": 1, "jobs": 1},
-    {"raw_title": "Paralegal, Funds", "action": "map", "role": "Paralegal", "job_count": 1, "jobs": 1},
-    {"raw_title": "Sales Training Manager, Prenatal", "action": "map", "role": "Sales Enablement Manager", "job_count": 1, "jobs": 1},
-    {"raw_title": "Consumer Compliance Senior Analyst, Complaints", "action": "map", "role": "Compliance Specialist", "job_count": 1, "jobs": 1},
-    {"raw_title": "Cybersecurity Analyst: New Grad", "action": "map", "role": "Security Operations Analyst", "job_count": 1, "jobs": 1},
-    {"raw_title": "IT Support - Tier 1", "action": "map", "role": "IT Support Engineer", "job_count": 1, "jobs": 1},
-    {"raw_title": "Service Desk Analyst III - Leeds, UK", "action": "map", "role": "IT Support Engineer", "job_count": 1, "jobs": 1},
-    {"raw_title": "Desktop Support", "action": "map", "role": "IT Support Engineer", "job_count": 1, "jobs": 1},
-    {"raw_title": "IT Operations Support", "action": "map", "role": "IT Support Engineer", "job_count": 1, "jobs": 1},
-    {"raw_title": "Shipper", "action": "map", "role": "Warehouse Associate", "job_count": 1, "jobs": 1},
-    {"raw_title": "Chemical Mixer", "action": "map", "role": "Manufacturing Technician", "job_count": 1, "jobs": 1},
-    {"raw_title": "Compounder", "action": "map", "role": "Manufacturing Technician", "job_count": 1, "jobs": 1},
-    {"raw_title": "Processing Operator- Pasteurization (12 Hour Nights- Rotating Weekends)", "action": "map", "role": "Manufacturing Technician", "job_count": 1, "jobs": 1},
-    {"raw_title": "Warehouse Operator I [Contract]", "action": "map", "role": "Warehouse Associate", "job_count": 1, "jobs": 1},
-    {"raw_title": "Frontend Developer React (BuBa - Accounting)", "action": "map", "role": "Software Engineer", "job_count": 1, "jobs": 1},
-    {"raw_title": "Principal Java Developer Ukraine", "action": "map", "role": "Software Engineer", "job_count": 1, "jobs": 1},
-    {"raw_title": "Principal Java Developer Moldova (Java, React, AWS)", "action": "map", "role": "Software Engineer", "job_count": 1, "jobs": 1},
-    {"raw_title": "Software Lead, Mission Systems, Maritime", "action": "map", "role": "Software Engineer", "job_count": 1, "jobs": 1},
-    {"raw_title": "GUI Tools Software Development", "action": "map", "role": "Software Engineer", "job_count": 1, "jobs": 1},
-    {"raw_title": "Senior Business Intelligence Developer/Analyst", "action": "map", "role": "Data Analyst", "job_count": 1, "jobs": 1},
-    {"raw_title": "Senior BI Developer (Web analytics domain) - Bangkok based, relocation provided", "action": "map", "role": "Data Analyst", "job_count": 1, "jobs": 1},
-    {"raw_title": "Senior Integrations Developer (Celigo) | Manila", "action": "map", "role": "Integration Engineer", "job_count": 1, "jobs": 1},
-    {"raw_title": "Senior Data Modeller - English B2 or C1", "action": "map", "role": "Data Engineer", "job_count": 1, "jobs": 1},
-    {"raw_title": "Research Associate, Biology", "action": "map", "role": "Research Scientist", "job_count": 1, "jobs": 1},
-    {"raw_title": "Scientist, Bioconjugation", "action": "map", "role": "Research Scientist", "job_count": 1, "jobs": 1},
-    {"raw_title": "Scientist II/Senior Scientist, Protein Sciences – Cell Binding Assays", "action": "map", "role": "Research Scientist", "job_count": 1, "jobs": 1},
-    {"raw_title": "Principal Scientist, Translational Modeling & Decision Science", "action": "map", "role": "Research Scientist", "job_count": 1, "jobs": 1},
-    {"raw_title": "Principal Scientist, Agentic Systems for Pipeline Strategy", "action": "map", "role": "Research Scientist", "job_count": 1, "jobs": 1},
-    {"raw_title": "Senior Statistical Geneticist", "action": "map", "role": "Research Scientist", "job_count": 1, "jobs": 1},
-    {"raw_title": "Lead Scientist, Discovery", "action": "map", "role": "Research Scientist", "job_count": 1, "jobs": 1},
-    {"raw_title": "Director/Sr. Director Clinical Pharmacology", "action": "map", "role": "Research Scientist", "job_count": 1, "jobs": 1},
-    {"raw_title": "Pioneering Medicines: Director, In Vivo Pharmacology - Metabolic Disease", "action": "map", "role": "Research Scientist", "job_count": 1, "jobs": 1},
-    {"raw_title": "Threat Intel Manager, Model Exploitation & Fraud", "action": "map", "role": "Intelligence Analyst", "job_count": 1, "jobs": 1},
-    {"raw_title": "Threat Intel Manager, Influence Operations & Surveillance", "action": "map", "role": "Intelligence Analyst", "job_count": 1, "jobs": 1},
-    {"raw_title": "Threat Intel Manager, CBRN-E & Advanced Weapons", "action": "map", "role": "Intelligence Analyst", "job_count": 1, "jobs": 1},
-    {"raw_title": "SAR Analyst, Fincrime Intelligence and Reporting, Ongoing Monitoring", "action": "map", "role": "Compliance Specialist", "job_count": 1, "jobs": 1},
-    {"raw_title": "Compliance Officer & MLRO", "action": "map", "role": "Compliance Specialist", "job_count": 1, "jobs": 1},
-    {"raw_title": "Revenue Operations (Rev Ops)", "action": "map", "role": "Revenue Operations Manager", "job_count": 1, "jobs": 1},
-    {"raw_title": "Revenue Operations - Compensation & GTM Integration", "action": "map", "role": "Revenue Operations Manager", "job_count": 1, "jobs": 1},
-    {"raw_title": "Market Operations Leader", "action": "map", "role": "Operations Manager", "job_count": 1, "jobs": 1},
-    {"raw_title": "Underwriting and Lending, VP", "action": "map", "role": "Underwriter", "job_count": 1, "jobs": 1},
-    {"raw_title": "Lead, Accounts Payable", "action": "map", "role": "Accountant", "job_count": 1, "jobs": 1},
-    {"raw_title": "Accounting Specialist, Accounts Payable (Contract)", "action": "map", "role": "Accountant", "job_count": 1, "jobs": 1},
-    {"raw_title": "Senior Finance Analyst, BP&A", "action": "map", "role": "Financial Analyst", "job_count": 1, "jobs": 1},
-    {"raw_title": "Sr. Consultant, Professional Services", "action": "map", "role": "Implementation Consultant", "job_count": 1, "jobs": 1},
-    {"raw_title": "Senior Consultant, Adoption Services", "action": "map", "role": "Implementation Consultant", "job_count": 1, "jobs": 1},
-    {"raw_title": "Senior Learning Consultant, Charleston, SC", "action": "map", "role": "Learning & Development Manager", "job_count": 1, "jobs": 1},
-    {"raw_title": "Assistant Manager of People Operations - Champs-Elysées, Paris", "action": "map", "role": "People Operations Specialist", "job_count": 1, "jobs": 1},
-    {"raw_title": "Assistant Manager of People Operations - K11 Musea", "action": "map", "role": "People Operations Specialist", "job_count": 1, "jobs": 1},
-    {"raw_title": "Recruiting Programs Generalist", "action": "map", "role": "Recruiter", "job_count": 1, "jobs": 1},
-    {"raw_title": "Senior Recruitment Consultant Contract (m/w/d)", "action": "map", "role": "Recruiter", "job_count": 1, "jobs": 1},
-    {"raw_title": "Board Certified Behavior Analyst *$5k First Year Bonus*", "action": "map", "role": "Behavioral Specialist", "job_count": 1, "jobs": 1},
-    {"raw_title": "BCBA/LBA Clinical Supervisor $5K sign-on bonus - Farmingdale (Center Based)", "action": "map", "role": "Behavioral Specialist", "job_count": 1, "jobs": 1},
-    {"raw_title": "ACCS Recovery Coach", "action": "map", "role": "Behavioral Specialist", "job_count": 1, "jobs": 1},
-    {"raw_title": "CBHC Recovery Coach", "action": "map", "role": "Behavioral Specialist", "job_count": 1, "jobs": 1},
-    {"raw_title": "Certified Occupational Therapy Assistant (Pediatric)", "action": "map", "role": "Occupational Therapist", "job_count": 1, "jobs": 1},
-    {"raw_title": "Bedside Intensivist", "action": "map", "role": "Physician", "job_count": 1, "jobs": 1},
-    {"raw_title": "Part-Time Tele-Endocrinology | Maryland or Active IMLC", "action": "map", "role": "Endocrinologist", "job_count": 1, "jobs": 1},
-    {"raw_title": "Part-Time Tele-Neurology Clinic | Michigan or Active IMLC", "action": "map", "role": "Physician", "job_count": 1, "jobs": 1},
-    {"raw_title": "Sr. Web Content Strategist, Digital Experience", "action": "map", "role": "Content Marketing Manager", "job_count": 1, "jobs": 1},
-    {"raw_title": "Web Content Author -Contentful", "action": "map", "role": "Content Creator", "job_count": 1, "jobs": 1},
-    {"raw_title": "Senior Demand Generation Lead, Digital Campaigns", "action": "map", "role": "Demand Generation Manager", "job_count": 1, "jobs": 1},
-    {"raw_title": "Media Senior Associate, Programmatic", "action": "map", "role": "Paid Media Specialist", "job_count": 1, "jobs": 1},
-    {"raw_title": "Senior Public Relation Executive - Brands, Sports and Entertainment", "action": "map", "role": "Communications Manager", "job_count": 1, "jobs": 1},
-    {"raw_title": "Partner, Influencer Creative Strategy", "action": "map", "role": "Influencer Marketing Manager", "job_count": 1, "jobs": 1},
-    {"raw_title": "IT Security AI-Redteamer", "action": "map", "role": "Offensive Security Engineer", "job_count": 1, "jobs": 1},
-    {"raw_title": "(702) Cybersecurity Technical Specialist Level III", "action": "map", "role": "Security Engineer", "job_count": 1, "jobs": 1},
-    {"raw_title": "ITDI Cyber Operations Lead #831", "action": "map", "role": "Security Operations Engineer", "job_count": 1, "jobs": 1},
-    {"raw_title": "Senior Structural Analyst, Space", "action": "map", "role": "Mechanical Engineer", "job_count": 1, "jobs": 1},
-    {"raw_title": "Oracle Fusion Cloud Financials SME", "action": "map", "role": "Business Systems Analyst", "job_count": 1, "jobs": 1},
-    {"raw_title": "Workday Technical SME", "action": "map", "role": "Workday Administrator", "job_count": 1, "jobs": 1},
-    {"raw_title": "DE - Principal Consultant - Enterprise Architect / Pre-Sales", "action": "map", "role": "Solutions Architect", "job_count": 1, "jobs": 1},
-    {"raw_title": "Business Development Leader, Hospitality", "action": "map", "role": "Business Development Manager", "job_count": 1, "jobs": 1},
-    {"raw_title": "Business Development Lead, Channel Sales", "action": "map", "role": "Business Development Manager", "job_count": 1, "jobs": 1},
-    {"raw_title": "Principal Business Development And Integrations", "action": "map", "role": "Business Development Manager", "job_count": 1, "jobs": 1},
-    {"raw_title": "Enterprise BDR (Remote)", "action": "map", "role": "Business Development Representative", "job_count": 1, "jobs": 1},
-    {"raw_title": "GTM Enablement - APAC", "action": "map", "role": "Sales Enablement Manager", "job_count": 1, "jobs": 1},
-    {"raw_title": "Lead GTM Enablement & Scale Architect, Product Enablement", "action": "map", "role": "Sales Enablement Manager", "job_count": 1, "jobs": 1},
-    {"raw_title": "Lead, Deal Desk Strategy", "action": "map", "role": "Deal Desk Analyst", "job_count": 1, "jobs": 1},
-    {"raw_title": "Lead, IT Risk", "action": "map", "role": "Risk Manager", "job_count": 1, "jobs": 1},
-    {"raw_title": "Lead, Liquidity and Funding", "action": "map", "role": "Treasury Analyst", "job_count": 1, "jobs": 1},
-    {"raw_title": "Strategic Financial Institution Sales", "action": "map", "role": "Account Executive", "job_count": 1, "jobs": 1},
-    {"raw_title": "Professional Services Sales", "action": "map", "role": "Account Executive", "job_count": 1, "jobs": 1},
-    {"raw_title": "Principal, Institutional Sales", "action": "map", "role": "Account Executive", "job_count": 1, "jobs": 1},
-    {"raw_title": "Senior Principal, Institutional Sales", "action": "map", "role": "Account Executive", "job_count": 1, "jobs": 1},
-    {"raw_title": "Workplace Operations - New York", "action": "map", "role": "Workplace Experience Manager", "job_count": 1, "jobs": 1},
-    {"raw_title": "Assistant Manager Operations - Robotics Labs", "action": "map", "role": "Operations Manager", "job_count": 1, "jobs": 1},
-    {"raw_title": "Senior / Manager, Manufacturing Operations", "action": "map", "role": "Operations Manager", "job_count": 1, "jobs": 1},
-    {"raw_title": "Technician II - Green Envy South", "action": "map", "role": "Landscape Technician", "job_count": 1, "jobs": 1},
-    {"raw_title": "Technician II - Independent Lawn Care", "action": "map", "role": "Landscape Technician", "job_count": 1, "jobs": 1},
-    {"raw_title": "Resolutions Support (Part-Time)", "action": "map", "role": "Support Specialist", "job_count": 1, "jobs": 1},
-    {"raw_title": "Immigration Assistant", "action": "map", "role": "Legal Assistant", "job_count": 1, "jobs": 1},
-    {"raw_title": "Legal PA - Licensing", "action": "map", "role": "Legal Assistant", "job_count": 1, "jobs": 1},
-    {"raw_title": "Licensing Assistant", "action": "map", "role": "Legal Assistant", "job_count": 1, "jobs": 1},
-    {"raw_title": "Solicitor - Real Estate", "action": "map", "role": "Attorney", "job_count": 1, "jobs": 1},
-    {"raw_title": "Global Benefits Specialist  FTC", "action": "map", "role": "Compensation Analyst", "job_count": 1, "jobs": 1},
-    {"raw_title": "Creative (f/m/d) - Brand Design", "action": "map", "role": "Brand Designer", "job_count": 1, "jobs": 1},
-    {"raw_title": "Senior Partner Enablement Associate (x/f/m) - München", "action": "map", "role": "Partner Manager", "job_count": 1, "jobs": 1},
-    {"raw_title": "Partnership Manager, Life Sciences", "action": "map", "role": "Partner Manager", "job_count": 1, "jobs": 1},
-    {"raw_title": "Preparation Chef", "action": "map", "role": "Chef", "job_count": 1, "jobs": 1},
-    {"raw_title": "DashMart Team Member - Southern Burnaby", "action": "map", "role": "Warehouse Associate", "job_count": 1, "jobs": 1},
-    {"raw_title": "Seasonal Keyholder, University Village", "action": "map", "role": "Store Associate", "job_count": 1, "jobs": 1},
-    {"raw_title": "Key Lead, Atlanta", "action": "map", "role": "Shift Supervisor", "job_count": 1, "jobs": 1},
-    {"raw_title": "Temporary Key Lead, Soho", "action": "map", "role": "Shift Supervisor", "job_count": 1, "jobs": 1},
-    {"raw_title": "3IC (Retail) (Part-time)", "action": "map", "role": "Shift Supervisor", "job_count": 1, "jobs": 1},
-    {"raw_title": "Field Support Logistician", "action": "map", "role": "Logistics Coordinator", "job_count": 1, "jobs": 1},
-    {"raw_title": "Events Coordinator || Contractor", "action": "map", "role": "Event Marketing Manager", "job_count": 1, "jobs": 1},
-    {"raw_title": "Director of Special Events", "action": "map", "role": "Event Marketing Manager", "job_count": 1, "jobs": 1},
-    {"raw_title": "Regional Manager, Milwaukee", "action": "map", "role": "Area Manager", "job_count": 1, "jobs": 1},
-    {"raw_title": "Regional Manager, Affordable Housing - Alaska - West", "action": "map", "role": "Area Manager", "job_count": 1, "jobs": 1},
-    {"raw_title": "Maintenance Full-Time (7:30am - 4:00pm)", "action": "map", "role": "Maintenance Technician", "job_count": 1, "jobs": 1},
-    {"raw_title": "Metrology Specialist/CMM Programmer, Maritime Division", "action": "map", "role": "Quality Inspector", "job_count": 1, "jobs": 1},
-    {"raw_title": "Senior AI Builder", "action": "map", "role": "AI Engineer", "job_count": 1, "jobs": 1},
-    {"raw_title": "AI Expert", "action": "map", "role": "AI Engineer", "job_count": 1, "jobs": 1},
-    {"raw_title": "Senior Architect- Education", "action": "map", "role": "Architect", "job_count": 1, "jobs": 1}
+    {
+      "raw_title": "Security Officer",
+      "action": "map",
+      "role": "Security Officer",
+      "job_count": 49,
+      "jobs": 49
+    },
+    {
+      "raw_title": "Health Information Specialist I",
+      "action": "map",
+      "role": "Health Information Specialist",
+      "job_count": 47,
+      "jobs": 47
+    },
+    {
+      "raw_title": "Warehouse Associate",
+      "action": "map",
+      "role": "Warehouse Associate",
+      "job_count": 39,
+      "jobs": 39
+    },
+    {
+      "raw_title": "Private Equity Event Volunteer",
+      "action": "reject",
+      "reason": "volunteer",
+      "job_count": 33
+    },
+    {
+      "raw_title": "General Manager",
+      "action": "map",
+      "role": "General Manager",
+      "job_count": 32,
+      "jobs": 32
+    },
+    {
+      "raw_title": "Finance Industry Event Volunteer",
+      "action": "reject",
+      "reason": "volunteer",
+      "job_count": 29
+    },
+    {
+      "raw_title": "Lead Store Associate",
+      "action": "map",
+      "role": "Store Associate",
+      "job_count": 29,
+      "jobs": 29
+    },
+    {
+      "raw_title": "Art Director",
+      "action": "new_role",
+      "suggested_title": "Art Director",
+      "category": "Design",
+      "job_family": "Art Direction",
+      "job_count": 23,
+      "jobs": 23
+    },
+    {
+      "raw_title": "Retail General Manager",
+      "action": "map",
+      "role": "Retail Store Manager",
+      "job_count": 20,
+      "jobs": 20
+    },
+    {
+      "raw_title": "Security Specialist ",
+      "action": "map",
+      "role": "Security Officer",
+      "job_count": 20,
+      "jobs": 20
+    },
+    {
+      "raw_title": "Procurement Specialist",
+      "action": "map",
+      "role": "Procurement Manager",
+      "job_count": 17,
+      "jobs": 17
+    },
+    {
+      "raw_title": "Assessoria de Investimentos: In\u00edcio de Carreira",
+      "action": "reject",
+      "reason": "non-english",
+      "job_count": 17
+    },
+    {
+      "raw_title": "Maintenance Manager",
+      "action": "map",
+      "role": "Maintenance Supervisor",
+      "job_count": 17,
+      "jobs": 17
+    },
+    {
+      "raw_title": "Sales Internship Program",
+      "action": "reject",
+      "reason": "intern/program",
+      "job_count": 15
+    },
+    {
+      "raw_title": "Facilities Manager",
+      "action": "map",
+      "role": "Facility Manager",
+      "job_count": 15,
+      "jobs": 15
+    },
+    {
+      "raw_title": "Management Consulting Conference Volunteer",
+      "action": "reject",
+      "reason": "volunteer",
+      "job_count": 15
+    },
+    {
+      "raw_title": "Private Equity Conference Volunteer",
+      "action": "reject",
+      "reason": "volunteer",
+      "job_count": 15
+    },
+    {
+      "raw_title": "Unarmed Security Officer",
+      "action": "map",
+      "role": "Security Officer",
+      "job_count": 14,
+      "jobs": 14
+    },
+    {
+      "raw_title": "Events Manager",
+      "action": "map",
+      "role": "Event Marketing Manager",
+      "job_count": 14,
+      "jobs": 14
+    },
+    {
+      "raw_title": "Feasibility Manager",
+      "action": "map",
+      "role": "Clinical Trial Manager",
+      "job_count": 14,
+      "jobs": 14
+    },
+    {
+      "raw_title": "Repartidor de Tarjetas - Medio tiempo + BONO GARANTIZADO",
+      "action": "reject",
+      "reason": "non-english",
+      "job_count": 14
+    },
+    {
+      "raw_title": "Event Coordinator Volunteer",
+      "action": "reject",
+      "reason": "volunteer",
+      "job_count": 13
+    },
+    {
+      "raw_title": "Senior Art Director",
+      "action": "new_role",
+      "suggested_title": "Art Director",
+      "category": "Design",
+      "job_family": "Art Direction",
+      "job_count": 13,
+      "jobs": 13
+    },
+    {
+      "raw_title": "Investment Banking Event Volunteer",
+      "action": "reject",
+      "reason": "volunteer",
+      "job_count": 13
+    },
+    {
+      "raw_title": "Finance Event Volunteer",
+      "action": "reject",
+      "reason": "volunteer",
+      "job_count": 13
+    },
+    {
+      "raw_title": "Retail Assistant Manager",
+      "action": "map",
+      "role": "Retail Store Manager",
+      "job_count": 13,
+      "jobs": 13
+    },
+    {
+      "raw_title": "Conference Coordinator Volunteer",
+      "action": "reject",
+      "reason": "volunteer",
+      "job_count": 13
+    },
+    {
+      "raw_title": "Management Consulting Event Volunteer",
+      "action": "reject",
+      "reason": "volunteer",
+      "job_count": 13
+    },
+    {
+      "raw_title": "Finance Industry Conference Volunteer",
+      "action": "reject",
+      "reason": "volunteer",
+      "job_count": 13
+    },
+    {
+      "raw_title": "Environmental Specialist",
+      "action": "map",
+      "role": "EHS Specialist",
+      "job_count": 12,
+      "jobs": 12
+    },
+    {
+      "raw_title": "Store Associate",
+      "action": "map",
+      "role": "Store Associate",
+      "job_count": 12,
+      "jobs": 12
+    },
+    {
+      "raw_title": "Assistant Property Manager",
+      "action": "map",
+      "role": "Property Manager",
+      "job_count": 12,
+      "jobs": 12
+    },
+    {
+      "raw_title": "Maintenance Supervisor",
+      "action": "map",
+      "role": "Maintenance Supervisor",
+      "job_count": 12,
+      "jobs": 12
+    },
+    {
+      "raw_title": "Clinical Trial Manager",
+      "action": "map",
+      "role": "Clinical Trial Manager",
+      "job_count": 12,
+      "jobs": 12
+    },
+    {
+      "raw_title": "Health Information Specialist I ",
+      "action": "map",
+      "role": "Health Information Specialist",
+      "job_count": 11,
+      "jobs": 11
+    },
+    {
+      "raw_title": "Portfolio Manager",
+      "action": "map",
+      "role": "Portfolio Manager",
+      "job_count": 11,
+      "jobs": 11
+    },
+    {
+      "raw_title": "Event Manager",
+      "action": "map",
+      "role": "Event Marketing Manager",
+      "job_count": 11,
+      "jobs": 11
+    },
+    {
+      "raw_title": "Chief Financial Officer",
+      "action": "map",
+      "role": "Chief Financial Officer",
+      "job_count": 11,
+      "jobs": 11
+    },
+    {
+      "raw_title": "Construction Manager",
+      "action": "map",
+      "role": "Construction Manager",
+      "job_count": 11,
+      "jobs": 11
+    },
+    {
+      "raw_title": "Property Manager",
+      "action": "map",
+      "role": "Property Manager",
+      "job_count": 11,
+      "jobs": 11
+    },
+    {
+      "raw_title": "Compliance Officer",
+      "action": "map",
+      "role": "Compliance Specialist",
+      "job_count": 11,
+      "jobs": 11
+    },
+    {
+      "raw_title": "Accounts Receivable Specialist",
+      "action": "map",
+      "role": "Credit & Collections Specialist",
+      "job_count": 10,
+      "jobs": 10
+    },
+    {
+      "raw_title": "Security Specialist",
+      "action": "map",
+      "role": "Security Officer",
+      "job_count": 10,
+      "jobs": 10
+    },
+    {
+      "raw_title": "Regional Manager",
+      "action": "map",
+      "role": "General Manager",
+      "job_count": 10,
+      "jobs": 10
+    },
+    {
+      "raw_title": "General Manager ",
+      "action": "map",
+      "role": "General Manager",
+      "job_count": 10,
+      "jobs": 10
+    },
+    {
+      "raw_title": "Area Health Information Specialist I",
+      "action": "map",
+      "role": "Health Information Specialist",
+      "job_count": 10,
+      "jobs": 10
+    },
+    {
+      "raw_title": "Production Associate",
+      "action": "map",
+      "role": "Manufacturing Technician",
+      "job_count": 10,
+      "jobs": 10
+    },
+    {
+      "raw_title": "Head of Events",
+      "action": "map",
+      "role": "Event Marketing Manager",
+      "job_count": 10,
+      "jobs": 10
+    },
+    {
+      "raw_title": "Logistics Specialist",
+      "action": "map",
+      "role": "Logistics Coordinator",
+      "job_count": 9,
+      "jobs": 9
+    },
+    {
+      "raw_title": "Executive Protection Specialist",
+      "action": "map",
+      "role": "Security Officer",
+      "job_count": 8,
+      "jobs": 8
+    },
+    {
+      "raw_title": "Business Development Intern ",
+      "action": "reject",
+      "reason": "intern/program",
+      "job_count": 8
+    },
+    {
+      "raw_title": "Security Officer 3",
+      "action": "map",
+      "role": "Security Officer",
+      "job_count": 8,
+      "jobs": 8
+    },
+    {
+      "raw_title": "Assistant Manager",
+      "action": "map",
+      "role": "Retail Store Manager",
+      "job_count": 8,
+      "jobs": 8
+    },
+    {
+      "raw_title": "Quality Manager",
+      "action": "map",
+      "role": "Quality Assurance Manager",
+      "job_count": 8,
+      "jobs": 8
+    },
+    {
+      "raw_title": "Principal Instructor - ArcGIS Enterprise",
+      "action": "map",
+      "role": "Technical Trainer",
+      "job_count": 8,
+      "jobs": 8
+    },
+    {
+      "raw_title": "Retail Security Officer",
+      "action": "map",
+      "role": "Security Officer",
+      "job_count": 7,
+      "jobs": 7
+    },
+    {
+      "raw_title": "Yard Associate",
+      "action": "map",
+      "role": "Warehouse Associate",
+      "job_count": 7,
+      "jobs": 7
+    },
+    {
+      "raw_title": "Veterinary Practice Manager",
+      "action": "map",
+      "role": "Office Manager",
+      "job_count": 7,
+      "jobs": 7
+    },
+    {
+      "raw_title": "Portfolio Support Manager ",
+      "action": "map",
+      "role": "Property Manager",
+      "job_count": 7,
+      "jobs": 7
+    },
+    {
+      "raw_title": "Accounting Specialist",
+      "action": "map",
+      "role": "Accountant",
+      "job_count": 7,
+      "jobs": 7
+    },
+    {
+      "raw_title": "Teamleiter Logistik (m/w/d)",
+      "action": "reject",
+      "reason": "non-english",
+      "job_count": 7
+    },
+    {
+      "raw_title": "Senior Property Manager",
+      "action": "map",
+      "role": "Property Manager",
+      "job_count": 7,
+      "jobs": 7
+    },
+    {
+      "raw_title": "Intern, Construction Delay ",
+      "action": "reject",
+      "reason": "intern/program",
+      "job_count": 7
+    },
+    {
+      "raw_title": "Risk Manager",
+      "action": "map",
+      "role": "Risk Manager",
+      "job_count": 7,
+      "jobs": 7
+    },
+    {
+      "raw_title": "Event Manager (Freelance)",
+      "action": "map",
+      "role": "Event Marketing Manager",
+      "job_count": 7,
+      "jobs": 7
+    },
+    {
+      "raw_title": "General Manager (Pump, Power & HVAC)",
+      "action": "map",
+      "role": "General Manager",
+      "job_count": 7,
+      "jobs": 7
+    },
+    {
+      "raw_title": "Regional Director",
+      "action": "map",
+      "role": "General Manager",
+      "job_count": 7,
+      "jobs": 7
+    },
+    {
+      "raw_title": "Collections Specialist",
+      "action": "map",
+      "role": "Credit & Collections Specialist",
+      "job_count": 7,
+      "jobs": 7
+    },
+    {
+      "raw_title": "Facharzt f\u00fcr Allgemeinmedizin / Innere Medizin (m/w/d)",
+      "action": "reject",
+      "reason": "non-english",
+      "job_count": 6
+    },
+    {
+      "raw_title": "Warehouse Associate ",
+      "action": "map",
+      "role": "Warehouse Associate",
+      "job_count": 6,
+      "jobs": 6
+    },
+    {
+      "raw_title": "Unarmed Security Officer ",
+      "action": "map",
+      "role": "Security Officer",
+      "job_count": 6,
+      "jobs": 6
+    },
+    {
+      "raw_title": "Test",
+      "action": "reject",
+      "reason": "noise/test",
+      "job_count": 6
+    },
+    {
+      "raw_title": "Billing Specialist",
+      "action": "map",
+      "role": "Billing Specialist",
+      "job_count": 6,
+      "jobs": 6
+    },
+    {
+      "raw_title": "Human Resources Manager",
+      "action": "map",
+      "role": "HR Manager",
+      "job_count": 6,
+      "jobs": 6
+    },
+    {
+      "raw_title": "Teamleiter Logistik (m/w/d) ",
+      "action": "reject",
+      "reason": "non-english",
+      "job_count": 6
+    },
+    {
+      "raw_title": "Accounting Associate",
+      "action": "map",
+      "role": "Accountant",
+      "job_count": 6,
+      "jobs": 6
+    },
+    {
+      "raw_title": "Associate, PhD - Early Decision (Economics Focus) (2027)",
+      "action": "map",
+      "role": "Quantitative Researcher",
+      "job_count": 6,
+      "jobs": 6
+    },
+    {
+      "raw_title": "Submit Your Application for Future Consideration",
+      "action": "reject",
+      "reason": "noise/test",
+      "job_count": 6
+    },
+    {
+      "raw_title": "Associate, MBA - Economics/Finance",
+      "action": "map",
+      "role": "Investment Banking Associate",
+      "job_count": 6,
+      "jobs": 6
+    },
+    {
+      "raw_title": "Facility Manager (m/w/d)",
+      "action": "map",
+      "role": "Facility Manager",
+      "job_count": 6,
+      "jobs": 6
+    },
+    {
+      "raw_title": "Senior Manager, Retail Analytics - Walmart",
+      "action": "map",
+      "role": "Merchandising Analyst",
+      "job_count": 6,
+      "jobs": 6
+    },
+    {
+      "raw_title": "Junior Facility Manager (m/w/d)",
+      "action": "map",
+      "role": "Facility Manager",
+      "job_count": 6,
+      "jobs": 6
+    },
+    {
+      "raw_title": "Home Care Supervisor",
+      "action": "map",
+      "role": "Home Health Aide",
+      "job_count": 6,
+      "jobs": 6
+    },
+    {
+      "raw_title": "Schichtleiter*in automatisierte Logistik (m/w/d)",
+      "action": "reject",
+      "reason": "non-english",
+      "job_count": 6
+    },
+    {
+      "raw_title": "Ejecutivo de ventas en campo ",
+      "action": "reject",
+      "reason": "non-english",
+      "job_count": 6
+    },
+    {
+      "raw_title": "Health Information Specialist 1",
+      "action": "map",
+      "role": "Health Information Specialist",
+      "job_count": 6,
+      "jobs": 6
+    },
+    {
+      "raw_title": "Contract Specialist",
+      "action": "map",
+      "role": "Contracts Manager",
+      "job_count": 6,
+      "jobs": 6
+    },
+    {
+      "raw_title": "Psychologische Berater:in (m/w/d)",
+      "action": "reject",
+      "reason": "non-english",
+      "job_count": 6
+    },
+    {
+      "raw_title": "Psychologe (m/w/d)",
+      "action": "reject",
+      "reason": "non-english",
+      "job_count": 6
+    },
+    {
+      "raw_title": "Volunteer Team Member",
+      "action": "reject",
+      "reason": "volunteer",
+      "job_count": 6
+    },
+    {
+      "raw_title": "Production Team Lead",
+      "action": "map",
+      "role": "Production Supervisor",
+      "job_count": 6,
+      "jobs": 6
+    },
+    {
+      "raw_title": "Preconstruction Manager",
+      "action": "map",
+      "role": "Construction Manager",
+      "job_count": 6,
+      "jobs": 6
+    },
+    {
+      "raw_title": "Regional Lead - Government & Industry Affairs ",
+      "action": "map",
+      "role": "Government Affairs Manager",
+      "job_count": 6,
+      "jobs": 6
+    },
+    {
+      "raw_title": "Paid Media Manager",
+      "action": "map",
+      "role": "Paid Media Specialist",
+      "job_count": 5,
+      "jobs": 5
+    },
+    {
+      "raw_title": "Part-Time Mental Health Professional Development Trainer and Coach",
+      "action": "map",
+      "role": "Health Educator",
+      "job_count": 5,
+      "jobs": 5
+    },
+    {
+      "raw_title": "Campaign Manager",
+      "action": "map",
+      "role": "Paid Media Specialist",
+      "job_count": 5,
+      "jobs": 5
+    },
+    {
+      "raw_title": "Events Specialist",
+      "action": "map",
+      "role": "Event Marketing Manager",
+      "job_count": 5,
+      "jobs": 5
+    },
+    {
+      "raw_title": "Event Manager (volunteer)",
+      "action": "reject",
+      "reason": "volunteer",
+      "job_count": 5
+    },
+    {
+      "raw_title": "Manager, Paid Search",
+      "action": "map",
+      "role": "Paid Media Specialist",
+      "job_count": 5,
+      "jobs": 5
+    },
+    {
+      "raw_title": "Manager In Training",
+      "action": "map",
+      "role": "Retail Store Manager",
+      "job_count": 5,
+      "jobs": 5
+    },
+    {
+      "raw_title": "Event Koordinator (frivillig)",
+      "action": "reject",
+      "reason": "volunteer",
+      "job_count": 5
+    },
+    {
+      "raw_title": "Become a BioChef",
+      "action": "map",
+      "role": "Chef",
+      "job_count": 5,
+      "jobs": 5
+    },
+    {
+      "raw_title": "EHS Manager",
+      "action": "map",
+      "role": "EHS Specialist",
+      "job_count": 5,
+      "jobs": 5
+    },
+    {
+      "raw_title": "EA Test - Most Questions",
+      "action": "reject",
+      "reason": "noise/test",
+      "job_count": 5
+    },
+    {
+      "raw_title": "Enrollment Specialist",
+      "action": "map",
+      "role": "Intake Specialist",
+      "job_count": 5,
+      "jobs": 5
+    },
+    {
+      "raw_title": "Teamleiter Last Mile Logistik (m/w/d)",
+      "action": "reject",
+      "reason": "non-english",
+      "job_count": 5
+    },
+    {
+      "raw_title": "Accounting Intern",
+      "action": "reject",
+      "reason": "intern/program",
+      "job_count": 5
+    },
+    {
+      "raw_title": "Inventory Specialist",
+      "action": "map",
+      "role": "Supply Chain Analyst",
+      "job_count": 5,
+      "jobs": 5
+    },
+    {
+      "raw_title": "Associate, PhD - Early Decision (Finance/Crypto Focus) (2027)",
+      "action": "map",
+      "role": "Quantitative Researcher",
+      "job_count": 5,
+      "jobs": 5
+    },
+    {
+      "raw_title": "Senior Research Associate",
+      "action": "map",
+      "role": "Research Associate (Biotech/Therapeutics)",
+      "job_count": 5,
+      "jobs": 5
+    },
+    {
+      "raw_title": "Senior Art Director ",
+      "action": "new_role",
+      "suggested_title": "Art Director",
+      "category": "Design",
+      "job_family": "Art Direction",
+      "job_count": 5,
+      "jobs": 5
+    },
+    {
+      "raw_title": "Associate Director, Paid Social",
+      "action": "map",
+      "role": "Paid Media Specialist",
+      "job_count": 5,
+      "jobs": 5
+    },
+    {
+      "raw_title": "Senior Clinical Trial Manager",
+      "action": "map",
+      "role": "Clinical Trial Manager",
+      "job_count": 5,
+      "jobs": 5
+    },
+    {
+      "raw_title": "Security Officer ",
+      "action": "map",
+      "role": "Security Officer",
+      "job_count": 5,
+      "jobs": 5
+    },
+    {
+      "raw_title": "Hospice Volunteer",
+      "action": "reject",
+      "reason": "volunteer",
+      "job_count": 5
+    },
+    {
+      "raw_title": "Hospice Volunteer (unpaid)",
+      "action": "reject",
+      "reason": "volunteer",
+      "job_count": 5
+    },
+    {
+      "raw_title": "Customer Care Specialist",
+      "action": "map",
+      "role": "Support Specialist",
+      "job_count": 5,
+      "jobs": 5
+    },
+    {
+      "raw_title": "CRM Specialist",
+      "action": "map",
+      "role": "CRM Manager",
+      "job_count": 5,
+      "jobs": 5
+    },
+    {
+      "raw_title": "Retail Assistant General Manager",
+      "action": "map",
+      "role": "Retail Store Manager",
+      "job_count": 5,
+      "jobs": 5
+    },
+    {
+      "raw_title": "Research Associate",
+      "action": "map",
+      "role": "UX Researcher",
+      "job_count": 5,
+      "jobs": 5
+    },
+    {
+      "raw_title": "GIS Industry Solutions Specialist - Rail",
+      "action": "map",
+      "role": "Solutions Consultant",
+      "job_count": 5,
+      "jobs": 5
+    },
+    {
+      "raw_title": "Global Talent Intern",
+      "action": "reject",
+      "reason": "intern/program",
+      "job_count": 5
+    },
+    {
+      "raw_title": "Quantitative Research Intern",
+      "action": "reject",
+      "reason": "intern/program",
+      "job_count": 5
+    },
+    {
+      "raw_title": "GIS Industry Solutions Specialist - Architecture, Engineering, and Construction (AEC)",
+      "action": "map",
+      "role": "Solutions Consultant",
+      "job_count": 5,
+      "jobs": 5
+    },
+    {
+      "raw_title": "GIS Industry Solutions Specialist - Electric & Gas Utilities",
+      "action": "map",
+      "role": "Solutions Consultant",
+      "job_count": 5,
+      "jobs": 5
+    },
+    {
+      "raw_title": "GIS Industry Solutions Specialist - Infrastructure",
+      "action": "map",
+      "role": "Solutions Consultant",
+      "job_count": 5,
+      "jobs": 5
+    },
+    {
+      "raw_title": "Apartment Maintenance Manager",
+      "action": "map",
+      "role": "Maintenance Supervisor",
+      "job_count": 5,
+      "jobs": 5
+    },
+    {
+      "raw_title": "Production Manager",
+      "action": "map",
+      "role": "Production Supervisor",
+      "job_count": 5,
+      "jobs": 5
+    },
+    {
+      "raw_title": "Clinical Research Associate II",
+      "action": "map",
+      "role": "Clinical Research Associate",
+      "job_count": 5,
+      "jobs": 5
+    },
+    {
+      "raw_title": "Production Lead",
+      "action": "map",
+      "role": "Production Supervisor",
+      "job_count": 5,
+      "jobs": 5
+    },
+    {
+      "raw_title": "Clinical Supervisor - ACCS",
+      "action": "map",
+      "role": "Clinical Supervisor (Behavioral Health)",
+      "job_count": 5,
+      "jobs": 5
+    },
+    {
+      "raw_title": "Produktionsmitarbeiter (gn)",
+      "action": "reject",
+      "reason": "non-english",
+      "job_count": 5
+    },
+    {
+      "raw_title": "FIELD MANAGER",
+      "action": "map",
+      "role": "Construction Manager",
+      "job_count": 5,
+      "jobs": 5
+    },
+    {
+      "raw_title": "Executive Protection Specialist - Veterans Preferred",
+      "action": "map",
+      "role": "Security Officer",
+      "job_count": 4,
+      "jobs": 4
+    },
+    {
+      "raw_title": "Onboarding Specialist",
+      "action": "map",
+      "role": "People Operations Specialist",
+      "job_count": 4,
+      "jobs": 4
+    },
+    {
+      "raw_title": "Events Manager | EMEA | Remote",
+      "action": "map",
+      "role": "Event Marketing Manager",
+      "job_count": 4,
+      "jobs": 4
+    }
   ]
 }
