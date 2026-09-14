@@ -1521,8 +1521,8 @@ const LandingScreen = () => {
 
               {/* Roles: rising / declining trends */}
               <div>
-                <h3 className="text-2xl sm:text-3xl font-semibold tracking-tight mb-2">Roles on the move</h3>
-                <p className="text-ink-muted max-w-2xl leading-relaxed mb-4">Which roles are gaining and losing ground.</p>
+                <h3 className="text-2xl sm:text-3xl font-semibold tracking-tight mb-2">Top 10 rising roles vs declining roles</h3>
+                <p className="text-ink-muted max-w-2xl leading-relaxed mb-4">The roles gaining the most ground, side by side with those losing it.</p>
                 <div className="grid md:grid-cols-2 gap-6">
                   <MarketPanel title="Rising roles" hint="last 3 months" tone="up"
                     items={ins.rising_role} onPick={switchToRole}
@@ -1534,8 +1534,8 @@ const LandingScreen = () => {
 
               {/* Roles: raw hiring volume (full width, two columns) */}
               <div>
-                <h3 className="text-2xl sm:text-3xl font-semibold tracking-tight mb-2">Where the hiring is</h3>
-                <p className="text-ink-muted max-w-2xl leading-relaxed mb-4">The roles with the most open postings right now.</p>
+                <h3 className="text-2xl sm:text-3xl font-semibold tracking-tight mb-2">Roles with most job openings</h3>
+                <p className="text-ink-muted max-w-2xl leading-relaxed mb-4">Ranked by how many postings are live across all tracked companies.</p>
                 <MarketPanel hint="last 3 months" cols={2}
                   items={ins.in_demand_role} onPick={switchToRole} />
               </div>
