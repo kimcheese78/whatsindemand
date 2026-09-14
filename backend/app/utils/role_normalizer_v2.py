@@ -385,23 +385,21 @@ _SUFFIX_DEFAULTS = [
     # Fraud, Cybersecurity, FP&A...) into Business Analyst. Specific analyst
     # families are handled by explicit suffixes above + aliases.yaml; anything
     # else now falls through to Unknown → review queue.
-    ("manager", "operations_manager"),
-    ("director", "operations_manager"),
-    ("specialist", "operations_manager"),
+    # NOTE: generic manager/director/specialist/associate/supervisor/lead/head/
+    # officer → operations_manager removed 2026-09-14 — these catch-alls turned
+    # Operations Manager into a 33k-variation junk drawer (Security Officer, Art
+    # Director, Warehouse Associate, Scientific Director, GTM Lead...). Specific
+    # role families are handled by explicit suffixes above + aliases.yaml;
+    # anything else now falls to Unknown → review queue instead of a wrong OM label.
     ("coordinator", "administrative_assistant"),
-    ("associate", "operations_manager"),
     ("administrator", "systems_administrator"),
     ("technician", "manufacturing_technician"),
     ("planner", "material_planner"),
     ("trainer", "technical_writer"),
     ("consultant", "solutions_consultant"),
     ("representative", "sales_representative"),
-    ("supervisor", "operations_manager"),
     ("architect", "solutions_architect"),
     ("buyer", "senior_buyer"),
-    ("lead", "operations_manager"),
-    ("head", "operations_manager"),
-    ("officer", "operations_manager"),
     ("partner", "partner_manager"),
     ("advisor", "solutions_consultant"),
     ("agent", "sales_representative"),
