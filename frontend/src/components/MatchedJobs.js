@@ -39,7 +39,7 @@ function MatchRow({ job }) {
     <Panel pad="sm" className="hover:border-line-strong transition-colors">
       <button
         onClick={() => setOpen((o) => !o)}
-        className="w-full flex items-start gap-4 text-left"
+        className="w-full min-h-11 flex items-start gap-3 sm:gap-4 text-left"
       >
         {/* Logo */}
         <div className="w-10 h-10 relative shrink-0 mt-0.5">
@@ -63,7 +63,7 @@ function MatchRow({ job }) {
             {job.new_this_week && <Pill tone="up" dot={false}>NEW</Pill>}
           </div>
           <div className="text-small text-ink-muted mt-0.5 truncate">{job.company}</div>
-          <div className="flex items-center gap-3 mt-1.5 text-small text-ink-faint">
+          <div className="flex flex-wrap items-center gap-x-3 gap-y-1 mt-1.5 text-small text-ink-faint">
             {loc && (
               <span className="inline-flex items-center gap-1">
                 <MapPin className="w-3 h-3" /> {loc}
@@ -76,7 +76,7 @@ function MatchRow({ job }) {
 
         {/* Match % — the visual anchor */}
         <div className="shrink-0 text-right">
-          <div className={cx('num text-h2 leading-none', matchTone(job.match_pct))}>
+          <div className={cx('num text-base sm:text-h2 leading-none', matchTone(job.match_pct))}>
             {Math.round(job.match_pct * 100)}%
           </div>
           <div className="text-eyebrow uppercase text-ink-faint mt-1">match</div>

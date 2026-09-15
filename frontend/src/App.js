@@ -12,6 +12,7 @@ import MatchedJobs, { MatchedJobsSummaryCard } from './components/MatchedJobs';
 import PositionScore from './components/PositionScore';
 import { LearningModule, LearningToggle } from './components/Learning';
 import OrgConsole from './components/org/OrgConsole';
+import MobileDataCards from './components/MobileDataCards';
 
 const SCREEN_TO_PATH = {
   landing: '/',
@@ -696,17 +697,17 @@ const NavBar = () => {
   const { user, handleLogout, setCurrentScreen, roleData } = useApp();
   
   return (
-    <nav className="px-4 sm:px-8 py-6 border-b border-line">
+    <nav className="px-4 sm:px-8 py-4 sm:py-6 border-b border-line">
       <div className="max-w-7xl mx-auto flex items-center justify-between">
         <button 
           onClick={() => setCurrentScreen('landing')}
-          className="text-lg font-medium tracking-widest hover:text-ink-muted transition-colors"
+          className="text-sm sm:text-lg font-medium tracking-widest hover:text-ink-muted transition-colors"
         >
           WhatsInDemand
         </button>
         
         {user ? (
-          <div className="flex items-center gap-6">
+          <div className="flex items-center gap-2 sm:gap-6">
             <button
               onClick={() => setCurrentScreen(roleData ? 'dashboard' : 'landing')}
               aria-label={roleData ? 'Go to dashboard' : 'Pick your role'}
@@ -723,7 +724,7 @@ const NavBar = () => {
             </button>
             <button
               onClick={handleLogout}
-              className="text-md font-medium hover:text-ink-muted transition-colors"
+              className="min-h-11 text-xs sm:text-md font-medium hover:text-ink-muted transition-colors"
             >
               SIGN OUT
             </button>
@@ -745,9 +746,9 @@ const Footer = () => {
   const { setCurrentScreen } = useApp();
   return (
     <footer className="border-t border-line mt-auto">
-      <div className="max-w-7xl mx-auto px-8 py-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-ink-muted text-xs">
+      <div className="max-w-7xl mx-auto px-4 sm:px-8 py-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-ink-muted text-xs text-center sm:text-left">
         <div>© {new Date().getFullYear()} WhatsInDemand. All rights reserved.</div>
-        <div className="flex items-center gap-5">
+        <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2 sm:gap-5">
           <button
             onClick={() => setCurrentScreen('about')}
             className="hover:text-white transition-colors"
@@ -863,10 +864,10 @@ const MultiSelectDropdown = ({
   };
 
   return (
-    <div className="relative" ref={dropdownRef}>
+    <div className="relative w-full sm:w-auto" ref={dropdownRef}>
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className={`px-4 py-2 bg-surface border rounded-lg text-white text-sm focus:outline-none cursor-pointer flex items-center gap-2 min-w-[160px] transition-colors ${
+        className={`w-full sm:w-auto min-h-11 px-4 py-2 bg-surface border rounded-lg text-white text-sm focus:outline-none cursor-pointer flex items-center gap-2 min-w-0 sm:min-w-[160px] transition-colors ${
           isOpen ? 'border-white' : 'border-line-strong hover:border-white/40'
         }`}
       >
@@ -875,7 +876,7 @@ const MultiSelectDropdown = ({
       </button>
 
       {isOpen && (
-        <div className="absolute top-full left-0 mt-1 w-64 bg-zinc-900 border border-line-strong rounded-xl z-30 shadow-xl max-h-72 overflow-y-auto">
+        <div className="absolute top-full left-0 mt-1 w-[calc(100vw-3.5rem)] max-w-64 sm:w-64 bg-zinc-900 border border-line-strong rounded-xl z-30 shadow-xl max-h-72 overflow-y-auto">
           {/* All option */}
           <label className="flex items-center gap-3 px-4 py-3 hover:bg-surface cursor-pointer border-b border-line">
             <input
@@ -1013,11 +1014,11 @@ const LocationDropdown = ({ value, onChange, className = '' }) => {
   };
 
   return (
-    <div className={`relative ${className}`} ref={dropdownRef}>
+    <div className={`relative w-full sm:w-auto ${className}`} ref={dropdownRef}>
       <button
         type="button"
         onClick={() => setIsOpen(!isOpen)}
-        className={`px-4 py-2 bg-surface border rounded-lg text-white text-sm focus:outline-none cursor-pointer flex items-center gap-2 min-w-[160px] transition-colors ${
+        className={`w-full sm:w-auto min-h-11 px-4 py-2 bg-surface border rounded-lg text-white text-sm focus:outline-none cursor-pointer flex items-center gap-2 min-w-0 sm:min-w-[160px] transition-colors ${
           isOpen ? 'border-white' : 'border-line-strong hover:border-white/40'
         }`}
       >
@@ -1026,7 +1027,7 @@ const LocationDropdown = ({ value, onChange, className = '' }) => {
       </button>
 
       {isOpen && (
-        <div className="absolute top-full left-0 mt-1 w-72 bg-zinc-900 border border-line-strong rounded-xl z-30 shadow-xl max-h-[320px] overflow-y-auto">
+        <div className="absolute top-full left-0 mt-1 w-[calc(100vw-3.5rem)] max-w-72 sm:w-72 bg-zinc-900 border border-line-strong rounded-xl z-30 shadow-xl max-h-[min(320px,60vh)] overflow-y-auto">
           {/* All Locations */}
           <label className="flex items-center gap-3 px-4 py-3 hover:bg-surface cursor-pointer border-b border-line">
             <input
@@ -1111,11 +1112,11 @@ const SingleSelectDropdown = ({
   };
 
   return (
-    <div className="relative" ref={dropdownRef}>
+    <div className="relative w-full sm:w-auto" ref={dropdownRef}>
       <button
         type="button"
         onClick={() => setIsOpen(!isOpen)}
-        className={`px-4 py-2 bg-surface border rounded-lg text-white text-sm focus:outline-none cursor-pointer flex items-center gap-2 min-w-[140px] transition-colors ${
+        className={`w-full sm:w-auto min-h-11 px-4 py-2 bg-surface border rounded-lg text-white text-sm focus:outline-none cursor-pointer flex items-center gap-2 min-w-0 sm:min-w-[140px] transition-colors ${
           isOpen ? 'border-white' : 'border-line-strong hover:border-white/40'
         }`}
       >
@@ -1124,7 +1125,7 @@ const SingleSelectDropdown = ({
       </button>
 
       {isOpen && (
-        <div className="absolute top-full left-0 mt-1 w-full min-w-[180px] bg-zinc-900 border border-line-strong rounded-xl z-30 shadow-xl max-h-64 overflow-y-auto">
+        <div className="absolute top-full left-0 mt-1 w-full min-w-0 sm:min-w-[180px] bg-zinc-900 border border-line-strong rounded-xl z-30 shadow-xl max-h-64 overflow-y-auto">
           {options.map((option, idx) => {
             const optValue = getOptionValue(option);
             const optLabel = getOptionLabel(option);
@@ -1437,8 +1438,8 @@ const LandingScreen = () => {
       <NavBar />
 
       <div className="flex-1">
-        <div className="max-w-5xl mx-auto px-6 sm:px-8 pt-16 sm:pt-24 pb-28">
-          <h1 className="text-5xl sm:text-6xl md:text-7xl font-semibold mb-6 leading-[1.02] tracking-tight">
+        <div className="max-w-5xl mx-auto px-4 sm:px-8 pt-12 sm:pt-24 pb-20 sm:pb-28">
+          <h1 className="text-[2.35rem] sm:text-6xl md:text-7xl font-semibold mb-6 leading-[1.04] tracking-tight break-words">
             See hiring trends for<br /><RotatingRole />
           </h1>
           <p className="text-lg sm:text-xl text-ink-muted mb-5 max-w-2xl leading-relaxed" style={{ textWrap: 'balance' }}>
@@ -2134,6 +2135,7 @@ const MobileHeader = () => {
     user,
     activeTab,
     setActiveTab,
+    currentScreen,
     setCurrentScreen,
     handleLogout,
     selectedRole,
@@ -2164,7 +2166,7 @@ const MobileHeader = () => {
   ];
 
   return (
-    <div className="lg:hidden">
+    <div className="lg:hidden sticky top-0 z-40 bg-zinc-950">
       {/* Top Bar */}
       <div className="flex items-center justify-between p-4 border-b border-line bg-zinc-950">
         <button 
@@ -2176,19 +2178,21 @@ const MobileHeader = () => {
         
         <button
           onClick={() => setMenuOpen(!menuOpen)}
-          className="p-2 hover:bg-white/10 transition-colors"
+          aria-label={menuOpen ? 'Close navigation menu' : 'Open navigation menu'}
+          aria-expanded={menuOpen}
+          className="min-h-11 min-w-11 p-2 hover:bg-white/10 transition-colors rounded-lg"
         >
           {menuOpen ? <X className="w-5 h-5" /> : <Layers className="w-5 h-5" />}
         </button>
       </div>
 
       {/* Tab Bar */}
-      <div className="flex border-b border-line bg-zinc-950 overflow-x-auto">
+      {currentScreen === 'dashboard' && <div className="mobile-tab-strip flex border-b border-line bg-zinc-950 overflow-x-auto overscroll-x-contain">
         {tabs.map((tab) => (
           <button
             key={tab.id}
             onClick={() => setActiveTab(tab.id)}
-            className={`flex-1 min-w-max px-4 py-3 text-xs font-medium tracking-wider transition-colors ${
+            className={`flex-1 min-w-max min-h-11 px-4 py-3 text-xs font-medium tracking-wider transition-colors ${
               activeTab === tab.id
                 ? 'text-white border-b-2 border-white'
                 : 'text-ink-muted'
@@ -2197,11 +2201,11 @@ const MobileHeader = () => {
             {tab.label}
           </button>
         ))}
-      </div>
+      </div>}
 
       {/* Dropdown Menu */}
       {menuOpen && (
-        <div className="absolute top-14 right-4 z-50 w-64 bg-zinc-900 border border-line rounded-xl shadow-xl">
+        <div className="fixed top-[4.25rem] right-4 z-50 w-[calc(100vw-2rem)] max-w-64 bg-zinc-900 border border-line rounded-xl shadow-xl">
           {user && (
             <div className="p-4 border-b border-line">
               <div className="font-medium text-sm">{user.full_name || 'User'}</div>
@@ -2454,12 +2458,12 @@ const SkillsInputScreen = () => {
       <NavBar />
 
       <div className="flex-1">
-        <div className="max-w-3xl mx-auto px-4 sm:px-8 pt-16 pb-24">
+        <div className="max-w-3xl mx-auto px-4 sm:px-8 pt-10 sm:pt-16 pb-24">
           <div className="mb-10">
-            <h1 className="text-4xl sm:text-5xl md:text-6xl font-semibold mb-6 tracking-tight">
+            <h1 className="text-3xl sm:text-5xl md:text-6xl font-semibold mb-4 sm:mb-6 tracking-tight">
               THE SKILLS YOU HAVE
             </h1>
-            <p className="text-xl text-ink-muted">
+            <p className="text-base sm:text-xl text-ink-muted">
               Pick the skills you can claim today as a {seniorityLabel} {selectedRole}.
               We'll use this to highlight your gaps.
             </p>
@@ -2576,25 +2580,25 @@ const SkillsInputScreen = () => {
         </Panel>
 
         {/* Footer actions */}
-        <div className="flex items-center gap-3 pt-4">
+        <div className="flex flex-col sm:flex-row sm:items-center gap-3 pt-4">
           <button
             type="button"
             onClick={() => setCurrentScreen('landing')}
-            className="px-5 py-3 border border-line-strong text-sm font-medium hover:bg-surface transition-colors rounded-lg"
+            className="w-full sm:w-auto px-5 py-3 border border-line-strong text-sm font-medium hover:bg-surface transition-colors rounded-lg"
           >
             BACK
           </button>
           <button
             onClick={handleSkip}
-            className="text-small text-ink-muted hover:text-white transition-colors px-2"
+            className="w-full sm:w-auto min-h-11 text-small text-ink-muted hover:text-white transition-colors px-2"
           >
             SKIP FOR NOW
           </button>
-          <div className="flex-1" />
+          <div className="hidden sm:block flex-1" />
           <button
             onClick={handleContinue}
             disabled={submitting}
-            className={`px-6 py-3 text-sm font-medium tracking-wide transition-colors flex items-center gap-2 rounded-lg ${
+            className={`w-full sm:w-auto px-6 py-3 text-sm font-medium tracking-wide transition-colors flex items-center justify-center gap-2 rounded-lg ${
               submitting ? 'bg-white/10 text-ink-faint cursor-not-allowed' : 'bg-white text-black hover:bg-gray-200'
             }`}
           >
@@ -2878,14 +2882,14 @@ const DashboardScreen = () => {
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 lg:pt-8 pb-24">
 
           {showVerifyBanner && (
-            <div className="mb-6 px-4 py-3 bg-yellow-500/10 border border-yellow-500/30 rounded-xl flex items-center justify-between gap-4 text-sm">
+            <div className="mb-6 px-4 py-3 bg-yellow-500/10 border border-yellow-500/30 rounded-xl flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4 text-sm">
               <div className="text-yellow-100">
                 Verify your email to keep your saved skills and preferences.
                 {verifyBannerStatus && (
                   <span className="ml-2 text-ink-muted">{verifyBannerStatus}</span>
                 )}
               </div>
-              <div className="flex items-center gap-3 shrink-0">
+              <div className="flex w-full sm:w-auto items-center justify-between sm:justify-start gap-3 shrink-0">
                 <button
                   onClick={handleBannerResend}
                   disabled={verifyBannerSending}
@@ -2993,7 +2997,7 @@ const DashboardScreen = () => {
           {/* Filter Bar - hidden on Paths tab */}
           {activeTab !== 'paths' && <div className="mb-6 lg:mb-8 p-3 lg:p-4 bg-surface border border-line rounded-xl">
             <div className="flex flex-wrap items-center gap-2 lg:gap-4">
-              <div className="flex items-center gap-2 text-xs lg:text-sm text-ink-muted">
+              <div className="flex w-full sm:w-auto items-center gap-2 text-xs lg:text-sm text-ink-muted">
                 <Filter className="w-4 h-4" />
                 <span className="hidden sm:inline">Filter:</span>
               </div>
@@ -3573,7 +3577,7 @@ const OverviewTab = () => {
       </div>
 
       {/* METRICS ROW — things the user actually wants to know */}
-      <div className="grid grid-cols-3 gap-2">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
         <Stat label="Active postings" value={totalJobs.toLocaleString()} />
         <Stat label="Companies hiring" value={companyCount.toLocaleString()} />
         <Stat
@@ -3709,6 +3713,71 @@ const EmployersTab = () => {
 
       {/* Employers Table */}
       <div className="bg-surface border border-line rounded-xl overflow-hidden">
+        <MobileDataCards
+          items={sortedCompanies}
+          getKey={(company) => company.id}
+          getLabel={(company) => `${company.name}, ${company.job_count || 0} current openings`}
+          empty={<div className="px-4 py-10 text-center text-ink-muted">No employers found matching your criteria.</div>}
+          renderSummary={(company, idx, expanded) => (
+            <div className="flex items-center gap-3">
+              <span className="text-xs text-ink-faint w-5 shrink-0">{idx + 1}</span>
+              <div className="min-w-0 flex-1">
+                <div className="font-medium truncate">{company.name}</div>
+                <div className="mt-1 flex items-center gap-2 text-xs text-ink-muted">
+                  <span>{company.job_count?.toLocaleString() || '0'} openings</span>
+                  {company.industry && <><span aria-hidden="true">·</span><span className="truncate">{company.industry}</span></>}
+                </div>
+              </div>
+              {company.growth_pct != null && (
+                <span className={`text-xs font-medium shrink-0 ${company.growth_pct > 0 ? 'text-accent-up' : company.growth_pct < 0 ? 'text-accent-down' : 'text-ink-muted'}`}>
+                  {company.growth_pct > 100 ? '+100%+' : `${company.growth_pct > 0 ? '+' : ''}${company.growth_pct}%`}
+                </span>
+              )}
+              <ChevronDown className={`w-4 h-4 text-ink-muted shrink-0 transition-transform ${expanded ? 'rotate-180' : ''}`} />
+            </div>
+          )}
+          renderDetails={(company) => (
+            <div className="space-y-4">
+              {company.website && (
+                <a
+                  href={company.website.startsWith('http') ? company.website : `https://${company.website}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex min-h-11 max-w-full items-center gap-2 rounded-lg border border-line-strong px-3 py-2 text-sm font-medium"
+                >
+                  <span className="truncate">{company.website.replace(/^https?:\/\//, '').replace(/\/$/, '')}</span>
+                  <ExternalLink className="h-3.5 w-3.5 shrink-0" />
+                </a>
+              )}
+              <dl className="grid grid-cols-2 gap-x-4 gap-y-3 text-sm">
+                {[
+                  ['Location', company.location],
+                  ['Founded', company.founded_year],
+                  ['Type', company.company_type],
+                  ['Valuation', company.valuation],
+                  ['Average salary', company.avg_salary ? `$${Math.round(company.avg_salary / 1000)}K` : null],
+                ].map(([label, value]) => (
+                  <div key={label} className="min-w-0">
+                    <dt className="text-xs uppercase tracking-wider text-ink-muted">{label}</dt>
+                    <dd className="mt-0.5 break-words font-medium">{value || '—'}</dd>
+                  </div>
+                ))}
+              </dl>
+              {company.top_skills?.length > 0 && (
+                <div>
+                  <div className="mb-2 text-xs tracking-wider text-ink-muted">TOP SKILLS</div>
+                  <div className="flex flex-wrap gap-1.5">
+                    {company.top_skills.slice(0, 8).map((skill) => (
+                      <span key={skill} className="rounded-lg border border-line bg-white/5 px-2 py-1 text-xs">{skill}</span>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+        />
+
+        <div className="hidden lg:block">
         {/* Header */}
         <div className="grid grid-cols-12 gap-4 px-6 py-4 border-b border-line text-xs font-medium text-ink-muted tracking-wider">
           <div className="col-span-4">
@@ -3854,6 +3923,7 @@ const EmployersTab = () => {
               );
             })
           )}
+        </div>
         </div>
       </div>
 
@@ -4011,6 +4081,111 @@ const SkillsTab = () => {
 
       {/* Skills Table */}
       <div className="bg-surface border border-line rounded-xl overflow-hidden">
+        <MobileDataCards
+          items={sortedSkills}
+          getKey={(skill, idx) => skill.skill_id || idx}
+          getLabel={(skill) => `${skill.name}, ${skill.demand}% demand`}
+          onExpandedChange={setSelectedSkill}
+          empty={<div className="px-4 py-10 text-center text-ink-muted">No skills found matching your criteria.</div>}
+          renderSummary={(skill, idx, expanded) => {
+            const userHas = hasUserSkills && userSkillIds.has(skill.skill_id);
+            return (
+              <div className="flex items-center gap-3">
+                <span className="text-xs text-ink-faint w-5 shrink-0">{idx + 1}</span>
+                <div className="min-w-0 flex-1">
+                  <div className="flex items-center gap-2">
+                    <span className="font-medium truncate">{skill.name}</span>
+                    {userHas && <span className="text-accent-up" title="You have this skill">✓</span>}
+                  </div>
+                  <div className="mt-1 truncate text-xs text-ink-muted">
+                    {skill.subcategory || (skill.category || 'other').toUpperCase()} · {skill.job_count?.toLocaleString() || '0'} jobs
+                  </div>
+                </div>
+                <div className="w-14 shrink-0 text-right">
+                  <div className="text-sm font-medium">{skill.demand}%</div>
+                  {skill.growth_pct != null && (
+                    <div className={`text-xs ${skill.growth_pct > 0 ? 'text-accent-up' : skill.growth_pct < 0 ? 'text-accent-down' : 'text-ink-muted'}`}>
+                      {skill.growth_pct > 100 ? '+100%+' : `${skill.growth_pct > 0 ? '+' : ''}${skill.growth_pct}%`}
+                    </div>
+                  )}
+                </div>
+                <ChevronDown className={`w-4 h-4 text-ink-muted shrink-0 transition-transform ${expanded ? 'rotate-180' : ''}`} />
+              </div>
+            );
+          }}
+          renderDetails={(skill) => {
+            const userHas = hasUserSkills && userSkillIds.has(skill.skill_id);
+            const coSkills = coSkillsCache[skill.skill_id];
+            return (
+              <div className="space-y-5">
+                <div>
+                  <div className="mb-2 flex items-center justify-between text-xs text-ink-muted">
+                    <span>{skill.required_pct || 0}% required · {skill.preferred_pct || 0}% preferred</span>
+                    <span>{skill.job_count?.toLocaleString() || '0'} jobs</span>
+                  </div>
+                  <div className="h-2 overflow-hidden rounded-full bg-white/10">
+                    <div className="h-full bg-white" style={{ width: `${skill.demand}%` }} />
+                  </div>
+                </div>
+                {user && !userHas && (
+                  <LearningToggle
+                    skillId={skill.skill_id}
+                    skillName={skill.name}
+                    category={skill.category}
+                    onAcquired={addAcquiredSkill}
+                  />
+                )}
+                {skill.top_companies?.length > 0 && (
+                  <div>
+                    <div className="mb-2 text-xs tracking-wider text-ink-muted">TOP COMPANIES HIRING</div>
+                    <div className="space-y-2">
+                      {skill.top_companies.slice(0, 5).map((company, idx) => (
+                        <div key={company.name} className="flex items-center justify-between gap-3 text-sm">
+                          <span className="min-w-0 truncate"><span className="mr-2 text-xs text-ink-faint">{idx + 1}</span>{company.name}</span>
+                          <span className="shrink-0 text-xs text-ink-muted">{company.job_count} jobs</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+                <div className="grid gap-5 sm:grid-cols-2">
+                  <div>
+                    <div className="mb-2 text-xs tracking-wider text-ink-muted">OFTEN PAIRED WITH</div>
+                    {coSkills === undefined ? (
+                      <div className="text-xs text-ink-faint">Loading…</div>
+                    ) : coSkills.length ? (
+                      <div className="space-y-2">
+                        {coSkills.slice(0, 5).map((paired) => (
+                          <div key={paired.skill_id} className="flex items-center justify-between gap-3 text-sm">
+                            <span className="truncate">{paired.name}</span>
+                            <span className="shrink-0 text-xs text-ink-muted">{Math.round(paired.co_pct)}%</span>
+                          </div>
+                        ))}
+                      </div>
+                    ) : <div className="text-xs text-ink-faint">No pairing data yet.</div>}
+                  </div>
+                  <div>
+                    <div className="mb-2 text-xs tracking-wider text-ink-muted">LEARN THIS SKILL</div>
+                    <div className="grid grid-cols-2 gap-2">
+                      {[
+                        { label: 'Coursera', href: `https://www.coursera.org/search?query=${encodeURIComponent(skill.name)}` },
+                        { label: 'LinkedIn', href: `https://www.linkedin.com/learning/search?keywords=${encodeURIComponent(skill.name)}` },
+                        { label: 'Udemy', href: `https://www.udemy.com/courses/search/?q=${encodeURIComponent(skill.name)}` },
+                        { label: 'YouTube', href: `https://www.youtube.com/results?search_query=${encodeURIComponent(skill.name + ' tutorial')}` },
+                      ].map(({ label, href }) => (
+                        <a key={label} href={href} target="_blank" rel="noopener noreferrer" className="flex min-h-11 items-center justify-between rounded-lg border border-line bg-black/30 px-3 py-2 text-xs">
+                          <span>{label}</span><ExternalLink className="h-3 w-3 text-ink-muted" />
+                        </a>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            );
+          }}
+        />
+
+        <div className="hidden lg:block">
         {/* Header */}
         <div className="grid grid-cols-12 gap-4 px-6 py-4 border-b border-line text-xs font-medium text-ink-muted tracking-wider">
           <div className="col-span-3">
@@ -4212,6 +4387,7 @@ const SkillsTab = () => {
               );
             })
           )}
+        </div>
         </div>
       </div>
     </div>
@@ -5123,8 +5299,9 @@ const AccountScreen = () => {
   };
 
   return (
-    <div className="min-h-screen bg-zinc-900 text-white flex">
+    <div className="min-h-screen bg-zinc-900 text-white flex flex-col lg:flex-row">
       <DashboardSidebar />
+      <MobileHeader />
 
       <div className="flex-1 lg:ml-64">
         <div className="max-w-3xl mx-auto px-4 sm:px-8 pt-8 pb-24">
@@ -5136,7 +5313,7 @@ const AccountScreen = () => {
             >
               ← {roleData ? 'Back to dashboard' : 'Back to start'}
             </button>
-            <h1 className="text-5xl font-semibold tracking-tight">
+            <h1 className="text-4xl sm:text-5xl font-semibold tracking-tight">
               SETTINGS
             </h1>
           </div>
@@ -5144,7 +5321,7 @@ const AccountScreen = () => {
           <div className="space-y-6">
 
             {/* Profile */}
-            <section className="p-6 bg-surface border border-line rounded-xl">
+            <section className="p-4 sm:p-6 bg-surface border border-line rounded-xl">
               <div className="text-eyebrow text-ink-faint mb-4">PROFILE</div>
               <div className="flex items-center gap-4 mb-6">
                 <div className="w-16 h-16 bg-white/10 flex items-center justify-center">
@@ -5152,25 +5329,25 @@ const AccountScreen = () => {
                     {user.full_name?.charAt(0) || user.email?.charAt(0) || 'U'}
                   </span>
                 </div>
-                <div>
+                <div className="min-w-0">
                   <h2 className="text-xl font-medium">{user.full_name || 'User'}</h2>
-                  <p className="text-ink-muted">{user.email}</p>
+                  <p className="text-ink-muted break-all">{user.email}</p>
                 </div>
               </div>
 
               <div>
                 <div className="py-3 border-b border-line">
-                  <div className="flex justify-between items-center">
+                  <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2">
                     <span className="text-ink-muted">Full Name</span>
                     {editingName ? (
-                      <div className="flex items-center gap-2">
+                      <div className="flex flex-col sm:flex-row sm:items-center gap-2">
                         <input
                           autoFocus
                           value={nameDraft}
                           onChange={(e) => setNameDraft(e.target.value)}
                           onKeyDown={(e) => { if (e.key === 'Enter') saveName(); if (e.key === 'Escape') setEditingName(false); }}
                           disabled={nameSaving}
-                          className="px-3 py-1 bg-zinc-950 border border-line-strong text-sm focus:outline-none focus:border-white rounded-lg"
+                          className="w-full sm:w-auto px-3 py-2 bg-zinc-950 border border-line-strong text-base sm:text-sm focus:outline-none focus:border-white rounded-lg"
                         />
                         <button
                           onClick={saveName}
@@ -5201,10 +5378,10 @@ const AccountScreen = () => {
                   </div>
                   {nameError && <div className="text-xs text-red-400 mt-2">{nameError}</div>}
                 </div>
-                <div className="flex justify-between items-center py-3 border-b border-line">
+                <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 py-3 border-b border-line">
                   <span className="text-ink-muted">Email</span>
-                  <div className="flex items-center gap-3">
-                    <span className="font-medium">{user.email}</span>
+                  <div className="flex max-w-full flex-wrap items-center gap-3">
+                    <span className="font-medium break-all">{user.email}</span>
                     {!isGoogleAccount && (
                       <button
                         onClick={() => setShowEmailModal(true)}
@@ -5216,14 +5393,14 @@ const AccountScreen = () => {
                   </div>
                 </div>
                 {user.pending_email && (
-                  <div className="flex justify-between items-center py-3 border-b border-line">
+                  <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 py-3 border-b border-line">
                     <span className="text-ink-muted">Pending email</span>
-                    <span className="text-sm text-ink-muted italic">
+                    <span className="text-sm text-ink-muted italic break-all">
                       {user.pending_email} (awaiting confirmation)
                     </span>
                   </div>
                 )}
-                <div className="flex justify-between py-3">
+                <div className="flex justify-between gap-4 py-3">
                   <span className="text-ink-muted">Member since</span>
                   <span className="font-medium">{memberSince}</span>
                 </div>
@@ -5231,8 +5408,8 @@ const AccountScreen = () => {
             </section>
 
             {/* Career preferences */}
-            <section className="p-6 bg-surface border border-line rounded-xl">
-              <div className="flex items-center justify-between mb-4">
+            <section className="p-4 sm:p-6 bg-surface border border-line rounded-xl">
+              <div className="flex flex-wrap items-center justify-between gap-2 mb-4">
                 <div className="text-eyebrow text-ink-faint">CAREER PREFERENCES</div>
                 <button
                   onClick={() => setCurrentScreen('landing')}
@@ -5243,21 +5420,21 @@ const AccountScreen = () => {
               </div>
 
               <div>
-                <div className="flex justify-between items-center py-3 border-b border-line">
+                <div className="flex justify-between items-start gap-4 py-3 border-b border-line">
                   <span className="text-ink-muted">Target role</span>
-                  <span className="font-medium">{selectedRole || '—'}</span>
+                  <span className="font-medium text-right break-words">{selectedRole || '—'}</span>
                 </div>
-                <div className="flex justify-between items-center py-3 border-b border-line">
+                <div className="flex justify-between items-start gap-4 py-3 border-b border-line">
                   <span className="text-ink-muted">Seniority</span>
                   <span className="font-medium">{baseSeniorityLabel}</span>
                 </div>
-                <div className="flex justify-between items-center py-3 border-b border-line">
+                <div className="flex justify-between items-start gap-4 py-3 border-b border-line">
                   <span className="text-ink-muted">Location</span>
-                  <span className="font-medium text-right max-w-xs truncate" title={locationsLabel}>
+                  <span className="font-medium text-right max-w-[60%] break-words" title={locationsLabel}>
                     {locationsLabel}
                   </span>
                 </div>
-                <div className="flex justify-between items-center py-3">
+                <div className="flex justify-between items-center gap-4 py-3">
                   <span className="text-ink-muted">Your skills</span>
                   <div className="flex items-center gap-3">
                     <span className="font-medium">
@@ -5276,12 +5453,12 @@ const AccountScreen = () => {
             </section>
 
             {/* Security */}
-            <section className="p-6 bg-surface border border-line rounded-xl">
+            <section className="p-4 sm:p-6 bg-surface border border-line rounded-xl">
               <div className="text-eyebrow text-ink-faint mb-4">SECURITY</div>
 
               <div>
                 <div className="py-3 border-b border-line">
-                  <div className="flex justify-between items-center">
+                  <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2">
                     <span className="text-ink-muted">Password</span>
                     {isGoogleAccount ? (
                       <span className="text-sm text-ink-muted">Signed in via Google</span>
@@ -5300,9 +5477,9 @@ const AccountScreen = () => {
                 </div>
 
                 <div className="py-3">
-                  <div className="flex justify-between items-center">
+                  <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2">
                     <span className="text-ink-muted">Email verification</span>
-                    <div className="flex items-center gap-3">
+                    <div className="flex flex-wrap items-center gap-3">
                       {user.email_verified ? (
                         <span className="text-xs px-2 py-1 bg-emerald-500/15 text-emerald-300 border border-emerald-500/30 rounded-lg">
                           Verified
@@ -5331,10 +5508,10 @@ const AccountScreen = () => {
             </section>
 
             {/* Data */}
-            <section className="p-6 bg-surface border border-line rounded-xl">
+            <section className="p-4 sm:p-6 bg-surface border border-line rounded-xl">
               <div className="text-eyebrow text-ink-faint mb-4">DATA</div>
 
-              <div className="flex items-start justify-between gap-6 py-3 border-b border-line">
+              <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 sm:gap-6 py-3 border-b border-line">
                 <div>
                   <div className="font-medium mb-1">Reset preferences</div>
                   <div className="text-sm text-ink-muted">
@@ -5343,13 +5520,13 @@ const AccountScreen = () => {
                 </div>
                 <button
                   onClick={handleResetPreferences}
-                  className="shrink-0 px-4 py-2 border border-line-strong text-sm hover:bg-white/5 transition-colors rounded-lg"
+                  className="w-full sm:w-auto shrink-0 px-4 py-2 border border-line-strong text-sm hover:bg-white/5 transition-colors rounded-lg"
                 >
                   Reset
                 </button>
               </div>
 
-              <div className="flex items-start justify-between gap-6 pt-4">
+              <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 sm:gap-6 pt-4">
                 <div>
                   <div className="font-medium mb-1">Export my data</div>
                   <div className="text-sm text-ink-muted">
@@ -5362,7 +5539,7 @@ const AccountScreen = () => {
                 <button
                   onClick={handleExport}
                   disabled={exporting}
-                  className="shrink-0 px-4 py-2 border border-line-strong text-sm hover:bg-white/5 transition-colors disabled:opacity-50 rounded-lg"
+                  className="w-full sm:w-auto shrink-0 px-4 py-2 border border-line-strong text-sm hover:bg-white/5 transition-colors disabled:opacity-50 rounded-lg"
                 >
                   {exporting ? 'Preparing…' : 'Export'}
                 </button>
@@ -5370,8 +5547,8 @@ const AccountScreen = () => {
             </section>
 
             {/* Danger zone */}
-            <section className="p-6 bg-surface border border-red-500/40 rounded-xl">
-              <div className="flex items-start justify-between gap-6">
+            <section className="p-4 sm:p-6 bg-surface border border-red-500/40 rounded-xl">
+              <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 sm:gap-6">
                 <div>
                   <div className="font-medium mb-1">Delete account</div>
                   <div className="text-sm text-ink-muted">
@@ -5380,7 +5557,7 @@ const AccountScreen = () => {
                 </div>
                 <button
                   onClick={() => setShowDeleteModal(true)}
-                  className="shrink-0 px-4 py-2 border border-red-500/50 text-red-400 text-sm hover:bg-red-500/10 transition-colors rounded-lg"
+                  className="w-full sm:w-auto shrink-0 px-4 py-2 border border-red-500/50 text-red-400 text-sm hover:bg-red-500/10 transition-colors rounded-lg"
                 >
                   Delete
                 </button>

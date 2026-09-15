@@ -11,7 +11,7 @@ const cx = (...xs) => xs.filter(Boolean).join(' ');
  */
 export const Panel = ({ as: Tag = 'div', tone = 'default', pad = 'md', className, children, ...rest }) => {
   const bg = tone === 'raised' ? 'bg-surface-raised' : 'bg-surface';
-  const padding = pad === 'sm' ? 'p-3' : pad === 'lg' ? 'p-6' : 'p-5';
+  const padding = pad === 'sm' ? 'p-3' : pad === 'lg' ? 'p-4 sm:p-6' : 'p-4 sm:p-5';
   return (
     <Tag className={cx(bg, 'border border-line rounded-xl', padding, className)} {...rest}>
       {children}

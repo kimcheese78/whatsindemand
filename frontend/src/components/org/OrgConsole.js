@@ -12,6 +12,7 @@ import {
 } from 'lucide-react';
 import { Panel, Eyebrow } from '../ui';
 import { Sparkline } from '../PositionScore';
+import MobileDataCards from '../MobileDataCards';
 import api from '../../services/api';
 
 const cx = (...xs) => xs.filter(Boolean).join(' ');
@@ -111,7 +112,7 @@ function ClientDrawer({ clientId, onClose, onDeleted }) {
       onClick={onClose}>
       <div
         onClick={(e) => e.stopPropagation()}
-        className="w-full max-w-lg h-full overflow-y-auto bg-zinc-900 border-l border-line p-6 print:max-w-none print:border-0"
+        className="w-full max-w-lg h-full overflow-y-auto bg-zinc-900 border-l border-line p-4 sm:p-6 print:max-w-none print:border-0"
       >
         {error && <div className="text-accent-down text-sm">{error}</div>}
         {!detail && !error && <div className="text-ink-muted text-sm">Loading client…</div>}
@@ -270,19 +271,19 @@ function AddClientModal({ cohort, roles, onClose, onCreated }) {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4" onClick={onClose}>
       <div onClick={(e) => e.stopPropagation()}
-        className="w-full max-w-xl max-h-[90vh] overflow-y-auto bg-zinc-900 border border-line rounded-xl p-6">
+        className="w-full max-w-xl max-h-[90vh] overflow-y-auto bg-zinc-900 border border-line rounded-xl p-4 sm:p-6">
         <div className="flex items-center justify-between mb-5">
           <div className="text-h2 font-medium">Add client</div>
           <button onClick={onClose} className="p-1.5 hover:bg-white/10 rounded-lg"><X className="w-4 h-4" /></button>
         </div>
         <div className="space-y-4">
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <input value={name} onChange={(e) => setName(e.target.value)} placeholder="Full name *"
               className="px-3 py-2 bg-surface border border-line-strong rounded-lg text-sm focus:outline-none focus:border-white" />
             <input value={email} onChange={(e) => setEmail(e.target.value)} placeholder="Email (optional)"
               className="px-3 py-2 bg-surface border border-line-strong rounded-lg text-sm focus:outline-none focus:border-white" />
           </div>
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <select value={role} onChange={(e) => setRole(e.target.value)}
               className="px-3 py-2 bg-surface border border-line-strong rounded-lg text-sm focus:outline-none">
               <option value="">Target role *</option>
@@ -337,13 +338,13 @@ function CohortForm({ roles, existing, onClose, onSaved }) {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4" onClick={onClose}>
       <div onClick={(e) => e.stopPropagation()}
-        className="w-full max-w-xl max-h-[90vh] overflow-y-auto bg-zinc-900 border border-line rounded-xl p-6">
+        className="w-full max-w-xl max-h-[90vh] overflow-y-auto bg-zinc-900 border border-line rounded-xl p-4 sm:p-6">
         <div className="flex items-center justify-between mb-5">
           <div className="text-h2 font-medium">{existing ? 'Edit cohort' : 'New cohort'}</div>
           <button onClick={onClose} className="p-1.5 hover:bg-white/10 rounded-lg"><X className="w-4 h-4" /></button>
         </div>
         <div className="space-y-4">
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <input value={name} onChange={(e) => setName(e.target.value)} placeholder="Cohort name * (e.g. Fall 2026)"
               className="px-3 py-2 bg-surface border border-line-strong rounded-lg text-sm focus:outline-none focus:border-white" />
             <select value={role} onChange={(e) => setRole(e.target.value)}
@@ -519,19 +520,19 @@ export default function OrgConsole() {
     <div className="min-h-screen bg-zinc-900 text-white">
       {/* Header */}
       <div className="border-b border-line bg-zinc-950 print:hidden">
-        <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between gap-4">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 py-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div className="flex items-center gap-3 min-w-0">
             <a href="/" className="text-sm font-medium tracking-widest shrink-0">WhatsInDemand</a>
             <span className="text-ink-faint">/</span>
             <span className="text-sm text-ink-muted truncate">{org.name}</span>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex w-full sm:w-auto flex-wrap items-center gap-2">
             {cohorts.length > 0 && (
               <div className="relative">
                 <select
                   value={activeCohort?.id || ''}
                   onChange={(e) => setActiveCohort(cohorts.find((c) => c.id === +e.target.value) || null)}
-                  className="appearance-none pl-3 pr-8 py-2 bg-surface border border-line-strong rounded-lg text-sm focus:outline-none">
+                  className="max-w-[calc(100vw-2rem)] appearance-none pl-3 pr-8 py-2 bg-surface border border-line-strong rounded-lg text-sm focus:outline-none">
                   {cohorts.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}
                 </select>
                 <ChevronDown className="w-3.5 h-3.5 absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none text-ink-muted" />
@@ -551,7 +552,7 @@ export default function OrgConsole() {
         </div>
       </div>
 
-      <div className="max-w-6xl mx-auto px-6 py-6 space-y-5">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 py-6 space-y-5">
         {!activeCohort ? (
           <Panel pad="lg" className="text-center">
             <Users className="w-8 h-8 text-ink-faint mx-auto mb-3" />
@@ -595,7 +596,7 @@ export default function OrgConsole() {
             </div>
 
             {/* Roster — one row per client, everything scannable */}
-            <Panel pad="sm" className="overflow-x-auto">
+            <Panel pad="sm">
               <div className="flex items-center justify-between px-2 pt-1 pb-3">
                 <Eyebrow>Client roster</Eyebrow>
                 <button onClick={refresh} disabled={refreshing}
@@ -604,6 +605,36 @@ export default function OrgConsole() {
                   {refreshing ? 'Rescoring…' : 'Rescore now'}
                 </button>
               </div>
+              <MobileDataCards
+                items={rollup?.clients || []}
+                getKey={(client) => client.id}
+                getLabel={(client) => `${client.display_name}, score ${client.score ?? 'not available'}`}
+                empty={<div className="px-4 py-6 text-center text-sm text-ink-muted">{rollup ? 'No clients yet — add your first client to see their market position.' : 'Loading roster…'}</div>}
+                renderSummary={(client, idx, expanded) => (
+                  <div className="flex items-center gap-3">
+                    <span className="min-w-0 flex-1">
+                      <span className="block truncate font-medium">{client.display_name}</span>
+                      <span className="mt-1 block truncate text-xs text-ink-muted">{client.target_role}{client.seniority ? ` · ${client.seniority}` : ''}</span>
+                    </span>
+                    <span className={cx('num shrink-0 font-medium', scoreTone(client.score))}>{client.score ?? '—'}</span>
+                    <ChevronDown className={cx('h-4 w-4 shrink-0 text-ink-muted transition-transform', expanded && 'rotate-180')} />
+                  </div>
+                )}
+                renderDetails={(client) => (
+                  <div className="space-y-3 text-sm">
+                    <dl className="grid grid-cols-2 gap-3">
+                      <div><dt className="text-xs text-ink-muted">Weekly change</dt><dd className="mt-1"><Delta value={client.delta} /></dd></div>
+                      <div><dt className="text-xs text-ink-muted">Top gap</dt><dd className="mt-1 break-words">{client.top_gap || '—'}</dd></div>
+                      <div><dt className="text-xs text-ink-muted">Job matches</dt><dd className="mt-1 num">{client.matched_jobs ?? '—'}{client.new_matches > 0 && <span className="text-accent-up"> +{client.new_matches}</span>}</dd></div>
+                      <div><dt className="text-xs text-ink-muted">Learning</dt><dd className="mt-1 num">{client.learning_count || '—'}</dd></div>
+                    </dl>
+                    <button onClick={() => setDrawerClient(client.id)} className="w-full min-h-11 rounded-lg border border-line-strong px-3 py-2 text-left font-medium hover:bg-white/5">
+                      View client report →
+                    </button>
+                  </div>
+                )}
+              />
+              <div className="hidden lg:block overflow-x-auto">
               <table className="w-full text-sm">
                 <thead>
                   <tr className="text-eyebrow uppercase text-ink-faint text-left border-b border-line">
@@ -647,6 +678,7 @@ export default function OrgConsole() {
                   )}
                 </tbody>
               </table>
+              </div>
             </Panel>
 
             {/* Curriculum vs market */}

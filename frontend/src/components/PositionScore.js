@@ -71,11 +71,11 @@ export default function PositionScore() {
 
   return (
     <Panel tone="raised" pad="lg">
-      <div className="flex items-start justify-between gap-6">
+      <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 sm:gap-6">
         <div className="min-w-0">
           <div className="text-eyebrow uppercase text-ink-faint mb-2">Your Position Score</div>
           <div className="flex items-baseline gap-3">
-            <span className={cx('num text-hero leading-none', scoreTone(current.position_score))}>
+            <span className={cx('num text-display sm:text-hero leading-none', scoreTone(current.position_score))}>
               {current.position_score}
             </span>
             <span className="text-ink-faint text-h2">/100</span>
