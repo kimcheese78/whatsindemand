@@ -1281,7 +1281,7 @@ const InsightRow = ({ item, tone, onPick }) => {
         {item.sector && <div className="text-small text-ink-faint truncate">{item.sector}</div>}
       </div>
       <div className="flex items-center gap-3 shrink-0">
-        {Array.isArray(item.trend) && item.trend.length > 1 && <Sparkline data={item.trend} tone={rowTone} />}
+        {Array.isArray(item.trend) && item.trend.length > 1 && <Sparkline data={item.trend} tone={rowTone} className="hidden sm:block" />}
         {rowGrowth != null && <Pill tone={rowTone}>{_fmtPct(rowGrowth)}</Pill>}
         {rowGrowth == null && item.company_count != null && (
           <Num className="text-ink-muted">{item.company_count} cos</Num>
@@ -1322,7 +1322,7 @@ const AISkillRow = ({ item }) => {
         )}
       </div>
       <div className="flex items-center gap-3 shrink-0">
-        {Array.isArray(item.trend) && item.trend.length > 1 && <Sparkline data={item.trend} tone={gTone} />}
+        {Array.isArray(item.trend) && item.trend.length > 1 && <Sparkline data={item.trend} tone={gTone} className="hidden sm:block" />}
         {g != null && <Pill tone={gTone}>{_fmtPct(g)}</Pill>}
         {item.to_share != null && <Num className="text-ink-muted">{item.to_share}%</Num>}
       </div>
