@@ -3,8 +3,31 @@
 No Flask, no DB — given a role's numbers, return an honest, plain-language
 verdict. Unit-tested in tests/ai_outlook/test_verdict.py.
 """
+import json
+import os
 
 LENS_PHRASE = "the roughly 3,300 fast-growing companies we track"
+
+_BLS_PATH = os.path.join(os.path.dirname(__file__), "..", "data", "bls_projections.json")
+_BLS_TABLE = None
+
+
+def _load_bls_table():
+    global _BLS_TABLE
+    if _BLS_TABLE is None:
+        with open(_BLS_PATH, encoding="utf-8") as f:
+            _BLS_TABLE = json.load(f)
+    return _BLS_TABLE
+
+
+def bls_for(soc_code, table=None):
+    """Look up a BLS projection record by occupation code. Returns
+    {'pct', 'period', 'employment_base'} or None."""
+    if not soc_code:
+        return None
+    if table is None:
+        table = _load_bls_table()
+    return table.get(soc_code)
 
 GROW_FLOOR = 5.0   # BLS 10-yr % change at/above this => job is growing
 FLAT_FLOOR = -2.0  # between FLAT_FLOOR and GROW_FLOOR => roughly steady
