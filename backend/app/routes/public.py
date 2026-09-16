@@ -20,6 +20,7 @@ from sqlalchemy import func
 
 from app.models import db, Job, JobSkill, Skill, Role, Company
 from app.routes._web import WEB_URL, CACHE_HEADER, _esc, _slugify
+from app.services.ai_verdict import plural
 from app.blog import loader as blog_loader
 from app.blog.feed import blog_sitemap_urls
 
@@ -276,7 +277,7 @@ def public_role_page(role_slug):
 
   {related_section}
 
-  <p style="margin-top:18px"><a href="/ai/will-ai-replace-{canonical_slug}">Will AI replace {_esc(title)}s? →</a></p>
+  <p style="margin-top:18px"><a href="/ai/will-ai-replace-{canonical_slug}">Will AI replace {_esc(plural(title))}? →</a></p>
 
   <a class="cta" href="{WEB_URL}">See the live dashboard — free →</a>
 

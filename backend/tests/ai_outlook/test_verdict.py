@@ -1,4 +1,11 @@
-from app.services.ai_verdict import decide_verdict, LENS_PHRASE
+from app.services.ai_verdict import decide_verdict, LENS_PHRASE, plural
+
+
+def test_plural_handles_regular_and_sibilant_and_y_endings():
+    assert plural("Software Engineer") == "software engineers"
+    assert plural("Data Scientist") == "data scientists"
+    assert plural("Sales") == "saleses"          # ends in s -> +es, not "saless"
+    assert plural("UX Researcher") == "ux researchers"
 
 
 def test_growing_when_bls_strongly_positive():

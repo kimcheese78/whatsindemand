@@ -10,21 +10,11 @@ from app.routes._web import WEB_URL, CACHE_HEADER, _slugify
 from app.routes.public import (
     _find_role_by_slug, _role_page_data, _related_roles, MIN_JOBS_FOR_PAGE,
 )
-from app.services.ai_verdict import decide_verdict, bls_for
+from app.services.ai_verdict import decide_verdict, bls_for, plural
 from app.services.ai_render import render_role_outlook_page, render_outlook_index
 from app.services.ai_flagship import flagship_html_for
 
 ai_outlook_bp = Blueprint("ai_outlook", __name__)
-
-
-def _plural(name):
-    """Rough plural for display copy: 'Data Scientist' -> 'data scientists'."""
-    n = name.lower()
-    if n.endswith(("s", "x", "z", "ch", "sh")):
-        return n + "es"
-    if n.endswith("y") and n[-2:-1] not in "aeiou":
-        return n[:-1] + "ies"
-    return n + "s"
 
 
 @ai_outlook_bp.route("/ai/will-ai-replace-<role_slug>", methods=["GET"])
@@ -43,7 +33,7 @@ def ai_role_page(role_slug):
         return Response("<h1>No active postings for this role</h1>",
                         mimetype="text/html", status=404)
 
-    role_plural = _plural(role.normalized_title)
+    role_plural = plural(role.normalized_title)
     bls_rec = bls_for(role.bls_soc_code)
     verdict = decide_verdict(
         role_plural=role_plural, ai_pct=data["ai_pct"], total=data["total"],
@@ -67,7 +57,7 @@ def ai_index():
     roles = Role.query.filter(
         Role.total_active_jobs >= MIN_JOBS_FOR_PAGE
     ).order_by(Role.total_active_jobs.desc()).all()
-    items = [(_plural(r.normalized_title), _slugify(r.normalized_title),
+    items = [(plural(r.normalized_title), _slugify(r.normalized_title),
               r.total_active_jobs) for r in roles]
     return Response(render_outlook_index(items=items), mimetype="text/html",
                     headers={"Cache-Control": CACHE_HEADER})

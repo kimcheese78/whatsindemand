@@ -33,6 +33,18 @@ GROW_FLOOR = 5.0   # BLS 10-yr % change at/above this => job is growing
 FLAT_FLOOR = -2.0  # between FLAT_FLOOR and GROW_FLOOR => roughly steady
 
 
+def plural(name: str) -> str:
+    """Rough lowercase plural for display copy: 'Data Scientist' -> 'data
+    scientists'. Handles sibilant (s/x/z/ch/sh -> +es) and consonant-y (-> ies)
+    endings so titles like 'Sales' don't become 'saless'."""
+    n = name.lower().strip()
+    if n.endswith(("s", "x", "z", "ch", "sh")):
+        return n + "es"
+    if n.endswith("y") and n[-2:-1] not in "aeiou":
+        return n[:-1] + "ies"
+    return n + "s"
+
+
 def _ai_clause(role_plural: str, ai_pct: int) -> str:
     """One plain sentence about how many current openings ask for AI skills."""
     if ai_pct <= 0:

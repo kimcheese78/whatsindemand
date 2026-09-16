@@ -7,7 +7,7 @@ tests/ai_outlook/test_render.py.
 import json
 
 from app.routes._web import WEB_URL, _esc, _slugify  # pure helpers, safe to import
-from app.services.ai_verdict import LENS_PHRASE
+from app.services.ai_verdict import LENS_PHRASE, plural
 
 _CSS = """
 body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;
@@ -92,7 +92,7 @@ def render_role_outlook_page(*, role_singular, role_plural, slug, month, data,
         for c in data["companies"]
     )
     related_html = "".join(
-        f"<li><a href='/ai/will-ai-replace-{_slugify(name)}'>Will AI replace {_esc(name)}s?</a></li>"
+        f"<li><a href='/ai/will-ai-replace-{_slugify(name)}'>Will AI replace {_esc(plural(name))}?</a></li>"
         for name, _ in related
     )
 
