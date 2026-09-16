@@ -351,7 +351,12 @@ class Role(db.Model):
     total_active_jobs = db.Column(db.Integer, default=0)
     avg_salary_min = db.Column(db.Integer)
     avg_salary_max = db.Column(db.Integer)
-    
+
+    # BLS Employment Projections (populated by scripts/map_roles_to_bls.py)
+    bls_soc_code = db.Column(db.String(10), index=True)       # e.g. "15-1252"
+    bls_projection_pct = db.Column(db.Float)                  # 10-yr % change
+    bls_projection_period = db.Column(db.String(30))          # e.g. "2024 to 2034"
+
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
     
