@@ -7,6 +7,8 @@
     { "source": "/blog/:path*", "destination": "https://whatsindemand-production.up.railway.app/blog/:path*" },
     { "source": "/r/:path*", "destination": "https://whatsindemand-production.up.railway.app/r/:path*" },
     { "source": "/sitemap.xml", "destination": "https://whatsindemand-production.up.railway.app/sitemap.xml" },
+    { "source": "/ai", "destination": "https://whatsindemand-production.up.railway.app/ai/" },
+    { "source": "/ai/:path*", "destination": "https://whatsindemand-production.up.railway.app/ai/:path*" },
     { "source": "/(.*)", "destination": "/" }
   ],
   "headers": [
