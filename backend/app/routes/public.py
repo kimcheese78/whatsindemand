@@ -322,7 +322,11 @@ def public_role_index():
 def sitemap():
     roles = Role.query.filter(Role.total_active_jobs >= MIN_JOBS_FOR_PAGE).all()
     today = datetime.utcnow().strftime('%Y-%m-%d')
-    urls = [f"<url><loc>{WEB_URL}/r/</loc><lastmod>{today}</lastmod></url>"]
+    urls = [
+        f"<url><loc>{WEB_URL}/</loc><lastmod>{today}</lastmod>"
+        f"<changefreq>daily</changefreq><priority>1.0</priority></url>",
+        f"<url><loc>{WEB_URL}/r/</loc><lastmod>{today}</lastmod></url>",
+    ]
     urls += [
         f"<url><loc>{WEB_URL}/r/{_slugify(r.normalized_title)}</loc>"
         f"<lastmod>{today}</lastmod><changefreq>weekly</changefreq></url>"
