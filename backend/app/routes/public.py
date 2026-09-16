@@ -276,6 +276,8 @@ def public_role_page(role_slug):
 
   {related_section}
 
+  <p style="margin-top:18px"><a href="/ai/will-ai-replace-{canonical_slug}">Will AI replace {_esc(title)}s? →</a></p>
+
   <a class="cta" href="{WEB_URL}">See the live dashboard — free →</a>
 
   <footer>
@@ -333,6 +335,10 @@ def sitemap():
         for r in roles
     ]
     urls += blog_sitemap_urls(blog_loader.load_posts())
+    # Function-local import avoids a circular import (ai_outlook imports from public).
+    from app.routes.ai_outlook import ai_sitemap_rows
+    from app.services.ai_render import ai_sitemap_urls
+    urls += ai_sitemap_urls(ai_sitemap_rows(), today)
     xml = ('<?xml version="1.0" encoding="UTF-8"?>'
            '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'
            + ''.join(urls) + '</urlset>')

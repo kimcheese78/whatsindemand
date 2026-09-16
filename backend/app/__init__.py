@@ -104,6 +104,10 @@ def create_app(config_name=None):
     from app.routes.public import public_bp
     app.register_blueprint(public_bp)
 
+    # 'Will AI replace [role]?' pages (/ai/, /ai/will-ai-replace-<slug>)
+    from app.routes.ai_outlook import ai_outlook_bp
+    app.register_blueprint(ai_outlook_bp)
+
     # Server-rendered blog (/blog, /blog/<slug>, /blog/tag/<tag>, /blog/rss.xml)
     from app.routes.blog import blog_bp
     app.register_blueprint(blog_bp)
