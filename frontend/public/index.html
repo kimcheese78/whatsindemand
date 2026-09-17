@@ -64,7 +64,36 @@
     </script>
   </head>
   <body>
-    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <noscript>
+      <!-- Crawlable fallback for non-JS clients (AI answer engines: GPTBot,
+           PerplexityBot, ClaudeBot, etc.). Real users with JS see the React app;
+           this block gives crawlers real content + internal links to the
+           server-rendered /r/ role pages. -->
+      <main>
+        <h1>WhatsInDemand — real hiring trends from live job postings</h1>
+        <p>
+          We read 100,000+ live job postings from 3,300+ high-growth companies to
+          show what's rising, what's declining, and which skills are suddenly in
+          demand. Data is refreshed weekly and free to explore.
+        </p>
+        <h2>Most-tracked roles</h2>
+        <ul>
+          <li><a href="/r/software-engineer">Software Engineer — skills in demand</a></li>
+          <li><a href="/r/product-manager">Product Manager — skills in demand</a></li>
+          <li><a href="/r/data-scientist">Data Scientist — skills in demand</a></li>
+          <li><a href="/r/operations-manager">Operations Manager — skills in demand</a></li>
+          <li><a href="/r/account-executive">Account Executive — skills in demand</a></li>
+          <li><a href="/r/marketing-manager">Marketing Manager — skills in demand</a></li>
+          <li><a href="/r/business-analyst">Business Analyst — skills in demand</a></li>
+          <li><a href="/r/engineering-manager">Engineering Manager — skills in demand</a></li>
+        </ul>
+        <p>
+          <a href="/r/">Browse all tracked roles</a> &middot;
+          <a href="/blog">Read the WhatsInDemand blog</a>
+        </p>
+      </main>
+      <p>You need to enable JavaScript to run the interactive dashboard.</p>
+    </noscript>
     <div id="root"></div>
   </body>
 </html>

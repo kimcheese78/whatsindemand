@@ -20,6 +20,7 @@ from sqlalchemy import func
 
 from app.models import db, Job, JobSkill, Skill, Role, Company
 from app.routes._web import WEB_URL, CACHE_HEADER, _esc, _slugify
+from app.services.ai_verdict import plural
 from app.blog import loader as blog_loader
 from app.blog.feed import blog_sitemap_urls
 
@@ -276,6 +277,8 @@ def public_role_page(role_slug):
 
   {related_section}
 
+  <p style="margin-top:18px"><a href="/ai/will-ai-replace-{canonical_slug}">Will AI replace {_esc(plural(title))}? →</a></p>
+
   <a class="cta" href="{WEB_URL}">See the live dashboard — free →</a>
 
   <footer>
@@ -322,13 +325,21 @@ def public_role_index():
 def sitemap():
     roles = Role.query.filter(Role.total_active_jobs >= MIN_JOBS_FOR_PAGE).all()
     today = datetime.utcnow().strftime('%Y-%m-%d')
-    urls = [f"<url><loc>{WEB_URL}/r/</loc><lastmod>{today}</lastmod></url>"]
+    urls = [
+        f"<url><loc>{WEB_URL}/</loc><lastmod>{today}</lastmod>"
+        f"<changefreq>daily</changefreq><priority>1.0</priority></url>",
+        f"<url><loc>{WEB_URL}/r/</loc><lastmod>{today}</lastmod></url>",
+    ]
     urls += [
         f"<url><loc>{WEB_URL}/r/{_slugify(r.normalized_title)}</loc>"
         f"<lastmod>{today}</lastmod><changefreq>weekly</changefreq></url>"
         for r in roles
     ]
     urls += blog_sitemap_urls(blog_loader.load_posts())
+    # Function-local import avoids a circular import (ai_outlook imports from public).
+    from app.routes.ai_outlook import ai_sitemap_rows
+    from app.services.ai_render import ai_sitemap_urls
+    urls += ai_sitemap_urls(ai_sitemap_rows(), today)
     xml = ('<?xml version="1.0" encoding="UTF-8"?>'
            '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'
            + ''.join(urls) + '</urlset>')
