@@ -1443,7 +1443,7 @@ const LandingScreen = () => {
             See hiring trends for<br /><RotatingRole />
           </h1>
           <p className="text-lg sm:text-xl text-ink-muted mb-5 max-w-2xl leading-relaxed" style={{ textWrap: 'balance' }}>
-            We read 100,000+ live job postings from 3,300+ high-growth companies and show you what's rising, what's declining, and what's suddenly in demand.
+            We read 110,000+ live job postings from 3,300+ high-growth companies and show you what's rising, what's declining, and what's suddenly in demand.
           </p>
           <span className="inline-flex items-center gap-2 mb-8 px-3 py-1 rounded-full border border-line-strong text-meta text-ink-muted">
             <span className="w-1.5 h-1.5 rounded-full bg-accent-up" />
@@ -1560,7 +1560,7 @@ const LandingScreen = () => {
             Stop guessing. Look it up.
           </h2>
           <p className="text-ink-muted mb-8 max-w-xl mx-auto leading-relaxed">
-            100,000+ live job postings from 3,300+ high-growth companies, re-read every week —
+            110,000+ live job postings from 3,300+ high-growth companies, re-read every week —
             so you bet your time on what's actually being hired.
           </p>
           <div className="flex items-center justify-center gap-4">
@@ -3064,7 +3064,7 @@ const DashboardScreen = () => {
           {activeTab === 'paths' ? (
             <AlternativesTab />
           ) : activeTab === 'jobs' ? (
-            <MatchedJobs />
+            <MatchedJobs hasSkills={(userSkills || []).length > 0} />
           ) : roleData?.total_jobs_analyzed === 0 ? (
             <NoResultsMessage onClearFilters={handleClearFilters} loading={loading} />
           ) : (

@@ -283,7 +283,7 @@ def public_role_page(role_slug):
 
   <footer>
     Data from live job postings at 3,300+ companies, refreshed weekly.
-    Skill tags come from a curated taxonomy of 5,700+ verified skills.
+    Skill tags come from a curated taxonomy of 3,500+ verified skills.
     <br>© WhatsInDemand
   </footer>
 </main>

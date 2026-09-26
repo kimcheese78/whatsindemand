@@ -174,19 +174,35 @@ export function MatchedJobsSummaryCard({ onView }) {
   );
 }
 
-export default function MatchedJobs() {
+export default function MatchedJobs({ hasSkills = true }) {
   const [data, setData] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(hasSkills);
   const [error, setError] = useState(null);
 
   useEffect(() => {
+    // Client-side skill selection is the source of truth; the DB mirror can lag
+    // behind it. Don't surface matches until the user has actually selected
+    // skills, or a stale DB set would show jobs the user never asked to match.
+    if (!hasSkills) return;
     let alive = true;
     api.getMatchedJobs()
       .then((d) => { if (alive) setData(d); })
       .catch((e) => { if (alive) setError(e.message || 'Failed to load matches'); })
       .finally(() => { if (alive) setLoading(false); });
     return () => { alive = false; };
-  }, []);
+  }, [hasSkills]);
+
+  if (!hasSkills) {
+    return (
+      <Panel pad="lg" className="text-center">
+        <div className="text-ink font-medium mb-1">Add your skills to see matching jobs</div>
+        <div className="text-small text-ink-muted max-w-md mx-auto">
+          Jobs for You ranks live postings by how many of the required skills you
+          already have. Select your skills to start getting matches.
+        </div>
+      </Panel>
+    );
+  }
 
   if (loading) {
     return <div className="text-ink-muted text-sm py-12 text-center">Finding jobs that match your skills…</div>;
