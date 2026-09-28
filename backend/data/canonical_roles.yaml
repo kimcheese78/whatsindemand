@@ -368,6 +368,21 @@ research_scientist:
   category: Data Science
   job_family: Research
 
+research_associate_biotech:
+  name: Research Associate (Biotech/Therapeutics)
+  category: Healthcare
+  job_family: Lab Research
+
+clinical_research_associate:
+  name: Clinical Research Associate
+  category: Healthcare
+  job_family: Clinical Research
+
+equity_research_analyst:
+  name: Equity Research Analyst
+  category: Finance
+  job_family: Investment Research
+
 data_science_manager:
   name: Data Science Manager
   category: Data Science

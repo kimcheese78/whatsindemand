@@ -2816,7 +2816,16 @@
 "production lead": production_supervisor
 "production manager": production_supervisor
 "production team lead": production_supervisor
-"research associate": ux_researcher
+"research associate": research_associate_biotech
+"user research associate": ux_researcher
+"clinical research associate": clinical_research_associate
+"equity research associate": equity_research_analyst
+"private markets research associate": financial_analyst
+"capital markets research associate": financial_analyst
+"client investment research associate": financial_analyst
+"market research associate": financial_analyst
+"primary market research associate": financial_analyst
+"primary market research junior associate": financial_analyst
 "retail assistant general manager": retail_store_manager
 "retail assistant manager": retail_store_manager
 "retail general manager": retail_store_manager
