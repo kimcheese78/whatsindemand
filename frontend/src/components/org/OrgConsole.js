@@ -77,7 +77,7 @@ function SkillExtractor({ label, hint, skills, setSkills }) {
         <div className="flex flex-wrap gap-1.5 mt-2">
           {skills.map((s) => (
             <span key={s.skill_id}
-              className="inline-flex items-center gap-1 px-2 py-0.5 text-small bg-white/10 rounded">
+              className="inline-flex items-center gap-1 px-2 py-0.5 text-small bg-white/10 rounded-lg">
               {s.name}
               <button onClick={() => setSkills(skills.filter((x) => x.skill_id !== s.skill_id))}
                 className="text-ink-faint hover:text-white"><X className="w-3 h-3" /></button>
@@ -170,7 +170,7 @@ function ClientDrawer({ clientId, onClose, onDeleted }) {
                 <div className="flex flex-wrap gap-1.5">
                   {detail.gap.top_missing.map((s) => (
                     <span key={s.skill_id}
-                      className="px-2 py-0.5 text-small border border-accent-warn/40 text-accent-warn rounded">
+                      className="px-2 py-0.5 text-small border border-accent-warn/40 text-accent-warn rounded-lg">
                       {s.name} <span className="text-ink-faint">{Math.round(s.demand)}%</span>
                     </span>
                   ))}
@@ -192,7 +192,7 @@ function ClientDrawer({ clientId, onClose, onDeleted }) {
               <div className="space-y-2">
                 {detail.matched_jobs.top.slice(0, 6).map((j) => (
                   <a key={j.id} href={j.source_url || '#'} target="_blank" rel="noopener noreferrer"
-                    className="flex items-center justify-between gap-3 text-sm hover:bg-white/5 -mx-2 px-2 py-1 rounded">
+                    className="flex items-center justify-between gap-3 text-sm hover:bg-white/5 -mx-2 px-2 py-1 rounded-lg">
                     <span className="truncate">{j.title} <span className="text-ink-faint">· {j.company}</span></span>
                     <span className={cx('num shrink-0', scoreTone(Math.round(j.match_pct * 100)))}>
                       {Math.round(j.match_pct * 100)}%
@@ -210,7 +210,7 @@ function ClientDrawer({ clientId, onClose, onDeleted }) {
               <Eyebrow className="mb-2">Skills ({detail.skills.have.length})</Eyebrow>
               <div className="flex flex-wrap gap-1.5">
                 {detail.skills.have.map((s) => (
-                  <span key={s.skill_id} className="px-2 py-0.5 text-small bg-accent-up/15 text-accent-up rounded">
+                  <span key={s.skill_id} className="px-2 py-0.5 text-small bg-accent-up/15 text-accent-up rounded-lg">
                     {s.name}
                   </span>
                 ))}
@@ -220,7 +220,7 @@ function ClientDrawer({ clientId, onClose, onDeleted }) {
                   <Eyebrow className="mt-3 mb-2">Learning</Eyebrow>
                   <div className="flex flex-wrap gap-1.5">
                     {detail.skills.learning.map((s) => (
-                      <span key={s.skill_id} className="px-2 py-0.5 text-small border border-line-strong text-ink-muted rounded">
+                      <span key={s.skill_id} className="px-2 py-0.5 text-small border border-line-strong text-ink-muted rounded-lg">
                         <GraduationCap className="w-3 h-3 inline mr-1" />{s.name}
                       </span>
                     ))}
@@ -291,7 +291,7 @@ function AddClientModal({ cohort, roles, onClose, onCreated }) {
             </select>
             <select value={seniority} onChange={(e) => setSeniority(e.target.value)}
               className="px-3 py-2 bg-surface border border-line-strong rounded-lg text-sm focus:outline-none">
-              <option value="entry">Entry</option><option value="mid">Mid</option>
+              <option value="intern">Internship</option><option value="entry">Entry</option><option value="mid">Mid</option>
               <option value="senior">Senior</option><option value="lead">Lead</option>
             </select>
           </div>
@@ -409,7 +409,7 @@ function CurriculumFit({ cohortId, coveragePct }) {
           </div>
           <div className="flex flex-wrap gap-1.5">
             {fit.missing.map((s) => (
-              <span key={s.skill_id} className="px-2 py-0.5 text-small border border-accent-warn/40 text-accent-warn rounded">
+              <span key={s.skill_id} className="px-2 py-0.5 text-small border border-accent-warn/40 text-accent-warn rounded-lg">
                 {s.name} <span className="opacity-70">{Math.round(s.demand)}%</span>
               </span>
             ))}
@@ -422,7 +422,7 @@ function CurriculumFit({ cohortId, coveragePct }) {
           </div>
           <div className="flex flex-wrap gap-1.5">
             {fit.emerging.map((s) => (
-              <span key={s.skill_id} className="px-2 py-0.5 text-small bg-white/10 rounded">
+              <span key={s.skill_id} className="px-2 py-0.5 text-small bg-white/10 rounded-lg">
                 {s.name} <span className="text-accent-up">+{Math.round(s.growth_pct)}%</span>
               </span>
             ))}
@@ -658,7 +658,7 @@ export default function OrgConsole() {
                       <td className="px-2 py-2.5"><Delta value={c.delta} /></td>
                       <td className="px-2 py-2.5">
                         {c.top_gap
-                          ? <span className="px-2 py-0.5 text-small border border-accent-warn/40 text-accent-warn rounded">{c.top_gap}</span>
+                          ? <span className="px-2 py-0.5 text-small border border-accent-warn/40 text-accent-warn rounded-lg">{c.top_gap}</span>
                           : <span className="text-ink-faint text-small">—</span>}
                       </td>
                       <td className="px-2 py-2.5 text-right num">

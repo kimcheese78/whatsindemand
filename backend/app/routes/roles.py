@@ -203,7 +203,8 @@ def get_trend_data(
         # Seniority filter
         if seniority and seniority.lower() != 'all':
             seniority_map = {
-                'entry': ['entry', 'junior', 'associate', 'i', 'I', '1', 'intern'],
+                'intern': ['intern'],
+                'entry': ['entry', 'junior', 'associate', 'i', 'I', '1'],
                 'mid': ['mid', 'middle', 'ii', 'II', '2', 'intermediate'],
                 'senior': ['senior', 'sr', 'iii', 'III', '3'],
                 'lead': ['lead', 'principal', 'staff', 'director', 'head', 'iv', 'IV', '4', '5']
@@ -608,7 +609,8 @@ def get_role_insights():
     # Apply seniority filter
     if not is_all(seniority):
         seniority_map = {
-            'entry': ['entry', 'junior', 'associate', 'i', 'I', '1', 'intern'],
+            'intern': ['intern'],
+            'entry': ['entry', 'junior', 'associate', 'i', 'I', '1'],
             'mid': ['mid', 'middle', 'ii', 'II', '2', 'intermediate'],
             'senior': ['senior', 'sr', 'iii', 'III', '3'],
             'lead': ['lead', 'principal', 'staff', 'director', 'head', 'iv', 'IV', '4', '5']

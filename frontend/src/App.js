@@ -183,6 +183,7 @@ const AppProvider = ({ children }) => {
   // Constants
   const seniorities = [
     { id: 'All', label: 'All Levels', subtitle: 'Any experience' },
+    { id: 'intern', label: 'Internship', subtitle: 'Student / co-op' },
     { id: 'entry', label: 'Entry Level', subtitle: '0-2 years' },
     { id: 'mid', label: 'Mid Level', subtitle: '3-5 years' },
     { id: 'senior', label: 'Senior Level', subtitle: '5-10 years' },
@@ -5014,8 +5015,8 @@ const TermsScreen = () => (
     <LegalSection heading="CONTACT">
       <p>
         Questions about these terms?{' '}
-        <a href="mailto:henry@whatsindemand.com" className="text-white underline">
-          henry@whatsindemand.com
+        <a href="mailto:hello@whatsindemand.com" className="text-white underline">
+          hello@whatsindemand.com
         </a>
       </p>
     </LegalSection>
@@ -5123,8 +5124,8 @@ const PrivacyScreen = () => (
     <LegalSection heading="CONTACT">
       <p>
         Privacy questions or requests?{' '}
-        <a href="mailto:henry@whatsindemand.com" className="text-white underline">
-          henry@whatsindemand.com
+        <a href="mailto:hello@whatsindemand.com" className="text-white underline">
+          hello@whatsindemand.com
         </a>
       </p>
     </LegalSection>
@@ -5159,8 +5160,8 @@ const ContactScreen = () => (
   <LegalLayout title="CONTACT">
     <p>
       Found a bug? Have an idea? Just want to talk? Drop me an email at{' '}
-      <a href="mailto:henry@whatsindemand.com" className="text-white underline">
-        henry@whatsindemand.com
+      <a href="mailto:hello@whatsindemand.com" className="text-white underline">
+        hello@whatsindemand.com
       </a>
       .
     </p>

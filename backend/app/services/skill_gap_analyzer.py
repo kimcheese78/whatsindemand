@@ -45,7 +45,8 @@ class SkillGapAnalyzer:
         # Apply seniority filter
         if seniority_filter and seniority_filter != 'all':
             seniority_map = {
-                'entry': ['entry', 'junior', 'associate', 'i', 'I', '1', 'intern'],
+                'intern': ['intern'],
+                'entry': ['entry', 'junior', 'associate', 'i', 'I', '1'],
                 'mid': ['mid', 'middle', 'ii', 'II', '2', 'intermediate'],
                 'senior': ['senior', 'sr', 'iii', 'III', '3'],
                 'lead': ['lead', 'principal', 'staff', 'director', 'head', 'iv', 'IV', '4', '5', 'senior-staff']
